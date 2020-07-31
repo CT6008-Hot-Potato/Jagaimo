@@ -8,11 +8,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class MoveObject : MonoBehaviour
 {
-
     //Variables
     #region Variables
     private GameObject movingObject;
@@ -26,10 +24,15 @@ public class MoveObject : MonoBehaviour
     private Transform furthestPosition;
     [SerializeField]
     private Transform position;
+    private float throwStrength;
     #endregion Variables
-    //Start method.
+    //Start method setting up and assigning values
     void Start()
     {
+        if (throwStrength == 0)
+        {
+            throwStrength = 15;
+        }
         position.position = movingParent.transform.position;
         if (!movingObject || !movingObject.GetComponent<Rigidbody>())
         {
@@ -43,9 +46,10 @@ public class MoveObject : MonoBehaviour
     //OnMouseDown method.
     void Update()
     {
-
+        //If the player has interacted
         if (Input.GetMouseButtonDown(0) || Input.GetAxis("LeftClick") > 0.1)
         {
+            //Quickly enable the main camera regardless of if third or first person to do raycast
             if (GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().enabled)
             {
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -58,6 +62,7 @@ public class MoveObject : MonoBehaviour
                 GameObject.FindGameObjectWithTag("ThirdPersonCamera").GetComponent<Camera>().enabled = true;
                 GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().enabled = false;
             }
+            //Do a raycast and check if the object needs to be dropped or picked up
             if (Physics.Raycast(ray, out hit, 5))
             {
                 if (movingObject != null)
@@ -89,6 +94,7 @@ public class MoveObject : MonoBehaviour
             }
 
         }
+        //Throw the object when right click or right trigger pressed
         else if (Input.GetMouseButtonDown(1) || Input.GetAxis("RightClick") > 0.1)
         {
             if (movingObject != null)
@@ -96,6 +102,7 @@ public class MoveObject : MonoBehaviour
                 Drop(true);
             }
         }
+        //Otherwise if holding the moving object it can be moved closer or further from player
         else if (movingObject != null)
         {
             movingParent.transform.position = UnityEngine.Vector3.MoveTowards(movingParent.transform.position, position.position, 1000 * Time.deltaTime);
@@ -115,14 +122,17 @@ public class MoveObject : MonoBehaviour
     //This function will set the paramaters of the collision for a carried object based upon what type of colliders it is
     private void AdjustCollision()
     {
+        //Set collision parameters if box collider
         if (movingParent.GetComponent<Collider>().GetType() == typeof(BoxCollider))
         {
             movingParent.GetComponent<BoxCollider>().size = new Vector3(movingParent.GetComponent<BoxCollider>().size.x * 0.5f, movingParent.GetComponent<BoxCollider>().size.y * 0.5f, movingParent.GetComponent<BoxCollider>().size.z * 0.5f);
         }
+        //Set collision parameters if sphere collider
         else if (movingParent.GetComponent<Collider>().GetType() == typeof(SphereCollider))
         {
             movingParent.GetComponent<SphereCollider>().radius = movingParent.GetComponent<SphereCollider>().radius * 0.5f;
         }
+        //Debug if other type of collider
         else
         {
             Debug.Log("Other collider type");
@@ -139,11 +149,14 @@ public class MoveObject : MonoBehaviour
         movingObject.GetComponent<Rigidbody>().isKinematic = false;
         movingObject.transform.parent = null;
         movingObject.transform.position = movingParent.transform.position;
+        //When object is being thrown first will check got rigidbody and then throw it
         if (throwObject && movingObject.TryGetComponent(out Rigidbody rB))
         {
-            rB.AddRelativeForce(transform.forward * 15, ForceMode.Impulse);
+            rB.AddRelativeForce(transform.forward * throwStrength, ForceMode.Impulse);
         }
+        //Unassign moving object
         movingObject = null;
+        //Loop through the parent destroying it's components
         foreach (var comp in movingParent.GetComponents<Component>())
         {
             if (!(comp is Transform) && comp.GetType() != typeof(MoveObject))
@@ -151,6 +164,7 @@ public class MoveObject : MonoBehaviour
                 Destroy(comp);
             }
         }
+        //Set position back to the closesty position for when it picks something up again
         position.position = closestPosition.position;
     }
 

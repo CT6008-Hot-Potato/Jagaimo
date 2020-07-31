@@ -59,7 +59,6 @@ public class PlayerController : MonoBehaviour
     private float leftRight;
     private int currentlyChecking;
     private bool grounded = false;
-    private bool canJump = true;
     private RaycastHit hit;
     private Ray ray;
     #endregion
@@ -128,7 +127,7 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (grounded && pM != playerMovement.INTERACTING)
+        if (pM != playerMovement.INTERACTING)
         {
             // Calculate how fast we should be moving
             Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -144,9 +143,10 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(velocityChange, ForceMode.VelocityChange);
 
             // Jump
-            if (canJump && Input.GetButton("Jump"))
+            if (grounded && Input.GetButton("Jump"))
             {
                 rb.velocity = new Vector3(velocity.x, JumpSpeed(), velocity.z);
+                //rb.velocity = rb.velocity + new Vector3(velocity.x, JumpSpeed(), velocity.z);
             }
         }
 

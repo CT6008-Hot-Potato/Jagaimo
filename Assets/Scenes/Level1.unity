@@ -528,7 +528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ac762714a3d01e429363068213d444e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thirdPersonView: 1
+  thirdPersonView: 0
   mouseSensitivity: 5
   mouseInvertXAxis: 0
   mouseInvertYAxis: 1
