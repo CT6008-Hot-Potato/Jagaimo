@@ -28,7 +28,7 @@ public class CarryCollision : MonoBehaviour
     {
         if (canCollide && collider.gameObject != gameObject)
         {
-            moveObject.Drop();
+            moveObject.Drop(false);
         }
     }
 }

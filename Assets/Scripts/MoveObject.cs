@@ -62,7 +62,7 @@ public class MoveObject : MonoBehaviour
             {
                 if (movingObject != null)
                 {
-                    Drop();
+                    Drop(false);
                 }
                 else if (hit.rigidbody != null)
                 {
@@ -89,6 +89,13 @@ public class MoveObject : MonoBehaviour
             }
 
         }
+        else if (Input.GetMouseButtonDown(1) || Input.GetAxis("RightClick") > 0.1)
+        {
+            if (movingObject != null)
+            {
+                Drop(true);
+            }
+        }
         else if (movingObject != null)
         {
             movingParent.transform.position = UnityEngine.Vector3.MoveTowards(movingParent.transform.position, position.position, 1000 * Time.deltaTime);
@@ -105,6 +112,7 @@ public class MoveObject : MonoBehaviour
         }
     }
 
+    //This function will set the paramaters of the collision for a carried object based upon what type of colliders it is
     private void AdjustCollision()
     {
         if (movingParent.GetComponent<Collider>().GetType() == typeof(BoxCollider))
@@ -123,7 +131,7 @@ public class MoveObject : MonoBehaviour
 
 
     //Function which when called will drop the current object which is being carried 
-    public void Drop()
+    public void Drop(bool throwObject)
     {
         movingParent.transform.position = position.position;
         movingObject.GetComponent<Collider>().enabled = true;
@@ -131,6 +139,10 @@ public class MoveObject : MonoBehaviour
         movingObject.GetComponent<Rigidbody>().isKinematic = false;
         movingObject.transform.parent = null;
         movingObject.transform.position = movingParent.transform.position;
+        if (throwObject && movingObject.TryGetComponent(out Rigidbody rB))
+        {
+            rB.AddRelativeForce(transform.forward * 15, ForceMode.Impulse);
+        }
         movingObject = null;
         foreach (var comp in movingParent.GetComponents<Component>())
         {
