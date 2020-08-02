@@ -12,6 +12,7 @@ public class CarryCollision : MonoBehaviour
 {
     MoveObject moveObject;
     private bool canCollide = false;
+    private Vector3 moveTo;
     private void Start()
     {
         moveObject = FindObjectOfType<MoveObject>();

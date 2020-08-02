@@ -146,7 +146,6 @@ public class PlayerController : MonoBehaviour
             if (grounded && Input.GetButton("Jump"))
             {
                 rb.velocity = new Vector3(velocity.x, JumpSpeed(), velocity.z);
-                //rb.velocity = rb.velocity + new Vector3(velocity.x, JumpSpeed(), velocity.z);
             }
         }
 
@@ -332,12 +331,12 @@ public class PlayerController : MonoBehaviour
         else if (shouldOverrideCam)
         {
             UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-            if (thirdPersonView == true) // lets move third person cam
+            if (thirdPersonView == true) // lets move third person camera
             {
                 thirdPersonCamera.transform.position = Vector3.Lerp(thirdPersonCamera.transform.position, otherCamPosition.position, otherCamSpeed * Time.deltaTime);
                 thirdPersonCamera.transform.rotation = Quaternion.Lerp(thirdPersonCamera.transform.rotation, otherCamPosition.rotation, otherCamSpeed * Time.deltaTime);
             }
-            else // lets move first person cam
+            else // lets move first person camera
             {
                 firstPersonCamera.transform.position = Vector3.Lerp(firstPersonCamera.transform.position, otherCamPosition.position, otherCamSpeed * Time.deltaTime);
                 firstPersonCamera.transform.rotation = Quaternion.Lerp(firstPersonCamera.transform.rotation, otherCamPosition.rotation, otherCamSpeed * Time.deltaTime);
