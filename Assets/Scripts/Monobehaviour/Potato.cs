@@ -15,7 +15,10 @@ public class Potato : MonoBehaviour
             return;
         }
 
-        //Run it's interact function
-        interactable.Interact();
+        //Run it's interact function if the script is enabled
+        if (((MonoBehaviour)interactable).enabled)
+        {
+            interactable.Interact();
+        }
     }
 }

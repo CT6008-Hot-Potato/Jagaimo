@@ -1,0 +1,45 @@
+﻿
+public delegate void TimerEvent();  // delegate
+
+//A class not attached to unity to handle the timer float
+public class Timer
+{
+    //Could be locked
+    bool isLocked;
+
+    //Needed to tick up or down
+    float max_time;
+    public float current_time { get; private set; }
+
+    public event TimerEvent timerEnd;
+
+    //Constructor
+    Timer(float duration)
+    {
+        max_time = duration;
+        current_time = duration;
+    }
+
+    //Ticking the timer down
+    void Tick(float delta_time)
+    {
+        if (current_time.Equals(0f) || isLocked)
+        {
+            return;
+        }
+
+        current_time -= delta_time;
+        EndCheck();
+    } 
+
+    //Function to check if timer ran out
+    void EndCheck()
+    {
+        if (current_time < 0f)
+        {
+            current_time = 0f;
+
+            timerEnd.Invoke();
+        }
+    }
+}

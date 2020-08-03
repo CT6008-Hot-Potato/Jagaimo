@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿/////////////////////////////////////////////////////////////
+//
+//  Creator: Charles Carter
+//  Last Edit Date:
+//  Description: A script for when the potato hits an interactable map object
+//  
+/////////////////////////////////////////////////////////////
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

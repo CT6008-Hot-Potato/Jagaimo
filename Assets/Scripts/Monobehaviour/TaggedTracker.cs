@@ -1,0 +1,73 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TaggedTracker : MonoBehaviour, IInteractable
+{
+    //The main bool for the tracker
+    [SerializeField]
+    private bool isTagged = false;
+
+    [SerializeField]
+    private RoundManager roundManager;
+
+    //Runs when Object is enabled
+    private void OnEnable()
+    {
+        RoundManager.RoundEnded += ExplodedCheck;
+        RoundManager.PlayerTagged += PlayerTaggedCheck;
+    }
+
+    //Runs when Object is disabled
+    private void OnDisable()
+    {
+        RoundManager.RoundEnded -= ExplodedCheck;
+        RoundManager.PlayerTagged -= PlayerTaggedCheck;
+    }
+
+    //Triggering the tagged function if interact is called on the object
+    void IInteractable.Interact() => Hit();
+
+    //Runs when the player is hit by the potato and this component is active
+    void Hit()
+    {
+        //This player is already tagged
+        if (isTagged)
+        {
+            return;
+        }
+
+        //Turning on the previously tagged player's tracker
+        roundManager.previousTagged.enabled = true;
+
+        //Call the on playertagged delegate event
+        roundManager.CallOnPlayerTagged(this);
+    }
+
+    //Setting the variable
+    void PlayerTaggedCheck(TaggedTracker taggedPlayer, TaggedTracker untaggedPlayer)
+    {
+        //If this instance of the script is the tagged player
+        if (this.Equals(taggedPlayer))
+        {
+            //Set the bool and turn off the component so the potato doesnt trigger it (?)
+            isTagged = true;
+            enabled = false;
+        }
+
+        //Else
+        isTagged = false;
+    }
+
+    //Just a test function for now
+    void ExplodedCheck()
+    {
+        //This player isnt tagged
+        if (!isTagged)
+        {
+            return;
+        }
+
+        //Player should explode
+    }
+}
