@@ -20,14 +20,14 @@ public class RoundTimer : MonoBehaviour
     {
         RoundManager.RoundStarted   += StartTimer;
         RoundManager.RoundEnded     += EndTimer;
-        RoundManager.RoundPauseToggle += LockTimer;
+        //RoundManager.RoundPauseToggle += LockTimer;
     }
 
     private void OnDisable()
     {
         RoundManager.RoundStarted   -= StartTimer;
         RoundManager.RoundEnded     -= EndTimer;
-        RoundManager.RoundPauseToggle -= LockTimer;
+        //RoundManager.RoundPauseToggle -= LockTimer;
 
         roundTimer.timerEnd -= EndTimer;
     }
@@ -41,10 +41,10 @@ public class RoundTimer : MonoBehaviour
         roundTimer.timerEnd += EndTimer;
     }
 
-    //Toggles Locked/Unlocked
-    void LockTimer()
+    //Toggles Locked/Unlocked (For Dev UI)
+    public void LockTimer(bool newLocked)
     {
-        roundTimer.isLocked = !roundTimer.isLocked;
+        roundTimer.isLocked = newLocked;
     }
 
     //End the timer forcefully
@@ -53,6 +53,7 @@ public class RoundTimer : MonoBehaviour
         Debug.Log("Timer Over");
     }
 
+    //The timer behaviour
     IEnumerator TimerBehaviour(Timer timer)
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
@@ -63,6 +64,7 @@ public class RoundTimer : MonoBehaviour
         }
     }
 
+    //Updates the text UI
     void UpdateTimerUI()
     {
         float minutes = Mathf.FloorToInt(roundTimer.current_time / 60);
