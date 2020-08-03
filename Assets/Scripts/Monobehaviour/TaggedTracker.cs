@@ -39,12 +39,6 @@ public class TaggedTracker : MonoBehaviour, IInteractable
 
         Debug.Log("Non tagged player hit with potato");
 
-        if (roundManager.previousTagged)
-        {
-            //Turning on the previously tagged player's tracker
-            roundManager.previousTagged.enabled = true;
-        }
-
         //Call the on playertagged delegate event
         roundManager.CallOnPlayerTagged(this);
     }
@@ -58,14 +52,12 @@ public class TaggedTracker : MonoBehaviour, IInteractable
             //Set the bool and turn off the component so the potato doesnt trigger it (?)
             //Change camera etc on player
             isTagged = true;
-            Debug.Log("Tagged Me: " + isTagged);
             enabled = false;
             return;
         }
         //If it's the player who was tagged last
         else if (this.Equals(untaggedPlayer))
         {
-            enabled = true;
             isTagged = false;
             //Change camera etc on player
         }
