@@ -68,6 +68,7 @@ public class TaggedTracker : MonoBehaviour, IInteractable
 
         if (this.Equals(untaggedPlayer))
         {
+
             //Change camera etc on player
         }
     }

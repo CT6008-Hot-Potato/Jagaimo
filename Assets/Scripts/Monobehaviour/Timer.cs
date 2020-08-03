@@ -5,7 +5,7 @@ public delegate void TimerEvent();  // delegate
 public class Timer
 {
     //Could be locked
-    bool isLocked;
+    public bool isLocked;
 
     //Needed to tick up or down
     float max_time;
@@ -14,14 +14,14 @@ public class Timer
     public event TimerEvent timerEnd;
 
     //Constructor
-    Timer(float duration)
+    public Timer(float duration)
     {
         max_time = duration;
         current_time = duration;
     }
 
     //Ticking the timer down
-    void Tick(float delta_time)
+    public void Tick(float delta_time)
     {
         if (current_time.Equals(0f) || isLocked)
         {
@@ -39,7 +39,10 @@ public class Timer
         {
             current_time = 0f;
 
-            timerEnd.Invoke();
+            if (timerEnd != null)
+            {
+                timerEnd.Invoke();
+            }
         }
     }
 }
