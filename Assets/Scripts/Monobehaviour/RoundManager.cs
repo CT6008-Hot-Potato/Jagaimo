@@ -17,9 +17,13 @@ public class RoundManager : MonoBehaviour
     public delegate void TaggedEvent(TaggedTracker NewTagged, TaggedTracker previouslyTagged);
     public static event TaggedEvent PlayerTagged;
 
+    [SerializeField]
+    TaggedTracker initialTagged;
+
     private void Awake()
     {
         CallOnRoundStart();
+        currentTagged = initialTagged;
     }
 
     //Calling the OnRoundStart Delegate Event
@@ -48,17 +52,18 @@ public class RoundManager : MonoBehaviour
         //Null checking the delegate event
         if (PlayerTagged != null)
         {
-            //The tracked for the previously player should turn back on
-            if (previousTagged)
+            //Variable management
+            previousTagged = currentTagged;
+            if (previousTagged && !previousTagged.enabled)
             {
+                //Old tagged now should track if they're hit
                 previousTagged.enabled = true;
             }
 
-            PlayerTagged.Invoke(Tagged, previousTagged);
-
-            //Updating previous and current tagged
-            previousTagged = currentTagged;
             currentTagged = Tagged;
+
+            //Sending out the event
+            PlayerTagged.Invoke(Tagged, previousTagged);
         }
     }
 }

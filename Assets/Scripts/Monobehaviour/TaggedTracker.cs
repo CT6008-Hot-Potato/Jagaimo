@@ -62,13 +62,11 @@ public class TaggedTracker : MonoBehaviour, IInteractable
             enabled = false;
             return;
         }
-
-        //Else
-        isTagged = false;
-
-        if (this.Equals(untaggedPlayer))
+        //If it's the player who was tagged last
+        else if (this.Equals(untaggedPlayer))
         {
-
+            enabled = true;
+            isTagged = false;
             //Change camera etc on player
         }
     }
