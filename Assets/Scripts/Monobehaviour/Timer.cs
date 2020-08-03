@@ -45,4 +45,9 @@ public class Timer
             }
         }
     }
+
+    public void OverrideCurrentTime(float amountToChangeBy)
+    {
+        current_time += amountToChangeBy;
+    }
 }

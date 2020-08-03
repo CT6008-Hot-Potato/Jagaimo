@@ -14,14 +14,12 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     //Runs when Object is enabled
     private void OnEnable()
     {
-        RoundManager.RoundEnded += ExplodedCheck;
         RoundManager.PlayerTagged += PlayerTaggedCheck;
     }
 
     //Runs when Object is disabled
     private void OnDisable()
     {
-        RoundManager.RoundEnded -= ExplodedCheck;
         RoundManager.PlayerTagged -= PlayerTaggedCheck;
     }
 
@@ -61,17 +59,5 @@ public class TaggedTracker : MonoBehaviour, IInteractable
             isTagged = false;
             //Change camera etc on player
         }
-    }
-
-    //Just a test function for now
-    void ExplodedCheck()
-    {
-        //This player isnt tagged
-        if (!isTagged)
-        {
-            return;
-        }
-
-        //Player should explode
     }
 }
