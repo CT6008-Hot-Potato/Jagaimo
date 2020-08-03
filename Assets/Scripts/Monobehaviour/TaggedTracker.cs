@@ -6,7 +6,7 @@ public class TaggedTracker : MonoBehaviour, IInteractable
 {
     //The main bool for the tracker
     [SerializeField]
-    private bool isTagged = false;
+    private bool isTagged;
 
     [SerializeField]
     private RoundManager roundManager;
@@ -37,8 +37,13 @@ public class TaggedTracker : MonoBehaviour, IInteractable
             return;
         }
 
-        //Turning on the previously tagged player's tracker
-        roundManager.previousTagged.enabled = true;
+        Debug.Log("Non tagged player hit with potato");
+
+        if (roundManager.previousTagged)
+        {
+            //Turning on the previously tagged player's tracker
+            roundManager.previousTagged.enabled = true;
+        }
 
         //Call the on playertagged delegate event
         roundManager.CallOnPlayerTagged(this);
@@ -51,12 +56,20 @@ public class TaggedTracker : MonoBehaviour, IInteractable
         if (this.Equals(taggedPlayer))
         {
             //Set the bool and turn off the component so the potato doesnt trigger it (?)
+            //Change camera etc on player
             isTagged = true;
+            Debug.Log("Tagged Me: " + isTagged);
             enabled = false;
+            return;
         }
 
         //Else
         isTagged = false;
+
+        if (this.Equals(untaggedPlayer))
+        {
+            //Change camera etc on player
+        }
     }
 
     //Just a test function for now
