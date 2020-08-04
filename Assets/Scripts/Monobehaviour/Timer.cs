@@ -6,6 +6,7 @@ public class Timer
 {
     //Could be locked
     public bool isLocked;
+    public bool isActive;
 
     //Needed to tick up or down
     float max_time;
@@ -18,6 +19,8 @@ public class Timer
     {
         max_time = duration;
         current_time = duration;
+
+        isActive = true;
     }
 
     //Ticking the timer down
@@ -41,6 +44,7 @@ public class Timer
 
             if (timerEnd != null)
             {
+                isActive = false;
                 timerEnd.Invoke();
             }
         }

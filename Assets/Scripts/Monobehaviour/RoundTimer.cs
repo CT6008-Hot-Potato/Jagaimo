@@ -10,6 +10,7 @@ public class RoundTimer : MonoBehaviour
     RoundManager roundManager;
     public Timer roundTimer { get; private set; }
 
+    //Duation is in seconds
     [SerializeField]
     float duration;
 
@@ -29,14 +30,17 @@ public class RoundTimer : MonoBehaviour
         RoundManager.RoundEnded     -= EndTimer;
         //RoundManager.RoundPauseToggle -= LockTimer;
 
-        roundTimer.timerEnd -= EndTimer;
+        //Script could get disabled without ever defining the timer
+        if (roundTimer != null)
+        {
+            roundTimer.timerEnd -= EndTimer;
+        }
     }
 
     //Start the timer
     void StartTimer()
     {
-        roundTimer = new Timer(duration);
-        StartCoroutine(TimerBehaviour(roundTimer));
+        StartCoroutine(TimerBehaviour());
 
         roundTimer.timerEnd += EndTimer;
     }
@@ -47,12 +51,15 @@ public class RoundTimer : MonoBehaviour
         Debug.Log("Timer Over");
     }
 
-    //The timer behaviour
-    IEnumerator TimerBehaviour(Timer timer)
+    //The timer behaviour (maybe should be refactored into a multiuse script)
+    IEnumerator TimerBehaviour()
     {
-        for (float t = 0; t < duration; t += Time.deltaTime)
+        roundTimer = new Timer(duration);
+        //Debug.Log(roundTimer.isActive);
+
+        while (roundTimer.isActive)
         {
-            timer.Tick(Time.deltaTime);
+            roundTimer.Tick(Time.deltaTime);
             UpdateTimerUI();
             yield return null;
         }
@@ -84,5 +91,11 @@ public class RoundTimer : MonoBehaviour
         }
 
         roundTimer.OverrideCurrentTime(change);
+    }
+
+    //Note: The timer wont work when run out
+    public void ResetTimer()
+    {
+        StartTimer();
     }
 }

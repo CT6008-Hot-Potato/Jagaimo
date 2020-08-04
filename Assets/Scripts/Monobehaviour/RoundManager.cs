@@ -20,7 +20,7 @@ public class RoundManager : MonoBehaviour
     [SerializeField]
     TaggedTracker initialTagged;
 
-    private void Awake()
+    private void Start()
     {
         CallOnRoundStart();
         currentTagged = initialTagged;
