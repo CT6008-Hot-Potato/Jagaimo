@@ -85,9 +85,7 @@ public class MoveObject : MonoBehaviour
                     movingParent.AddComponent<Rigidbody>();
                     movingParent.GetComponent<Rigidbody>().freezeRotation = true;
                     movingParent.GetComponent<Rigidbody>().isKinematic = false;
-                    movingParent.GetComponent<Rigidbody>().useGravity = true;
-                    //movingParent.GetComponenMt<Rigidbody>().mass = 0.000001f;
-                    //movingParent.GetComponent<Rigidbody>().angularDrag = 0;                    
+                    movingParent.GetComponent<Rigidbody>().useGravity = true;          
                     movingParent.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
                     movingParent.AddComponent<CarryCollision>();
                 }
@@ -144,26 +142,31 @@ public class MoveObject : MonoBehaviour
     public void Drop(bool throwObject)
     {
         movingParent.transform.position = position.position;
-        //Try to get rigidbody
-        if (movingObject.TryGetComponent(out Rigidbody rB))
+        //Null check on moving object
+        if (movingObject != null)
         {
-            rB.useGravity = true;
-            rB.isKinematic = false;
+            //Try to get rigidbody and collider
+            if (movingObject.TryGetComponent(out Rigidbody rB) && movingObject.TryGetComponent(out Collider cD))
+            {
+                rB.useGravity = true;
+                rB.isKinematic = false;
+                //Try to get collider
+                cD.enabled = true;
+                movingObject.transform.parent = null;
+                movingObject.transform.position = movingParent.transform.position;
+                //When object is being thrown first will check got rigidbody and then throw it
+                if (throwObject)
+                {
+                    rB.AddRelativeForce(transform.forward * throwStrength, ForceMode.Impulse);
+                }
+            }
+            //Unassign moving object
+            movingObject = null;
         }
-        //Try to get collider
-        if (movingObject.TryGetComponent(out Collider cD))
+        else
         {
-            cD.enabled = true;
+            Debug.Log("Null moving object.");
         }
-        movingObject.transform.parent = null;
-        movingObject.transform.position = movingParent.transform.position;
-        //When object is being thrown first will check got rigidbody and then throw it
-        if (throwObject && movingObject.GetComponent<Rigidbody>() != null)
-        {
-            movingObject.GetComponent<Rigidbody>().AddRelativeForce(transform.forward * throwStrength, ForceMode.Impulse);
-        }
-        //Unassign moving object
-        movingObject = null;
         //Loop through the parent destroying it's components
         foreach (var comp in movingParent.GetComponents<Component>())
         {

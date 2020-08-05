@@ -10,24 +10,25 @@ using UnityEngine;
 
 public class CarryCollision : MonoBehaviour
 {
+    //Variables
     MoveObject moveObject;
     private bool canCollide = false;
-    private Vector3 moveTo;
+    //Start function gettiing moveobject
     private void Start()
     {
-        moveObject = FindObjectOfType<MoveObject>();
+        moveObject = gameObject.transform.parent.parent.GetComponent<MoveObject>();
         StartCoroutine("WaitFirst");
     }
-
+    //Coroutine giving brief window of pickup from position without collision
     IEnumerator WaitFirst()
     {
         yield return new WaitForSeconds(0.1f);
         canCollide = true;
     }
-
+    //Drop the carried object when it something is within it's collision
     private void OnTriggerStay(Collider collider)
     {
-        if (canCollide && collider.gameObject != gameObject)
+        if (canCollide && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
         {
             moveObject.Drop(false);
         }
