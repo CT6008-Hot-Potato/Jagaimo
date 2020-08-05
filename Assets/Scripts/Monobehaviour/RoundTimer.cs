@@ -1,9 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Just for testing
+//Bit different from other basic timers as it needs dev options
 public class RoundTimer : MonoBehaviour
 {
     [SerializeField]

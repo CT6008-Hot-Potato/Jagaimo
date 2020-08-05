@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GameMode
+public enum eGameMode
 {
     NONE       =    0b00,
     QUICK_FFA  =    0b00000001,
@@ -12,7 +12,7 @@ public enum GameMode
     COUNT
 }
 
-public enum GameState
+public enum eGameState
 {
     MainMenu,
     Local_CoOp,
@@ -21,6 +21,10 @@ public enum GameState
 
 public class GameManager : MonoBehaviour
 {
+
+    int MAX_ROUND_NUMBER;
+    int iCurrentRound;
+
     // Start is called before the first frame update
     void Start()
     {

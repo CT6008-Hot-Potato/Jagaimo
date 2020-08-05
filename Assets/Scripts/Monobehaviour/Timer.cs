@@ -38,7 +38,8 @@ public class Timer
     //Function to check if timer ran out
     void EndCheck()
     {
-        if (current_time < 0f)
+        //Timer is over
+        if (current_time <= 0f)
         {
             current_time = 0f;
             isActive = false;

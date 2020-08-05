@@ -14,6 +14,10 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     //Runs when Object is enabled
     private void OnEnable()
     {
+        if (!roundManager)
+        {
+            roundManager = FindObjectOfType<RoundManager>();
+        }
         RoundManager.PlayerTagged += PlayerTaggedCheck;
     }
 

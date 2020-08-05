@@ -21,6 +21,7 @@ public class BasicTimerBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //This will be called on events at some point
         CallOnTimerStart();    
     }
 
@@ -38,7 +39,6 @@ public class BasicTimerBehaviour : MonoBehaviour
     IEnumerator TimerStart()
     {
         timer = new Timer(duration);
-
         while (timer.isActive)
         {
             timer.Tick(Time.deltaTime);
@@ -50,6 +50,7 @@ public class BasicTimerBehaviour : MonoBehaviour
             yield return null;
         }
 
+        timerText.enabled = false;
         TimerBehaviour.Invoke();
     }
 
@@ -63,7 +64,7 @@ public class BasicTimerBehaviour : MonoBehaviour
         }
         else
         {
-            timerText.enabled = false;
+            timerText.text = "GO!";
         }
     }
 }
