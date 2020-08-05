@@ -22,7 +22,7 @@ public class RoundManager : MonoBehaviour
 
     private void Start()
     {
-        CallOnRoundStart();
+        //CallOnRoundStart();
         currentTagged = initialTagged;
     }
 
@@ -32,6 +32,7 @@ public class RoundManager : MonoBehaviour
         //Null checking the delegate event
         if (RoundStarted != null)
         {
+            Debug.Log("Round Started");
             RoundStarted.Invoke();
         }
     }

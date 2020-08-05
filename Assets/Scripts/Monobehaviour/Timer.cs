@@ -41,10 +41,10 @@ public class Timer
         if (current_time < 0f)
         {
             current_time = 0f;
+            isActive = false;
 
             if (timerEnd != null)
             {
-                isActive = false;
                 timerEnd.Invoke();
             }
         }

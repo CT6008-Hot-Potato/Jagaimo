@@ -12,10 +12,15 @@ public class RoundTimer : MonoBehaviour
 
     //Duation is in seconds
     [SerializeField]
-    float duration;
+    float duration = 301;
 
     [SerializeField]
     Text timerText;
+
+    private void Awake()
+    {
+        timerText = GetComponent<Text>();
+    }
 
     private void OnEnable()
     {
@@ -40,6 +45,7 @@ public class RoundTimer : MonoBehaviour
     //Start the timer
     void StartTimer()
     {
+        timerText.enabled = true;
         StartCoroutine(TimerBehaviour());
 
         roundTimer.timerEnd += EndTimer;
