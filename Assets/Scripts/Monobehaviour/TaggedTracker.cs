@@ -22,18 +22,6 @@ public class TaggedTracker : MonoBehaviour, IInteractable
         roundManager = roundManager ?? FindObjectOfType<RoundManager>();
     }
 
-    //Runs when Object is enabled
-    private void OnEnable()
-    {
-        //RoundManager.PlayerTagged += PlayerTaggedCheck;
-    }
-
-    //Runs when Object is disabled
-    private void OnDisable()
-    {
-        //RoundManager.PlayerTagged -= PlayerTaggedCheck;
-    }
-
     //Triggering the tagged function if interact is called on the object
     void IInteractable.Interact() => Hit();
 
@@ -49,6 +37,7 @@ public class TaggedTracker : MonoBehaviour, IInteractable
         roundManager.OnPlayerTagged(this);
 
         //Set the bool and turn off the component so the potato doesnt trigger it
+        //Should change camera etc
         isTagged = true;
         enabled = false;
     }

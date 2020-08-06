@@ -28,7 +28,7 @@ public class BasicTimerBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //This will be called on game start event at some point
+        //This will be called on round start event at some point
         CallOnTimerStart();    
     }
 

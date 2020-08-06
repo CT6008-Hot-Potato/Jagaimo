@@ -8,14 +8,21 @@
 
 using UnityEngine;
 
-//A class to hold the events that happen throughout the round
+//A class to hold the events that happen throughout the round, a round is a full game where everyone is alive to the last player left
 public class RoundManager : MonoBehaviour
 {
     //Defining Delegate
     public delegate void RoundEvent();
     public static event RoundEvent RoundStarted;
     public static event RoundEvent RoundEnded;
-    public static event RoundEvent RoundPauseToggle;
+
+    //A Countdown is the timer before the next player dying
+    public delegate void CountdownEvent();
+    public static event CountdownEvent CountdownStarted;
+    public static event CountdownEvent CountdownEnded;
+
+    //For multiplayer
+    public static event CountdownEvent CountdownPauseToggle;
 
     public TaggedTracker currentTagged  { get; private set; }
     public TaggedTracker previousTagged { get; private set; }
@@ -23,13 +30,13 @@ public class RoundManager : MonoBehaviour
     [SerializeField]
     private TaggedTracker initialTagged;
 
-    private void Start()
+    private void Awake()
     {
-        //CallOnRoundStart();
+        initialTagged = initialTagged ?? FindObjectOfType<TaggedTracker>();
         currentTagged = initialTagged;
     }
 
-    //Calling the OnRoundStart Delegate Event
+    //Calling the RoundStarted Delegate Event
     public void CallOnRoundStart()
     {
         //Null checking the delegate event
@@ -40,7 +47,7 @@ public class RoundManager : MonoBehaviour
         }
     }
 
-    //Calling the OnRoundEnd Delegate Event
+    //Calling the RoundEnded Delegate Event
     public void CallOnRoundEnd()
     {
         //Null checking the delegate event
@@ -50,7 +57,27 @@ public class RoundManager : MonoBehaviour
         }
     }
 
-    //Calling the OnPlayerTagged Delegate Event
+    //Calling the CountdownStarted Delegate Event
+    public void CallOnCountdownStart()
+    {
+        //Null checking the delegate event
+        if (CountdownStarted != null)
+        {
+            CountdownStarted.Invoke();
+        }
+    }
+
+    //Calling the CountdownEnded Delegate Event
+    public void CallOnCountdownEnd()
+    {
+        //Null checking the delegate event
+        if (CountdownEnded != null)
+        {
+            CountdownEnded.Invoke();
+        }
+    }
+
+    //A player has been tagged
     public void OnPlayerTagged(TaggedTracker Tagged)
     {
         //Variable management

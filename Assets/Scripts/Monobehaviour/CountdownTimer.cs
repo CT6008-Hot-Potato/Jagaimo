@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////
 //
-//  Script Name: RoundTimer.cs
+//  Script Name: CountdownTimer.cs
 //  Creator: Charles Carter
 //  Description: The script for the round timer itself
 //  
@@ -9,9 +9,10 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 //Bit different from other basic timers as it needs dev options
-public class RoundTimer : MonoBehaviour
+public class CountdownTimer : MonoBehaviour
 {
     [SerializeField]
     private RoundManager roundManager;
@@ -24,6 +25,8 @@ public class RoundTimer : MonoBehaviour
     [SerializeField]
     private Text timerText;
 
+    public UnityEvent timerEnd;
+
     private void Awake()
     {
         roundManager = roundManager ?? FindObjectOfType<RoundManager>();
@@ -32,22 +35,14 @@ public class RoundTimer : MonoBehaviour
 
     private void OnEnable()
     {
-        RoundManager.RoundStarted   += StartTimer;
-        RoundManager.RoundEnded     += EndTimer;
+        RoundManager.CountdownStarted   += StartTimer;
         //RoundManager.RoundPauseToggle += LockTimer;
     }
 
     private void OnDisable()
     {
-        RoundManager.RoundStarted   -= StartTimer;
-        RoundManager.RoundEnded     -= EndTimer;
+        RoundManager.CountdownStarted -= StartTimer;
         //RoundManager.RoundPauseToggle -= LockTimer;
-
-        //Script could get disabled without ever defining the timer
-        if (roundTimer != null)
-        {
-            roundTimer.timerEnd -= EndTimer;
-        }
     }
 
     //Start the timer
@@ -55,12 +50,10 @@ public class RoundTimer : MonoBehaviour
     {
         timerText.enabled = true;
         StartCoroutine(Co_TimerBehaviour());
-
-        roundTimer.timerEnd += EndTimer;
     }
 
     //End the timer forcefully
-    private void EndTimer()
+    public void TimerEnded()
     {
         Debug.Log("Round Timer Over", this);
     }
@@ -69,7 +62,6 @@ public class RoundTimer : MonoBehaviour
     private IEnumerator Co_TimerBehaviour()
     {
         roundTimer = new Timer(duration);
-        //Debug.Log(roundTimer.isActive);
 
         while (roundTimer.isActive)
         {
@@ -77,6 +69,8 @@ public class RoundTimer : MonoBehaviour
             UpdateTimerUI();
             yield return null;
         }
+
+        timerEnd.Invoke();
     }
 
     //Updates the text UI

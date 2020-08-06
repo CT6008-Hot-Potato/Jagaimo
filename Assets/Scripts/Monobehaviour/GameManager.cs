@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviour
     private int MAX_ROUND_NUMBER;
     private int iCurrentRound;
 
+    private int iPlayerCount;
+
     // Start is called before the first frame update
     void Start()
     {

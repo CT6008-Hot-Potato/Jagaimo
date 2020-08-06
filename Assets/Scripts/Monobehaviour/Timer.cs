@@ -6,8 +6,6 @@
 //  
 /////////////////////////////////////////////////////////////
 
-public delegate void TimerEvent();  // delegate
-
 //A class not attached to unity to handle the timer float
 public class Timer
 {
@@ -18,8 +16,6 @@ public class Timer
     //Needed to tick up or down
     private float max_time;
     public float current_time { get; private set; }
-
-    public event TimerEvent timerEnd;
 
     //Constructor
     public Timer(float duration)
@@ -50,11 +46,6 @@ public class Timer
         {
             current_time = 0f;
             isActive = false;
-
-            if (timerEnd != null)
-            {
-                timerEnd.Invoke();
-            }
         }
     }
 
