@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿/////////////////////////////////////////////////////////////
+//
+//  Script Name: GameManager.cs
+//  Creator: Charles Carter
+//  Description: A manager script for the game as a whole
+//  
+/////////////////////////////////////////////////////////////
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,8 +30,8 @@ public enum eGameState
 public class GameManager : MonoBehaviour
 {
 
-    int MAX_ROUND_NUMBER;
-    int iCurrentRound;
+    private int MAX_ROUND_NUMBER;
+    private int iCurrentRound;
 
     // Start is called before the first frame update
     void Start()

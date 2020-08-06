@@ -1,5 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/////////////////////////////////////////////////////////////
+//
+//  Script Name: TaggedTracker.cs
+//  Creator: Charles Carter
+//  Description: A script for when an untagged player is hit by a potato
+//  
+/////////////////////////////////////////////////////////////
+
 using UnityEngine;
 
 public class TaggedTracker : MonoBehaviour, IInteractable
@@ -11,57 +17,47 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     [SerializeField]
     private RoundManager roundManager;
 
+    private void Awake()
+    {
+        roundManager = roundManager ?? FindObjectOfType<RoundManager>();
+    }
+
     //Runs when Object is enabled
     private void OnEnable()
     {
-        if (!roundManager)
-        {
-            roundManager = FindObjectOfType<RoundManager>();
-        }
-        RoundManager.PlayerTagged += PlayerTaggedCheck;
+        //RoundManager.PlayerTagged += PlayerTaggedCheck;
     }
 
     //Runs when Object is disabled
     private void OnDisable()
     {
-        RoundManager.PlayerTagged -= PlayerTaggedCheck;
+        //RoundManager.PlayerTagged -= PlayerTaggedCheck;
     }
 
     //Triggering the tagged function if interact is called on the object
     void IInteractable.Interact() => Hit();
 
     //Runs when the player is hit by the potato and this component is active
-    void Hit()
+    private void Hit()
     {
-        //This player is already tagged
-        if (isTagged)
-        {
-            return;
-        }
+        //This player is already tagged, shouldnt ever happen since this component should be off when tagged
+        if (isTagged) return;
+        
+        Debug.Log("Non tagged player hit with potato", this);
 
-        Debug.Log("Non tagged player hit with potato");
+        //Telling the round manager that this was tagged
+        roundManager.OnPlayerTagged(this);
 
-        //Call the on playertagged delegate event
-        roundManager.CallOnPlayerTagged(this);
+        //Set the bool and turn off the component so the potato doesnt trigger it
+        isTagged = true;
+        enabled = false;
     }
 
-    //Setting the variable
-    void PlayerTaggedCheck(TaggedTracker taggedPlayer, TaggedTracker untaggedPlayer)
+    //This player isnt tagged anymore
+    public void PlayerUnTagged()
     {
-        //If this instance of the script is the tagged player
-        if (this.Equals(taggedPlayer))
-        {
-            //Set the bool and turn off the component so the potato doesnt trigger it (?)
-            //Change camera etc on player
-            isTagged = true;
-            enabled = false;
-            return;
-        }
-        //If it's the player who was tagged last
-        else if (this.Equals(untaggedPlayer))
-        {
-            isTagged = false;
-            //Change camera etc on player
-        }
+        isTagged = false;
+        Debug.Log("This was untagged", this);
+        //Change camera etc on player
     }
 }

@@ -1,5 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/////////////////////////////////////////////////////////////
+//
+//  Script Name: BasicTimeBehaviour.cs
+//  Creator: Charles Carter
+//  Description: A script for a simple timer
+//  
+/////////////////////////////////////////////////////////////
+
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -8,35 +15,32 @@ public class BasicTimerBehaviour : MonoBehaviour
 {
     [Header("The base timer")]
     [SerializeField]
-    float duration;
+    private float duration;
     Timer timer;
     public UnityEvent TimerBehaviour;
 
     [Header("If there's UI needed")]
     [SerializeField]
-    Text timerText;
+    private Text timerText;
     [SerializeField]
-    bool isDramatic = false;
+    private bool isDramatic = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        //This will be called on events at some point
+        //This will be called on game start event at some point
         CallOnTimerStart();    
     }
 
     //Starting the timer
-    void CallOnTimerStart()
+    private void CallOnTimerStart()
     {
-        if (!timerText)
-        {
-            timerText = GetComponent<Text>();
-        }
-        StartCoroutine(TimerStart());
+        timerText = timerText ?? GetComponent<Text>();
+        StartCoroutine(Co_RunTimer());
     }
 
     //Running the timer
-    IEnumerator TimerStart()
+    private IEnumerator Co_RunTimer()
     {
         timer = new Timer(duration);
         while (timer.isActive)
@@ -55,7 +59,7 @@ public class BasicTimerBehaviour : MonoBehaviour
     }
 
     //Updating the timer text
-    void UpdateUI()
+    private void UpdateUI()
     {
         float seconds = Mathf.FloorToInt(timer.current_time % 60);
         if (seconds > 0)

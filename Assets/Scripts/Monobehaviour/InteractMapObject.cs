@@ -1,7 +1,7 @@
 ﻿/////////////////////////////////////////////////////////////
 //
+//  Script Name: InteractMapObject.cs
 //  Creator: Charles Carter
-//  Last Edit Date:
 //  Description: A script for when the potato hits an interactable map object
 //  
 /////////////////////////////////////////////////////////////
@@ -20,23 +20,11 @@ public class InteractMapObject : MonoBehaviour, IInteractable
     [SerializeField]
     private Animation obj_anim;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void IInteractable.Interact() => Interact();
 
-    void Interact()
+    private void Interact()
     {
-        Debug.Log("Hit Interactable Map Object");
+        Debug.Log("Hit Interactable Map Object", this);
 
         if (obj_anim)
         {

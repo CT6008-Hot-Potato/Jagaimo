@@ -1,7 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/////////////////////////////////////////////////////////////
+//
+//  Script Name: TestWorldBoundsScript.cs
+//  Creator: Charles Carter
+//  Description: A script for when something leaves the map
+//  
+/////////////////////////////////////////////////////////////
+
 using UnityEngine;
 
+//A trigger placed below the test world
 public class TestWorldBoundsScript : MonoBehaviour
 {
     //When something enters the bounds
@@ -9,5 +16,6 @@ public class TestWorldBoundsScript : MonoBehaviour
     {
         //Put it back at the start
         other.transform.position = new Vector3(0, 5, 0);
+        Debug.Log("Something left the map", this);
     }
 }

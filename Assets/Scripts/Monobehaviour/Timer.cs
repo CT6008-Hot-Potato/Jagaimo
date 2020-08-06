@@ -1,4 +1,11 @@
-﻿
+﻿/////////////////////////////////////////////////////////////
+//
+//  Script Name: Timer.cs
+//  Creator: Charles Carter
+//  Description: A base script for the timer functionality
+//  
+/////////////////////////////////////////////////////////////
+
 public delegate void TimerEvent();  // delegate
 
 //A class not attached to unity to handle the timer float
@@ -9,7 +16,7 @@ public class Timer
     public bool isActive;
 
     //Needed to tick up or down
-    float max_time;
+    private float max_time;
     public float current_time { get; private set; }
 
     public event TimerEvent timerEnd;
@@ -36,7 +43,7 @@ public class Timer
     } 
 
     //Function to check if timer ran out
-    void EndCheck()
+    private void EndCheck()
     {
         //Timer is over
         if (current_time <= 0f)

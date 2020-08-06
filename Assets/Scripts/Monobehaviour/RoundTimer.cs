@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿/////////////////////////////////////////////////////////////
+//
+//  Script Name: RoundTimer.cs
+//  Creator: Charles Carter
+//  Description: The script for the round timer itself
+//  
+/////////////////////////////////////////////////////////////
+
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,19 +14,20 @@ using UnityEngine.UI;
 public class RoundTimer : MonoBehaviour
 {
     [SerializeField]
-    RoundManager roundManager;
+    private RoundManager roundManager;
     public Timer roundTimer { get; private set; }
 
     //Duation is in seconds
     [SerializeField]
-    float duration = 301;
+    private float duration = 301;
 
     [SerializeField]
-    Text timerText;
+    private Text timerText;
 
     private void Awake()
     {
-        timerText = GetComponent<Text>();
+        roundManager = roundManager ?? FindObjectOfType<RoundManager>();
+        timerText = timerText ?? GetComponent<Text>();
     }
 
     private void OnEnable()
@@ -42,22 +51,22 @@ public class RoundTimer : MonoBehaviour
     }
 
     //Start the timer
-    void StartTimer()
+    private void StartTimer()
     {
         timerText.enabled = true;
-        StartCoroutine(TimerBehaviour());
+        StartCoroutine(Co_TimerBehaviour());
 
         roundTimer.timerEnd += EndTimer;
     }
 
     //End the timer forcefully
-    void EndTimer()
+    private void EndTimer()
     {
-        Debug.Log("Timer Over");
+        Debug.Log("Round Timer Over", this);
     }
 
     //The timer behaviour (maybe should be refactored into a multiuse script)
-    IEnumerator TimerBehaviour()
+    private IEnumerator Co_TimerBehaviour()
     {
         roundTimer = new Timer(duration);
         //Debug.Log(roundTimer.isActive);
@@ -71,7 +80,7 @@ public class RoundTimer : MonoBehaviour
     }
 
     //Updates the text UI
-    void UpdateTimerUI()
+    private void UpdateTimerUI()
     {
         float minutes = Mathf.FloorToInt(roundTimer.current_time / 60);
         float seconds = Mathf.FloorToInt(roundTimer.current_time % 60);

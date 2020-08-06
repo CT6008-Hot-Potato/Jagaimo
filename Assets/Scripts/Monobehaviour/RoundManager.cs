@@ -1,5 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/////////////////////////////////////////////////////////////
+//
+//  Script Name: RoundManager.cs
+//  Creator: Charles Carter
+//  Description: A manager script for the current round
+//  
+/////////////////////////////////////////////////////////////
+
 using UnityEngine;
 
 //A class to hold the events that happen throughout the round
@@ -14,11 +20,8 @@ public class RoundManager : MonoBehaviour
     public TaggedTracker currentTagged  { get; private set; }
     public TaggedTracker previousTagged { get; private set; }
 
-    public delegate void TaggedEvent(TaggedTracker NewTagged, TaggedTracker previouslyTagged);
-    public static event TaggedEvent PlayerTagged;
-
     [SerializeField]
-    TaggedTracker initialTagged;
+    private TaggedTracker initialTagged;
 
     private void Start()
     {
@@ -32,7 +35,7 @@ public class RoundManager : MonoBehaviour
         //Null checking the delegate event
         if (RoundStarted != null)
         {
-            Debug.Log("Round Started");
+            Debug.Log("Round Started", this);
             RoundStarted.Invoke();
         }
     }
@@ -48,23 +51,17 @@ public class RoundManager : MonoBehaviour
     }
 
     //Calling the OnPlayerTagged Delegate Event
-    public void CallOnPlayerTagged(TaggedTracker Tagged)
+    public void OnPlayerTagged(TaggedTracker Tagged)
     {
-        //Null checking the delegate event
-        if (PlayerTagged != null)
+        //Variable management
+        previousTagged = currentTagged;
+        if (previousTagged && !previousTagged.enabled)
         {
-            //Variable management
-            previousTagged = currentTagged;
-            if (previousTagged && !previousTagged.enabled)
-            {
-                //Old tagged now should track if they're hit
-                previousTagged.enabled = true;
-            }
-
-            currentTagged = Tagged;
-
-            //Sending out the event
-            PlayerTagged.Invoke(Tagged, previousTagged);
+            //Old tagged now should track if they're hit
+            previousTagged.enabled = true;
+            previousTagged.PlayerUnTagged();
         }
+
+        currentTagged = Tagged;
     }
 }
