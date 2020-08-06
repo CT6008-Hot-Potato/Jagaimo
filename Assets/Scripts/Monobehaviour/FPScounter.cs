@@ -1,5 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/////////////////////////////////////////////////////////////
+//
+//  Script Name: FPScounter.cs
+//  Creator: Charles Carter
+//  Description: The script for the frames per second counter in game
+//  
+/////////////////////////////////////////////////////////////
+
+//This script uses these namespaces
 using UnityEngine;
 using UnityEngine.UI;
 

@@ -6,6 +6,7 @@
 //  
 /////////////////////////////////////////////////////////////
 
+//This script uses these namespaces
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -43,6 +44,7 @@ public class BasicTimerBehaviour : MonoBehaviour
     private IEnumerator Co_RunTimer()
     {
         timer = new Timer(duration);
+
         while (timer.isActive)
         {
             timer.Tick(Time.deltaTime);

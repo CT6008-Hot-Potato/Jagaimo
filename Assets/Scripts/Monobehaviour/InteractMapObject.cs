@@ -6,6 +6,7 @@
 //  
 /////////////////////////////////////////////////////////////
 
+//This script uses these namespaces
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

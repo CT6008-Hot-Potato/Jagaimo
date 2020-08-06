@@ -49,6 +49,7 @@ public class Timer
         }
     }
 
+    //If something wants to add/remove time
     public void OverrideCurrentTime(float amountToChangeBy)
     {
         current_time += amountToChangeBy;

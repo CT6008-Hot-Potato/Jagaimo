@@ -6,6 +6,7 @@
 //  
 /////////////////////////////////////////////////////////////
 
+//This script uses these namespaces
 using UnityEngine;
 
 //A class to hold the events that happen throughout the round, a round is a full game where everyone is alive to the last player left
@@ -24,9 +25,11 @@ public class RoundManager : MonoBehaviour
     //For multiplayer
     public static event CountdownEvent CountdownPauseToggle;
 
+    //The only trackers needed for mechanics in an overall round
     public TaggedTracker currentTagged  { get; private set; }
     public TaggedTracker previousTagged { get; private set; }
 
+    //The person who starts as tagged each countdown
     [SerializeField]
     private TaggedTracker initialTagged;
 

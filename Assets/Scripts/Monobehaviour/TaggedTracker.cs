@@ -6,6 +6,7 @@
 //  
 /////////////////////////////////////////////////////////////
 
+//This script uses these namespaces
 using UnityEngine;
 
 public class TaggedTracker : MonoBehaviour, IInteractable

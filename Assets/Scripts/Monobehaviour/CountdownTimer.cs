@@ -6,6 +6,7 @@
 //  
 /////////////////////////////////////////////////////////////
 
+//This script uses these namespaces
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -101,7 +102,7 @@ public class CountdownTimer : MonoBehaviour
         roundTimer.OverrideCurrentTime(change);
     }
 
-    //Note: The timer wont work when run out
+    //Reset really just starts a new timer
     public void ResetTimer()
     {
         StartTimer();

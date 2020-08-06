@@ -6,6 +6,7 @@
 //  
 /////////////////////////////////////////////////////////////
 
+//This script uses these namespaces
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,6 @@ using UnityEngine;
 //The never changes itself, only triggers other things
 public class Potato : MonoBehaviour
 {
-
     //The Potato actives a trigger
     private void OnTriggerEnter(Collider other)
     {
