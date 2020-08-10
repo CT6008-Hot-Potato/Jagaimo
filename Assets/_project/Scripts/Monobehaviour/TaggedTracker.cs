@@ -12,15 +12,16 @@ using UnityEngine;
 public class TaggedTracker : MonoBehaviour, IInteractable
 {
     //The main bool for the tracker
-    [SerializeField]
-    private bool isTagged;
+    public bool isTagged { get; private set; }
 
     [SerializeField]
     private RoundManager roundManager;
+    private PlayerManager playerManager;
 
     private void Awake()
     {
         roundManager = roundManager ?? FindObjectOfType<RoundManager>();
+        playerManager = GetComponent<PlayerManager>();
     }
 
     //Triggering the tagged function if interact is called on the object
@@ -39,8 +40,7 @@ public class TaggedTracker : MonoBehaviour, IInteractable
 
         //Set the bool and turn off the component so the potato doesnt trigger it
         //Should change camera etc
-        isTagged = true;
-        enabled = false;
+        PlayerTagged();
     }
 
     //This player isnt tagged anymore
@@ -48,6 +48,12 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     {
         isTagged = false;
         Debug.Log("This was untagged", this);
-        //Change camera etc on player
+    }
+
+    //This player was just tagged
+    public void PlayerTagged()
+    {
+        isTagged = true;
+        enabled = false;
     }
 }
