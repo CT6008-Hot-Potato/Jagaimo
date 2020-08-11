@@ -37,13 +37,13 @@ public class CountdownTimer : MonoBehaviour
     private void OnEnable()
     {
         RoundManager.CountdownStarted   += StartTimer;
-        //RoundManager.RoundPauseToggle += LockTimer;
+        RoundManager.CountdownEnded += TimerEndedDebug;
     }
 
     private void OnDisable()
     {
         RoundManager.CountdownStarted -= StartTimer;
-        //RoundManager.RoundPauseToggle -= LockTimer;
+        RoundManager.CountdownEnded -= TimerEndedDebug;
     }
 
     //Start the timer
@@ -54,8 +54,9 @@ public class CountdownTimer : MonoBehaviour
     }
 
     //End the timer forcefully
-    public void TimerEnded()
+    public void TimerEndedDebug()
     {
+
         Debug.Log("Round Timer Over", this);
     }
 

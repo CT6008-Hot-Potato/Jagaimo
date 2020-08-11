@@ -2125,7 +2125,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bce7e5e4b3483ee46b8c4800bfd73e36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTagged: 0
   roundManager: {fileID: 683221330}
 --- !u!65 &590768681
 BoxCollider:
@@ -2883,6 +2882,7 @@ GameObject:
   - component: {fileID: 732922360}
   - component: {fileID: 732922359}
   - component: {fileID: 732922358}
+  - component: {fileID: 732922362}
   m_Layer: 5
   m_Name: PlayerUICanvas
   m_TagString: Untagged
@@ -2972,6 +2972,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &732922362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 732922357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd985a3cc87b9c04582afb80523bf2a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startCountdown: {fileID: 1522013858}
 --- !u!1 &837336116
 GameObject:
   m_ObjectHideFlags: 0
@@ -5637,7 +5650,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1522013854}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
@@ -7436,6 +7449,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3036951078483901510, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: _roundManager
+      value: 
+      objectReference: {fileID: 683221330}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db12d72d4c1eac343a0018cb017cf701, type: 3}
 --- !u!1001 &422177396312407025

@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+//A timer behaviour script seperate from the countdown
 public class BasicTimerBehaviour : MonoBehaviour
 {
     [Header("The base timer")]
@@ -26,17 +27,14 @@ public class BasicTimerBehaviour : MonoBehaviour
     [SerializeField]
     private bool isDramatic = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //This will be called on round start event at some point
-        CallOnTimerStart();    
-    }
-
     //Starting the timer
-    private void CallOnTimerStart()
+    public void CallOnTimerStart()
     {
         timerText = timerText ?? GetComponent<Text>();
+        if (!timerText.enabled)
+        {
+            timerText.enabled = true;
+        }
         StartCoroutine(Co_RunTimer());
     }
 
