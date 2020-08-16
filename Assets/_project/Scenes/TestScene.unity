@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 898174240}
-  m_IndirectSpecularColor: {r: 0.17276813, g: 0.21589187, b: 0.29782563, a: 1}
+  m_IndirectSpecularColor: {r: 0.17276844, g: 0.21589246, b: 0.2978263, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7444,10 +7444,45 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 25329864749002331, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: mouseInversion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 25329864749002331, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: minDist
+      value: 10.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 25329864749002331, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: maxZoomDist
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 25329864749002331, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: smooth
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 25329864749002331, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: speedZoom
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 25329864749002333, guid: db12d72d4c1eac343a0018cb017cf701,
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 25329865591700435, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 25329865591700438, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3036951078483901510, guid: db12d72d4c1eac343a0018cb017cf701,
         type: 3}
