@@ -56,8 +56,10 @@ public class CountdownTimer : MonoBehaviour
     //End the timer forcefully
     public void TimerEndedDebug()
     {
-
-        Debug.Log("Round Timer Over", this);
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Round Timer Over", this);
+        }
     }
 
     //The timer behaviour (maybe should be refactored into a multiuse script)

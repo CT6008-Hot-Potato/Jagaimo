@@ -17,6 +17,9 @@ public class TestWorldBoundsScript : MonoBehaviour
     {
         //Put it back at the start
         other.transform.position = new Vector3(0, 5, 0);
-        Debug.Log("Something left the map", this);
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Something left the map", this);
+        }
     }
 }

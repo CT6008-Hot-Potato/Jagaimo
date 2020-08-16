@@ -11,25 +11,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum eGameMode
-{
-    NONE       =    0b00,
-    QUICK_FFA  =    0b00000001,
-    MEDIUM_FFA =    0b00000010,
-    LONG_FFA   =    0b00000100,
-
-    COUNT
-}
-
+//An enum to hold the current state of the overall game loop
 public enum eGameState
 {
     MainMenu,
     Local_CoOp,
     Pause,
+
+    COUNT
 }
 
 public class GameManager : MonoBehaviour
 {
+    private eGameState _currentState;
+    public IGamemode _chosenGamemode { get; private set; }
 
     private int MAX_ROUND_NUMBER;
     private int iCurrentRound;
@@ -37,9 +32,9 @@ public class GameManager : MonoBehaviour
     private int iPlayerCount;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        _currentState = eGameState.MainMenu;
     }
 
     // Update is called once per frame

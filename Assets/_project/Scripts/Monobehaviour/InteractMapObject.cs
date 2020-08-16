@@ -25,7 +25,10 @@ public class InteractMapObject : MonoBehaviour, IInteractable
 
     private void Interact()
     {
-        Debug.Log("Hit Interactable Map Object", this);
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Hit Interactable Map Object", this);
+        }
 
         if (obj_anim)
         {

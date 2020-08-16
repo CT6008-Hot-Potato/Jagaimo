@@ -32,8 +32,11 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     {
         //This player is already tagged, shouldnt ever happen since this component should be off when tagged
         if (isTagged) return;
-        
-        Debug.Log("Non tagged player hit with potato", this);
+
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Non tagged player hit with potato", this);
+        }
 
         //Telling the round manager that this was tagged
         roundManager.OnPlayerTagged(this);
@@ -47,7 +50,11 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     public void PlayerUnTagged()
     {
         isTagged = false;
-        Debug.Log("This was untagged", this);
+
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("This was untagged", this);
+        }
     }
 
     //This player was just tagged

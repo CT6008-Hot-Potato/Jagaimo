@@ -12,12 +12,15 @@ using UnityEngine;
 //A class to hold the events that happen throughout the round, a round is a full game where everyone is alive to the last player left
 public class RoundManager : MonoBehaviour
 {
+    [SerializeField]
+    IGamemode _currentGamemode;
+
     //Defining Delegate
     public delegate void RoundEvent();
     public static event RoundEvent RoundStarted;
     public static event RoundEvent RoundEnded;
 
-    //A Countdown is the timer before the next player dying
+    //A Countdown is the timer before gamemode's effect
     public delegate void CountdownEvent();
     public static event CountdownEvent CountdownStarted;
     public static event CountdownEvent CountdownEnded;
@@ -45,7 +48,10 @@ public class RoundManager : MonoBehaviour
         //Null checking the delegate event
         if (RoundStarted != null)
         {
-            Debug.Log("Round Started", this);
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log("Round Started", this);
+            }
             RoundStarted.Invoke();
         }
     }
