@@ -4,9 +4,8 @@
 ///This class is responsible for controlling the correct movement and parenting of rigidbody objects picked up by players.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//This script is using the following:
+//This class is using:
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveObject : MonoBehaviour
@@ -16,6 +15,8 @@ public class MoveObject : MonoBehaviour
     private GameObject movingObject;
     [SerializeField]
     private GameObject movingParent;
+    [SerializeField]
+    private GameObject mainCamera;
     private RaycastHit hit;
     private Ray ray;
     [SerializeField]
@@ -24,46 +25,46 @@ public class MoveObject : MonoBehaviour
     private Transform furthestPosition;
     [SerializeField]
     private Transform position;
-    private float throwStrength;
+    [SerializeField]
+    private float throwStrength = 15;
+    [SerializeField]
+    private float grabDistance = 5;
+    private Rigidbody rbObject;
+    private Rigidbody rbParent;
+
     #endregion Variables
     //Start method setting up and assigning values
     void Start()
     {
-        if (throwStrength == 0)
-        {
-            throwStrength = 15;
-        }
         position.position = movingParent.transform.position;
         if (!movingObject || !movingObject.GetComponent<Rigidbody>())
         {
             return;
         }
+        rbObject = movingObject.GetComponent<Rigidbody>();
         //Set the component Rigidbody's useGravity to true in the modelItem.
-        movingObject.GetComponent<Rigidbody>().useGravity = true;
-
+        rbObject.useGravity = true;
     }
 
-    //OnMouseDown method.
+    //Function to return a ray from camera
+    public Ray getRay()
+    {
+        return ray;
+    }
+
+    //Update method checking for clicks to throw,drop or grab rigidbody objects to move and also move closer or further/
     void Update()
     {
+
         //If the player has interacted
         if (Input.GetMouseButtonDown(0) || Input.GetAxis("LeftClick") > 0.1)
         {
-            //Quickly enable the main camera regardless of if third or first person to do raycast
-            if (GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().enabled)
-            {
-                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            }
-            else
-            {
-                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().enabled = true;
-                GameObject.FindGameObjectWithTag("ThirdPersonCamera").GetComponent<Camera>().enabled = false;
-                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                GameObject.FindGameObjectWithTag("ThirdPersonCamera").GetComponent<Camera>().enabled = true;
-                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().enabled = false;
-            }
+            //Try get cameras and then quickly enable the main camera regardless of if third or first person to do raycast
+            ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
+
+
             //Do a raycast and check if the object needs to be dropped or picked up
-            if (Physics.Raycast(ray, out hit, 5))
+            if (Physics.Raycast(ray, out hit, grabDistance))
             {
                 if (movingObject != null)
                 {
@@ -72,21 +73,28 @@ public class MoveObject : MonoBehaviour
                 else if (hit.rigidbody != null)
                 {
                     movingObject = hit.transform.gameObject;
-                    movingObject.GetComponent<Rigidbody>().useGravity = false;
-                    movingObject.GetComponent<Rigidbody>().isKinematic = true;
+                    //Here we are simply assigning the rbObject the rb component on moving object then setting it's gravity to false and kinematic to true, this is done so this object doesn't drag around.
+                    rbObject = movingObject.GetComponent<Rigidbody>();
+                    rbObject.useGravity = false;
+                    rbObject.isKinematic = true;
+                    //Here movingObject position, rotation and parent are assigned to that of moving parent, this is done to keep the moving object positioned where moving parent is and parented to it too.
                     movingObject.transform.position = movingParent.transform.position;
                     movingObject.transform.rotation = movingParent.transform.rotation;
                     movingObject.transform.parent = movingParent.transform;
+                    //The collider component on movingObject is assigned the collider type of that of the movingParent and it's collision is then adjusted to the correct type accordingly. 
                     SetComponent(movingObject.GetComponent<Collider>(), movingParent);
                     AdjustCollision();
+                    //Set the smaller trigger component to true
                     movingParent.GetComponent<Collider>().isTrigger = true;
                     SetComponent(movingObject.GetComponent<Collider>(), movingParent);
                     movingObject.GetComponent<Collider>().enabled = false;
-                    movingParent.AddComponent<Rigidbody>();
-                    movingParent.GetComponent<Rigidbody>().freezeRotation = true;
-                    movingParent.GetComponent<Rigidbody>().isKinematic = false;
-                    movingParent.GetComponent<Rigidbody>().useGravity = true;          
-                    movingParent.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
+                    //Assign the parent rigidbody to the moving parent rigidbody and setting aspects of it true and false
+                    rbParent = movingParent.AddComponent<Rigidbody>();
+                    rbParent.freezeRotation = true;
+                    rbParent.isKinematic = false;
+                    rbParent.useGravity = true;
+                    //RbParent rigidbody collision is set to ContinuousDynamic as this is the best collision for this fast moving object, also below the carry collision class/component is added to moving parent.
+                    rbParent.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                     movingParent.AddComponent<CarryCollision>();
                 }
             }
@@ -95,6 +103,8 @@ public class MoveObject : MonoBehaviour
         //Throw the object when right click or right trigger pressed
         else if (Input.GetMouseButtonDown(1) || Input.GetAxis("RightClick") > 0.1)
         {
+            ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
+
             if (movingObject != null)
             {
                 Drop(true);
@@ -120,20 +130,28 @@ public class MoveObject : MonoBehaviour
     //This function will set the paramaters of the collision for a carried object based upon what type of colliders it is
     private void AdjustCollision()
     {
-        //Set collision parameters if box collider
-        if (movingParent.GetComponent<Collider>().GetType() == typeof(BoxCollider))
+        if (movingParent.TryGetComponent(out Collider cD))
         {
-            movingParent.GetComponent<BoxCollider>().size = new Vector3(movingParent.GetComponent<BoxCollider>().size.x * 0.5f, movingParent.GetComponent<BoxCollider>().size.y * 0.5f, movingParent.GetComponent<BoxCollider>().size.z * 0.5f);
-        }
-        //Set collision parameters if sphere collider
-        else if (movingParent.GetComponent<Collider>().GetType() == typeof(SphereCollider))
-        {
-            movingParent.GetComponent<SphereCollider>().radius = movingParent.GetComponent<SphereCollider>().radius * 0.5f;
-        }
-        //Debug if other type of collider
-        else
-        {
-            Debug.Log("Other collider type");
+            //Set collision parameters if box collider
+            if (cD.GetType() == typeof(BoxCollider))
+            {
+                cD.GetComponent<BoxCollider>().size = new Vector3(cD.GetComponent<BoxCollider>().size.x * 0.5f, cD.GetComponent<BoxCollider>().size.y * 0.5f, cD.GetComponent<BoxCollider>().size.z * 0.5f);
+            }
+            //Set collision parameters if sphere collider
+            else if (cD.GetType() == typeof(SphereCollider))
+            {
+                cD.GetComponent<SphereCollider>().radius = cD.GetComponent<SphereCollider>().radius * 0.5f;
+            }
+            else if (cD.GetType() == typeof(CapsuleCollider))
+            {
+                cD.GetComponent<CapsuleCollider>().height = cD.GetComponent<CapsuleCollider>().height * 0.5f;
+                cD.GetComponent<CapsuleCollider>().radius = cD.GetComponent<CapsuleCollider>().radius * 0.5f;
+            }
+            //Debug if other type of collider
+            else
+            {
+                Debug.Log("Other collider type");
+            }
         }
     }
 
@@ -179,6 +197,8 @@ public class MoveObject : MonoBehaviour
         position.position = closestPosition.position;
     }
 
+
+
     //Function assigned component given as paramater to the gameobject given as parameter along with ensuring it
     public Component SetComponent(Component originalComponent, GameObject gameobjectToSet)
     {
@@ -193,3 +213,4 @@ public class MoveObject : MonoBehaviour
         return copy;
     }
 }
+

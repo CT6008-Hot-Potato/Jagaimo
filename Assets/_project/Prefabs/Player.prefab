@@ -306,9 +306,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movingParent: {fileID: 25329865803530990}
+  mainCamera: {fileID: 25329865591700438}
   closestPosition: {fileID: 25329864056691347}
   furthestPosition: {fileID: 25329864638583474}
   position: {fileID: 25329864197498895}
+  throwStrength: 15
+  grabDistance: 5
 --- !u!114 &25329864749002325
 MonoBehaviour:
   m_ObjectHideFlags: 0
