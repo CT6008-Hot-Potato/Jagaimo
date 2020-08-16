@@ -23,6 +23,7 @@ public enum eGameState
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField]
     private eGameState _currentState;
     public IGamemode _chosenGamemode { get; private set; }
 

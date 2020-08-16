@@ -14,5 +14,10 @@ using UnityEngine;
 public interface IGamemode
 {
     //The contracted functions and variables that every gamemode will have
+    void RoundStarting();
+    void RoundEnding();
+    void CountdownStarting();
+    void CountdownEnding();
+    void PlayerTagged();
     bool WinCondition();
 }

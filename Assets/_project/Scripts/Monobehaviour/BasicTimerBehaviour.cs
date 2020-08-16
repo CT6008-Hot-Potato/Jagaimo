@@ -17,7 +17,7 @@ public class BasicTimerBehaviour : MonoBehaviour
 {
     [Header("The base timer")]
     [SerializeField]
-    private float duration;
+    private float duration = 1f;
     Timer timer;
     public UnityEvent TimerBehaviour;
 

@@ -7,11 +7,13 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
+using System;
 using UnityEngine;
 
 //A class to hold the events that happen throughout the round, a round is a full game where everyone is alive to the last player left
 public class RoundManager : MonoBehaviour
 {
+    //The current gamemode
     [SerializeField]
     IGamemode _currentGamemode;
 
@@ -26,7 +28,7 @@ public class RoundManager : MonoBehaviour
     public static event CountdownEvent CountdownEnded;
 
     //For multiplayer
-    public static event CountdownEvent CountdownPauseToggle;
+    //public static event CountdownEvent CountdownPauseToggle;
 
     //The only trackers needed for mechanics in an overall round
     public TaggedTracker currentTagged  { get; private set; }
@@ -38,6 +40,17 @@ public class RoundManager : MonoBehaviour
 
     private void Awake()
     {
+        //Adding the default gamemode if it doesnt have one
+        _currentGamemode = _currentGamemode ?? gameObject.AddComponent<DefaultGamemode>();
+
+        //If there is a gamemode already on the object or is current gamemode is set but not on the object 
+        if (!TryGetComponent<IGamemode>(out var gamemode))
+        {
+            _currentGamemode = gamemode;
+            Type type = gamemode.GetType();
+            gameObject.AddComponent(type);
+        }
+
         initialTagged = initialTagged ?? FindObjectOfType<TaggedTracker>();
         currentTagged = initialTagged;
     }

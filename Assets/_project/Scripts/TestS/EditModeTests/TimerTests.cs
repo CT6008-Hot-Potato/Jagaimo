@@ -36,5 +36,23 @@ namespace Tests
             Assert.AreEqual(timer.current_time, 0.0f);
             Assert.AreEqual(timer.isActive, false);
         }
+
+        [UnityTest]
+        public IEnumerator TimerBehaviour()
+        {
+            //Assign
+            var timer = new Timer(1.0f);
+
+            //Act
+            while (timer.isActive)
+            {          
+                timer.Tick(UnityEngine.Time.deltaTime);
+                yield return null;
+            }
+
+            //Assert
+            Assert.AreEqual(timer.current_time, 0.0f);
+            Assert.AreEqual(timer.isActive, false);
+        }
     }
 }
