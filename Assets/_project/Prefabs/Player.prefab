@@ -265,7 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81daa6c644f3b784d8376c0c90451a51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _roundManager: {fileID: 0}
+  eliminatedMat: {fileID: 2100000, guid: 8aa9c9596a408c1449948ec4667597ab, type: 2}
 --- !u!114 &25329864749002331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,21 +278,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ac762714a3d01e429363068213d444e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thirdPersonView: 0
+  minDist: 1
+  maxDist: 4
+  maxZoomDist: 15
+  smooth: 10
+  speedZoom: 10
+  dollyDir: {x: 0, y: 0, z: 0}
+  dollyDirAdjusted: {x: 0, y: 0, z: 0}
+  distance: 0
   mouseSensitivity: 5
-  mouseInvertXAxis: 0
-  mouseInvertYAxis: 1
+  velocityClamp: 10
+  jumpVelocity: 50
+  speedMultiplier: 0.5
+  walkSpeed: 5
+  runSpeed: 7
+  crouchSpeed: 1.5
+  clampDegree: 70
   firstPersonCamera: {fileID: 25329865591700435}
   thirdPersonCamera: {fileID: 25329865651095598}
-  otherCamPosition: {fileID: 0}
-  firstPersonCamPosition: {x: 0, y: 0, z: 0}
-  shouldOverrideCam: 0
-  otherCamSpeed: 10
   zoomOutPosition: {fileID: 25329865470517264}
   zoomInPosition: {fileID: 25329864222649916}
   zoomPosition: {fileID: 25329865615126443}
+  firstPersonCamPosition: {x: 0, y: 0, z: 0}
+  otherCamSpeed: 10
   rotationPosition: {fileID: 25329865953400561}
-  pM: 0
+  mouseInversion: 0
+  cameraState: 0
+  previousCameraState: 0
 --- !u!114 &25329864749002328
 MonoBehaviour:
   m_ObjectHideFlags: 0

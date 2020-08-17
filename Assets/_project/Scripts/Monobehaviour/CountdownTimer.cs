@@ -26,8 +26,6 @@ public class CountdownTimer : MonoBehaviour
     [SerializeField]
     private Text timerText;
 
-    public UnityEvent timerEnd;
-
     private void Awake()
     {
         roundManager = roundManager ?? FindObjectOfType<RoundManager>();
@@ -74,7 +72,7 @@ public class CountdownTimer : MonoBehaviour
             yield return null;
         }
 
-        timerEnd.Invoke();
+        roundManager.CallOnCountdownEnd();
     }
 
     //Updates the text UI

@@ -51,8 +51,13 @@ public class RoundManager : MonoBehaviour
             gameObject.AddComponent(type);
         }
 
+        //This will be done on round start and use non spectator characters in actual version
+        _currentGamemode.SetActivePlayers(FindObjectsOfType<CharacterManager>());
+
+        //This will be delegated to the gamemode at some point
         initialTagged = initialTagged ?? FindObjectOfType<TaggedTracker>();
         currentTagged = initialTagged;
+        currentTagged.PlayerTagged();
     }
 
     //Calling the RoundStarted Delegate Event
@@ -66,6 +71,7 @@ public class RoundManager : MonoBehaviour
                 Debug.Log("Round Started", this);
             }
             RoundStarted.Invoke();
+            _currentGamemode.RoundStarted();
         }
     }
 
@@ -76,6 +82,7 @@ public class RoundManager : MonoBehaviour
         if (RoundEnded != null)
         {
             RoundEnded.Invoke();
+            _currentGamemode.RoundEnded();
         }
     }
 
@@ -86,6 +93,7 @@ public class RoundManager : MonoBehaviour
         if (CountdownStarted != null)
         {
             CountdownStarted.Invoke();
+            _currentGamemode.CountdownStarted();
         }
     }
 
@@ -96,6 +104,7 @@ public class RoundManager : MonoBehaviour
         if (CountdownEnded != null)
         {
             CountdownEnded.Invoke();
+            _currentGamemode.CountdownEnded();
         }
     }
 
@@ -112,5 +121,8 @@ public class RoundManager : MonoBehaviour
         }
 
         currentTagged = Tagged;
+
+        currentTagged.PlayerTagged();
+        _currentGamemode.PlayerTagged();
     }
 }

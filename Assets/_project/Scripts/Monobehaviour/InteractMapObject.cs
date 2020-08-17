@@ -22,7 +22,6 @@ public class InteractMapObject : MonoBehaviour, IInteractable
     private Animation obj_anim;
 
     void IInteractable.Interact() => Interact();
-
     private void Interact()
     {
         if (Debug.isDebugBuild)

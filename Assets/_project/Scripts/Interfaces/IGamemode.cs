@@ -6,18 +6,19 @@
 //  
 /////////////////////////////////////////////////////////////
 
-//This script uses these namespaces
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public interface IGamemode
 {
     //The contracted functions and variables that every gamemode will have
-    void RoundStarting();
-    void RoundEnding();
-    void CountdownStarting();
-    void CountdownEnding();
+    //Controlling active players
+    void SetActivePlayers(CharacterManager[] charactersInGame);
+    void RemoveActivePlayer(CharacterManager charToRemove);
+    void AddActivePlayer(CharacterManager charToAdd);
+
+    //Controlling events in the game
+    void RoundStarted();
+    void RoundEnded();
+    void CountdownStarted();
+    void CountdownEnded();
     void PlayerTagged();
     bool WinCondition();
 }

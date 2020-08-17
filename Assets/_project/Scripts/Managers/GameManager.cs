@@ -15,7 +15,11 @@ using UnityEngine;
 public enum eGameState
 {
     MainMenu,
+    Loading,
+    SinglePlayer,
     Local_CoOp,
+    MultiplayerLobby,
+    MultiplayerGame,
     Pause,
 
     COUNT
@@ -38,9 +42,8 @@ public class GameManager : MonoBehaviour
         _currentState = eGameState.MainMenu;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SceneChanged(eGameState newState)
     {
-        
+        _currentState = newState;
     }
 }

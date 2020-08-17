@@ -1,8 +1,8 @@
 ﻿/////////////////////////////////////////////////////////////
 //
-//  Script Name: PlayerManager.cs
+//  Script Name: CharacterManager.cs
 //  Creator: Charles Carter
-//  Description: A manager script for the player
+//  Description: A manager script for the characters in the scene player or otherwise
 //  
 /////////////////////////////////////////////////////////////
 
@@ -10,37 +10,74 @@
 using UnityEngine;
 
 //The class needs these other components on the object
-[RequireComponent(typeof(TaggedTracker), typeof(PlayerController))]
-public class PlayerManager : MonoBehaviour
-{
-    [SerializeField]
-    private RoundManager _roundManager;
+[RequireComponent(typeof(TaggedTracker))]
+public class CharacterManager : MonoBehaviour
+{  
     private TaggedTracker _tracker;
     private PlayerController _movement;
+    private Renderer _rend;
+
+    //Just for testing
+    [SerializeField]
+    private Material eliminatedMat;
+
+    public bool isActive { get; private set; }
+    public bool isPlayer { get; private set; }
 
     private void Awake()
     {
-        _roundManager = _roundManager ?? FindObjectOfType<RoundManager>();
         _tracker = GetComponent<TaggedTracker>();
         _movement = GetComponent<PlayerController>();
+        _rend = GetComponent<Renderer>();
+    }
+
+    private void Start()
+    {
+        //This can be done better
+        if (_movement)
+        {
+            isPlayer = true;
+        }
+        else
+        {
+            isPlayer = false;
+        }
     }
 
     private void OnEnable()
     {
-        RoundManager.CountdownEnded += isEliminated;
+
     }
 
     private void OnDisable()
     {
-        RoundManager.CountdownEnded -= isEliminated;
+
     }
 
-    private void isEliminated()
+    //Some Gamemodes will have elimination, some wont
+    public void CheckIfEliminated()
     {
-        //If the tracker is enabled they arent tagged
-        if (_tracker.enabled) return;
+        //If they arent tagged then do nothing
+        if (!_tracker.isTagged) return;
 
         //The player should do whatever the gamemode wants them to (base gamemode will want them to explode)
+        if (eliminatedMat != null)
+        {
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log("Eliminated player shown", this);
+            }
+
+            _rend.material = eliminatedMat;
+        }
+        else
+        {
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log("Set an eliminated material in the renderer", this);
+            }
+        }
+
         //Play VFX + Sound
         //Turn all non-important scripts off (ones that allow the player to interact especially)
         //Make them in spectator camera

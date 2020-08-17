@@ -16,12 +16,12 @@ public class TaggedTracker : MonoBehaviour, IInteractable
 
     [SerializeField]
     private RoundManager roundManager;
-    private PlayerManager playerManager;
+    private CharacterManager playerManager;
 
     private void Awake()
     {
         roundManager = roundManager ?? FindObjectOfType<RoundManager>();
-        playerManager = GetComponent<PlayerManager>();
+        playerManager = GetComponent<CharacterManager>();
     }
 
     //Triggering the tagged function if interact is called on the object
