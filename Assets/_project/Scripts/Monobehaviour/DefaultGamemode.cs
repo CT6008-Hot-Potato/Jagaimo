@@ -90,7 +90,11 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         //Exploding the tagged player and removing from active players
         foreach (CharacterManager cManager in currentActivePlayers)
         {
-            cManager.CheckIfEliminated();
+            if (cManager.CheckIfEliminated())
+            {
+                RemoveActivePlayer(cManager);
+                break;
+            }
         }
 
         //Each countdown in this gamemode could be the end of this game

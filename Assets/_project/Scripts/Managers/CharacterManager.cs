@@ -55,10 +55,10 @@ public class CharacterManager : MonoBehaviour
     }
 
     //Some Gamemodes will have elimination, some wont
-    public void CheckIfEliminated()
+    public CharacterManager CheckIfEliminated()
     {
         //If they arent tagged then do nothing
-        if (!_tracker.isTagged) return;
+        if (!_tracker.isTagged) return null;
 
         //The player should do whatever the gamemode wants them to (base gamemode will want them to explode)
         if (eliminatedMat != null)
@@ -81,6 +81,8 @@ public class CharacterManager : MonoBehaviour
         //Play VFX + Sound
         //Turn all non-important scripts off (ones that allow the player to interact especially)
         //Make them in spectator camera
+
+        return this;
     }
 
     //Function to have the player locked in a position (so they cant move or rotate the camera)
