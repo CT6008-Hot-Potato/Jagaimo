@@ -411,35 +411,38 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        if (cameraState == cS.THIRDPERSON || cameraState == cS.FREECAM)
+        {
+            //If an obstacle is found then zoom in
+            if (Physics.Linecast(firstPersonCamera.transform.position, thirdPersonCamera.transform.position, out hit) && hit.collider.tag != "Player" && !hit.collider.isTrigger)
+            {
+                zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, 90 * Time.deltaTime);
+                if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < 0.2f)
+                {
+                    cameraState = cS.FIRSTPERSON;
+                }
+            }        
+        }
+    }
+
     //This function managed zooming and mesh clipping avoidance for the third person camera if it is 
     void DoOnEitherThirdPersonMode()
     {
-        //If an obstacle is found then zoom in
-        if (Physics.Linecast(firstPersonCamera.transform.position, thirdPersonCamera.transform.position, out hit) && hit.collider.tag != "Player" && !hit.collider.isTrigger)
+        //Zoom in
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f || Input.GetAxis("Zoom") > 0f)
         {
-            zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, 90 * Time.deltaTime);
+            zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, 200 * Time.deltaTime);
             if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < 0.2f)
             {
                 cameraState = cS.FIRSTPERSON;
             }
         }
-        else
+        //Zoom out
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0f || Input.GetAxis("Zoom") < 0f)
         {
-            //Zoom in
-            if (Input.GetAxis("Mouse ScrollWheel") > 0f || Input.GetAxis("Zoom") > 0f)
-            {
-                zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, 200 * Time.deltaTime);
-                if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < 0.2f)
-                {
-                    cameraState = cS.FIRSTPERSON;
-                }
-            }
-            //Zoom out
-            else if (Input.GetAxis("Mouse ScrollWheel") < 0f || Input.GetAxis("Zoom") < 0f)
-            {
-                zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomOutPosition.position, 200 * Time.deltaTime);
-            }
-
+            zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomOutPosition.position, 200 * Time.deltaTime);
         }
         //Added this so that it smooth lerps to a new zoom posiiton rather than imitadly set cam pos. this also fixes a cam issue when interacting 
         thirdPersonCamera.transform.position = Vector3.Lerp(thirdPersonCamera.transform.position, zoomPosition.position, otherCamSpeed * Time.deltaTime);
