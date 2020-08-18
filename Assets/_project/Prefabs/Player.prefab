@@ -132,7 +132,6 @@ GameObject:
   - component: {fileID: 25329864749002334}
   - component: {fileID: 25329864749002335}
   - component: {fileID: 25329864749002332}
-  - component: {fileID: 25329864749002324}
   - component: {fileID: 25329864749002330}
   - component: {fileID: 3036951078483901510}
   - component: {fileID: 25329864749002331}
@@ -224,19 +223,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &25329864749002324
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 25329864749002333}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.01, y: 2.01, z: 1.01}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &25329864749002330
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -283,9 +269,6 @@ MonoBehaviour:
   maxZoomDist: 15
   smooth: 10
   speedZoom: 10
-  dollyDir: {x: 0, y: 0, z: 0}
-  dollyDirAdjusted: {x: 0, y: 0, z: 0}
-  distance: 0
   mouseSensitivity: 5
   velocityClamp: 10
   jumpVelocity: 50
@@ -304,7 +287,6 @@ MonoBehaviour:
   rotationPosition: {fileID: 25329865953400561}
   mouseInversion: 0
   cameraState: 0
-  previousCameraState: 0
 --- !u!114 &25329864749002328
 MonoBehaviour:
   m_ObjectHideFlags: 0
