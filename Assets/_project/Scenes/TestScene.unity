@@ -3045,6 +3045,8 @@ MonoBehaviour:
   runSpeed: 7
   crouchSpeed: 1.5
   clampDegree: 70
+  cameraPushSpeed: 90
+  cameraZoomSpeed: 0
   firstPersonCamera: {fileID: 0}
   thirdPersonCamera: {fileID: 0}
   zoomOutPosition: {fileID: 0}
@@ -12702,7 +12704,7 @@ PrefabInstance:
     - target: {fileID: 25329864222649916, guid: db12d72d4c1eac343a0018cb017cf701,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.050000012
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 25329864749002324, guid: db12d72d4c1eac343a0018cb017cf701,
         type: 3}
@@ -12807,7 +12809,12 @@ PrefabInstance:
     - target: {fileID: 25329864749002331, guid: db12d72d4c1eac343a0018cb017cf701,
         type: 3}
       propertyPath: crouchSpeed
-      value: 5
+      value: 7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 25329864749002331, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: cameraZoomSpeed
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 25329864749002333, guid: db12d72d4c1eac343a0018cb017cf701,
         type: 3}
@@ -12828,6 +12835,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 25329865651095596, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 25329865651095596, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3036951078483901510, guid: db12d72d4c1eac343a0018cb017cf701,
         type: 3}

@@ -181,10 +181,6 @@ public class MoveObject : MonoBehaviour
             //Unassign moving object
             movingObject = null;
         }
-        else
-        {
-            Debug.Log("Null moving object.");
-        }
         //Loop through the parent destroying it's components
         foreach (var comp in movingParent.GetComponents<Component>())
         {
