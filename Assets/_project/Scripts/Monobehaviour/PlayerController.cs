@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
     private float cameraPushSpeed = 90;
     [SerializeField]
     private float cameraZoomSpeed;
+    [SerializeField]
+    private float cameraTransferDistance = 0.05f;
     //First person camera
     [SerializeField]
     public Camera firstPersonCamera;
@@ -426,13 +428,12 @@ public class PlayerController : MonoBehaviour
         //    thirdPersonCamera.transform.localRotation = Quaternion.Lerp(thirdPersonCamera.transform.rotation, Quaternion.Euler(15, thirdPersonCamera.transform.rotation.y, thirdPersonCamera.transform.rotation.z), 1);
         //}
         //If an obstacle is found then zoom in
-        if (Physics.Linecast(firstPersonCamera.transform.position, thirdPersonCamera.transform.position, out hit) && hit.collider.gameObject != gameObject && !hit.collider.isTrigger)
+        if (Physics.Linecast(firstPersonCamera.transform.position, zoomPosition.transform.position, out hit) && hit.collider.gameObject != gameObject && !hit.collider.isTrigger)
         {
             zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, cameraPushSpeed * Time.deltaTime);
-            if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < 0.05f)
+            if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < cameraTransferDistance)
             {
                 cameraState = cS.FIRSTPERSON;
-                //transform.localRotation = Quaternion.Euler(0, thirdPersonCamera.transform.rotation.y, thirdPersonCamera.transform.rotation.z);
             }
         }  
         else
@@ -441,7 +442,7 @@ public class PlayerController : MonoBehaviour
             if (Input.GetAxis("Mouse ScrollWheel") > 0f || Input.GetAxis("Zoom") > 0f)
             {
                 zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, cameraZoomSpeed/* * Time.deltaTime*/);
-                if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < 0.05f)
+                if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < cameraTransferDistance)
                 {
                     cameraState = cS.FIRSTPERSON;
                     transform.localRotation = Quaternion.Euler (0, thirdPersonCamera.transform.rotation.y, thirdPersonCamera.transform.rotation.z);

@@ -3047,6 +3047,7 @@ MonoBehaviour:
   clampDegree: 70
   cameraPushSpeed: 90
   cameraZoomSpeed: 0
+  cameraTransferDistance: 0.5
   firstPersonCamera: {fileID: 0}
   thirdPersonCamera: {fileID: 0}
   zoomOutPosition: {fileID: 0}
@@ -3732,7 +3733,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh17150
+  m_Name: pb_Mesh25372
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -12815,6 +12816,11 @@ PrefabInstance:
         type: 3}
       propertyPath: cameraZoomSpeed
       value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 25329864749002331, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: cameraTransferDistance
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 25329864749002333, guid: db12d72d4c1eac343a0018cb017cf701,
         type: 3}
