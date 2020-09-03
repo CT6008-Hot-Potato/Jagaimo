@@ -3037,27 +3037,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ac762714a3d01e429363068213d444e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 0
   velocityClamp: 10
   jumpVelocity: 50
   speedMultiplier: 0.5
   walkSpeed: 5
   runSpeed: 7
   crouchSpeed: 1.5
-  clampDegree: 70
-  cameraPushSpeed: 90
-  cameraZoomSpeed: 0
-  cameraTransferDistance: 0.05
-  firstPersonCamera: {fileID: 0}
-  thirdPersonCamera: {fileID: 0}
-  zoomOutPosition: {fileID: 0}
-  zoomInPosition: {fileID: 0}
-  zoomPosition: {fileID: 0}
-  firstPersonCamPosition: {x: 0, y: 0, z: 0}
-  otherCamSpeed: 2
   rotationPosition: {fileID: 0}
-  mouseInversion: 0
-  cameraState: 0
 --- !u!54 &590768683
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12913,7 +12899,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117fc3935f7142b458233fba43bb97d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clampDegree: 70
+  clampDegree: 80
   cameraPushSpeed: 90
   cameraZoomSpeed: 0.35
   cameraTransferDistance: 0.1
