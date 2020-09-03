@@ -99,13 +99,13 @@ public class PlayerController : MonoBehaviour
                 //Jumpine velocity for the player
                 rb.velocity = new Vector3(velocity.x, Mathf.Sqrt(jumpVelocity), velocity.z);
             }
-            else if (grounded && downForce != 15)
-            {
-                downForce = 15;
-            }
-            else
+            else if (grounded == false)
             {
                 downForce = 22;
+            }
+            else if (downForce != 15)
+            {
+                downForce = 15;
             }
         }
 
