@@ -8,8 +8,8 @@
 /////////////////////////////////////////////////////////////
 ///
 
-using Mirror;
-public class NetworkRoomPlayerLobby : NetworkBehaviour
-{
-   
-}
+//using Mirror;
+//public class NetworkRoomPlayerLobby : NetworkBehaviour
+//{
+//   
+//}
