@@ -49,6 +49,7 @@ public class PlayerCamera : MonoBehaviour
     private float mouseSensitivity;
     private float pitch;
     private float yaw;
+    private CharacterManager cM;
     #endregion Variables
 
     #region Enums
@@ -75,6 +76,7 @@ public class PlayerCamera : MonoBehaviour
     // Assigning audio listeners, setting correct camera state and making sure queriesHitBackfaces is true for raycasting later
     void Start()
     {
+        cM = GetComponent<CharacterManager>();
         Physics.queriesHitBackfaces = true;
         firstPersonCamPosition = firstPersonCamera.transform.localPosition;
         firstPersonListener = firstPersonCamera.GetComponent<AudioListener>();
@@ -85,16 +87,105 @@ public class PlayerCamera : MonoBehaviour
         if (cameraState != cS.FIRSTPERSON)
         {
             thirdPersonCamera.enabled = true;
-            thirdPersonListener.enabled = true;
             firstPersonCamera.enabled = false;
-            firstPersonListener.enabled = false;
+            if (cM.playerIndex == 0)
+            {
+                thirdPersonListener.enabled = true;
+                firstPersonListener.enabled = false;
+            }
         }
         else
         {
             thirdPersonCamera.enabled = false;
-            thirdPersonListener.enabled = false;
             firstPersonCamera.enabled = true;
-            firstPersonListener.enabled = true;
+            if (cM.playerIndex == 0)
+            {
+                thirdPersonListener.enabled = false;
+                firstPersonListener.enabled = true;
+            }
+        }
+        SetupCameraAspectRatio();
+    }
+
+    private void SetupCameraAspectRatio()
+    {
+        switch (GameObject.FindObjectsOfType<MoveObject>().Length)
+        {
+            case 0:
+                Debug.Log("No players found");
+                break;
+            case 1:
+                switch (cM.playerIndex)
+                {
+                    case 0:
+                        firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f ,1.0f);
+                        thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
+                        break;
+                    default:
+                        Debug.Log("Value too high");
+                        break;
+                }
+                break;
+            case 2:
+                switch (cM.playerIndex)
+                {
+                    case 0:
+                        firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
+                        thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f , 0.5f);
+                        break;
+                    case 1:
+                        firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
+                        thirdPersonCamera.rect = new Rect(0.0f,0.0f, 1.0f, 0.5f);
+                        break;
+                    default:
+                        Debug.Log("Value too high");
+                        break;
+                }
+                break;
+            case 3:
+                switch (cM.playerIndex)
+                {
+                    case 0:
+                        firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
+                        thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
+                        break;
+                    case 1:
+                        firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+                        thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+                        break;
+                    case 2:
+                        firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
+                        thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
+                        break;
+                    default:
+                        Debug.Log("Value too high");
+                        break;
+                }
+                break;
+            case 4:
+                switch (cM.playerIndex)
+                {
+                    case 0:
+                        firstPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
+                        thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
+                        break;
+                    case 1:
+                        firstPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+                        thirdPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+                        break;
+                    case 2:
+                        firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+                        thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+                        break;
+                    case 3:
+                        firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
+                        thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
+                        break;
+                    default:
+                        Debug.Log("Value too high");
+                        break;
+                }
+                break;
         }
     }
 
@@ -130,9 +221,12 @@ public class PlayerCamera : MonoBehaviour
                     if (thirdPersonCamera.enabled)
                     {
                         thirdPersonCamera.enabled = false;
-                        thirdPersonListener.enabled = false;
                         firstPersonCamera.enabled = true;
-                        firstPersonListener.enabled = true;
+                        if (cM.playerIndex == 0)
+                        {
+                            thirdPersonListener.enabled = false;
+                            firstPersonListener.enabled = true;
+                        }
                     }
                     else
                     {
@@ -208,9 +302,12 @@ public class PlayerCamera : MonoBehaviour
                 pC.SetMovement(0);
                 UnityEngine.Cursor.lockState = CursorLockMode.None;
                 thirdPersonCamera.enabled = false;
-                thirdPersonListener.enabled = false;
                 firstPersonCamera.enabled = true;
-                firstPersonListener.enabled = true;
+                if (cM.playerIndex == 0)
+                {
+                    thirdPersonListener.enabled = false;
+                    firstPersonListener.enabled = true;
+                }
             }
             else if (UnityEngine.Cursor.lockState == CursorLockMode.None)
             {
@@ -316,10 +413,13 @@ public class PlayerCamera : MonoBehaviour
 
     //Function to enable third person mode camera, vfx and audio listener
     void EnableThirdPerson()
-    {
+    {         
         thirdPersonCamera.enabled = true;
-        thirdPersonListener.enabled = true;
         firstPersonCamera.enabled = false;
-        firstPersonListener.enabled = false;
+        if (cM.playerIndex == 0)
+        {
+            thirdPersonListener.enabled = true;
+            firstPersonListener.enabled = false;
+        }
     }
 }
