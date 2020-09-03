@@ -16,7 +16,6 @@ public class CharacterManager : MonoBehaviour
     private TaggedTracker _tracker;
     private PlayerController _movement;
     private Renderer _rend;
-
     //Just for testing
     [SerializeField]
     private Material eliminatedMat;

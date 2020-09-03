@@ -1,7 +1,7 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///PlayerController.cs
 ///Developed by Charlie Bullock
-///This class primarily acts as the main script for controlling the player movemeny and first/third person camera management.
+///This class primarily acts as the main script for controlling the player movement.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //This class is using:
@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     private Transform rotationPosition;
     private Rigidbody rb;
     private float speed;
+    private float downForce = 15;
     private bool grounded = false;
     private PlayerCamera pC;
     private CapsuleCollider collider;
@@ -92,17 +93,24 @@ public class PlayerController : MonoBehaviour
             velocityChange.z = Mathf.Clamp(velocityChange.z, -velocityClamp, velocityClamp);
             velocityChange.y = 0;
             rb.AddForce(velocityChange, ForceMode.VelocityChange);
-
             // Jump if grounded and input for jump pressed
             if (grounded && Input.GetButton("Jump"))
             {
                 //Jumpine velocity for the player
                 rb.velocity = new Vector3(velocity.x, Mathf.Sqrt(jumpVelocity), velocity.z);
             }
+            else if (grounded && downForce != 15)
+            {
+                downForce = 15;
+            }
+            else
+            {
+                downForce = 22;
+            }
         }
 
         // We apply gravity manually for more tuning control
-        rb.AddForce(new Vector3(0, -15 * rb.mass, 0));
+        rb.AddForce(new Vector3(0, -downForce * rb.mass, 0));
 
         grounded = false;
     }
@@ -167,7 +175,7 @@ public class PlayerController : MonoBehaviour
                     speed = walkSpeed;
                     collider.center = new Vector3(0, 0, 0);
                     collider.height = 2;
-                    //Call uncrouch
+                    pC.UnCrouch();
                     playerMovement = pM.WALKING;
                 }
                 break;
@@ -178,7 +186,7 @@ public class PlayerController : MonoBehaviour
                     speed = crouchSpeed;
                     collider.center = new Vector3(0, -0.5f, 0);
                     collider.height = 1;
-                    //Call crouch
+                    pC.Crouch();
                     playerMovement = pM.CROUCHING;
                 }
                 else if (Input.GetButton("Sprint"))

@@ -1,14 +1,19 @@
-﻿using System.Collections;
+﻿/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///PlayerCamera.cs
+///Developed by Charlie Bullock
+///This class is responsible for first/third person camera of the player.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
-
+    #region Variables
     [SerializeField]
     private float clampDegree = 70;
     [SerializeField]
-    private float cameraPushSpeed = 90;
+    private float cameraPushSpeed = 120;
     [SerializeField]
     private float cameraZoomSpeed;
     [SerializeField]
@@ -44,6 +49,9 @@ public class PlayerCamera : MonoBehaviour
     private float mouseSensitivity;
     private float pitch;
     private float yaw;
+    #endregion Variables
+
+    #region Enums
     //Enum for mouse input type
     private enum mI
     {
@@ -63,8 +71,8 @@ public class PlayerCamera : MonoBehaviour
     private mI mouseInversion;
     [SerializeField]
     public cS cameraState;
-
-    // Start is called before the first frame update
+    #endregion Enums
+    // Assigning audio listeners, setting correct camera state and making sure queriesHitBackfaces is true for raycasting later
     void Start()
     {
         Physics.queriesHitBackfaces = true;
@@ -95,13 +103,13 @@ public class PlayerCamera : MonoBehaviour
         //Function for aspects of the player movement to if the camera is in third or first person mode
         CameraType();
     }
-
+    //Called to crouch the player
     public void Crouch()
     {
         firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0, 0);
         zoomInPosition.localPosition = Vector3.zero;
     }
-
+    //Called to uncrouch the player
     public void UnCrouch()
     {
         firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0.75f, 0);
