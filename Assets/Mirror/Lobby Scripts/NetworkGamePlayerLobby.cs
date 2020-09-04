@@ -22,6 +22,7 @@ public class NetworkGamePlayerLobby : NetworkBehaviour
         Room.GamePlayers.Add(this);
     }
 
+    [System.Obsolete]
     public override void OnNetworkDestroy()
     {
         Room.GamePlayers.Remove(this);
