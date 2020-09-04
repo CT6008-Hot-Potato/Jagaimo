@@ -3014,18 +3014,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 550099009}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &559300504 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 25329864749002325, guid: db12d72d4c1eac343a0018cb017cf701,
-    type: 3}
-  m_PrefabInstance: {fileID: 25329864232178125}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 25329864232178126}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bce7e5e4b3483ee46b8c4800bfd73e36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &590768679
 GameObject:
   m_ObjectHideFlags: 0
@@ -3041,7 +3029,6 @@ GameObject:
   - component: {fileID: 590768681}
   - component: {fileID: 590768683}
   - component: {fileID: 590768688}
-  - component: {fileID: 590768682}
   - component: {fileID: 590768680}
   m_Layer: 0
   m_Name: TestDummy
@@ -3076,25 +3063,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.01, y: 2.01, z: 1.01}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &590768682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 590768679}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ac762714a3d01e429363068213d444e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocityClamp: 10
-  jumpVelocity: 50
-  speedMultiplier: 0.5
-  walkSpeed: 5
-  runSpeed: 7
-  crouchSpeed: 1.5
-  rotationPosition: {fileID: 0}
 --- !u!54 &590768683
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3430,7 +3398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bdec4ac71d9c244fbae67423d897b75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialTagged: {fileID: 559300504}
+  initialTagged: {fileID: 0}
 --- !u!4 &683221331
 Transform:
   m_ObjectHideFlags: 0
@@ -3777,7 +3745,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh25372
+  m_Name: pb_Mesh18366
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4208,6 +4176,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 25329864749002333, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 25329865591700433, guid: db12d72d4c1eac343a0018cb017cf701,
         type: 3}
@@ -5814,7 +5787,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-13110
+  m_Name: pb_Mesh17940
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

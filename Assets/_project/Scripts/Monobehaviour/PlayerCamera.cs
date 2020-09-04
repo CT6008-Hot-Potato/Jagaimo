@@ -115,16 +115,16 @@ public class PlayerCamera : MonoBehaviour
                 Debug.Log("No players found");
                 break;
             case 1:
-                switch (cM.playerIndex)
+                if (cM.playerIndex == 0)
                 {
-                    case 0:
-                        firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f ,1.0f);
-                        thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
-                        break;
-                    default:
-                        Debug.Log("Value too high");
-                        break;
+                    firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f ,1.0f);
+                    thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);                  
                 }
+                else
+                {
+                    Debug.Log("Value too high");
+                }
+                    
                 break;
             case 2:
                 switch (cM.playerIndex)
