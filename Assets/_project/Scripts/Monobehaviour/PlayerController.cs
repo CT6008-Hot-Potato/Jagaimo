@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     private float downForce = 15;
     private bool grounded = false;
     private PlayerCamera pC;
+    private CharacterManager cM;
     private CapsuleCollider collider;
     #endregion
     //Enums
@@ -49,6 +50,7 @@ public class PlayerController : MonoBehaviour
     //Start function sets up numerous aspects of the player ready for use
     void Start()
     {
+        cM = GetComponent<CharacterManager>();
         Physics.queriesHitBackfaces = true;
         pC = GetComponent<PlayerCamera>();
         playerMovement = pM.INTERACTING;
@@ -82,7 +84,7 @@ public class PlayerController : MonoBehaviour
         if (playerMovement != pM.INTERACTING)
         {
             //Calculate how fast player should be moving
-            Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal" + cM.playerIndex), 0, Input.GetAxis("Vertical" + cM.playerIndex));
             targetVelocity = rotationPosition.TransformDirection(targetVelocity);
             targetVelocity *= speed * speedMultiplier;
 
@@ -94,7 +96,7 @@ public class PlayerController : MonoBehaviour
             velocityChange.y = 0;
             rb.AddForce(velocityChange, ForceMode.VelocityChange);
             // Jump if grounded and input for jump pressed
-            if (grounded && Input.GetButton("Jump"))
+            if (grounded && Input.GetButton("Jump" + cM.playerIndex))
             {
                 //Jumpine velocity for the player
                 rb.velocity = new Vector3(velocity.x, Mathf.Sqrt(jumpVelocity), velocity.z);
@@ -155,7 +157,7 @@ public class PlayerController : MonoBehaviour
         {
             case pM.INTERACTING:
                 //Checks for player walking
-                if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+                if (Input.GetAxis("Horizontal" + cM.playerIndex) != 0 || Input.GetAxis("Vertical" + cM.playerIndex) != 0)
                 {
 
                     //Unlock cursor
@@ -170,7 +172,7 @@ public class PlayerController : MonoBehaviour
             //Crouching
             case pM.CROUCHING:
                 speed = crouchSpeed;
-                if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetButtonDown("Crouch"))
+                if (Input.GetButtonDown("Crouch" + cM.playerIndex))
                 {
                     speed = walkSpeed;
                     collider.center = new Vector3(0, 0, 0);
@@ -181,7 +183,7 @@ public class PlayerController : MonoBehaviour
                 break;
             //Walking
             case pM.WALKING:
-                if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetButtonDown("Crouch"))
+                if (Input.GetButtonDown("Crouch" + cM.playerIndex))
                 {
                     speed = crouchSpeed;
                     collider.center = new Vector3(0, -0.5f, 0);
@@ -189,11 +191,11 @@ public class PlayerController : MonoBehaviour
                     pC.Crouch();
                     playerMovement = pM.CROUCHING;
                 }
-                else if (Input.GetButton("Sprint"))
+                else if (Input.GetButton("Sprint" + cM.playerIndex))
                 {
                     speed = runSpeed;
                 }
-                else if (!Input.GetButton("Sprint"))
+                else if (!Input.GetButton("Sprint" + cM.playerIndex))
                 {
                     speed = walkSpeed;
                 }

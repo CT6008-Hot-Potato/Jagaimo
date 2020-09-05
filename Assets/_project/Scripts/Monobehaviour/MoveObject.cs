@@ -55,9 +55,8 @@ public class MoveObject : MonoBehaviour
     //Update method checking for clicks to throw,drop or grab rigidbody objects to move and also move closer or further/
     void Update()
     {
-
         //If the player has interacted
-        if (Input.GetMouseButtonDown(0) || Input.GetAxis("LeftClick") > 0.1)
+        if (Input.GetAxis("LeftClick1") > 0.1)
         {
             //Try get cameras and then quickly enable the main camera regardless of if third or first person to do raycast
             ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
@@ -101,7 +100,7 @@ public class MoveObject : MonoBehaviour
 
         }
         //Throw the object when right click or right trigger pressed
-        else if (Input.GetMouseButtonDown(1) || Input.GetAxis("RightClick") > 0.1)
+        else if (Input.GetAxis("RightClick1") > 0.1)
         {
             ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
 

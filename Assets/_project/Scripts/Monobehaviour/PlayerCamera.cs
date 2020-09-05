@@ -115,27 +115,27 @@ public class PlayerCamera : MonoBehaviour
                 Debug.Log("No players found");
                 break;
             case 1:
-                if (cM.playerIndex == 0)
+                if (cM.playerIndex - 1 == 0)
                 {
-                    firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f ,1.0f);
-                    thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);                  
+                    firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
+                    thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
                 }
                 else
                 {
                     Debug.Log("Value too high");
                 }
-                    
+
                 break;
             case 2:
-                switch (cM.playerIndex)
+                switch (cM.playerIndex - 1)
                 {
                     case 0:
                         firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                        thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f , 0.5f);
+                        thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
                         break;
                     case 1:
                         firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
-                        thirdPersonCamera.rect = new Rect(0.0f,0.0f, 1.0f, 0.5f);
+                        thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
                         break;
                     default:
                         Debug.Log("Value too high");
@@ -143,7 +143,7 @@ public class PlayerCamera : MonoBehaviour
                 }
                 break;
             case 3:
-                switch (cM.playerIndex)
+                switch (cM.playerIndex - 1)
                 {
                     case 0:
                         firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
@@ -163,7 +163,7 @@ public class PlayerCamera : MonoBehaviour
                 }
                 break;
             case 4:
-                switch (cM.playerIndex)
+                switch (cM.playerIndex - 1)
                 {
                     case 0:
                         firstPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
@@ -231,7 +231,7 @@ public class PlayerCamera : MonoBehaviour
                     else
                     {
                         rotationPosition.rotation = UnityEngine.Quaternion.Euler(0, firstPersonCamera.transform.localRotation.eulerAngles.y, 0);
-                        if (Input.GetAxis("Mouse ScrollWheel") < 0f || Input.GetAxis("Zoom") < 0f)
+                        if (Input.GetAxis("Zoom" + cM.playerIndex) < 0f)
                         {
                             //Make sure that player not crouching      
                             collider.center = new Vector3(0, 0, 0);
@@ -270,7 +270,7 @@ public class PlayerCamera : MonoBehaviour
                         rotationPosition.rotation = UnityEngine.Quaternion.Euler(0, firstPersonCamera.transform.localRotation.eulerAngles.y, 0);
                         DoOnEitherThirdPersonMode();
                         //Begins freecam movement
-                        if (Input.GetMouseButtonDown(2) || Input.GetButtonDown("CameraRotate"))
+                        if (Input.GetButtonDown("CameraRotate" + cM.playerIndex))
                         {
                             cameraState = cS.FREECAM;
                         }
@@ -288,7 +288,7 @@ public class PlayerCamera : MonoBehaviour
                         if (GetComponent<MoveObject>() && GetComponent<MoveObject>().enabled)
                             GetComponent<MoveObject>().Drop(false);
                         DoOnEitherThirdPersonMode();
-                        if (Input.GetMouseButtonUp(2) || Input.GetButtonUp("CameraRotate"))
+                        if (Input.GetButtonUp("CameraRotate1" + cM.playerIndex))
                         {
                             cameraState = cS.THIRDPERSON;
                         }
@@ -319,26 +319,26 @@ public class PlayerCamera : MonoBehaviour
             {
                 //InvertX
                 case mI.INVERTX:
-                    yaw -= mouseSensitivity * Input.GetAxis("Mouse X");
-                    pitch += mouseSensitivity * Input.GetAxis("Mouse Y");
+                    yaw -= mouseSensitivity * Input.GetAxis("Mouse X" + cM.playerIndex);
+                    pitch += mouseSensitivity * Input.GetAxis("Mouse Y" + cM.playerIndex);
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //InvertY
                 case mI.INVERTY:
-                    yaw += mouseSensitivity * Input.GetAxis("Mouse X");
-                    pitch -= mouseSensitivity * Input.GetAxis("Mouse Y");
+                    yaw += mouseSensitivity * Input.GetAxis("Mouse X" + cM.playerIndex);
+                    pitch -= mouseSensitivity * Input.GetAxis("Mouse Y" + cM.playerIndex);
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //Both
                 case mI.INVERTBOTH:
-                    yaw -= mouseSensitivity * Input.GetAxis("Mouse X");
-                    pitch -= mouseSensitivity * Input.GetAxis("Mouse Y");
+                    yaw -= mouseSensitivity * Input.GetAxis("Mouse X" + cM.playerIndex);
+                    pitch -= mouseSensitivity * Input.GetAxis("Mouse Y" + cM.playerIndex);
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //None
                 case mI.INVERTNONE:
-                    yaw += mouseSensitivity * Input.GetAxis("Mouse X");
-                    pitch += mouseSensitivity * Input.GetAxis("Mouse Y");
+                    yaw += mouseSensitivity * Input.GetAxis("Mouse X" + cM.playerIndex);
+                    pitch += mouseSensitivity * Input.GetAxis("Mouse Y" + cM.playerIndex);
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
             }
@@ -387,7 +387,7 @@ public class PlayerCamera : MonoBehaviour
         else
         {
             //Zoom in
-            if (Input.GetAxis("Mouse ScrollWheel") > 0f || Input.GetAxis("Zoom") > 0f)
+            if (Input.GetAxis("Zoom" + cM.playerIndex) > 0f)
             {
                 zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, cameraZoomSpeed/* * Time.deltaTime*/);
                 if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < cameraTransferDistance)
@@ -397,7 +397,7 @@ public class PlayerCamera : MonoBehaviour
                 }
             }
             //Zoom out
-            else if (Input.GetAxis("Mouse ScrollWheel") < 0f || Input.GetAxis("Zoom") < 0f)
+            else if (Input.GetAxis("Zoom" + cM.playerIndex) < 0f)
             {
                 zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomOutPosition.position, cameraZoomSpeed/*/* * Time.deltaTime*/);
             }
@@ -413,7 +413,7 @@ public class PlayerCamera : MonoBehaviour
 
     //Function to enable third person mode camera, vfx and audio listener
     void EnableThirdPerson()
-    {         
+    {
         thirdPersonCamera.enabled = true;
         firstPersonCamera.enabled = false;
         if (cM.playerIndex == 0)
