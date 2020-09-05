@@ -1811,7 +1811,8 @@ MonoBehaviour:
   numberOfRounds: 1
   mapSet: {fileID: 0}
   roomPlayerPrefab: {fileID: 9119097531072501199}
-  gamePlayerPrefab: {fileID: 0}
+  gamePlayerPrefab: {fileID: 3104887800763778087, guid: c687bd69ad7615642a876f47f59fa093,
+    type: 3}
   playerSpawnSystem: {fileID: 0}
   roundSystem: {fileID: 0}
 --- !u!4 &1625925737
