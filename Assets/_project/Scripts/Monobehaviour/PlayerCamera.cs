@@ -9,6 +9,7 @@ using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
+    //Variables
     #region Variables
     [SerializeField]
     private float clampDegree = 70;
