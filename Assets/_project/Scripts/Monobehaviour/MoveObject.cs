@@ -31,11 +31,13 @@ public class MoveObject : MonoBehaviour
     private float grabDistance = 5;
     private Rigidbody rbObject;
     private Rigidbody rbParent;
+    private CharacterManager cM;
 
     #endregion Variables
     //Start method setting up and assigning values
     void Start()
     {
+        cM = GameObject.FindObjectOfType<CharacterManager>();
         position.position = movingParent.transform.position;
         if (!movingObject || !movingObject.GetComponent<Rigidbody>())
         {
@@ -56,7 +58,7 @@ public class MoveObject : MonoBehaviour
     void Update()
     {
         //If the player has interacted
-        if (Input.GetAxis("LeftClick1") > 0.1)
+        if (Input.GetAxis("LeftClick" + cM.playerIndex) > 0.1)
         {
             //Try get cameras and then quickly enable the main camera regardless of if third or first person to do raycast
             ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
@@ -100,7 +102,7 @@ public class MoveObject : MonoBehaviour
 
         }
         //Throw the object when right click or right trigger pressed
-        else if (Input.GetAxis("RightClick1") > 0.1)
+        else if (Input.GetAxis("RightClick" + cM.playerIndex) > 0.1)
         {
             ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
 
