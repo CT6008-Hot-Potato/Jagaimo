@@ -6,7 +6,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerCamera : MonoBehaviour
 {
@@ -52,13 +51,6 @@ public class PlayerCamera : MonoBehaviour
     private float pitch;
     private float yaw;
     private CharacterManager cM;
-    [SerializeField]
-    private PlayerInput playerInput = null;
-    public PlayerInput PlayerInput => playerInput;
-    private float zoomValue = 0;
-    private float cameraRotateValue = 0;
-    private float escapeValue = 0;
-    private Vector2 cameraValue = Vector2.zero;
     #endregion Variables
 
     #region Enums
@@ -82,19 +74,6 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     public cS cameraState;
     #endregion Enums
-
-    public void SetCameraView(bool firstPerson)
-    {
-        if (firstPerson)
-        {
-            cameraState = cS.FIRSTPERSON;
-        }
-        else
-        {
-            cameraState = cS.THIRDPERSON;
-        }
-    }
-
     // Assigning audio listeners, setting correct camera state and making sure queriesHitBackfaces is true for raycasting later
     void Start()
     {
@@ -253,7 +232,7 @@ public class PlayerCamera : MonoBehaviour
                     else
                     {
                         rotationPosition.rotation = UnityEngine.Quaternion.Euler(0, firstPersonCamera.transform.localRotation.eulerAngles.y, 0);
-                        if (zoomValue < 0f)
+                        if (Input.GetAxis("Zoom" + cM.playerIndex) < 0f)
                         {
                             //Make sure that player not crouching      
                             collider.center = new Vector3(0, 0, 0);
@@ -262,7 +241,7 @@ public class PlayerCamera : MonoBehaviour
                             zoomInPosition.localPosition = Vector3.zero;
                             GetComponent<PlayerController>().SetMovement(0);
                             //Raycast when in third person checking if there is an obstacle between camera and player
-                            ray = firstPersonCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+                            ray = firstPersonCamera.ScreenPointToRay(Input.mousePosition);
                             ray.direction *= -1;
                             Physics.Raycast(ray, out hit, 3);
                             //If an obstacle is found then zoom in
@@ -292,7 +271,7 @@ public class PlayerCamera : MonoBehaviour
                         rotationPosition.rotation = UnityEngine.Quaternion.Euler(0, firstPersonCamera.transform.localRotation.eulerAngles.y, 0);
                         DoOnEitherThirdPersonMode();
                         //Begins freecam movement
-                        if (cameraRotateValue > 0.1f)
+                        if (Input.GetButtonDown("CameraRotate" + cM.playerIndex))
                         {
                             cameraState = cS.FREECAM;
                         }
@@ -310,7 +289,7 @@ public class PlayerCamera : MonoBehaviour
                         if (GetComponent<MoveObject>() && GetComponent<MoveObject>().enabled)
                             GetComponent<MoveObject>().Drop(false);
                         DoOnEitherThirdPersonMode();
-                        if (cameraRotateValue <= 0.1f)
+                        if (Input.GetButtonUp("CameraRotate1" + cM.playerIndex))
                         {
                             cameraState = cS.THIRDPERSON;
                         }
@@ -319,7 +298,7 @@ public class PlayerCamera : MonoBehaviour
             }
 
             //Goes to first person mode and unlocks cursor when unlock pressed
-            if (escapeValue > 0.1f)
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
                 pC.SetMovement(0);
                 UnityEngine.Cursor.lockState = CursorLockMode.None;
@@ -341,26 +320,26 @@ public class PlayerCamera : MonoBehaviour
             {
                 //InvertX
                 case mI.INVERTX:
-                    yaw += mouseSensitivity * cameraValue.x;
-                    pitch += mouseSensitivity * cameraValue.y;
+                    yaw -= mouseSensitivity * Input.GetAxis("Mouse X" + cM.playerIndex);
+                    pitch += mouseSensitivity * Input.GetAxis("Mouse Y" + cM.playerIndex);
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //InvertY
                 case mI.INVERTY:
-                    yaw -= mouseSensitivity * cameraValue.x;
-                    pitch -= mouseSensitivity * cameraValue.y;
+                    yaw += mouseSensitivity * Input.GetAxis("Mouse X" + cM.playerIndex);
+                    pitch -= mouseSensitivity * Input.GetAxis("Mouse Y" + cM.playerIndex);
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //Both
                 case mI.INVERTBOTH:
-                    yaw -= mouseSensitivity * cameraValue.x;
-                    pitch += mouseSensitivity * cameraValue.y;
+                    yaw -= mouseSensitivity * Input.GetAxis("Mouse X" + cM.playerIndex);
+                    pitch -= mouseSensitivity * Input.GetAxis("Mouse Y" + cM.playerIndex);
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //None
                 case mI.INVERTNONE:
-                    yaw += mouseSensitivity * cameraValue.x;
-                    pitch -= mouseSensitivity * cameraValue.y;
+                    yaw += mouseSensitivity * Input.GetAxis("Mouse X" + cM.playerIndex);
+                    pitch += mouseSensitivity * Input.GetAxis("Mouse Y" + cM.playerIndex);
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
             }
@@ -409,7 +388,7 @@ public class PlayerCamera : MonoBehaviour
         else
         {
             //Zoom in
-            if (zoomValue > 0f)
+            if (Input.GetAxis("Zoom" + cM.playerIndex) > 0f)
             {
                 zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, cameraZoomSpeed/* * Time.deltaTime*/);
                 if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < cameraTransferDistance)
@@ -419,7 +398,7 @@ public class PlayerCamera : MonoBehaviour
                 }
             }
             //Zoom out
-            else if (zoomValue < 0f)
+            else if (Input.GetAxis("Zoom" + cM.playerIndex) < 0f)
             {
                 zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomOutPosition.position, cameraZoomSpeed/*/* * Time.deltaTime*/);
             }
@@ -443,25 +422,5 @@ public class PlayerCamera : MonoBehaviour
             thirdPersonListener.enabled = true;
             firstPersonListener.enabled = false;
         }
-    }
-
-    public void Camera(InputAction.CallbackContext ctx)
-    {
-        cameraValue = new Vector3(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y, 0);
-    }
-
-    public void CameraZoom(InputAction.CallbackContext ctx)
-    {
-        zoomValue = ctx.ReadValue<float>();
-    }
-
-    public void CameraRotate(InputAction.CallbackContext ctx)
-    {
-        cameraRotateValue = ctx.ReadValue<float>();
-    }
-
-    public void Escape(InputAction.CallbackContext ctx)
-    {
-        escapeValue = ctx.ReadValue<float>();
     }
 }
