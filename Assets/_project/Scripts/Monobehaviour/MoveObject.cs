@@ -7,7 +7,6 @@
 //This class is using:
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class MoveObject : MonoBehaviour
 {
@@ -33,16 +32,8 @@ public class MoveObject : MonoBehaviour
     private Rigidbody rbObject;
     private Rigidbody rbParent;
     private CharacterManager cM;
-    private bool grabbing = false;
-    [SerializeField]
-    private PlayerInput playerInput = null;
-    public PlayerInput PlayerInput => playerInput;
-    private float leftClick = 0;
-    private float rightClick = 0;
-    private float zoomIn = 0;
-    private float zoomOut = 0;
-    #endregion Variables
 
+    #endregion Variables
     //Start method setting up and assigning values
     void Start()
     {
@@ -66,11 +57,9 @@ public class MoveObject : MonoBehaviour
     //Update method checking for clicks to throw,drop or grab rigidbody objects to move and also move closer or further/
     void Update()
     {
-
         //If the player has interacted
-        if (leftClick > 0.1 && grabbing == false)
+        if (Input.GetAxis("LeftClick" + cM.playerIndex) > 0.1)
         {
-            grabbing = true;
             //Try get cameras and then quickly enable the main camera regardless of if third or first person to do raycast
             ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
 
@@ -113,7 +102,7 @@ public class MoveObject : MonoBehaviour
 
         }
         //Throw the object when right click or right trigger pressed
-        else if (rightClick > 0.1)
+        else if (Input.GetAxis("RightClick" + cM.playerIndex) > 0.1)
         {
             ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
 
@@ -122,22 +111,17 @@ public class MoveObject : MonoBehaviour
                 Drop(true);
             }
         }
-        //Set grabbing back to false if already grabbing
-        else if (grabbing && leftClick == 0)
-        {
-            grabbing = false;
-        }
         //Otherwise if holding the moving object it can be moved closer or further from player
         else if (movingObject != null)
         {
             movingParent.transform.position = UnityEngine.Vector3.MoveTowards(movingParent.transform.position, position.position, 1000 * Time.deltaTime);
             //Zoom in
-            if (zoomIn > 0.1f)
+            if (Input.GetKey(KeyCode.RightBracket) || Input.GetKey(KeyCode.JoystickButton7))
             {
                 position.position = UnityEngine.Vector3.MoveTowards(position.position, closestPosition.position, 5 * Time.deltaTime);
             }
             //Zoom out
-            else if (zoomOut > 0.1f)
+            else if (Input.GetKey(KeyCode.LeftBracket) || Input.GetKey(KeyCode.JoystickButton6))
             {
                 position.position = UnityEngine.Vector3.MoveTowards(position.position, furthestPosition.position, 5 * Time.deltaTime);
             }
@@ -224,26 +208,6 @@ public class MoveObject : MonoBehaviour
             field.SetValue(copy, field.GetValue(originalComponent));
         }
         return copy;
-    }
-
-    public void LeftClick(InputAction.CallbackContext ctx)
-    {
-        leftClick = ctx.ReadValue<float>();
-    }
-
-    public void RightClick(InputAction.CallbackContext ctx)
-    {
-        rightClick = ctx.ReadValue<float>();
-    }
-
-    public void ZoomIn(InputAction.CallbackContext ctx)
-    {
-        zoomIn = ctx.ReadValue<float>();
-    }
-
-    public void ZoomOut(InputAction.CallbackContext ctx)
-    {
-        zoomOut = ctx.ReadValue<float>();
     }
 }
 
