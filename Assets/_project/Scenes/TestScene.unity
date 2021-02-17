@@ -7147,6 +7147,11 @@ PrefabInstance:
       propertyPath: playerInput
       value: 
       objectReference: {fileID: 25329864232178134}
+    - target: {fileID: 25329864749002331, guid: db12d72d4c1eac343a0018cb017cf701,
+        type: 3}
+      propertyPath: slideTime
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 25329864749002333, guid: db12d72d4c1eac343a0018cb017cf701,
         type: 3}
       propertyPath: m_Name

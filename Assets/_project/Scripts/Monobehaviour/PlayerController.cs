@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private float runSpeed = 7f;
     [SerializeField]
     private float crouchSpeed = 1.5f;
+    [SerializeField]
+    private float slideTime = 3;
     //Rotation position
     [SerializeField]
     private Transform rotationPosition;
@@ -33,6 +35,7 @@ public class PlayerController : MonoBehaviour
     private float speed;
     private float downForce = 15;
     private bool grounded = false;
+    private bool sliding = false;
     private PlayerCamera pC;
     private CharacterManager cM;
     private CapsuleCollider collider;
@@ -43,6 +46,7 @@ public class PlayerController : MonoBehaviour
     private float crouchValue = 0;
     private float sprintValue = 0;
     private RebindingDisplay rebindingDisplay;
+    private Timer timer;
     #endregion
     //Enums
     #region Enums
@@ -190,14 +194,17 @@ public class PlayerController : MonoBehaviour
             //Crouching
             case pM.CROUCHING:
                 speed = crouchSpeed;
-                if (crouchValue > 0.1f && crouching == false)
+                if ( crouching == false)
                 {
-                    crouching = true;
-                    speed = walkSpeed;
-                    collider.center = new Vector3(0, 0, 0);
-                    collider.height = 2;
-                    pC.UnCrouch();
-                    playerMovement = pM.WALKING;
+                    if (crouchValue > 0.1f || sprintValue > 0.1f)
+                    {
+                        crouching = true;
+                        speed = walkSpeed;
+                        collider.center = new Vector3(0, 0, 0);
+                        collider.height = 2;
+                        pC.UnCrouch();
+                        playerMovement = pM.WALKING;
+                    }
                 }
                 else if (crouching && crouchValue == 0)
                 {
@@ -206,24 +213,32 @@ public class PlayerController : MonoBehaviour
                 break;
             //Walking
             case pM.WALKING:
-                if (crouchValue > 0.1f && crouching == false)
+                if (crouchValue > 0.1f && crouching == false && sliding == false)
                 {
-                    crouching = true;
-                    speed = crouchSpeed;
                     collider.center = new Vector3(0, -0.5f, 0);
                     collider.height = 1;
                     pC.Crouch();
-                    playerMovement = pM.CROUCHING;
+                    if (speed == runSpeed)
+                    {
+                        sliding = true;
+                        StartCoroutine(Co_SlideTime());
+                    }
+                    else
+                    {
+                        crouching = true;
+                        speed = crouchSpeed;
+                        playerMovement = pM.CROUCHING;
+                    }
                 }
                 else if (crouching && crouchValue == 0)
                 {
                     crouching = false;
                 }
-                if (sprintValue > 0.1f)
+                if (sprintValue > 0.1f && !sliding)
                 {
                     speed = runSpeed;
                 }
-                else if (speed == runSpeed)
+                else if (speed == runSpeed && !sliding)
                 {
                     speed = walkSpeed;
                 }
@@ -234,9 +249,35 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private IEnumerator Co_SlideTime()
+    {
+        timer = new Timer(slideTime);
+
+        while (timer.isActive)
+        {
+            timer.Tick(Time.deltaTime);
+
+            movementValue = new Vector3(0, 0, 1);
+            if (speed != (runSpeed * 2))
+            {
+                speed = (runSpeed * 2);
+            }
+            yield return null;
+        }
+
+        sliding = false;
+        speed = walkSpeed;
+        collider.center = new Vector3(0, 0, 0);
+        collider.height = 2;
+        pC.UnCrouch();
+    }
+
     public void Movement(InputAction.CallbackContext ctx)
     {
-        movementValue = new Vector3 (ctx.ReadValue<Vector2>().x,0, ctx.ReadValue<Vector2>().y);
+        if (!sliding)
+        {
+            movementValue = new Vector3 (ctx.ReadValue<Vector2>().x,0, ctx.ReadValue<Vector2>().y);
+        }
     }
 
     public void Jump(InputAction.CallbackContext ctx)
@@ -246,7 +287,6 @@ public class PlayerController : MonoBehaviour
 
     public void Crouch(InputAction.CallbackContext ctx)
     {
-
         crouchValue = ctx.ReadValue<float>();
     }
 
