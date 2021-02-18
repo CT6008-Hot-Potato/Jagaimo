@@ -31,7 +31,7 @@ public class BasicTimerBehaviour : MonoBehaviour
     public void CallOnTimerStart()
     {
         timerText = timerText ?? GetComponent<Text>();
-        if (!timerText.enabled)
+        if (timerText && !timerText.enabled)
         {
             timerText.enabled = true;
         }
