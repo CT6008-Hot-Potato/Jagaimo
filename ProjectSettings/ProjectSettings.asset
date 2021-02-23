@@ -663,9 +663,9 @@ PlayerSettings:
   cloudProjectId: 721d0d66-e687-4e86-9a8d-425242849eb4
   framebufferDepthMemorylessMode: 0
   projectName: Jagaimo
-  organizationId: level-6-team
+  organizationId: cmcrter
   cloudEnabled: 0
-  enableNativePlatformBackendsForNewInputSystem: 0
-  disableOldInputManagerSupport: 0
+  enableNativePlatformBackendsForNewInputSystem: 1
+  disableOldInputManagerSupport: 1
   legacyClampBlendShapeWeights: 0
   virtualTexturingSupportEnabled: 0

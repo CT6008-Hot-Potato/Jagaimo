@@ -5,12 +5,15 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //This class is using:
+using System.Collections;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
-    //Variables
+     //Variables
     #region Variables
+    [SerializeField] 
+    private PlayerInput playerInput = null;
     [SerializeField]
     private float velocityClamp = 10f;
     [SerializeField]
@@ -23,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private float runSpeed = 7f;
     [SerializeField]
     private float crouchSpeed = 1.5f;
+    [SerializeField]
+    private float slideTime = 3;
     //Rotation position
     [SerializeField]
     private Transform rotationPosition;
@@ -30,9 +35,18 @@ public class PlayerController : MonoBehaviour
     private float speed;
     private float downForce = 15;
     private bool grounded = false;
+    private bool sliding = false;
     private PlayerCamera pC;
     private CharacterManager cM;
     private CapsuleCollider collider;
+    private bool crouching = false;
+    public PlayerInput PlayerInput => playerInput;
+    private Vector3 movementValue = Vector3.zero;
+    private float jumpValue = 0;
+    private float crouchValue = 0;
+    private float sprintValue = 0;
+    private RebindingDisplay rebindingDisplay;
+    private Timer timer;
     #endregion
     //Enums
     #region Enums
@@ -47,9 +61,12 @@ public class PlayerController : MonoBehaviour
     private pM playerMovement;
 
     #endregion Enum
+
     //Start function sets up numerous aspects of the player ready for use
     void Start()
     {
+        rebindingDisplay = FindObjectOfType<RebindingDisplay>();
+        speed = walkSpeed;
         cM = GetComponent<CharacterManager>();
         Physics.queriesHitBackfaces = true;
         pC = GetComponent<PlayerCamera>();
@@ -59,6 +76,8 @@ public class PlayerController : MonoBehaviour
         rb.freezeRotation = true;
         rb.useGravity = false;
     }
+
+
     //Function where collision checking if collider just staying on ground in order to determine if grounded or not is done
     private void OnCollisionStay(Collision collision)
     {
@@ -84,7 +103,7 @@ public class PlayerController : MonoBehaviour
         if (playerMovement != pM.INTERACTING)
         {
             //Calculate how fast player should be moving
-            Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal" + cM.playerIndex), 0, Input.GetAxis("Vertical" + cM.playerIndex));
+            Vector3 targetVelocity = movementValue;
             targetVelocity = rotationPosition.TransformDirection(targetVelocity);
             targetVelocity *= speed * speedMultiplier;
 
@@ -96,7 +115,7 @@ public class PlayerController : MonoBehaviour
             velocityChange.y = 0;
             rb.AddForce(velocityChange, ForceMode.VelocityChange);
             // Jump if grounded and input for jump pressed
-            if (grounded && Input.GetButton("Jump" + cM.playerIndex))
+            if (grounded && jumpValue > 0.1f)
             {
                 //Jumpine velocity for the player
                 rb.velocity = new Vector3(velocity.x, Mathf.Sqrt(jumpVelocity), velocity.z);
@@ -129,12 +148,15 @@ public class PlayerController : MonoBehaviour
         switch (state)
         {
             case 0:
+                rebindingDisplay.DisplayBindingMenu(true);
                 playerMovement = pM.INTERACTING;
                 break;
             case 1:
+                rebindingDisplay.DisplayBindingMenu(false);
                 playerMovement = pM.CROUCHING;
                 break;
             case 2:
+                rebindingDisplay.DisplayBindingMenu(false);
                 playerMovement = pM.WALKING;
                 break;
             default:
@@ -157,9 +179,9 @@ public class PlayerController : MonoBehaviour
         {
             case pM.INTERACTING:
                 //Checks for player walking
-                if (Input.GetAxis("Horizontal" + cM.playerIndex) != 0 || Input.GetAxis("Vertical" + cM.playerIndex) != 0)
+                if (movementValue != Vector3.zero)
                 {
-
+                    rebindingDisplay.DisplayBindingMenu(false);
                     //Unlock cursor
                     UnityEngine.Cursor.lockState = CursorLockMode.Locked;
                     playerMovement = pM.WALKING;
@@ -172,30 +194,51 @@ public class PlayerController : MonoBehaviour
             //Crouching
             case pM.CROUCHING:
                 speed = crouchSpeed;
-                if (Input.GetButtonDown("Crouch" + cM.playerIndex))
+                if ( crouching == false)
                 {
-                    speed = walkSpeed;
-                    collider.center = new Vector3(0, 0, 0);
-                    collider.height = 2;
-                    pC.UnCrouch();
-                    playerMovement = pM.WALKING;
+                    if (crouchValue > 0.1f || sprintValue > 0.1f)
+                    {
+                        crouching = true;
+                        speed = walkSpeed;
+                        collider.center = new Vector3(0, 0, 0);
+                        collider.height = 2;
+                        pC.UnCrouch();
+                        playerMovement = pM.WALKING;
+                    }
+                }
+                else if (crouching && crouchValue == 0)
+                {
+                    crouching = false;
                 }
                 break;
             //Walking
             case pM.WALKING:
-                if (Input.GetButtonDown("Crouch" + cM.playerIndex))
+                if (crouchValue > 0.1f && crouching == false && sliding == false)
                 {
-                    speed = crouchSpeed;
                     collider.center = new Vector3(0, -0.5f, 0);
                     collider.height = 1;
                     pC.Crouch();
-                    playerMovement = pM.CROUCHING;
+                    if (speed == runSpeed)
+                    {
+                        sliding = true;
+                        StartCoroutine(Co_SlideTime());
+                    }
+                    else
+                    {
+                        crouching = true;
+                        speed = crouchSpeed;
+                        playerMovement = pM.CROUCHING;
+                    }
                 }
-                else if (Input.GetButton("Sprint" + cM.playerIndex))
+                else if (crouching && crouchValue == 0)
+                {
+                    crouching = false;
+                }
+                if (sprintValue > 0.1f && !sliding)
                 {
                     speed = runSpeed;
                 }
-                else if (!Input.GetButton("Sprint" + cM.playerIndex))
+                else if (speed == runSpeed && !sliding)
                 {
                     speed = walkSpeed;
                 }
@@ -204,6 +247,52 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Given value for MovementType is too high.");
                 break;
         }
+    }
+
+    private IEnumerator Co_SlideTime()
+    {
+        timer = new Timer(slideTime);
+
+        while (timer.isActive)
+        {
+            timer.Tick(Time.deltaTime);
+
+            movementValue = new Vector3(0, 0, 1);
+            if (speed != (runSpeed * 2))
+            {
+                speed = (runSpeed * 2);
+            }
+            yield return null;
+        }
+
+        sliding = false;
+        speed = walkSpeed;
+        collider.center = new Vector3(0, 0, 0);
+        collider.height = 2;
+        pC.UnCrouch();
+    }
+
+    public void Movement(InputAction.CallbackContext ctx)
+    {
+        if (!sliding)
+        {
+            movementValue = new Vector3 (ctx.ReadValue<Vector2>().x,0, ctx.ReadValue<Vector2>().y);
+        }
+    }
+
+    public void Jump(InputAction.CallbackContext ctx)
+    {
+        jumpValue = ctx.ReadValue<float>();
+    }
+
+    public void Crouch(InputAction.CallbackContext ctx)
+    {
+        crouchValue = ctx.ReadValue<float>();
+    }
+
+    public void Sprint(InputAction.CallbackContext ctx)
+    {
+        sprintValue = ctx.ReadValue<float>();
     }
 
 }
