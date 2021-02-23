@@ -7,6 +7,6 @@ using UnityEngine;
 public class UIScriptableObject : ScriptableObject
 {
 
-    Sprite Potato, PotatoAlpha, PotatoFuse, MaskAlpha;      
+    public Sprite Potato, PotatoAlpha, PotatoFuse, MaskAlpha;      
 
 }
