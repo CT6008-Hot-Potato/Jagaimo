@@ -29,6 +29,7 @@ public class CharacterManager : MonoBehaviour
         _tracker = GetComponent<TaggedTracker>();
         _movement = GetComponent<PlayerController>();
         _rend = GetComponent<Renderer>();
+        playerIndex = GameObject.FindGameObjectsWithTag("Player").Length;
     }
 
     private void Start()

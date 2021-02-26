@@ -29,6 +29,9 @@ public class PlayerCamera : MonoBehaviour
     //Zoom out position of third person camera
     [SerializeField]
     private Transform zoomOutPosition;
+    //Player index
+    [SerializeField]
+    private float playerIndex;
     //Zoom in position of third person camera
     [SerializeField]
     private Transform zoomInPosition;
@@ -110,7 +113,7 @@ public class PlayerCamera : MonoBehaviour
         {
             thirdPersonCamera.enabled = true;
             firstPersonCamera.enabled = false;
-            if (cM.playerIndex == 0)
+            if (playerIndex == 0)
             {
                 thirdPersonListener.enabled = true;
                 firstPersonListener.enabled = false;
@@ -120,24 +123,22 @@ public class PlayerCamera : MonoBehaviour
         {
             thirdPersonCamera.enabled = false;
             firstPersonCamera.enabled = true;
-            if (cM.playerIndex == 0)
+            if (playerIndex == 0)
             {
                 thirdPersonListener.enabled = false;
                 firstPersonListener.enabled = true;
             }
         }
+        Debug.Log("This player" + playerIndex);
         SetupCameraAspectRatio();
     }
 
     private void SetupCameraAspectRatio()
     {
-        switch (GameObject.FindObjectsOfType<MoveObject>().Length)
+        switch (cM.playerIndex - 2)
         {
             case 0:
-                Debug.Log("No players found");
-                break;
-            case 1:
-                if (cM.playerIndex - 1 == 0)
+                if (playerIndex == 0)
                 {
                     firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
                     thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
@@ -146,10 +147,9 @@ public class PlayerCamera : MonoBehaviour
                 {
                     Debug.Log("Value too high");
                 }
-
                 break;
-            case 2:
-                switch (cM.playerIndex - 1)
+            case 1:
+                switch (playerIndex)
                 {
                     case 0:
                         firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
@@ -164,8 +164,8 @@ public class PlayerCamera : MonoBehaviour
                         break;
                 }
                 break;
-            case 3:
-                switch (cM.playerIndex - 1)
+            case 2:
+                switch (playerIndex)
                 {
                     case 0:
                         firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
@@ -184,8 +184,8 @@ public class PlayerCamera : MonoBehaviour
                         break;
                 }
                 break;
-            case 4:
-                switch (cM.playerIndex - 1)
+            case 3:
+                switch (playerIndex)
                 {
                     case 0:
                         firstPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
@@ -376,11 +376,21 @@ public class PlayerCamera : MonoBehaviour
                 case cS.FIRSTPERSON:
                     thirdPersonCamera.enabled = false;
                     firstPersonCamera.enabled = true;
+                    if (cM.playerIndex == 0)
+                    {
+                        thirdPersonListener.enabled = false;
+                        firstPersonListener.enabled = true;
+                    }
                     break;
                 //Third person camera
                 case cS.THIRDPERSON:
                     thirdPersonCamera.enabled = true;
                     firstPersonCamera.enabled = false;
+                    if (cM.playerIndex == 0)
+                    {
+                        firstPersonListener.enabled = false;
+                        thirdPersonListener.enabled = true;
+                    }
                     break;
                 default:
                     Debug.Log("Different value given.");
