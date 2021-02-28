@@ -30,8 +30,7 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     private Transform zoomOutPosition;
     //Player index
-    [SerializeField]
-    private float playerIndex;
+    public float playerIndex = 0;
     //Zoom in position of third person camera
     [SerializeField]
     private Transform zoomInPosition;
@@ -108,7 +107,10 @@ public class PlayerCamera : MonoBehaviour
         thirdPersonListener = thirdPersonCamera.GetComponent<AudioListener>();
         collider = GetComponent<CapsuleCollider>();
         pC = GetComponent<PlayerController>();
-        //Set to first or third person
+        if (FindObjectOfType<AudioListener>())
+        {
+            playerIndex = 1;
+        }
         if (cameraState != cS.FIRSTPERSON)
         {
             thirdPersonCamera.enabled = true;
@@ -129,13 +131,12 @@ public class PlayerCamera : MonoBehaviour
                 firstPersonListener.enabled = true;
             }
         }
-        Debug.Log("This player" + playerIndex);
         SetupCameraAspectRatio();
     }
 
     private void SetupCameraAspectRatio()
     {
-        switch (cM.playerIndex - 2)
+        switch (cM.playerIndex)
         {
             case 0:
                 if (playerIndex == 0)
@@ -244,7 +245,7 @@ public class PlayerCamera : MonoBehaviour
                     {
                         thirdPersonCamera.enabled = false;
                         firstPersonCamera.enabled = true;
-                        if (cM.playerIndex == 0)
+                        if (playerIndex == 0)
                         {
                             thirdPersonListener.enabled = false;
                             firstPersonListener.enabled = true;
@@ -325,7 +326,7 @@ public class PlayerCamera : MonoBehaviour
                 UnityEngine.Cursor.lockState = CursorLockMode.None;
                 thirdPersonCamera.enabled = false;
                 firstPersonCamera.enabled = true;
-                if (cM.playerIndex == 0)
+                if (playerIndex == 0)
                 {
                     thirdPersonListener.enabled = false;
                     firstPersonListener.enabled = true;
@@ -376,7 +377,7 @@ public class PlayerCamera : MonoBehaviour
                 case cS.FIRSTPERSON:
                     thirdPersonCamera.enabled = false;
                     firstPersonCamera.enabled = true;
-                    if (cM.playerIndex == 0)
+                    if (playerIndex == 0)
                     {
                         thirdPersonListener.enabled = false;
                         firstPersonListener.enabled = true;
@@ -386,7 +387,7 @@ public class PlayerCamera : MonoBehaviour
                 case cS.THIRDPERSON:
                     thirdPersonCamera.enabled = true;
                     firstPersonCamera.enabled = false;
-                    if (cM.playerIndex == 0)
+                    if (playerIndex == 0)
                     {
                         firstPersonListener.enabled = false;
                         thirdPersonListener.enabled = true;
@@ -448,7 +449,7 @@ public class PlayerCamera : MonoBehaviour
     {
         thirdPersonCamera.enabled = true;
         firstPersonCamera.enabled = false;
-        if (cM.playerIndex == 0)
+        if (playerIndex == 0)
         {
             thirdPersonListener.enabled = true;
             firstPersonListener.enabled = false;
