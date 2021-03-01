@@ -20,16 +20,44 @@ public class CharacterManager : MonoBehaviour
     //Just for testing
     [SerializeField]
     private Material eliminatedMat;
-
+    [SerializeField]
+    private PlayerCamera[] playerCameras;
+    [SerializeField]
+    private GameObject playerPrefab;
+    [SerializeField]
+    private GameObject playerManager;
+    [SerializeField]
+    private bool singleLocalPlayer;
     public bool isActive { get; private set; }
     public bool isPlayer { get; private set; }
 
     private void Awake()
     {
+        if (singleLocalPlayer)
+        {
+            playerManager.SetActive(false);
+            Instantiate(playerPrefab, new Vector3(0, 1, 0),playerPrefab.transform.rotation);
+        }
         _tracker = GetComponent<TaggedTracker>();
         _movement = GetComponent<PlayerController>();
         _rend = GetComponent<Renderer>();
+        playerCameras = FindObjectsOfType<PlayerCamera>();
+        playerIndex = (playerCameras.Length - 1) / 2;
+        for (int i = 0; i > playerIndex;i++)
+        {
+            playerCameras[i].playerIndex = i;
+        }
     }
+
+    //public void RedoIndex()
+    //{
+    //    playerCameras = FindObjectsOfType<PlayerCamera>();
+    //    playerIndex = (playerCameras.Length - 1) / 2;
+    //    for (int i = 0; i > playerIndex; i++)
+    //    {
+    //        playerCameras[i].playerIndex = i;
+    //    }
+    //}
 
     private void Start()
     {
