@@ -10,6 +10,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public enum GAMEMODE_INDEX
+{
+    CLASSIC = 0,
+    INFECTED = 1,
+    FOOTBALL = 2,
+    SABOTAGE = 3
+}
+
 public enum MAP_INDEX
 {
     STUDIO = 0,
@@ -22,17 +30,15 @@ public class GameCreationSettings : MonoBehaviour
 
     [Header("Needed Variables")]
     [SerializeField]
-    private int iCurrentGamemodeSelection = 0;
+    MenuMutatorUI MutatorUI;
+
+    [SerializeField]
+    private GAMEMODE_INDEX iCurrentGamemodeSelection = 0;
     [SerializeField]
     private MAP_INDEX iCurrentMapSelection = 0;
 
     [SerializeField]
     private ToggleGroup GamemodeGroup;
-
-    // 0 - Classic
-    // 1 - Infected
-    // 2 - Football
-    // 3 - Sabotage
 
     //All of the parents of the maps
     [SerializeField]
@@ -90,29 +96,32 @@ public class GameCreationSettings : MonoBehaviour
     private void UpdateMapGroup(int newMapGroup)
     {
         //If there is an object for the new gamemode
-        if (potentialMaps[newMapGroup] && firstMaps[iCurrentGamemodeSelection] && MapsGroup[iCurrentGamemodeSelection])
+        if (potentialMaps[newMapGroup] && firstMaps[(int)iCurrentGamemodeSelection] && MapsGroup[(int)iCurrentGamemodeSelection])
         {
-            MapsGroup[iCurrentGamemodeSelection].NotifyToggleOn(firstMaps[iCurrentGamemodeSelection]);
+            MapsGroup[(int)iCurrentGamemodeSelection].NotifyToggleOn(firstMaps[(int)iCurrentGamemodeSelection]);
 
-            potentialMaps[iCurrentGamemodeSelection].SetActive(false);
+            potentialMaps[(int)iCurrentGamemodeSelection].SetActive(false);
             potentialMaps[newMapGroup].SetActive(true);
 
-            iCurrentGamemodeSelection = newMapGroup;
+            iCurrentGamemodeSelection = (GAMEMODE_INDEX)newMapGroup;
 
+            //Resetting the maps for this group
             BaseEventData baseEvent = new BaseEventData(eventSystem);
-            firstMaps[iCurrentGamemodeSelection].OnSubmit(baseEvent);
+            firstMaps[(int)iCurrentGamemodeSelection].OnSubmit(baseEvent);
         }
         else if (Debug.isDebugBuild)
         {
-            Debug.Log("This map isnt set: " + newMapGroup, this);
+            Debug.Log("This map isnt set: " + ((MAP_INDEX)newMapGroup).ToString(), this);
         }
     }
 
     private void GenerateMutators()
     {
         //Change the gamemode mutators section
+        MutatorUI.UpdateGamemodeMutators(iCurrentGamemodeSelection);
 
         //Change the map mutators section
+        MutatorUI.UpdateMapMutators(iCurrentMapSelection);
     }
 
     #endregion
