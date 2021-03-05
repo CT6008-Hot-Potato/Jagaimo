@@ -14,7 +14,6 @@ using UnityEngine;
 public class RoundManager : MonoBehaviour
 {
     //The current gamemode
-    [SerializeField]
     IGamemode _currentGamemode;
 
     //Defining Delegate

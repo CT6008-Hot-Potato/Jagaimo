@@ -10,21 +10,23 @@ using UnityEngine;
 
 //A more concise version of MutatorUI to be sent over scenes/ networks with less information
 [System.Serializable]
-public struct PackagedMutator
+public class PackagedMutator
 {
-    string name;
-    int ID;
-
-    Mutator_Value_Type mutatorValue;
-    float value;
+    public string name;
+    public int ID;
+    public float value;
 }
 
 public class MutatorManager : MonoBehaviour
 {
     #region Public Fields
 
-    public List<MutatorUI> currentGmodeMutatorList;
-    public List<MutatorUI> currentMapMutatorList;
+    //A reference to the current gamemode selected
+    public GAMEMODE_INDEX Gamemode;
+
+    //The mutators being used currently
+    public List<MutatorUI> currentGmodeMutatorList = new List<MutatorUI>();
+    public List<MutatorUI> currentMapMutatorList = new List<MutatorUI>();
 
     #endregion
 
@@ -44,11 +46,13 @@ public class MutatorManager : MonoBehaviour
 
     #region Public Methods
 
+    //Setting the mutator list currently in use
     public void SetGModeMutatorList(List<MutatorUI> newMutatorList)
     {
         currentGmodeMutatorList = newMutatorList;
     }
 
+    //Getting the current mutator list
     public List<MutatorUI> GetGModeMutatorList()
     {
         return currentGmodeMutatorList;

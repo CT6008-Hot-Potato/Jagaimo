@@ -10,48 +10,69 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+//A container class for the gamemodes
+[System.Serializable]
+public class GamemodeUI
+{
+    //Constructor
+    public GamemodeUI(string gname, GAMEMODE_INDEX gindex, List<MutatorUI> gmutators)
+    {
+        name = gname;
+        index = gindex;
+        GamemodeMutators = gmutators;
+    }
+
+    //Reference Values
+    public string name;
+    public GAMEMODE_INDEX index;
+
+    //Is set by menu mutator UI
+    [HideInInspector]
+    public List<MutatorUI> GamemodeMutators;
+
+    //Getting the correct maps for each gamemode
+    public GameObject potentialMaps;
+    public ToggleGroup MapsGroup;
+    public Toggle firstMaps;
+}
+
 public enum GAMEMODE_INDEX
 {
     CLASSIC = 0,
     INFECTED = 1,
     FOOTBALL = 2,
-    SABOTAGE = 3
+    SABOTAGE = 3,
+
+    COUNT
 }
 
 public enum MAP_INDEX
 {
     STUDIO = 0,
-    STADIUM = 1
+    STADIUM = 1,
+
+    COUNT
 }
 
 public class GameCreationSettings : MonoBehaviour
 {
+    #region Public Variables
+
+    public GamemodeUI[] Current_GamemodesUI;
+    public GamemodeUI SelectedGamemode;
+
+    #endregion
+
     #region Inspector Fields
 
     [Header("Needed Variables")]
     [SerializeField]
-    MenuMutatorUI MutatorUI;
-
+    private MenuMutatorUI MutatorUI;
+    static GamemodeUI[] Static_GamemodesUI;
     [SerializeField]
     private GAMEMODE_INDEX iCurrentGamemodeSelection = 0;
     [SerializeField]
     private MAP_INDEX iCurrentMapSelection = 0;
-
-    [SerializeField]
-    private ToggleGroup GamemodeGroup;
-
-    //All of the parents of the maps
-    [SerializeField]
-    private List<GameObject> potentialMaps;
-
-    //All of the parents of the maps
-    [SerializeField]
-    private List<ToggleGroup> MapsGroup;
-
-    //First map of each toggle group
-    [SerializeField]
-    private List<Toggle> firstMaps;
-
     [SerializeField]
     private EventSystem eventSystem;
 
@@ -59,9 +80,9 @@ public class GameCreationSettings : MonoBehaviour
 
     #region Unity Methods
 
-    void Start()
+    void Awake()
     {
-	    
+        SelectedGamemode = Current_GamemodesUI[0];
     }
 
     #endregion
@@ -96,18 +117,21 @@ public class GameCreationSettings : MonoBehaviour
     private void UpdateMapGroup(int newMapGroup)
     {
         //If there is an object for the new gamemode
-        if (potentialMaps[newMapGroup] && firstMaps[(int)iCurrentGamemodeSelection] && MapsGroup[(int)iCurrentGamemodeSelection])
+        if (Current_GamemodesUI[newMapGroup].potentialMaps && Current_GamemodesUI[(int)iCurrentGamemodeSelection].firstMaps && Current_GamemodesUI[(int)iCurrentGamemodeSelection].MapsGroup)
         {
-            MapsGroup[(int)iCurrentGamemodeSelection].NotifyToggleOn(firstMaps[(int)iCurrentGamemodeSelection]);
+            Current_GamemodesUI[(int)iCurrentGamemodeSelection].MapsGroup.NotifyToggleOn(Current_GamemodesUI[(int)iCurrentGamemodeSelection].firstMaps);
 
-            potentialMaps[(int)iCurrentGamemodeSelection].SetActive(false);
-            potentialMaps[newMapGroup].SetActive(true);
+            Current_GamemodesUI[(int)iCurrentGamemodeSelection].potentialMaps.SetActive(false);
+            Current_GamemodesUI[newMapGroup].potentialMaps.SetActive(true);
 
             iCurrentGamemodeSelection = (GAMEMODE_INDEX)newMapGroup;
+            SelectedGamemode = Current_GamemodesUI[(int)iCurrentGamemodeSelection];
 
             //Resetting the maps for this group
             BaseEventData baseEvent = new BaseEventData(eventSystem);
-            firstMaps[(int)iCurrentGamemodeSelection].OnSubmit(baseEvent);
+            Current_GamemodesUI[(int)iCurrentGamemodeSelection].firstMaps.OnSubmit(baseEvent);
+
+            GenerateMutators();
         }
         else if (Debug.isDebugBuild)
         {
