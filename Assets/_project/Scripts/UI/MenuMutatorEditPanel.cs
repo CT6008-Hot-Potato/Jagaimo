@@ -13,7 +13,6 @@ public class MenuMutatorEditPanel : MonoBehaviour
     #region Public Varialbes
 
     public MutatorManager currentMutators;
-    public MenuMutatorUI mutatorUIs;
 
     #endregion
 
@@ -30,8 +29,13 @@ public class MenuMutatorEditPanel : MonoBehaviour
     private void OnEnable()
     {
         //Turn on the right mutator edit gameobjects
-        if (currentMutators && currentMutators.Gamemode != GAMEMODE_INDEX.CLASSIC && GamemodePanels[(int)currentMutators.Gamemode])
+        if (currentMutators && GamemodePanels[(int)currentMutators.Gamemode])
         {
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log(currentMutators.Gamemode);
+            }
+
             GamemodePanels[(int)currentMutators.Gamemode].SetActive(true);
         }
     }
@@ -40,7 +44,7 @@ public class MenuMutatorEditPanel : MonoBehaviour
     private void OnDisable()
     {
         //Turn off the right mutator edit gameobjects ready for next time
-        if (currentMutators && currentMutators.Gamemode != GAMEMODE_INDEX.CLASSIC && GamemodePanels[(int)currentMutators.Gamemode])
+        if (currentMutators && GamemodePanels[(int)currentMutators.Gamemode])
         {
             GamemodePanels[(int)currentMutators.Gamemode].SetActive(false);
         }
@@ -49,22 +53,6 @@ public class MenuMutatorEditPanel : MonoBehaviour
     #endregion
 
     #region Public Methods
-
-    //Infected Edit Panel Function
-    public void InfectedSpeed(int newSpeed)
-    {
-        mutatorUIs.UpdateMutatorValue(0, GAMEMODE_INDEX.INFECTED, newSpeed);
-    }
-
-    public void SurvivorSpeed(int newSpeed)
-    {
-
-    }
-
-    public void InfectedCount(int newCount)
-    {
-
-    }
 
     #endregion
 }

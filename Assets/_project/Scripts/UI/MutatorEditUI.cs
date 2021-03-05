@@ -54,6 +54,11 @@ public class MutatorEditUI : MonoBehaviour
         if (MenuMutatorUI)
         {
             StoredValue = MenuMutatorUI.GetMutatorValue(mutatorID, gamemode).value;
+
+            if (valueText)
+            {
+                MutatorEditPanelDisplayUpdate();
+            }
         }
         else
         {

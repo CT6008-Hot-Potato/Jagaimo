@@ -22,7 +22,7 @@ public class MutatorManager : MonoBehaviour
     #region Public Fields
 
     //A reference to the current gamemode selected
-    public GAMEMODE_INDEX Gamemode;
+    public GAMEMODE_INDEX Gamemode = GAMEMODE_INDEX.CLASSIC;
 
     //The mutators being used currently
     public List<MutatorUI> currentGmodeMutatorList = new List<MutatorUI>();

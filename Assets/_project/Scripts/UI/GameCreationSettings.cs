@@ -70,9 +70,14 @@ public class GameCreationSettings : MonoBehaviour
     private MenuMutatorUI MutatorUI;
     static GamemodeUI[] Static_GamemodesUI;
     [SerializeField]
-    private GAMEMODE_INDEX iCurrentGamemodeSelection = 0;
+    private GAMEMODE_INDEX iCurrentGamemodeSelection = GAMEMODE_INDEX.CLASSIC;
     [SerializeField]
-    private MAP_INDEX iCurrentMapSelection = 0;
+    private MAP_INDEX iCurrentMapSelection = MAP_INDEX.STUDIO;
+
+
+    [SerializeField]
+    private List<MutatorUI> GeneralMutators;
+
     [SerializeField]
     private EventSystem eventSystem;
 
@@ -83,6 +88,7 @@ public class GameCreationSettings : MonoBehaviour
     void Awake()
     {
         SelectedGamemode = Current_GamemodesUI[0];
+        UpdateMapGroup(0);
     }
 
     #endregion
@@ -119,7 +125,13 @@ public class GameCreationSettings : MonoBehaviour
         //If there is an object for the new gamemode
         if (Current_GamemodesUI[newMapGroup].potentialMaps && Current_GamemodesUI[(int)iCurrentGamemodeSelection].firstMaps && Current_GamemodesUI[(int)iCurrentGamemodeSelection].MapsGroup)
         {
-            Current_GamemodesUI[(int)iCurrentGamemodeSelection].MapsGroup.NotifyToggleOn(Current_GamemodesUI[(int)iCurrentGamemodeSelection].firstMaps);
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log("New Gamemode: " + newMapGroup);
+                Debug.Log("Current Selection: " + iCurrentGamemodeSelection);
+            }
+
+            //Current_GamemodesUI[(int)iCurrentGamemodeSelection].MapsGroup.NotifyToggleOn(Current_GamemodesUI[(int)iCurrentGamemodeSelection].firstMaps);
 
             Current_GamemodesUI[(int)iCurrentGamemodeSelection].potentialMaps.SetActive(false);
             Current_GamemodesUI[newMapGroup].potentialMaps.SetActive(true);
