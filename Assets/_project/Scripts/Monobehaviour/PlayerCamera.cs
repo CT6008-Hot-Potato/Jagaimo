@@ -21,10 +21,8 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     private float cameraTransferDistance = 0.05f;
     //First person camera
-    [SerializeField]
     public Camera firstPersonCamera;
     //Serialized third person camera
-    [SerializeField]
     public Camera thirdPersonCamera;
     //Zoom out position of third person camera
     [SerializeField]
@@ -50,7 +48,9 @@ public class PlayerCamera : MonoBehaviour
     private Transform rotationPosition;
     private CapsuleCollider collider;
     [SerializeField]
-    private float mouseSensitivity;
+    private float cameraSensitivity;
+    [SerializeField]
+    private float controllerCameraSensitivityMultiplier = 1.25f;
     private float pitch;
     private float yaw;
     private CharacterManager cM;
@@ -131,10 +131,10 @@ public class PlayerCamera : MonoBehaviour
                 firstPersonListener.enabled = true;
             }
         }
-        SetupCameraAspectRatio();
+        //SetupCameraAspectRatio();
     }
 
-    private void SetupCameraAspectRatio()
+    public void SetupCameraAspectRatio()
     {
         switch (cM.playerIndex)
         {
@@ -342,26 +342,26 @@ public class PlayerCamera : MonoBehaviour
             {
                 //InvertX
                 case mI.INVERTX:
-                    yaw += mouseSensitivity * cameraValue.x;
-                    pitch += mouseSensitivity * cameraValue.y;
+                    yaw += cameraSensitivity * cameraValue.x;
+                    pitch += cameraSensitivity * cameraValue.y;
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //InvertY
                 case mI.INVERTY:
-                    yaw -= mouseSensitivity * cameraValue.x;
-                    pitch -= mouseSensitivity * cameraValue.y;
+                    yaw -= cameraSensitivity * cameraValue.x;
+                    pitch -= cameraSensitivity * cameraValue.y;
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //Both
                 case mI.INVERTBOTH:
-                    yaw -= mouseSensitivity * cameraValue.x;
-                    pitch += mouseSensitivity * cameraValue.y;
+                    yaw -= cameraSensitivity * cameraValue.x;
+                    pitch += cameraSensitivity * cameraValue.y;
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //None
                 case mI.INVERTNONE:
-                    yaw += mouseSensitivity * cameraValue.x;
-                    pitch -= mouseSensitivity * cameraValue.y;
+                    yaw += cameraSensitivity * cameraValue.x;
+                    pitch -= cameraSensitivity * cameraValue.y;
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
             }
@@ -458,7 +458,14 @@ public class PlayerCamera : MonoBehaviour
 
     public void Camera(InputAction.CallbackContext ctx)
     {
-        cameraValue = new Vector3(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y, 0);
+        if (ctx.action.ToString() == "Gameplay/Camera[/XInputControllerWindows/rightStick]")
+        {
+            cameraValue = new Vector3(ctx.ReadValue<Vector2>().x * controllerCameraSensitivityMultiplier, ctx.ReadValue<Vector2>().y * controllerCameraSensitivityMultiplier, 0);
+        }
+        else
+        {
+            cameraValue = new Vector3(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y, 0);
+        }
     }
 
     public void CameraZoom(InputAction.CallbackContext ctx)
