@@ -2447,7 +2447,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 4394244838949972448, guid: db12d72d4c1eac343a0018cb017cf701,
     type: 3}
   playerManager: {fileID: 699328003}
-  singleLocalPlayer: 1
+  singleLocalPlayer: 0
 --- !u!114 &699328007
 MonoBehaviour:
   m_ObjectHideFlags: 0

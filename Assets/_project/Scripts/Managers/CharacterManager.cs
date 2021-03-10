@@ -93,8 +93,8 @@ public class CharacterManager : MonoBehaviour
                     case 0:
                         if (i == 0)
                         {
-                            cameras[i].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
-                            cameras[i].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
+                            cameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
+                            cameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
                         }
                         else
                         {
@@ -105,14 +105,12 @@ public class CharacterManager : MonoBehaviour
                         switch (i)
                         {
                             case 0:
-                                Debug.Log("1");
-                                cameras[i].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                                cameras[i].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
+                                cameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
+                                cameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
                                 break;
                             case 1:
-                                Debug.Log("2");
-                                cameras[i].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
-                                cameras[i].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
+                                cameras[1].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
+                                cameras[1].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
                                 break;
                             default:
                                 Debug.Log("Value too high");
@@ -123,16 +121,16 @@ public class CharacterManager : MonoBehaviour
                         switch (i)
                         {
                             case 0:
-                                cameras[i].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                                cameras[i].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
+                                cameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
+                                cameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
                                 break;
                             case 1:
-                                cameras[i].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                                cameras[i].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+                                cameras[1].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+                                cameras[1].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
                                 break;
                             case 2:
-                                cameras[i].firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                                cameras[i].thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
+                                cameras[2].firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
+                                cameras[2].thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
                                 break;
                             default:
                                 Debug.Log("Value too high");
@@ -143,20 +141,20 @@ public class CharacterManager : MonoBehaviour
                         switch (i)
                         {
                             case 0:
-                                cameras[i].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
-                                cameras[i].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
+                                cameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
+                                cameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
                                 break;
                             case 1:
-                                cameras[i].firstPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-                                cameras[i].thirdPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+                                cameras[1].firstPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+                                cameras[1].thirdPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
                                 break;
                             case 2:
-                                cameras[i].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                                cameras[i].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+                                cameras[2].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+                                cameras[2].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
                                 break;
                             case 3:
-                                cameras[i].firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                                cameras[i].thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
+                                cameras[3].firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
+                                cameras[3].thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
                                 break;
                             default:
                                 Debug.Log("Value too high");
