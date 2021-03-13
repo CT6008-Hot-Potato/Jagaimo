@@ -190,10 +190,10 @@ public class MenuMutatorUI : MonoBehaviour
 
     #endregion
 
-        #region Private Methods
+    #region Private Methods
 
-        //Updating the text for each mutator
-        private void UpdateSpecificGamemodeMutatorText(int mutatorID)
+    //Updating the text for each mutator
+    private void UpdateSpecificGamemodeMutatorText(int mutatorID)
     {
         //Set the text correctly if there is a text
         if (currentMutators.currentGmodeMutatorList[mutatorID].TextToChange)
