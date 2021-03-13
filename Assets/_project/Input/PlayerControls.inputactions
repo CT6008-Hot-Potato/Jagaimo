@@ -124,6 +124,17 @@
                 },
                 {
                     "name": "",
+                    "id": "064b6b6a-2420-488c-941b-9c141aa7b424",
+                    "path": "<Keyboard>/leftBracket",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ZoomIn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "b3abdbc1-7e66-49be-821b-3747dc3414e4",
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
@@ -137,6 +148,17 @@
                     "name": "",
                     "id": "d5409866-9fe4-439c-b4c7-92673c4457bf",
                     "path": "<Keyboard>/equals",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ZoomOut",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b8571c42-40cb-4bd4-ad19-bdbe0b684a88",
+                    "path": "<Keyboard>/rightBracket",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -235,7 +257,7 @@
                 {
                     "name": "",
                     "id": "49ef10a3-6c43-466f-a739-d7348a791d40",
-                    "path": "<Gamepad>/leftStick/down",
+                    "path": "<Gamepad>/leftStickPress",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -247,6 +269,17 @@
                     "name": "",
                     "id": "75dbd0d3-6779-435a-91c0-7429880b424e",
                     "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "344329ae-54eb-4465-8ebb-b7d11698985c",
+                    "path": "<Keyboard>/c",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
