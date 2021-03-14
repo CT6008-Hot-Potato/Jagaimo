@@ -86,6 +86,7 @@ public class CharacterManager : MonoBehaviour
             for (int i = 0; i < cameras.Length; i++)
             {
                 cameras[i].playerIndex = i;
+                cameras[i].SetPlayerColor();
                 Debug.Log(playerIndex + "PLAYER INDEX");
                 Debug.Log(i + "Current player");
                 switch (playerIndex)

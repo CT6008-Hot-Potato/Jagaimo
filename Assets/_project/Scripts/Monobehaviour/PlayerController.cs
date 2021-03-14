@@ -149,15 +149,15 @@ public class PlayerController : MonoBehaviour
         switch (state)
         {
             case 0:
-                rebindingDisplay.DisplayBindingMenu(true);
+                //rebindingDisplay.DisplayBindingMenu(true);
                 playerMovement = pM.INTERACTING;
                 break;
             case 1:
-                rebindingDisplay.DisplayBindingMenu(false);
+                //rebindingDisplay.DisplayBindingMenu(false);
                 playerMovement = pM.CROUCHING;
                 break;
             case 2:
-                rebindingDisplay.DisplayBindingMenu(false);
+                //rebindingDisplay.DisplayBindingMenu(false);
                 playerMovement = pM.WALKING;
                 break;
             default:
@@ -182,7 +182,7 @@ public class PlayerController : MonoBehaviour
                 //Checks for player walking
                 if (movementValue != Vector3.zero)
                 {
-                    rebindingDisplay.DisplayBindingMenu(false);
+                    //rebindingDisplay.DisplayBindingMenu(false);
                     //Unlock cursor
                     UnityEngine.Cursor.lockState = CursorLockMode.Locked;
                     playerMovement = pM.WALKING;

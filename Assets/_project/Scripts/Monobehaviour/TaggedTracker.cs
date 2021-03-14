@@ -41,8 +41,7 @@ public class TaggedTracker : MonoBehaviour, IInteractable
         //Telling the round manager that this was tagged
         roundManager.OnPlayerTagged(this);
 
-        //Set the bool and turn off the component so the potato doesnt trigger it
-        //Should change camera etc
+        GetComponent<PlayerCamera>().SetCameraView(true);
         PlayerTagged();
     }
 
@@ -50,7 +49,7 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     public void PlayerUnTagged()
     {
         isTagged = false;
-
+        GetComponent<PlayerCamera>().SetCameraView(false);
         if (Debug.isDebugBuild)
         {
             Debug.Log("This was untagged", this);
