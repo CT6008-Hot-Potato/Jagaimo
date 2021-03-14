@@ -61,6 +61,12 @@ public class PlayerCamera : MonoBehaviour
     private float cameraRotateValue = 0;
     private float escapeValue = 0;
     private Vector2 cameraValue = Vector2.zero;
+    [SerializeField]
+    private Material[] characterColor;
+    [SerializeField]
+    private GameObject playerFirstPerson;
+    [SerializeField]
+    private GameObject playerThirdPerson;
     #endregion Variables
 
     #region Enums
@@ -84,7 +90,8 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     public cS cameraState;
     #endregion Enums
-
+    
+    //This method sets the camera view
     public void SetCameraView(bool firstPerson)
     {
         if (firstPerson)
@@ -102,7 +109,9 @@ public class PlayerCamera : MonoBehaviour
     {
         cM = GetComponent<CharacterManager>();
         Physics.queriesHitBackfaces = true;
+        SetPlayerColor();
         firstPersonCamPosition = firstPersonCamera.transform.localPosition;
+        //Get audio listeners for camera
         firstPersonListener = firstPersonCamera.GetComponent<AudioListener>();
         thirdPersonListener = thirdPersonCamera.GetComponent<AudioListener>();
         collider = GetComponent<CapsuleCollider>();
@@ -111,6 +120,7 @@ public class PlayerCamera : MonoBehaviour
         {
             playerIndex = 1;
         }
+        //Set to first person
         if (cameraState != cS.FIRSTPERSON)
         {
             thirdPersonCamera.enabled = true;
@@ -121,6 +131,7 @@ public class PlayerCamera : MonoBehaviour
                 firstPersonListener.enabled = false;
             }
         }
+        //Set to third person
         else
         {
             thirdPersonCamera.enabled = false;
@@ -131,13 +142,28 @@ public class PlayerCamera : MonoBehaviour
                 firstPersonListener.enabled = true;
             }
         }
+
+        if (!playerFirstPerson || !playerThirdPerson)
+        {
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log("Character model null");
+            }
+        }
         //SetupCameraAspectRatio();
+    }
+
+    public void SetPlayerColor()
+    { 
+        playerFirstPerson.GetComponent<SkinnedMeshRenderer>().material = characterColor[(int)playerIndex];    
+        playerThirdPerson.GetComponent<SkinnedMeshRenderer>().material = characterColor[(int)playerIndex];
     }
 
     public void SetupCameraAspectRatio()
     {
         switch (cM.playerIndex)
         {
+            //Player 1
             case 0:
                 if (playerIndex == 0)
                 {
@@ -149,6 +175,7 @@ public class PlayerCamera : MonoBehaviour
                     Debug.Log("Value too high");
                 }
                 break;
+            //Players 2
             case 1:
                 switch (playerIndex)
                 {
@@ -165,6 +192,7 @@ public class PlayerCamera : MonoBehaviour
                         break;
                 }
                 break;
+            //Players 3
             case 2:
                 switch (playerIndex)
                 {
@@ -186,6 +214,7 @@ public class PlayerCamera : MonoBehaviour
                 }
                 break;
             case 3:
+                //Players 4
                 switch (playerIndex)
                 {
                     case 0:
