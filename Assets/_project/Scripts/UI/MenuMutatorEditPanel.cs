@@ -31,11 +31,6 @@ public class MenuMutatorEditPanel : MonoBehaviour
         //Turn on the right mutator edit gameobjects
         if (currentMutators && GamemodePanels[(int)currentMutators.Gamemode])
         {
-            if (Debug.isDebugBuild)
-            {
-                Debug.Log(currentMutators.Gamemode);
-            }
-
             GamemodePanels[(int)currentMutators.Gamemode].SetActive(true);
         }
     }
@@ -49,10 +44,6 @@ public class MenuMutatorEditPanel : MonoBehaviour
             GamemodePanels[(int)currentMutators.Gamemode].SetActive(false);
         }
     }
-
-    #endregion
-
-    #region Public Methods
 
     #endregion
 }

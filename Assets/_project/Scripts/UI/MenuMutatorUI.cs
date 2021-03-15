@@ -20,14 +20,15 @@ public enum Mutator_Value_Type
 }
 
 //The mutators themselves are these
-[Serializable]
+[System.Serializable]
 public class MutatorUI
 {
+    public string name;
+
     //The text to change on the edit panel and display panel
     public TextMeshProUGUI TextToChange;
 
-    //Mutator Identifiers
-    public string name;
+    //Mutator Identifier`s
     public int ID;
 
     //The mutator value type, for displaying
@@ -63,9 +64,10 @@ public class MenuMutatorUI : MonoBehaviour
     [SerializeField]
     private List<GameObject> GamemodeMutatorsTexts;
 
-    //Each Map also has a stached list of texts
+    [Header("Mutator UIs")]
+
     [SerializeField]
-    private List<GameObject> MapMutatorsTexts;
+    private List<MutatorUI> GeneralMutators = new List<MutatorUI>();
 
     //The specific mutator lists per gamemode
     [SerializeField]
@@ -77,6 +79,9 @@ public class MenuMutatorUI : MonoBehaviour
     [SerializeField]
     private List<MutatorUI> SabotageMutators = new List<MutatorUI>();
 
+    [SerializeField]
+    private List<MutatorUI> MapMutators = new List<MutatorUI>();
+
     //The panel in which the player can edit the mutators
     [SerializeField]
     private GameObject MutatorsEditPanel;
@@ -87,60 +92,94 @@ public class MenuMutatorUI : MonoBehaviour
 
     private void Awake()
     {
+        currentMutators.currentGeneralMutatorList = GeneralMutators;
+
         creationSettings.Current_GamemodesUI[(int)GAMEMODE_INDEX.CLASSIC].GamemodeMutators = ClassicMutators;
         creationSettings.Current_GamemodesUI[(int)GAMEMODE_INDEX.INFECTED].GamemodeMutators = InfectedMutators;
         creationSettings.Current_GamemodesUI[(int)GAMEMODE_INDEX.FOOTBALL].GamemodeMutators = FootballMutators;
         creationSettings.Current_GamemodesUI[(int)GAMEMODE_INDEX.SABOTAGE].GamemodeMutators = SabotageMutators;
 
+        currentMutators.currentMapMutatorList = MapMutators;
+
+        UpdateGeneralMutators();
         for (int i = 0; i < (int)GAMEMODE_INDEX.COUNT; ++i)
         {
             UpdateGamemodeMutators((GAMEMODE_INDEX)i);
-            UpdateGamemodeMutatorsText();
         }
+        UpdateMapMutators(MAP_INDEX.STUDIO);
+        UpdateAllMutatorTexts();
     }
 
     #endregion
 
     #region Public Methods
 
+    public void UpdateGeneralMutators()
+    {
+        for (int i = 0; i < GeneralMutators.Count; ++i)
+        {
+            UpdateGeneralMutatorText(i);
+        }
+    }
+
     //Changing what mutators are shown to be able to edit 
     public void UpdateGamemodeMutators(GAMEMODE_INDEX Gamemode)
     {
-        GamemodeMutatorsTexts[(int)currentMutators.Gamemode].SetActive(false);
+        if (GamemodeMutatorsTexts[(int)currentMutators.Gamemode])
+        {
+            GamemodeMutatorsTexts[(int)currentMutators.Gamemode].SetActive(false);
 
-        currentMutators.SetGModeMutatorList(creationSettings.Current_GamemodesUI[(int)Gamemode].GamemodeMutators);
-        currentMutators.Gamemode = Gamemode;
+            if (currentMutators)
+            {
+                currentMutators.SetGModeMutatorList(creationSettings.Current_GamemodesUI[(int)Gamemode].GamemodeMutators);
+                currentMutators.Gamemode = Gamemode;
+            }
 
-        GamemodeMutatorsTexts[(int)Gamemode].SetActive(true);
+            GamemodeMutatorsTexts[(int)Gamemode].SetActive(true);
+        }
     }
 
     public void UpdateMapMutators(MAP_INDEX Map)
     {
-
-    }
-
-    public void UpdateGamemodeMutatorsText()
-    {
-        //Go through the gmode mutator list to set all of the values
-        for (int i = 0; i < currentMutators.currentGmodeMutatorList.Count; ++i)
+        for (int i = 0; i < MapMutators.Count; ++i)
         {
-            //Set the text correctly if there is a text
-            if (currentMutators.currentGmodeMutatorList[i].TextToChange)
-            {
-                currentMutators.currentGmodeMutatorList[i].TextToChange.text = currentMutators.currentGmodeMutatorList[i].name.ToString() + ":" + processMutatorValueToText(currentMutators.currentGmodeMutatorList[i]);
-            }
+            UpdateMapMutatorText(i);
         }
     }
 
-    public void UpdateMutatorValue(int mutatorID, GAMEMODE_INDEX gamemode, float newValue)
+    //Setting mutator values to the respective lists
+    public void SetMutatorValue(int mutatorID, float newValue)
+    {
+        currentMutators.currentGeneralMutatorList[mutatorID].value = newValue;
+        UpdateGeneralMutatorText(mutatorID);
+    }
+
+    public void SetMutatorValue(int mutatorID, GAMEMODE_INDEX gamemode, float newValue)
     {
         creationSettings.Current_GamemodesUI[(int)gamemode].GamemodeMutators[mutatorID].value = newValue;
+        currentMutators.currentGmodeMutatorList[mutatorID].value = newValue;
         UpdateSpecificGamemodeMutatorText(mutatorID);
     }
 
+    public void SetMutatorValue(int mutatorID, MAP_INDEX Map, float newValue)
+    {
+        currentMutators.currentMapMutatorList[mutatorID].value = newValue;
+        UpdateSpecificGamemodeMutatorText(mutatorID);
+    }
+
+    //Getting mutator values from the respective lists
     public MutatorUI GetMutatorValue(int mutatorID, GAMEMODE_INDEX gamemode)
     {
         return creationSettings.Current_GamemodesUI[(int)gamemode].GamemodeMutators[mutatorID];
+    }
+
+    public MutatorUI GetMutatorValue(int mutatorID)
+    {
+        return currentMutators.currentGeneralMutatorList[mutatorID];
+    }
+    public MutatorUI GetMutatorValue(int mutatorID, MAP_INDEX map)
+    {
+        return currentMutators.currentMapMutatorList[mutatorID];
     }
 
     //Opening the panel which should block off other options
@@ -181,7 +220,7 @@ public class MenuMutatorUI : MonoBehaviour
                 int toReturn = (int)mutatorToProcess.value;
                 return toReturn.ToString();
             case Mutator_Value_Type.PERCENTAGE:
-                string toStringReturn = String.Format("Value: {0:P2}.", mutatorToProcess.value);
+                string toStringReturn = String.Format("Value: {0:P0}.", mutatorToProcess.value);
                 return toStringReturn;
             default:
                 return mutatorToProcess.value.ToString();
@@ -192,7 +231,34 @@ public class MenuMutatorUI : MonoBehaviour
 
     #region Private Methods
 
-    //Updating the text for each mutator
+    private void UpdateAllMutatorTexts()
+    {
+        UpdateGeneralMutators();
+        UpdateAllGamemodeMutatorTexts();
+        UpdateMapMutators(MAP_INDEX.STUDIO);
+    }
+
+    //Updating all of the texts for this gamemode
+    private void UpdateAllGamemodeMutatorTexts()
+    {
+        for (int i = 0; i < currentMutators.currentGmodeMutatorList.Count; ++i)
+        {
+            UpdateSpecificGamemodeMutatorText(i);
+        }
+    }
+
+    //Updating the text for each mutator (these 3 functions below can be merged into 1)
+    private void UpdateGeneralMutatorText(int mutatorID)
+    {
+        //Set the text correctly if there is a text
+        if (currentMutators.currentGeneralMutatorList[mutatorID].TextToChange)
+        {
+            currentMutators.currentGeneralMutatorList[mutatorID].TextToChange.text = (
+            currentMutators.currentGeneralMutatorList[mutatorID].name + ": "
+            + processMutatorValueToText(currentMutators.currentGeneralMutatorList[mutatorID]));
+        }
+    }
+
     private void UpdateSpecificGamemodeMutatorText(int mutatorID)
     {
         //Set the text correctly if there is a text
@@ -201,6 +267,17 @@ public class MenuMutatorUI : MonoBehaviour
             currentMutators.currentGmodeMutatorList[mutatorID].TextToChange.text = (
             currentMutators.currentGmodeMutatorList[mutatorID].name + ": "
             + processMutatorValueToText(currentMutators.currentGmodeMutatorList[mutatorID]));
+        }
+    }
+
+    private void UpdateMapMutatorText(int mutatorID)
+    {
+        //Set the text correctly if there is a text
+        if (currentMutators.currentMapMutatorList[mutatorID].TextToChange)
+        {
+            currentMutators.currentMapMutatorList[mutatorID].TextToChange.text = (
+            currentMutators.currentMapMutatorList[mutatorID].name + ": "
+            + processMutatorValueToText(currentMutators.currentMapMutatorList[mutatorID]));
         }
     }
 

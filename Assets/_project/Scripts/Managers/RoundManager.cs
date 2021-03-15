@@ -40,7 +40,33 @@ public class RoundManager : MonoBehaviour
     private void Awake()
     {
         //Adding the default gamemode if it doesnt have one
-        _currentGamemode = _currentGamemode ?? gameObject.AddComponent<DefaultGamemode>();
+        GameSettingsContainer settingsContainer = GameSettingsContainer.instance;
+
+        //There are settings to use
+        if (settingsContainer)
+        {
+            //Depending on which gamemode, a different script is added
+            switch (settingsContainer.index)
+            {
+                case GAMEMODE_INDEX.CLASSIC:
+                    _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
+                    break;
+                case GAMEMODE_INDEX.INFECTED:
+                    break;
+                case GAMEMODE_INDEX.FOOTBALL:
+                    break;
+                case GAMEMODE_INDEX.SABOTAGE:
+                    break;
+                default:
+                    break;
+            }
+        }
+        //There are no settings to use
+        else
+        {
+            //Must be a normal game if there's no script added
+            _currentGamemode = _currentGamemode ?? gameObject.AddComponent<DefaultGamemode>();
+        }
 
         //If there is a gamemode already on the object or is current gamemode is set but not on the object 
         if (!TryGetComponent<IGamemode>(out var gamemode))
@@ -52,7 +78,7 @@ public class RoundManager : MonoBehaviour
 
         //This will be done on round start and use non spectator characters in actual version
         _currentGamemode.SetActivePlayers(FindObjectsOfType<CharacterManager>());
-
+        
         //This will be delegated to the gamemode at some point
         initialTagged = initialTagged ?? FindObjectOfType<TaggedTracker>();
         currentTagged = initialTagged;

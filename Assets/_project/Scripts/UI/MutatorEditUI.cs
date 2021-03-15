@@ -8,19 +8,29 @@
 using TMPro;
 using UnityEngine;
 
+internal enum MutatorList
+{
+    GEN,
+    GAM,
+    MAP
+}
+
 public class MutatorEditUI : MonoBehaviour
 {
     #region Public Variables
 
     //These are necessary to be correct
     [Header("Needed Variables")]
+    [SerializeField]
+    private MutatorList ListToGoInto;
     public GAMEMODE_INDEX gamemode;
+    public MAP_INDEX map;
     public int mutatorID;
 
     #endregion
 
     #region Private Variables
-
+    
     [SerializeField]
     private MenuMutatorUI MenuMutatorUI;
     private MutatorUI thisMutator;
@@ -41,19 +51,25 @@ public class MutatorEditUI : MonoBehaviour
 
     #region Unity Methods
 
-    private void Awake()
-    {
-        if (MenuMutatorUI)
-        {
-            thisMutator = MenuMutatorUI.GetMutatorValue(mutatorID, gamemode);
-        }
-    }
-
     private void Start()
     {
+        //Relies on Awake in this script to run first
         if (MenuMutatorUI)
         {
-            StoredValue = MenuMutatorUI.GetMutatorValue(mutatorID, gamemode).value;
+            switch (ListToGoInto)
+            {
+                case MutatorList.GEN:
+                    thisMutator = MenuMutatorUI.GetMutatorValue(mutatorID);
+                    break;
+                case MutatorList.GAM:
+                    thisMutator = MenuMutatorUI.GetMutatorValue(mutatorID, gamemode);
+                    break;
+                case MutatorList.MAP:
+                    thisMutator = MenuMutatorUI.GetMutatorValue(mutatorID, map);
+                    break;
+            }
+
+            StoredValue = thisMutator.value;
 
             if (valueText)
             {
@@ -76,13 +92,24 @@ public class MutatorEditUI : MonoBehaviour
     //This is a toggle based mutator
     public void MutatorBoolChange(bool newValue)
     {
+        float val = 0f;
+
         if (newValue)
         {
-            MenuMutatorUI.UpdateMutatorValue(mutatorID, gamemode, 1f);
+            val = 1f;
         }
-        else
+
+        switch (ListToGoInto)
         {
-            MenuMutatorUI.UpdateMutatorValue(mutatorID, gamemode, 0f);
+            case MutatorList.GEN:
+                MenuMutatorUI.SetMutatorValue(mutatorID, val);
+                break;
+            case MutatorList.GAM:
+                MenuMutatorUI.SetMutatorValue(mutatorID, gamemode, val);
+                break;
+            case MutatorList.MAP:
+                MenuMutatorUI.SetMutatorValue(mutatorID, map, val);
+                break;
         }
 
         MutatorEditPanelDisplayUpdate();
@@ -91,7 +118,19 @@ public class MutatorEditUI : MonoBehaviour
     //This is a slider based mutator
     public void MutatorSliderChange(float newValue)
     {
-        MenuMutatorUI.UpdateMutatorValue(mutatorID, gamemode, newValue);
+        switch (ListToGoInto)
+        {
+            case MutatorList.GEN:
+                MenuMutatorUI.SetMutatorValue(mutatorID, newValue);
+                break;
+            case MutatorList.GAM:
+                MenuMutatorUI.SetMutatorValue(mutatorID, gamemode, newValue);
+                break;
+            case MutatorList.MAP:
+                MenuMutatorUI.SetMutatorValue(mutatorID, map, newValue);
+                break;
+        }
+
         MutatorEditPanelDisplayUpdate();
     }
 

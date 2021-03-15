@@ -17,6 +17,8 @@ public class CountdownTimer : MonoBehaviour
 {
     [SerializeField]
     private RoundManager roundManager;
+    private GameSettingsContainer settings;
+
     public Timer roundTimer { get; private set; }
 
     //Duation is in seconds
@@ -28,8 +30,23 @@ public class CountdownTimer : MonoBehaviour
 
     private void Awake()
     {
+        settings = GameSettingsContainer.instance;
         roundManager = roundManager ?? FindObjectOfType<RoundManager>();
         timerText = timerText ?? GetComponent<Text>();
+    }
+
+    private void Start()
+    {
+        if (settings)
+        {
+            //If any come out with weird values, it'll need a fixing on the menu
+            float newDur = (float)settings.FindGeneralMutatorValue(0);
+
+            if (newDur != 0)
+            {
+                duration = newDur;
+            }
+        }
     }
 
     private void OnEnable()

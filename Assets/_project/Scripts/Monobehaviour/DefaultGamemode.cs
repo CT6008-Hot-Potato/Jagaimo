@@ -15,9 +15,8 @@ using UnityEngine;
 public class DefaultGamemode : MonoBehaviour, IGamemode
 {
     //Fulfilling the interfaces contracted functions
-    void IGamemode.Return_Mode() => GetGamemodeIndex();
+    GAMEMODE_INDEX IGamemode.Return_Mode() => GetGamemodeIndex();
     
-
     //These 3 functions will be the same on every gamemode I think
     void IGamemode.SetActivePlayers(CharacterManager[] charArray)        => SettingActivePlayers(charArray);
     void IGamemode.AddActivePlayer(CharacterManager charToAdd)          => AddActivePlayer(charToAdd);
