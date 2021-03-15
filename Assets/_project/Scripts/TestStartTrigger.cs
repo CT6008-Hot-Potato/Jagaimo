@@ -14,6 +14,12 @@ public class TestStartTrigger : MonoBehaviour
     private PlayerInput playerInput = null;
     public PlayerInput PlayerInput => playerInput;
     private float playValue = 0;
+
+    private void Awake()
+    {
+        playerInput = playerInput ?? FindObjectOfType<PlayerInput>();
+    }
+
     // Update is called once per frame
     void Update()
     {

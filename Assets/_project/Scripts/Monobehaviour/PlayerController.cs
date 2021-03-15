@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
     private CharacterManager cM;
     private CapsuleCollider collider;
     private bool crouching = false;
+    private bool slowStand = false;
     public PlayerInput PlayerInput => playerInput;
     private Vector3 movementValue = Vector3.zero;
     private float jumpValue = 0;
@@ -148,15 +149,15 @@ public class PlayerController : MonoBehaviour
         switch (state)
         {
             case 0:
-                rebindingDisplay.DisplayBindingMenu(true);
+                //rebindingDisplay.DisplayBindingMenu(true);
                 playerMovement = pM.INTERACTING;
                 break;
             case 1:
-                rebindingDisplay.DisplayBindingMenu(false);
+                //rebindingDisplay.DisplayBindingMenu(false);
                 playerMovement = pM.CROUCHING;
                 break;
             case 2:
-                rebindingDisplay.DisplayBindingMenu(false);
+                //rebindingDisplay.DisplayBindingMenu(false);
                 playerMovement = pM.WALKING;
                 break;
             default:
@@ -181,7 +182,7 @@ public class PlayerController : MonoBehaviour
                 //Checks for player walking
                 if (movementValue != Vector3.zero)
                 {
-                    rebindingDisplay.DisplayBindingMenu(false);
+                    //rebindingDisplay.DisplayBindingMenu(false);
                     //Unlock cursor
                     UnityEngine.Cursor.lockState = CursorLockMode.Locked;
                     playerMovement = pM.WALKING;
@@ -194,7 +195,7 @@ public class PlayerController : MonoBehaviour
             //Crouching
             case pM.CROUCHING:
                 speed = crouchSpeed;
-                if ( crouching == false)
+                if (crouching == false)
                 {
                     if (crouchValue > 0.1f || sprintValue > 0.1f)
                     {
@@ -218,7 +219,7 @@ public class PlayerController : MonoBehaviour
                     collider.center = new Vector3(0, -0.5f, 0);
                     collider.height = 1;
                     pC.Crouch();
-                    if (speed == runSpeed)
+                    if (speed == runSpeed && movementValue.z > 0.1f)
                     {
                         sliding = true;
                         StartCoroutine(Co_SlideTime());
@@ -270,10 +271,21 @@ public class PlayerController : MonoBehaviour
         collider.center = new Vector3(0, 0, 0);
         collider.height = 2;
         pC.UnCrouch();
+        if (slowStand)
+        {
+            movementValue = new Vector3(0, 0, 0);
+        }
     }
 
     public void Movement(InputAction.CallbackContext ctx)
     {
+        if (ctx.ReadValue<Vector2>().y <= 0 && sliding)
+        {
+            slowStand = true;
+        }
+        else if (slowStand == true){
+            slowStand = false;
+        }
         if (!sliding)
         {
             movementValue = new Vector3 (ctx.ReadValue<Vector2>().x,0, ctx.ReadValue<Vector2>().y);

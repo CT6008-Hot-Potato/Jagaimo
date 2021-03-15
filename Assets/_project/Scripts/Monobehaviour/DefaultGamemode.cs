@@ -15,6 +15,8 @@ using UnityEngine;
 public class DefaultGamemode : MonoBehaviour, IGamemode
 {
     //Fulfilling the interfaces contracted functions
+    GAMEMODE_INDEX IGamemode.Return_Mode() => GetGamemodeIndex();
+    
     //These 3 functions will be the same on every gamemode I think
     void IGamemode.SetActivePlayers(CharacterManager[] charArray)        => SettingActivePlayers(charArray);
     void IGamemode.AddActivePlayer(CharacterManager charToAdd)          => AddActivePlayer(charToAdd);
@@ -36,6 +38,11 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     private void Awake()
     {
         
+    }
+
+    private GAMEMODE_INDEX GetGamemodeIndex()
+    {
+        return GAMEMODE_INDEX.CLASSIC;
     }
 
     //A way for the round manager to set the active players at the start of the game
@@ -124,5 +131,10 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
 
         //There's more than 1 person left active
         return false;
+    }
+
+    public GAMEMODE_INDEX Return_Mode()
+    {
+        throw new System.NotImplementedException();
     }
 }

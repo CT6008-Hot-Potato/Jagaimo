@@ -41,7 +41,7 @@ public class RebindingDisplay : MonoBehaviour
 
     public void DisplayBindingMenu (bool display)
     {
-        bindingMenu.SetActive(display);
+        //bindingMenu.SetActive(display);
     }
 
     public void Save()

@@ -21,14 +21,14 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     private float cameraTransferDistance = 0.05f;
     //First person camera
-    [SerializeField]
     public Camera firstPersonCamera;
     //Serialized third person camera
-    [SerializeField]
     public Camera thirdPersonCamera;
     //Zoom out position of third person camera
     [SerializeField]
     private Transform zoomOutPosition;
+    //Player index
+    public float playerIndex = 0;
     //Zoom in position of third person camera
     [SerializeField]
     private Transform zoomInPosition;
@@ -48,7 +48,9 @@ public class PlayerCamera : MonoBehaviour
     private Transform rotationPosition;
     private CapsuleCollider collider;
     [SerializeField]
-    private float mouseSensitivity;
+    private float cameraSensitivity;
+    [SerializeField]
+    private float controllerCameraSensitivityMultiplier = 1.25f;
     private float pitch;
     private float yaw;
     private CharacterManager cM;
@@ -59,6 +61,12 @@ public class PlayerCamera : MonoBehaviour
     private float cameraRotateValue = 0;
     private float escapeValue = 0;
     private Vector2 cameraValue = Vector2.zero;
+    [SerializeField]
+    private Material[] characterColor;
+    [SerializeField]
+    private GameObject playerFirstPerson;
+    [SerializeField]
+    private GameObject playerThirdPerson;
     #endregion Variables
 
     #region Enums
@@ -82,7 +90,8 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     public cS cameraState;
     #endregion Enums
-
+    
+    //This method sets the camera view
     public void SetCameraView(bool firstPerson)
     {
         if (firstPerson)
@@ -100,44 +109,63 @@ public class PlayerCamera : MonoBehaviour
     {
         cM = GetComponent<CharacterManager>();
         Physics.queriesHitBackfaces = true;
+        SetPlayerColor();
         firstPersonCamPosition = firstPersonCamera.transform.localPosition;
+        //Get audio listeners for camera
         firstPersonListener = firstPersonCamera.GetComponent<AudioListener>();
         thirdPersonListener = thirdPersonCamera.GetComponent<AudioListener>();
         collider = GetComponent<CapsuleCollider>();
         pC = GetComponent<PlayerController>();
-        //Set to first or third person
+        if (FindObjectOfType<AudioListener>())
+        {
+            playerIndex = 1;
+        }
+        //Set to first person
         if (cameraState != cS.FIRSTPERSON)
         {
             thirdPersonCamera.enabled = true;
             firstPersonCamera.enabled = false;
-            if (cM.playerIndex == 0)
+            if (playerIndex == 0)
             {
                 thirdPersonListener.enabled = true;
                 firstPersonListener.enabled = false;
             }
         }
+        //Set to third person
         else
         {
             thirdPersonCamera.enabled = false;
             firstPersonCamera.enabled = true;
-            if (cM.playerIndex == 0)
+            if (playerIndex == 0)
             {
                 thirdPersonListener.enabled = false;
                 firstPersonListener.enabled = true;
             }
         }
-        SetupCameraAspectRatio();
+
+        if (!playerFirstPerson || !playerThirdPerson)
+        {
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log("Character model null");
+            }
+        }
+        //SetupCameraAspectRatio();
     }
 
-    private void SetupCameraAspectRatio()
+    public void SetPlayerColor()
+    { 
+        playerFirstPerson.GetComponent<SkinnedMeshRenderer>().material = characterColor[(int)playerIndex];    
+        playerThirdPerson.GetComponent<SkinnedMeshRenderer>().material = characterColor[(int)playerIndex];
+    }
+
+    public void SetupCameraAspectRatio()
     {
-        switch (GameObject.FindObjectsOfType<MoveObject>().Length)
+        switch (cM.playerIndex)
         {
+            //Player 1
             case 0:
-                Debug.Log("No players found");
-                break;
-            case 1:
-                if (cM.playerIndex - 1 == 0)
+                if (playerIndex == 0)
                 {
                     firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
                     thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
@@ -146,10 +174,10 @@ public class PlayerCamera : MonoBehaviour
                 {
                     Debug.Log("Value too high");
                 }
-
                 break;
-            case 2:
-                switch (cM.playerIndex - 1)
+            //Players 2
+            case 1:
+                switch (playerIndex)
                 {
                     case 0:
                         firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
@@ -164,8 +192,9 @@ public class PlayerCamera : MonoBehaviour
                         break;
                 }
                 break;
-            case 3:
-                switch (cM.playerIndex - 1)
+            //Players 3
+            case 2:
+                switch (playerIndex)
                 {
                     case 0:
                         firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
@@ -184,8 +213,9 @@ public class PlayerCamera : MonoBehaviour
                         break;
                 }
                 break;
-            case 4:
-                switch (cM.playerIndex - 1)
+            case 3:
+                //Players 4
+                switch (playerIndex)
                 {
                     case 0:
                         firstPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
@@ -244,7 +274,7 @@ public class PlayerCamera : MonoBehaviour
                     {
                         thirdPersonCamera.enabled = false;
                         firstPersonCamera.enabled = true;
-                        if (cM.playerIndex == 0)
+                        if (playerIndex == 0)
                         {
                             thirdPersonListener.enabled = false;
                             firstPersonListener.enabled = true;
@@ -325,7 +355,7 @@ public class PlayerCamera : MonoBehaviour
                 UnityEngine.Cursor.lockState = CursorLockMode.None;
                 thirdPersonCamera.enabled = false;
                 firstPersonCamera.enabled = true;
-                if (cM.playerIndex == 0)
+                if (playerIndex == 0)
                 {
                     thirdPersonListener.enabled = false;
                     firstPersonListener.enabled = true;
@@ -341,26 +371,26 @@ public class PlayerCamera : MonoBehaviour
             {
                 //InvertX
                 case mI.INVERTX:
-                    yaw += mouseSensitivity * cameraValue.x;
-                    pitch += mouseSensitivity * cameraValue.y;
+                    yaw += cameraSensitivity * cameraValue.x;
+                    pitch += cameraSensitivity * cameraValue.y;
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //InvertY
                 case mI.INVERTY:
-                    yaw -= mouseSensitivity * cameraValue.x;
-                    pitch -= mouseSensitivity * cameraValue.y;
+                    yaw -= cameraSensitivity * cameraValue.x;
+                    pitch -= cameraSensitivity * cameraValue.y;
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //Both
                 case mI.INVERTBOTH:
-                    yaw -= mouseSensitivity * cameraValue.x;
-                    pitch += mouseSensitivity * cameraValue.y;
+                    yaw -= cameraSensitivity * cameraValue.x;
+                    pitch += cameraSensitivity * cameraValue.y;
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //None
                 case mI.INVERTNONE:
-                    yaw += mouseSensitivity * cameraValue.x;
-                    pitch -= mouseSensitivity * cameraValue.y;
+                    yaw += cameraSensitivity * cameraValue.x;
+                    pitch -= cameraSensitivity * cameraValue.y;
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
             }
@@ -376,11 +406,21 @@ public class PlayerCamera : MonoBehaviour
                 case cS.FIRSTPERSON:
                     thirdPersonCamera.enabled = false;
                     firstPersonCamera.enabled = true;
+                    if (playerIndex == 0)
+                    {
+                        thirdPersonListener.enabled = false;
+                        firstPersonListener.enabled = true;
+                    }
                     break;
                 //Third person camera
                 case cS.THIRDPERSON:
                     thirdPersonCamera.enabled = true;
                     firstPersonCamera.enabled = false;
+                    if (playerIndex == 0)
+                    {
+                        firstPersonListener.enabled = false;
+                        thirdPersonListener.enabled = true;
+                    }
                     break;
                 default:
                     Debug.Log("Different value given.");
@@ -438,7 +478,7 @@ public class PlayerCamera : MonoBehaviour
     {
         thirdPersonCamera.enabled = true;
         firstPersonCamera.enabled = false;
-        if (cM.playerIndex == 0)
+        if (playerIndex == 0)
         {
             thirdPersonListener.enabled = true;
             firstPersonListener.enabled = false;
@@ -447,7 +487,14 @@ public class PlayerCamera : MonoBehaviour
 
     public void Camera(InputAction.CallbackContext ctx)
     {
-        cameraValue = new Vector3(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y, 0);
+        if (ctx.action.ToString() == "Gameplay/Camera[/XInputControllerWindows/rightStick]")
+        {
+            cameraValue = new Vector3(ctx.ReadValue<Vector2>().x * controllerCameraSensitivityMultiplier, ctx.ReadValue<Vector2>().y * controllerCameraSensitivityMultiplier, 0);
+        }
+        else
+        {
+            cameraValue = new Vector3(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y, 0);
+        }
     }
 
     public void CameraZoom(InputAction.CallbackContext ctx)
