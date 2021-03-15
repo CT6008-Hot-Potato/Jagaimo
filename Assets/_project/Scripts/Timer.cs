@@ -14,7 +14,9 @@ public class Timer
     public bool isActive;
 
     //Needed to tick up or down
-    private float max_time;
+    public float max_time { get; private set; }
+
+    public float min_time { get; private set; }
     public float current_time { get; private set; }
 
     //Constructor
@@ -29,7 +31,7 @@ public class Timer
     //Ticking the timer down
     public void Tick(float delta_time)
     {
-        if (current_time.Equals(0f) || isLocked)
+        if (current_time.Equals(min_time) || isLocked)
         {
             return;
         }
@@ -42,9 +44,9 @@ public class Timer
     private void EndCheck()
     {
         //Timer is over
-        if (current_time <= 0f)
+        if (current_time <= min_time)
         {
-            current_time = 0f;
+            current_time = min_time;
             isActive = false;
         }
     }

@@ -125,4 +125,17 @@ public class CountdownTimer : MonoBehaviour
     {
         StartTimer();
     }
+
+    protected float GetCurrentTime()
+    {
+        return roundTimer.current_time;
+    }
+    protected float GetMaxTime()
+    {
+        return roundTimer.max_time;
+    }
+    protected float GetMinTime()
+    {
+        return roundTimer.min_time;
+    }
 }
