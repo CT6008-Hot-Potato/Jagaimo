@@ -12,3 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c0c605d7713920409a3438983d83969, type: 3}
   m_Name: ScriptableUI
   m_EditorClassIdentifier: 
+  Potato: {fileID: 1513586605996651692, guid: 76d2954006ab67945bb83880a4104e06, type: 3}
+  PotatoAlpha: {fileID: 5793325378926297394, guid: 76d2954006ab67945bb83880a4104e06,
+    type: 3}
+  PotatoFuse: {fileID: -4491628875213123670, guid: 76d2954006ab67945bb83880a4104e06,
+    type: 3}
+  MaskAlpha: {fileID: 21300000, guid: 9c0519bbc99bad44da8f314ffcb59ed3, type: 3}
