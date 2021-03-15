@@ -2,65 +2,101 @@
 // File: GameCreationSettings
 // Author: Charles Carter
 // Date Created: 16/02/21
-// Brief: The settings for creating a game in the practice menu
+// Brief: The settings for creating a game in the practice menu on the UI
 //////////////////////////////////////////////////////////// 
 
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+//A container class for the gamemodes
+[System.Serializable]
+public class GamemodeUI
+{
+    //Constructor
+    public GamemodeUI(string gname, GAMEMODE_INDEX gindex, List<MutatorUI> gmutators)
+    {
+        name = gname;
+        index = gindex;
+        GamemodeMutators = gmutators;
+    }
+
+    //Reference Values
+    public string name;
+    public GAMEMODE_INDEX index;
+
+    //Is set by menu mutator UI
+    [HideInInspector]
+    public List<MutatorUI> GamemodeMutators;
+
+    //Getting the correct maps for each gamemode
+    public GameObject potentialMaps;
+    public ToggleGroup MapsGroup;
+    public Toggle firstMaps;
+}
+
+public enum GAMEMODE_INDEX
+{
+    CLASSIC = 0,
+    INFECTED = 1,
+    FOOTBALL = 2,
+    SABOTAGE = 3,
+
+    COUNT
+}
 
 public enum MAP_INDEX
 {
     STUDIO = 0,
-    STADIUM = 1
+    STADIUM = 1,
+
+    COUNT
 }
 
 public class GameCreationSettings : MonoBehaviour
 {
+    #region Public Variables
+
+    public GamemodeUI[] Current_GamemodesUI;
+    public GamemodeUI SelectedGamemode;
+
+    #endregion
+
     #region Inspector Fields
 
     [Header("Needed Variables")]
     [SerializeField]
-    private int iCurrentGamemodeSelection = 0;
+    private MenuMutatorUI MutatorUI;
     [SerializeField]
-    private MAP_INDEX iCurrentMapSelection = 0;
-
+    private GAMEMODE_INDEX iCurrentGamemodeSelection = GAMEMODE_INDEX.CLASSIC;
     [SerializeField]
-    private ToggleGroup GamemodeGroup;
-
-    // 0 - Classic
-    // 1 - Infected
-    // 2 - Football
-    // 3 - Sabotage
-
-    //All of the parents of the maps
-    [SerializeField]
-    private List<GameObject> potentialMaps;
-
-    //All of the parents of the maps
-    [SerializeField]
-    private List<ToggleGroup> MapsGroup;
-
-    //First map of each toggle group
-    [SerializeField]
-    private List<Toggle> firstMaps;
-
+    private MAP_INDEX iCurrentMapSelection = MAP_INDEX.STUDIO;
+    private bool bLocalPlayerSettings;
     [SerializeField]
     private EventSystem eventSystem;
+    [SerializeField]
+    GameObject GamemodeMutatorsTextParent;
 
     #endregion
 
     #region Unity Methods
 
-    void Start()
+    void Awake()
     {
-	    
+        SelectedGamemode = Current_GamemodesUI[0];
     }
 
     #endregion
 
     #region Public Methods
+
+    public void SetLocalPlay(bool bLocalPlayButtonPressed)
+    {
+        bLocalPlayerSettings = bLocalPlayButtonPressed;
+        UpdateMapGroup(0);
+    }
 
     //A different gamemode was selected
     public void GamemodeChanged(int iGamemodeChange)
@@ -79,7 +115,22 @@ public class GameCreationSettings : MonoBehaviour
         if (Debug.isDebugBuild)
         {
             Debug.Log("Map Chosen is: " + iCurrentMapSelection.ToString());
+            Debug.Log("Gamemode Chosen is: " + iCurrentGamemodeSelection.ToString());
+            
+            foreach (MutatorUI mutator in SelectedGamemode.GamemodeMutators)
+            {
+                if (!mutator.isDefaultValue)
+                {
+                    Debug.Log(mutator.name + " value changed to: " + mutator.value.ToString());
+                }
+            }
         }
+
+        //Telling the mutator manager to store it's current details after converting them to a more concise format
+        MutatorManager.instance.MakeChangedMutatorArrays(bLocalPlayerSettings);
+
+        //Loading the right map, other scripts in scene will make the relevant changes based on gamemode then mutators
+        SceneManager.LoadScene("Studio");
     }
 
     #endregion
@@ -90,29 +141,52 @@ public class GameCreationSettings : MonoBehaviour
     private void UpdateMapGroup(int newMapGroup)
     {
         //If there is an object for the new gamemode
-        if (potentialMaps[newMapGroup] && firstMaps[iCurrentGamemodeSelection] && MapsGroup[iCurrentGamemodeSelection])
+        if (Current_GamemodesUI[newMapGroup].potentialMaps && Current_GamemodesUI[(int)iCurrentGamemodeSelection].firstMaps && Current_GamemodesUI[(int)iCurrentGamemodeSelection].MapsGroup)
         {
-            MapsGroup[iCurrentGamemodeSelection].NotifyToggleOn(firstMaps[iCurrentGamemodeSelection]);
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log("New Gamemode: " + newMapGroup);
+                Debug.Log("Current Selection: " + iCurrentGamemodeSelection);
+            }
 
-            potentialMaps[iCurrentGamemodeSelection].SetActive(false);
-            potentialMaps[newMapGroup].SetActive(true);
+            //Current_GamemodesUI[(int)iCurrentGamemodeSelection].MapsGroup.NotifyToggleOn(Current_GamemodesUI[(int)iCurrentGamemodeSelection].firstMaps);
 
-            iCurrentGamemodeSelection = newMapGroup;
+            Current_GamemodesUI[(int)iCurrentGamemodeSelection].potentialMaps.SetActive(false);
+            Current_GamemodesUI[newMapGroup].potentialMaps.SetActive(true);
 
+            iCurrentGamemodeSelection = (GAMEMODE_INDEX)newMapGroup;
+            SelectedGamemode = Current_GamemodesUI[(int)iCurrentGamemodeSelection];
+
+            //Resetting the maps for this group
             BaseEventData baseEvent = new BaseEventData(eventSystem);
-            firstMaps[iCurrentGamemodeSelection].OnSubmit(baseEvent);
+            Current_GamemodesUI[(int)iCurrentGamemodeSelection].firstMaps.OnSubmit(baseEvent);
+
+            GenerateMutators();
         }
         else if (Debug.isDebugBuild)
         {
-            Debug.Log("This map isnt set: " + newMapGroup, this);
+            Debug.Log("This map isnt set: " + ((MAP_INDEX)newMapGroup).ToString(), this);
+        }
+
+        //Classic doesnt have gamemode mutators
+        if (iCurrentGamemodeSelection == GAMEMODE_INDEX.CLASSIC && GamemodeMutatorsTextParent)
+        {
+            GamemodeMutatorsTextParent.SetActive(false);
+        }
+        //Where as every other gamemode does
+        else if (iCurrentGamemodeSelection != GAMEMODE_INDEX.CLASSIC && GamemodeMutatorsTextParent)
+        {
+            GamemodeMutatorsTextParent.SetActive(true);
         }
     }
 
     private void GenerateMutators()
     {
         //Change the gamemode mutators section
+        MutatorUI.UpdateGamemodeMutators(iCurrentGamemodeSelection);
 
         //Change the map mutators section
+        MutatorUI.UpdateMapMutators(iCurrentMapSelection);
     }
 
     #endregion
