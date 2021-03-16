@@ -9,6 +9,7 @@
 //This script uses these namespaces
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterManager))]
 public class TaggedTracker : MonoBehaviour, IInteractable
 {
     //The main bool for the tracker
@@ -38,10 +39,8 @@ public class TaggedTracker : MonoBehaviour, IInteractable
             Debug.Log("Non tagged player hit with potato", this);
         }
 
-        //Telling the round manager that this was tagged
-        roundManager.OnPlayerTagged(this);
-
-        GetComponent<PlayerCamera>().SetCameraView(true);
+        //Telling the round manager that this was tagged and the relevant manager
+        roundManager.OnPlayerTagged(this, playerManager);
         PlayerTagged();
     }
 
@@ -59,6 +58,8 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     //This player was just tagged
     public void PlayerTagged()
     {
+        GetComponent<PlayerCamera>().SetCameraView(true);
+
         isTagged = true;
         enabled = false;
     }

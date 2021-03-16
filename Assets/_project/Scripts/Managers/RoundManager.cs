@@ -26,7 +26,7 @@ public class RoundManager : MonoBehaviour
     public static event CountdownEvent CountdownStarted;
     public static event CountdownEvent CountdownEnded;
 
-    //For multiplayer
+    //For multiplayer ?
     //public static event CountdownEvent CountdownPauseToggle;
 
     //The only trackers needed for mechanics in an overall round
@@ -39,10 +39,12 @@ public class RoundManager : MonoBehaviour
 
     [SerializeField]
     BasicTimerBehaviour startCountdown;
+    [SerializeField]
+    ScrollerText eventText;
 
     private void Awake()
     {
-        //Adding the default gamemode if it doesnt have one
+        //Getting the game settings saved over from the main menu
         GameSettingsContainer settingsContainer = GameSettingsContainer.instance;
 
         //There are settings to use
@@ -55,28 +57,28 @@ public class RoundManager : MonoBehaviour
                     _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
                     break;
                 case GAMEMODE_INDEX.INFECTED:
+                    _currentGamemode = gameObject.AddComponent<InfectedGamemode>();
                     break;
                 case GAMEMODE_INDEX.FOOTBALL:
+                    _currentGamemode = gameObject.AddComponent<FootballGamemode>();
                     break;
                 case GAMEMODE_INDEX.SABOTAGE:
+                    _currentGamemode = gameObject.AddComponent<SabotageGamemode>();
                     break;
                 default:
                     break;
             }
         }
-        //There are no settings to use
-        else
-        {
-            //Must be a normal game if there's no script added
-            _currentGamemode = _currentGamemode ?? gameObject.AddComponent<DefaultGamemode>();
-        }
 
-        //If there is a gamemode already on the object or is current gamemode is set but not on the object 
+        //If there is a gamemode already on the object
         if (!TryGetComponent<IGamemode>(out var gamemode))
         {
             _currentGamemode = gamemode;
-            Type type = gamemode.GetType();
-            gameObject.AddComponent(type);
+        }
+        //For some reason no gamemode was applied and none was on the objectwhat
+        else
+        {
+            _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
         }
 
         //This will be done on round start and use non spectator characters in actual version
@@ -142,7 +144,7 @@ public class RoundManager : MonoBehaviour
     }
 
     //A player has been tagged
-    public void OnPlayerTagged(TaggedTracker Tagged)
+    public void OnPlayerTagged(TaggedTracker Tagged, CharacterManager manager)
     {
         //Variable management
         previousTagged = currentTagged;
@@ -156,6 +158,6 @@ public class RoundManager : MonoBehaviour
         currentTagged = Tagged;
 
         currentTagged.PlayerTagged();
-        _currentGamemode.PlayerTagged();
+        _currentGamemode.PlayerTagged(manager);
     }
 }

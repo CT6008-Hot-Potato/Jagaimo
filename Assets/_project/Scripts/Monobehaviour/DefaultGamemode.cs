@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(RoundManager))]
 //This will mostly be in the other scripts anyway
 public class DefaultGamemode : MonoBehaviour, IGamemode
 {
@@ -26,7 +27,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     void IGamemode.RoundEnded()        => RoundEnding();
     void IGamemode.CountdownStarted()  => CountdownStarting();
     void IGamemode.CountdownEnded()    => CountdownEnding();
-    void IGamemode.PlayerTagged()      => PlayerTagged();
+    void IGamemode.PlayerTagged(CharacterManager charTagged)      => PlayerTagged();
     bool IGamemode.WinCondition()      => ThisWinCondition();
 
     //Variables needed for the gamemode
