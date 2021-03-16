@@ -6,33 +6,35 @@ using TMPro;
 
 public class UIMenuBehaviour : MonoBehaviour
 {
-
-    [Header("Sub-Behaviours")]
-    //public UIContextPanelsBehaviour uiContextPanelsBehaviour;
-    //public List<UIPanelRebindBehaviour> uiPanelRebindBehaviours = new List<UIPanelRebindBehaviour>();
-
+ 
     [Header("Core Object References")]
-    public GameObject uiMenuCameraObject;
-    public GameObject uiMenuCanvasObject;
 
-    [Header("Default Selected")]
-    public GameObject defaultSelectedGameObject;
-
+    public PlayerControls playerActionControls;
     
+
+    public GameObject uiMenuCanvasObject;
+  
     [Header("Player Display")]
-    //public DeviceDisplayConfigurator deviceDisplayconfigurator;
     public Image deviceDisplayIcon;
     public TextMeshProUGUI IDDisplayText;
 
 
-    //public void SetupRebindObjects(List<UIPanelRebindBehaviour> InputRebinds)
-    //{
-    //    foreach(UIPanelRebindBehaviour i in InputRebinds)
-    //    {
-    //        uiPanelRebindBehaviours.Add(i);
-    //    }
+    public void Awake()
+    {
+        playerActionControls = new PlayerControls();
+        playerActionControls.Gameplay.Escape.performed += _ => UpdateUIMenuState(true);
+        playerActionControls.Menu.Escape.performed += _ => UpdateUIMenuState(false);
+        SetupBehaviour();
+    }
 
-    //}
+    private void OnEnable()
+    {
+        playerActionControls.Enable();
+    }
+    private void OnDisable()
+    {
+        playerActionControls.Disable();
+    }
 
     public void SetupBehaviour()
     {   
@@ -40,18 +42,8 @@ public class UIMenuBehaviour : MonoBehaviour
     }
 
     public void UpdateUIMenuState(bool newState)
-    {
-        switch (newState)
-        {
-            case true:
-
-                break;
-
-            case false:
-                
-                break;
-        }
-
+    {        
+     
         UpdateCoreUIObjectsState(newState);
     }
 
@@ -60,33 +52,9 @@ public class UIMenuBehaviour : MonoBehaviour
 
     void UpdateCoreUIObjectsState(bool newState)
     {
-        uiMenuCameraObject.SetActive(newState);
+        //uiMenuCameraObject.SetActive(newState);
         uiMenuCanvasObject.SetActive(newState);
     }
 
-    
-
-    //void UpdateEventSystemDefaultSelected()
-    //{
-    //    EventSystemManager.Instance.SetCurrentSelectedGameObject(defaultSelectedGameObject);
-    //}
-
-    //void UpdateEventSystemUIInputModule()
-    //{
-    //    EventSystemManager.Instance.UpdateActionAssetToFocusedPlayer();
-    //}
-
-    //void UpdateUIRebindActions()
-    //{
-    //    foreach(UIPanelRebindBehaviour i in uiPanelRebindBehaviours)
-    //    {
-    //        i.UpdateRebindActions();
-    //    }
-    //}
-
-    //public void SwitchUIContextPanels(int selectedPanelID)
-    //{
-    //    uiContextPanelsBehaviour.UpdateContextPanels(selectedPanelID);
-    //}
     
 }
