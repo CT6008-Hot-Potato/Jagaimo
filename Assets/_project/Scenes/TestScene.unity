@@ -2978,6 +2978,18 @@ PrefabInstance:
       objectReference: {fileID: 683221330}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ec01ed5da9c4c2479db6938f0cd1761, type: 3}
+--- !u!114 &1977434640991229419 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1977434641621943112, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
+    type: 3}
+  m_PrefabInstance: {fileID: 1977434640991229418}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecb86d8636862eb4982fac791fdc9ea4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2692320980238218629
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3316,6 +3328,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
+        type: 3}
+      propertyPath: startCountdown
+      value: 
+      objectReference: {fileID: 1977434640991229419}
     - target: {fileID: 7172547651974387218, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
       propertyPath: m_Name

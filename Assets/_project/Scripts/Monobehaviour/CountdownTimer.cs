@@ -40,11 +40,17 @@ public class CountdownTimer : MonoBehaviour
         if (settings)
         {
             //If any come out with weird values, it'll need a fixing on the menu
-            float newDur = (float)settings.FindGeneralMutatorValue(0);
-
-            if (newDur != 0)
+            if (settings.HasGenMutator(2))
             {
-                duration = newDur;
+                //This is the value of the countdown time mutator
+                float newDur = (float)settings.FindGeneralMutatorValue(2);
+
+                //Making sure it doesnt return a nothing value
+                if (newDur != 0)
+                {
+                    //Making it into minutes + an offset for the timer
+                    duration = (newDur * 60) + 1;
+                }
             }
         }
     }
