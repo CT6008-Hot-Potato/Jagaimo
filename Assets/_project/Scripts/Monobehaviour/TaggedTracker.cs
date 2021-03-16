@@ -48,7 +48,7 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     public void PlayerUnTagged()
     {
         isTagged = false;
-        GetComponent<PlayerCamera>().SetCameraView(false);
+        //GetComponent<PlayerCamera>().SetCameraView(false);
         if (Debug.isDebugBuild)
         {
             Debug.Log("This was untagged", this);
@@ -58,7 +58,7 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     //This player was just tagged
     public void PlayerTagged()
     {
-        GetComponent<PlayerCamera>().SetCameraView(true);
+        //GetComponent<PlayerCamera>().SetCameraView(true);
 
         isTagged = true;
         enabled = false;

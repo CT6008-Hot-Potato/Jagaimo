@@ -75,8 +75,9 @@ public class RoundManager : MonoBehaviour
         {
             _currentGamemode = gamemode;
         }
+
         //For some reason no gamemode was applied and none was on the objectwhat
-        else
+        if (_currentGamemode == null)
         {
             _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
         }
