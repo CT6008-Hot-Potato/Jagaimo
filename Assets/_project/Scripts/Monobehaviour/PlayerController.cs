@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     private float sprintValue = 0;
     private RebindingDisplay rebindingDisplay;
     private Timer timer;
+    public UIMenuBehaviour uiMenu;
     #endregion
     //Enums
     #region Enums
@@ -76,6 +77,11 @@ public class PlayerController : MonoBehaviour
         collider = GetComponent<CapsuleCollider>();
         rb.freezeRotation = true;
         rb.useGravity = false;
+        if (!uiMenu)
+        {
+            Debug.LogWarning("Missing ui menu reference!");
+        }
+        
     }
 
 
@@ -184,6 +190,7 @@ public class PlayerController : MonoBehaviour
                 {
                     //rebindingDisplay.DisplayBindingMenu(false);
                     //Unlock cursor
+                    uiMenu.UpdateUIMenuState(false);
                     UnityEngine.Cursor.lockState = CursorLockMode.Locked;
                     playerMovement = pM.WALKING;
                 }
