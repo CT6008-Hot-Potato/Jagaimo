@@ -22,6 +22,6 @@ public interface IGamemode
     void RoundEnded();
     void CountdownStarted();
     void CountdownEnded();
-    void PlayerTagged();
+    void PlayerTagged(CharacterManager charTagged);
     bool WinCondition();
 }

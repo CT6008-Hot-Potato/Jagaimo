@@ -12,7 +12,7 @@ public class MenuMutatorEditPanel : MonoBehaviour
 {
     #region Public Varialbes
 
-    public MutatorManager currentMutators;
+    public MutatorPackager currentMutators;
 
     #endregion
 

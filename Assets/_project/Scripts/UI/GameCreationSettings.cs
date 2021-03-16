@@ -62,6 +62,9 @@ public class GameCreationSettings : MonoBehaviour
     public GamemodeUI[] Current_GamemodesUI;
     public GamemodeUI SelectedGamemode;
 
+    public List<MutatorUI> GeneralMutators;
+    public List<MutatorUI> MapMutators;
+
     #endregion
 
     #region Inspector Fields
@@ -81,21 +84,15 @@ public class GameCreationSettings : MonoBehaviour
 
     #endregion
 
-    #region Unity Methods
-
-    void Awake()
-    {
-        SelectedGamemode = Current_GamemodesUI[0];
-    }
-
-    #endregion
-
     #region Public Methods
 
     public void SetLocalPlay(bool bLocalPlayButtonPressed)
     {
         bLocalPlayerSettings = bLocalPlayButtonPressed;
         UpdateMapGroup(0);
+
+        //Change the map mutators section
+        MutatorUI.UpdateMapMutators(iCurrentMapSelection);
     }
 
     //A different gamemode was selected
@@ -125,9 +122,9 @@ public class GameCreationSettings : MonoBehaviour
                 }
             }
         }
-
-        //Telling the mutator manager to store it's current details after converting them to a more concise format
-        MutatorManager.instance.MakeChangedMutatorArrays(bLocalPlayerSettings);
+     
+        //Telling the mutator packager to package all the current mutators
+        MutatorPackager.instance.MakeChangedMutatorArrays(bLocalPlayerSettings, GeneralMutators, SelectedGamemode.GamemodeMutators, MapMutators);
 
         //Loading the right map, other scripts in scene will make the relevant changes based on gamemode then mutators
         SceneManager.LoadScene("Studio");
@@ -149,18 +146,19 @@ public class GameCreationSettings : MonoBehaviour
                 Debug.Log("Current Selection: " + iCurrentGamemodeSelection);
             }
 
-            //Current_GamemodesUI[(int)iCurrentGamemodeSelection].MapsGroup.NotifyToggleOn(Current_GamemodesUI[(int)iCurrentGamemodeSelection].firstMaps);
-
+            //Changing the maps shown
             Current_GamemodesUI[(int)iCurrentGamemodeSelection].potentialMaps.SetActive(false);
             Current_GamemodesUI[newMapGroup].potentialMaps.SetActive(true);
 
+            //Updating the gamemode values
             iCurrentGamemodeSelection = (GAMEMODE_INDEX)newMapGroup;
             SelectedGamemode = Current_GamemodesUI[(int)iCurrentGamemodeSelection];
 
-            //Resetting the maps for this group
+            //Resetting the toggles for this group
             BaseEventData baseEvent = new BaseEventData(eventSystem);
             Current_GamemodesUI[(int)iCurrentGamemodeSelection].firstMaps.OnSubmit(baseEvent);
 
+            //Showing the mutators
             GenerateMutators();
         }
         else if (Debug.isDebugBuild)
@@ -183,10 +181,7 @@ public class GameCreationSettings : MonoBehaviour
     private void GenerateMutators()
     {
         //Change the gamemode mutators section
-        MutatorUI.UpdateGamemodeMutators(iCurrentGamemodeSelection);
-
-        //Change the map mutators section
-        MutatorUI.UpdateMapMutators(iCurrentMapSelection);
+        MutatorUI.ShowGamemode(iCurrentGamemodeSelection);
     }
 
     #endregion

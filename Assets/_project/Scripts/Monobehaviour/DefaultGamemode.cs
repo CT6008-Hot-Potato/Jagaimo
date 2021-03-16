@@ -11,11 +11,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(RoundManager))]
 //This will mostly be in the other scripts anyway
 public class DefaultGamemode : MonoBehaviour, IGamemode
 {
     //Fulfilling the interfaces contracted functions
-    GAMEMODE_INDEX IGamemode.Return_Mode() => GetGamemodeIndex();
+    GAMEMODE_INDEX IGamemode.Return_Mode() => Return_Mode();
     
     //These 3 functions will be the same on every gamemode I think
     void IGamemode.SetActivePlayers(CharacterManager[] charArray)        => SettingActivePlayers(charArray);
@@ -26,23 +27,19 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     void IGamemode.RoundEnded()        => RoundEnding();
     void IGamemode.CountdownStarted()  => CountdownStarting();
     void IGamemode.CountdownEnded()    => CountdownEnding();
-    void IGamemode.PlayerTagged()      => PlayerTagged();
+    void IGamemode.PlayerTagged(CharacterManager charTagged)      => PlayerTagged();
     bool IGamemode.WinCondition()      => ThisWinCondition();
 
     //Variables needed for the gamemode
     [SerializeField]
     private RoundManager roundManager;
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
+    CharacterManager playerWhoWon;
 
     //Getting the needed components
-    private void Awake()
+    private void OnEnable()
     {
-        
-    }
-
-    private GAMEMODE_INDEX GetGamemodeIndex()
-    {
-        return GAMEMODE_INDEX.CLASSIC;
+        roundManager = roundManager ?? GetComponent<RoundManager>();
     }
 
     //A way for the round manager to set the active players at the start of the game
@@ -108,6 +105,10 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         if (ThisWinCondition())
         {
             //Moving to podium screen with a lobby countdown
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log("Player Won: " + playerWhoWon.name, this);
+            }
         }
     }
 
@@ -126,6 +127,8 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         //1 player is left so someone has won this round
         if (currentActivePlayers.Count == 1)
         {
+            //Keeping a record of who won
+            playerWhoWon = currentActivePlayers[0];
             return true;
         }
 
@@ -135,6 +138,6 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
 
     public GAMEMODE_INDEX Return_Mode()
     {
-        throw new System.NotImplementedException();
+        return GAMEMODE_INDEX.CLASSIC;
     }
 }
