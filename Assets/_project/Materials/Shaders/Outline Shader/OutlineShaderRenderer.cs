@@ -34,7 +34,7 @@ public class OutlineShaderRenderer : MonoBehaviour
         MeshFilter mesh = outlineObject.AddComponent<MeshFilter>();
         mesh.mesh = GetComponent<MeshFilter>().mesh;
 
-        MeshRenderer rend = outlineObject.AddComponent<MeshRenderer>();
+        Renderer rend = outlineObject.AddComponent<Renderer>();
         rend.material = outlineMat;
         rend.material.SetColor("Color_B76D8C5B", color);
         rend.material.SetFloat("Vector1_E75A2F97", scaleFactor );
