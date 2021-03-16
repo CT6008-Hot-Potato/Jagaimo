@@ -36,9 +36,6 @@ public class PlayerCamera : MonoBehaviour
     private Transform zoomPosition;
     private RaycastHit hit;
     private Ray ray;
-    //Audio listener
-    private AudioListener firstPersonListener;
-    private AudioListener thirdPersonListener;
     //Player movement
     private PlayerController pC;
     public Vector3 firstPersonCamPosition;
@@ -111,9 +108,6 @@ public class PlayerCamera : MonoBehaviour
         Physics.queriesHitBackfaces = true;
         SetPlayerColor();
         firstPersonCamPosition = firstPersonCamera.transform.localPosition;
-        //Get audio listeners for camera
-        firstPersonListener = firstPersonCamera.GetComponent<AudioListener>();
-        thirdPersonListener = thirdPersonCamera.GetComponent<AudioListener>();
         collider = GetComponent<CapsuleCollider>();
         pC = GetComponent<PlayerController>();
         if (FindObjectOfType<AudioListener>())
@@ -125,22 +119,12 @@ public class PlayerCamera : MonoBehaviour
         {
             thirdPersonCamera.enabled = true;
             firstPersonCamera.enabled = false;
-            if (playerIndex == 0)
-            {
-                thirdPersonListener.enabled = true;
-                firstPersonListener.enabled = false;
-            }
         }
         //Set to third person
         else
         {
             thirdPersonCamera.enabled = false;
             firstPersonCamera.enabled = true;
-            if (playerIndex == 0)
-            {
-                thirdPersonListener.enabled = false;
-                firstPersonListener.enabled = true;
-            }
         }
 
         if (!playerFirstPerson || !playerThirdPerson)
@@ -274,11 +258,6 @@ public class PlayerCamera : MonoBehaviour
                     {
                         thirdPersonCamera.enabled = false;
                         firstPersonCamera.enabled = true;
-                        if (playerIndex == 0)
-                        {
-                            thirdPersonListener.enabled = false;
-                            firstPersonListener.enabled = true;
-                        }
                     }
                     else
                     {
@@ -355,11 +334,6 @@ public class PlayerCamera : MonoBehaviour
                 UnityEngine.Cursor.lockState = CursorLockMode.None;
                 thirdPersonCamera.enabled = false;
                 firstPersonCamera.enabled = true;
-                if (playerIndex == 0)
-                {
-                    thirdPersonListener.enabled = false;
-                    firstPersonListener.enabled = true;
-                }
             }
             else if (UnityEngine.Cursor.lockState == CursorLockMode.None)
             {
@@ -406,21 +380,11 @@ public class PlayerCamera : MonoBehaviour
                 case cS.FIRSTPERSON:
                     thirdPersonCamera.enabled = false;
                     firstPersonCamera.enabled = true;
-                    if (playerIndex == 0)
-                    {
-                        thirdPersonListener.enabled = false;
-                        firstPersonListener.enabled = true;
-                    }
                     break;
                 //Third person camera
                 case cS.THIRDPERSON:
                     thirdPersonCamera.enabled = true;
                     firstPersonCamera.enabled = false;
-                    if (playerIndex == 0)
-                    {
-                        firstPersonListener.enabled = false;
-                        thirdPersonListener.enabled = true;
-                    }
                     break;
                 default:
                     Debug.Log("Different value given.");
@@ -478,11 +442,6 @@ public class PlayerCamera : MonoBehaviour
     {
         thirdPersonCamera.enabled = true;
         firstPersonCamera.enabled = false;
-        if (playerIndex == 0)
-        {
-            thirdPersonListener.enabled = true;
-            firstPersonListener.enabled = false;
-        }
     }
 
     public void Camera(InputAction.CallbackContext ctx)
