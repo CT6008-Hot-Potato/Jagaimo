@@ -28124,7 +28124,7 @@ PrefabInstance:
     - target: {fileID: 2692320980931498886, guid: 8cef0e0e385f04f4eb8d02c327e194db,
         type: 3}
       propertyPath: m_Name
-      value: CharacterAndPlayerManager
+      value: CharacterAndPlayerAndManager
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8cef0e0e385f04f4eb8d02c327e194db, type: 3}
