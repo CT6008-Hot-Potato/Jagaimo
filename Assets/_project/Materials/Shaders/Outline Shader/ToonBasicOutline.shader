@@ -1,9 +1,9 @@
-﻿Shader "Unlit/OutlineShader"
+Shader "Unlit/Outline"
 {
     Properties
     {
-        Color_B76D8C5B("OutlineColor", Color) = (0, 0, 0, 1)
-        Vector1_E75A2F97("ScaleFactor", Float) = 1.1
+        Color_B76D8C5B("OutlineColor", Color) = (1,0,0,0)
+        Vector1_E75A2F97("ScaleFactor ", Float) = 1.1
     }
         SubShader
     {
@@ -91,7 +91,7 @@
         {
             float3 ObjectSpaceNormal;
             float3 ObjectSpaceTangent;
-            float3 WorldSpacePosition;
+            float3 ObjectSpacePosition;
         };
 
         struct VertexDescription
@@ -106,7 +106,7 @@
             VertexDescription description = (VertexDescription)0;
             float _Property_AC2D6045_Out_0 = Vector1_E75A2F97;
             float3 _Multiply_E4FA4146_Out_2;
-            Unity_Multiply_float(IN.WorldSpacePosition, (_Property_AC2D6045_Out_0.xxx), _Multiply_E4FA4146_Out_2);
+            Unity_Multiply_float(IN.ObjectSpacePosition, (_Property_AC2D6045_Out_0.xxx), _Multiply_E4FA4146_Out_2);
             description.VertexPosition = _Multiply_E4FA4146_Out_2;
             description.VertexNormal = IN.ObjectSpaceNormal;
             description.VertexTangent = IN.ObjectSpaceTangent;
@@ -235,7 +235,7 @@
 
             output.ObjectSpaceNormal = input.normalOS;
             output.ObjectSpaceTangent = input.tangentOS;
-            output.WorldSpacePosition = TransformObjectToWorld(input.positionOS);
+            output.ObjectSpacePosition = input.positionOS;
 
             return output;
         }
@@ -343,7 +343,7 @@
             {
                 float3 ObjectSpaceNormal;
                 float3 ObjectSpaceTangent;
-                float3 WorldSpacePosition;
+                float3 ObjectSpacePosition;
             };
 
             struct VertexDescription
@@ -358,7 +358,7 @@
                 VertexDescription description = (VertexDescription)0;
                 float _Property_AC2D6045_Out_0 = Vector1_E75A2F97;
                 float3 _Multiply_E4FA4146_Out_2;
-                Unity_Multiply_float(IN.WorldSpacePosition, (_Property_AC2D6045_Out_0.xxx), _Multiply_E4FA4146_Out_2);
+                Unity_Multiply_float(IN.ObjectSpacePosition, (_Property_AC2D6045_Out_0.xxx), _Multiply_E4FA4146_Out_2);
                 description.VertexPosition = _Multiply_E4FA4146_Out_2;
                 description.VertexNormal = IN.ObjectSpaceNormal;
                 description.VertexTangent = IN.ObjectSpaceTangent;
@@ -484,7 +484,7 @@
 
                 output.ObjectSpaceNormal = input.normalOS;
                 output.ObjectSpaceTangent = input.tangentOS;
-                output.WorldSpacePosition = TransformObjectToWorld(input.positionOS);
+                output.ObjectSpacePosition = input.positionOS;
 
                 return output;
             }
@@ -592,7 +592,7 @@
                 {
                     float3 ObjectSpaceNormal;
                     float3 ObjectSpaceTangent;
-                    float3 WorldSpacePosition;
+                    float3 ObjectSpacePosition;
                 };
 
                 struct VertexDescription
@@ -607,7 +607,7 @@
                     VertexDescription description = (VertexDescription)0;
                     float _Property_AC2D6045_Out_0 = Vector1_E75A2F97;
                     float3 _Multiply_E4FA4146_Out_2;
-                    Unity_Multiply_float(IN.WorldSpacePosition, (_Property_AC2D6045_Out_0.xxx), _Multiply_E4FA4146_Out_2);
+                    Unity_Multiply_float(IN.ObjectSpacePosition, (_Property_AC2D6045_Out_0.xxx), _Multiply_E4FA4146_Out_2);
                     description.VertexPosition = _Multiply_E4FA4146_Out_2;
                     description.VertexNormal = IN.ObjectSpaceNormal;
                     description.VertexTangent = IN.ObjectSpaceTangent;
@@ -733,7 +733,7 @@
 
                     output.ObjectSpaceNormal = input.normalOS;
                     output.ObjectSpaceTangent = input.tangentOS;
-                    output.WorldSpacePosition = TransformObjectToWorld(input.positionOS);
+                    output.ObjectSpacePosition = input.positionOS;
 
                     return output;
                 }
