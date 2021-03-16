@@ -509,6 +509,7 @@ public class PlayerCamera : MonoBehaviour
 
     public void Escape(InputAction.CallbackContext ctx)
     {
+        pC.uiMenu.UpdateUIMenuState(!pC.uiMenu.GetMenuStatus());
         escapeValue = ctx.ReadValue<float>();
     }
 }

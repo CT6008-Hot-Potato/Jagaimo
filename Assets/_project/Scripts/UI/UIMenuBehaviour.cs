@@ -9,7 +9,7 @@ public class UIMenuBehaviour : MonoBehaviour
  
     [Header("Core Object References")]
 
-    public PlayerControls playerActionControls;
+    //public PlayerControls playerActionControls;
     
 
     public GameObject uiMenuCanvasObject;
@@ -21,24 +21,29 @@ public class UIMenuBehaviour : MonoBehaviour
 
     public void Awake()
     {
-        playerActionControls = new PlayerControls();
-        playerActionControls.Gameplay.Escape.performed += _ => UpdateUIMenuState(true);
-        playerActionControls.Menu.Escape.performed += _ => UpdateUIMenuState(false);
+        //playerActionControls = new PlayerControls();
+        //playerActionControls.Gameplay.Escape.performed += _ => UpdateUIMenuState(true);
+        //playerActionControls.Menu.Escape.performed += _ => UpdateUIMenuState(false);
         SetupBehaviour();
     }
 
-    private void OnEnable()
-    {
-        playerActionControls.Enable();
-    }
-    private void OnDisable()
-    {
-        playerActionControls.Disable();
-    }
+    //private void OnEnable()
+    //{
+    //    playerActionControls.Enable();
+    //}
+    //private void OnDisable()
+    //{
+    //    playerActionControls.Disable();
+    //}
 
     public void SetupBehaviour()
     {   
         UpdateUIMenuState(false);
+    }
+
+    public bool GetMenuStatus()
+    {
+        return uiMenuCanvasObject.activeSelf;
     }
 
     public void UpdateUIMenuState(bool newState)
