@@ -46,7 +46,7 @@ public class SoundManager : MonoBehaviour
     public void PlaySound(AudioClip PlayMe)
     {
         GameObject MyObject = new GameObject(PlayMe.name);
-        MyObject.transform.parent = Camera.main.transform;
+        MyObject.transform.parent = Camera.main.gameObject.transform;
         MyObject.transform.position = Vector3.zero;
 
         AudioSource MyAudio = MyObject.AddComponent<AudioSource>();
