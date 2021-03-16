@@ -24,25 +24,20 @@ public class PackagedMutator
     public string name;
     public int ID;
 
+    [SerializeField]
     public object value;
 }
 
 #endregion
 
-public class MutatorManager : MonoBehaviour
+public class MutatorPackager : MonoBehaviour
 {
     #region Public Fields
 
-    public static MutatorManager instance;
+    public static MutatorPackager instance;
 
     //A reference to the current gamemode selected
     public GAMEMODE_INDEX Gamemode = GAMEMODE_INDEX.CLASSIC;
-
-    public List<MutatorUI> currentGeneralMutatorList = new List<MutatorUI>();
-
-    //The mutators being used currently
-    public List<MutatorUI> currentGmodeMutatorList = new List<MutatorUI>();
-    public List<MutatorUI> currentMapMutatorList = new List<MutatorUI>();
 
     #endregion
 
@@ -53,34 +48,12 @@ public class MutatorManager : MonoBehaviour
 
     #region Public Methods
 
-    //Setting the mutator list currently in use
-    public void SetGModeMutatorList(List<MutatorUI> newMutatorList)
-    {
-        currentGmodeMutatorList = newMutatorList;
-    }
-
-    //Getting the current mutator list
-    public List<MutatorUI> GetGModeMutatorList()
-    {
-        return currentGmodeMutatorList;
-    }
-
-    public void SetMapMutatorList(List<MutatorUI> newMutatorList)
-    {
-        currentMapMutatorList = newMutatorList;
-    }
-
-    public List<MutatorUI> GetMapMutatorList()
-    {
-        return currentMapMutatorList;
-    }
-
     //Saving And Loading the current mutators for the game to use
-    public void MakeChangedMutatorArrays(bool bLocalPlay)
+    public void MakeChangedMutatorArrays(bool bLocalPlay, List<MutatorUI> GenMut, List<MutatorUI> GamMut, List<MutatorUI> MapMut)
     {
-        PackagedMutator[] genMutators = packagedMutatorsForGen();
-        PackagedMutator[] gmodeMutators = packagedMutatorsForGMode();
-        PackagedMutator[] mapMutators = packagedMutatorsForMap();
+        PackagedMutator[] genMutators = packagedMutatorsForGen(GenMut);
+        PackagedMutator[] gmodeMutators = packagedMutatorsForGMode(GamMut);
+        PackagedMutator[] mapMutators = packagedMutatorsForMap(MapMut);
 
         //If the game is just for local play
         if (bLocalPlay)
@@ -116,7 +89,7 @@ public class MutatorManager : MonoBehaviour
     #region Private Methods
 
     //Getting an array of packaged mutators from each current mutatorUI list
-    private PackagedMutator[] packagedMutatorsForGen()
+    private PackagedMutator[] packagedMutatorsForGen(List<MutatorUI> currentGeneralMutatorList)
     {
         //These 3 functions currently follow the same structure, could be optimized
         //Making a temp variable
@@ -137,7 +110,7 @@ public class MutatorManager : MonoBehaviour
         return packagedGenMutators.ToArray();
     }
 
-    private PackagedMutator[] packagedMutatorsForGMode()
+    private PackagedMutator[] packagedMutatorsForGMode(List<MutatorUI> currentGmodeMutatorList)
     {
         List<PackagedMutator> packagedGmodeMutators = new List<PackagedMutator>();
 
@@ -152,7 +125,7 @@ public class MutatorManager : MonoBehaviour
         return packagedGmodeMutators.ToArray();
     }
 
-    private PackagedMutator[] packagedMutatorsForMap()
+    private PackagedMutator[] packagedMutatorsForMap(List<MutatorUI> currentMapMutatorList)
     {
         List<PackagedMutator> packagedMapMutators = new List<PackagedMutator>();
 

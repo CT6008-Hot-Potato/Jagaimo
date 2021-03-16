@@ -42,9 +42,9 @@ public class GameSettingsContainer : MonoBehaviour
         {
             for (int i = 0; i < generalMutators.Length; ++i)
             {
-                if (ID == generalMutators[ID].ID)
+                if (ID == generalMutators[i].ID)
                 {
-                    return generalMutators[ID].value;
+                    return generalMutators[i].value;
                 }
             }
         }
@@ -58,14 +58,30 @@ public class GameSettingsContainer : MonoBehaviour
         {
             for (int i = 0; i < gamemodeMutators.Length; ++i)
             {
-                if (ID == gamemodeMutators[ID].ID)
+                if (ID == gamemodeMutators[i].ID)
                 {
-                    return gamemodeMutators[ID].value;
+                    return gamemodeMutators[i].value;
                 }
             }
         }
 
         return null;
+    }
+
+    public bool HasGenMutator(int ID)
+    {
+        if (generalMutators.Length > 0)
+        {
+            for (int i = 0; i < generalMutators.Length; ++i)
+            {
+                if (ID == generalMutators[i].ID)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     #endregion

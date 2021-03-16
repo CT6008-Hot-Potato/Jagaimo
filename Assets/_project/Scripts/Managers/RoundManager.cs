@@ -37,6 +37,9 @@ public class RoundManager : MonoBehaviour
     [SerializeField]
     private TaggedTracker initialTagged;
 
+    [SerializeField]
+    BasicTimerBehaviour startCountdown;
+
     private void Awake()
     {
         //Adding the default gamemode if it doesnt have one
@@ -83,6 +86,11 @@ public class RoundManager : MonoBehaviour
         initialTagged = initialTagged ?? FindObjectOfType<TaggedTracker>();
         currentTagged = initialTagged;
         currentTagged.PlayerTagged();
+    }
+
+    private void Start()
+    {
+        startCountdown.CallOnTimerStart();
     }
 
     //Calling the RoundStarted Delegate Event
