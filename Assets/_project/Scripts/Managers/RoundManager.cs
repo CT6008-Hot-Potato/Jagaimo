@@ -44,6 +44,7 @@ public class RoundManager : MonoBehaviour
 
     private void Awake()
     {
+
         //Getting the game settings saved over from the main menu
         GameSettingsContainer settingsContainer = GameSettingsContainer.instance;
 

@@ -59,7 +59,7 @@ public class PlayerCamera : MonoBehaviour
     private float escapeValue = 0;
     private Vector2 cameraValue = Vector2.zero;
     [SerializeField]
-    private Material[] characterColor;
+    private GameObject[] character;
     [SerializeField]
     private GameObject playerFirstPerson;
     [SerializeField]
@@ -139,8 +139,17 @@ public class PlayerCamera : MonoBehaviour
 
     public void SetPlayerColor()
     { 
-        playerFirstPerson.GetComponent<SkinnedMeshRenderer>().material = characterColor[(int)playerIndex];    
-        playerThirdPerson.GetComponent<SkinnedMeshRenderer>().material = characterColor[(int)playerIndex];
+        for (int i = 0;i < 4;i++)
+        {
+            if (i == playerIndex)
+            {
+                character[i].SetActive(true);
+            }
+            else
+            {
+                character[i].SetActive(false);
+            }
+        }
     }
 
     public void SetupCameraAspectRatio()

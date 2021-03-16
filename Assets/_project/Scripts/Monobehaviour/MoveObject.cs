@@ -36,6 +36,11 @@ public class MoveObject : MonoBehaviour
     private bool grabbing = false;
     [SerializeField]
     private PlayerInput playerInput = null;
+    [SerializeField]
+    private AudioClip grabSound;
+    [SerializeField]
+    private AudioClip throwSound;
+    private SoundManager sM;
     public PlayerInput PlayerInput => playerInput;
     private float leftClick = 0;
     private float rightClick = 0;
@@ -46,6 +51,7 @@ public class MoveObject : MonoBehaviour
     //Start method setting up and assigning values
     void Start()
     {
+        sM = FindObjectOfType<SoundManager>();
         cM = GameObject.FindObjectOfType<CharacterManager>();
         position.position = movingParent.transform.position;
         if (!movingObject || !movingObject.GetComponent<Rigidbody>())
@@ -84,6 +90,7 @@ public class MoveObject : MonoBehaviour
                 }
                 else if (hit.rigidbody != null && hit.transform.tag != "Player")
                 {
+                    sM.PlaySound(grabSound);
                     movingObject = hit.transform.gameObject;
                     //Here we are simply assigning the rbObject the rb component on moving object then setting it's gravity to false and kinematic to true, this is done so this object doesn't drag around.
                     rbObject = movingObject.GetComponent<Rigidbody>();
@@ -176,6 +183,8 @@ public class MoveObject : MonoBehaviour
     //Function which when called will drop the current object which is being carried 
     public void Drop(bool throwObject)
     {
+        sM.PlaySound(throwSound);
+
         movingParent.transform.position = position.position;
         //Null check on moving object
         if (movingObject != null)

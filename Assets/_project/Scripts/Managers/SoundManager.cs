@@ -11,10 +11,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
-
 public class SoundManager : MonoBehaviour
 {
     [SerializeField] AudioMixerGroup DefaultAudioMixer;
+    [SerializeField]
+    private AudioClip sound;
     public void PlaySound(AudioClip PlayMe, Vector3 AtHere, float PitchVariation)
     {
         GameObject MyObject = new GameObject(PlayMe.name);
@@ -28,6 +29,7 @@ public class SoundManager : MonoBehaviour
         MyAudio.Play();
         Destroy(MyObject, PlayMe.length);
     }
+
     public void PlaySound(AudioClip PlayMe, float PitchVariation)
     {
         GameObject MyObject = new GameObject(PlayMe.name);
@@ -46,7 +48,7 @@ public class SoundManager : MonoBehaviour
     public void PlaySound(AudioClip PlayMe)
     {
         GameObject MyObject = new GameObject(PlayMe.name);
-        MyObject.transform.parent = Camera.main.transform;
+        MyObject.transform.parent = transform;
         MyObject.transform.position = Vector3.zero;
 
         AudioSource MyAudio = MyObject.AddComponent<AudioSource>();

@@ -49,6 +49,13 @@ public class PlayerController : MonoBehaviour
     private RebindingDisplay rebindingDisplay;
     private Timer timer;
     public UIMenuBehaviour uiMenu;
+    [SerializeField]
+    private AudioClip slideSound;
+    [SerializeField]  
+    private AudioClip crouchSound;
+    [SerializeField]  
+    private AudioClip jumpSound;
+    private SoundManager sM;
     #endregion
     //Enums
     #region Enums
@@ -67,6 +74,7 @@ public class PlayerController : MonoBehaviour
     //Start function sets up numerous aspects of the player ready for use
     void Start()
     {
+        sM = FindObjectOfType<SoundManager>();
         rebindingDisplay = FindObjectOfType<RebindingDisplay>();
         speed = walkSpeed;
         cM = GetComponent<CharacterManager>();
@@ -124,6 +132,7 @@ public class PlayerController : MonoBehaviour
             // Jump if grounded and input for jump pressed
             if (grounded && jumpValue > 0.1f)
             {
+                sM.PlaySound(jumpSound);
                 //Jumpine velocity for the player
                 rb.velocity = new Vector3(velocity.x, Mathf.Sqrt(jumpVelocity), velocity.z);
             }
@@ -206,6 +215,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (crouchValue > 0.1f || sprintValue > 0.1f)
                     {
+                        sM.PlaySound(crouchSound);
                         crouching = true;
                         speed = walkSpeed;
                         collider.center = new Vector3(0, 0, 0);
@@ -229,10 +239,12 @@ public class PlayerController : MonoBehaviour
                     if (speed == runSpeed && movementValue.z > 0.1f)
                     {
                         sliding = true;
+                        sM.PlaySound(slideSound);
                         StartCoroutine(Co_SlideTime());
                     }
                     else
                     {
+                        sM.PlaySound(crouchSound);
                         crouching = true;
                         speed = crouchSpeed;
                         playerMovement = pM.CROUCHING;
@@ -301,11 +313,12 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext ctx)
     {
-        jumpValue = ctx.ReadValue<float>();
+       jumpValue = ctx.ReadValue<float>();
     }
 
     public void Crouch(InputAction.CallbackContext ctx)
     {
+
         crouchValue = ctx.ReadValue<float>();
     }
 
