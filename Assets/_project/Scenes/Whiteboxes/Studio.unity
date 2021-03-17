@@ -7785,7 +7785,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 509912382}
-  - component: {fileID: 509912381}
   - component: {fileID: 509912380}
   - component: {fileID: 509912379}
   - component: {fileID: 509912378}
@@ -7859,18 +7858,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &509912381
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 509912377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8233d90336aea43098adf6dbabd606a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &509912382
 Transform:
   m_ObjectHideFlags: 0
@@ -11510,7 +11497,7 @@ GameObject:
   - component: {fileID: 689174136}
   - component: {fileID: 689174135}
   m_Layer: 0
-  m_Name: Cube (3)
+  m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16709,7 +16696,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bc1ffe8e7959cc45a734b1ff12e8bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFactor: 1
+  scaleFactor: 1.1
   Color: {r: 0, g: 0, b: 0, a: 1}
   outlineColor: {fileID: 2100000, guid: df2924a5ac4bcff42bd3d7ab9f3353f4, type: 2}
 --- !u!108 &1054865313
@@ -28276,7 +28263,7 @@ PrefabInstance:
     - target: {fileID: 2692320980931498883, guid: 8cef0e0e385f04f4eb8d02c327e194db,
         type: 3}
       propertyPath: singleLocalPlayer
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2692320980931498886, guid: 8cef0e0e385f04f4eb8d02c327e194db,
         type: 3}
