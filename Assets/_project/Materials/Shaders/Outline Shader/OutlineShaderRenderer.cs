@@ -32,9 +32,16 @@ public class OutlineShaderRenderer : MonoBehaviour
 
         // outlineObject.transform.localScale = transform.localScale;
         MeshFilter mesh = outlineObject.AddComponent<MeshFilter>();
-        mesh.mesh = GetComponent<MeshFilter>().mesh;
+        if (GetComponent<MeshFilter>() != null)
+        {
+            mesh.mesh = GetComponent<MeshFilter>().mesh;
+        }
+        else if (GetComponent<SkinnedMeshRenderer>() != null)
+        {
+            mesh.mesh = GetComponent<SkinnedMeshRenderer>().sharedMesh;
+        }
 
-        Renderer rend = outlineObject.AddComponent<Renderer>();
+        Renderer rend = outlineObject.AddComponent<MeshRenderer>();
         rend.material = outlineMat;
         rend.material.SetColor("Color_B76D8C5B", color);
         rend.material.SetFloat("Vector1_E75A2F97", scaleFactor );
