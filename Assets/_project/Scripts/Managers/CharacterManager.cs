@@ -13,7 +13,7 @@ using UnityEngine;
 [RequireComponent(typeof(TaggedTracker))]
 public class CharacterManager : MonoBehaviour
 {  
-    private TaggedTracker _tracker;
+    public TaggedTracker _tracker;
     private PlayerController _movement;
     private Renderer _rend;
     public int playerIndex;
@@ -32,8 +32,13 @@ public class CharacterManager : MonoBehaviour
     public bool isActive { get; private set; }
     public bool isPlayer { get; private set; }
 
+    [SerializeField]
+    TestStartTrigger trigger;
+
     private void Awake()
     {
+        trigger = TestStartTrigger.instance;
+
         if (singleLocalPlayer)
         {
             playerManager.SetActive(false);
@@ -81,6 +86,12 @@ public class CharacterManager : MonoBehaviour
         playerIndex = (playerCameras.Length - 1);
         if (playerIndex != playerIndexPrior)
         {
+            if (!trigger)
+            {
+                trigger = TestStartTrigger.instance;
+                trigger.CanStart();
+            }
+
             playerIndexPrior = playerIndex;
             PlayerCamera[] cameras = FindObjectsOfType<PlayerCamera>();
             for (int i = 0; i < cameras.Length; i++)
@@ -191,7 +202,13 @@ public class CharacterManager : MonoBehaviour
                 Debug.Log("Eliminated player shown", this);
             }
 
-            _rend.material = eliminatedMat;
+            transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            gameObject.SetActive(false);
+
+            if (_rend)
+            {
+                _rend.material = eliminatedMat;
+            }
         }
         else
         {
@@ -207,6 +224,11 @@ public class CharacterManager : MonoBehaviour
 
         return this;
     }
+
+    //public void EliminatePlayer()
+    //{
+    //
+    //}
 
     //Function to have the player locked in a position (so they cant move or rotate the camera)
     private void LockPlayer()

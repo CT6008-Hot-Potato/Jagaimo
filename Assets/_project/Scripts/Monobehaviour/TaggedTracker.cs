@@ -17,7 +17,7 @@ public class TaggedTracker : MonoBehaviour, IInteractable
 
     [SerializeField]
     private RoundManager roundManager;
-    private CharacterManager playerManager;
+    public CharacterManager playerManager;
 
     private void Awake()
     {
@@ -48,7 +48,10 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     public void PlayerUnTagged()
     {
         isTagged = false;
+        //enabled = true;
+
         //GetComponent<PlayerCamera>().SetCameraView(false);
+
         if (Debug.isDebugBuild)
         {
             Debug.Log("This was untagged", this);

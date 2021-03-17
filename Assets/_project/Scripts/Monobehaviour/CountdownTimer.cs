@@ -59,12 +59,14 @@ public class CountdownTimer : MonoBehaviour
     {
         RoundManager.CountdownStarted   += StartTimer;
         RoundManager.CountdownEnded += TimerEndedDebug;
+        RoundManager.RoundEnded += RoundEnded;
     }
 
     private void OnDisable()
     {
         RoundManager.CountdownStarted -= StartTimer;
         RoundManager.CountdownEnded -= TimerEndedDebug;
+        RoundManager.RoundEnded -= RoundEnded;
     }
 
     //Start the timer
@@ -81,6 +83,11 @@ public class CountdownTimer : MonoBehaviour
         {
             Debug.Log("Round Timer Over", this);
         }
+    }
+
+    public void RoundEnded()
+    {
+        enabled = false;
     }
 
     //The timer behaviour (maybe should be refactored into a multiuse script)

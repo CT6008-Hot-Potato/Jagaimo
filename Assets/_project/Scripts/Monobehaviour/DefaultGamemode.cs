@@ -65,8 +65,9 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
 
     //Someone dies or leaves the game
     private void RemoveActivePlayer(CharacterManager characterLeft)
-    {
+    {       
         currentActivePlayers.Remove(characterLeft);
+        //Debug.Log(currentActivePlayers.Count);
     }
 
     //This runs when the round is about to start/ during the initial timer
@@ -85,30 +86,51 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     private void CountdownStarting()
     {
         //Tags previously tagged character if there was one, if not choose a random character 
-        //Spawns all character on random points (out of a set number of points) in an arena section
+        if (!roundManager.previousTagged)
+        {
+            roundManager.OnPlayerTagged(currentActivePlayers[0]._tracker, currentActivePlayers[0]);
+        }
+
+        //TODO: Spawns all character on random points (out of a set number of points) in an arena section
     }
 
     //When the countdown ends
     private void CountdownEnding()
     {
+        int iplayercount = currentActivePlayers.Count;
+
         //Exploding the tagged player and removing from active players
         foreach (CharacterManager cManager in currentActivePlayers)
         {
             if (cManager.CheckIfEliminated())
             {
+                Debug.Log("Round end");
                 RemoveActivePlayer(cManager);
                 break;
             }
         }
 
+        if (iplayercount == currentActivePlayers.Count)
+        {
+            Debug.Log(roundManager.previousTagged.name);
+            //RemoveActivePlayer(currentActivePlayers[0]);           
+        }
+
         //Each countdown in this gamemode could be the end of this game
         if (ThisWinCondition())
         {
+            roundManager.CallOnRoundEnd();
+
             //Moving to podium screen with a lobby countdown
             if (Debug.isDebugBuild)
             {
                 Debug.Log("Player Won: " + playerWhoWon.name, this);
             }
+        }
+        //It's not the end of the game
+        else
+        {
+            roundManager.CallOnCountdownStart();
         }
     }
 
