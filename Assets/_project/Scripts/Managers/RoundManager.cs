@@ -8,6 +8,9 @@
 
 //This script uses these namespaces
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 //A class to hold the events that happen throughout the round, a round is a full game where everyone is alive to the last player left
@@ -41,6 +44,8 @@ public class RoundManager : MonoBehaviour
     BasicTimerBehaviour startCountdown;
     [SerializeField]
     ScrollerText eventText;
+    [SerializeField]
+    CharacterManager characterManager;
 
     private void Awake()
     {
@@ -76,23 +81,59 @@ public class RoundManager : MonoBehaviour
         {
             _currentGamemode = gamemode;
         }
+
         //For some reason no gamemode was applied and none was on the objectwhat
-        else
+        if (_currentGamemode == null)
         {
             _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
         }
 
-        //This will be done on round start and use non spectator characters in actual version
-        _currentGamemode.SetActivePlayers(FindObjectsOfType<CharacterManager>());
-        
-        //This will be delegated to the gamemode at some point
-        initialTagged = initialTagged ?? FindObjectOfType<TaggedTracker>();
-        currentTagged = initialTagged;
-        currentTagged.PlayerTagged();
+        //List<CharacterManager> managers = FindObjectsOfType<CharacterManager>().ToList();
+        //managers.Remove(characterManager);
+
+        ////This will be done on round start and use non spectator characters in actual version
+        //_currentGamemode.SetActivePlayers(managers.ToArray());
+
+        ////This will be delegated to the gamemode at some point
+        //initialTagged = initialTagged ?? managers[0]._tracker;
+        //currentTagged = initialTagged;
+
+        //currentTagged.PlayerTagged();
     }
 
     private void Start()
     {
+        StartCoroutine(Co_WaitUntilPlayers());
+    }
+
+    IEnumerator Co_WaitUntilPlayers()
+    {
+        while (characterManager.playerIndex < 3)
+        {
+            yield return null;
+        }
+
+        List<CharacterManager> managers = FindObjectsOfType<CharacterManager>().ToList();
+        List<CharacterManager> charList = new List<CharacterManager>();
+
+        for (int i = 0; i < managers.Count; ++i)
+        {
+            if (managers[i].GetComponent<PlayerCamera>())
+            {
+                Debug.Log(managers[i].name);
+                charList.Add(managers[i]);
+            }
+        }
+
+        //This will be done on round start and use non spectator characters in actual version
+        _currentGamemode.SetActivePlayers(charList.ToArray());
+
+        //This will be delegated to the gamemode at some point
+        initialTagged = initialTagged ?? charList[0]._tracker;
+        currentTagged = initialTagged;
+
+        currentTagged.PlayerTagged();
+
         startCountdown.CallOnTimerStart();
     }
 
@@ -160,5 +201,10 @@ public class RoundManager : MonoBehaviour
 
         currentTagged.PlayerTagged();
         _currentGamemode.PlayerTagged(manager);
+
+        if (eventText)
+        {
+            eventText.AddTaggedText();
+        }
     }
 }

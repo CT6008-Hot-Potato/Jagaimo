@@ -26,4 +26,12 @@ public class Potato : MonoBehaviour
             interactable.Interact();
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.SetActive(false);
+        }
+    }
 }
