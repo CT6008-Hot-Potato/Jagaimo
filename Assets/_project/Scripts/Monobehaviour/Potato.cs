@@ -27,11 +27,11 @@ public class Potato : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            collision.gameObject.SetActive(false);
-        }
-    }
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.tag == "Player")
+    //    {
+    //        collision.gameObject.SetActive(false);
+    //    }
+    //}
 }

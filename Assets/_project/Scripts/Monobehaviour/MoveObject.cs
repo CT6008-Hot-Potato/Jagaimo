@@ -32,7 +32,7 @@ public class MoveObject : MonoBehaviour
     private float grabDistance = 5;
     private Rigidbody rbObject;
     private Rigidbody rbParent;
-    private CharacterManager cM;
+    private LocalMPScreenPartioning cM;
     private bool grabbing = false;
     [SerializeField]
     private PlayerInput playerInput = null;
@@ -52,7 +52,7 @@ public class MoveObject : MonoBehaviour
     void Start()
     {
         sM = FindObjectOfType<SoundManager>();
-        cM = GameObject.FindObjectOfType<CharacterManager>();
+        cM = GameObject.FindObjectOfType<LocalMPScreenPartioning>();
         position.position = movingParent.transform.position;
         if (!movingObject || !movingObject.GetComponent<Rigidbody>())
         {

@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
     private bool grounded = false;
     private bool sliding = false;
     private PlayerCamera pC;
-    private CharacterManager cM;
+    private LocalMPScreenPartioning cM;
     private CapsuleCollider collider;
     private bool crouching = false;
     private bool slowStand = false;
@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
         sM = FindObjectOfType<SoundManager>();
         rebindingDisplay = FindObjectOfType<RebindingDisplay>();
         speed = walkSpeed;
-        cM = GetComponent<CharacterManager>();
+        cM = GetComponent<LocalMPScreenPartioning>();
         Physics.queriesHitBackfaces = true;
         pC = GetComponent<PlayerCamera>();
         playerMovement = pM.INTERACTING;

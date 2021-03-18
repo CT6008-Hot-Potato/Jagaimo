@@ -45,7 +45,7 @@ public class RoundManager : MonoBehaviour
     [SerializeField]
     ScrollerText eventText;
     [SerializeField]
-    CharacterManager characterManager;
+    LocalMPScreenPartioning localMPIndexer;
 
     private void Awake()
     {
@@ -108,28 +108,23 @@ public class RoundManager : MonoBehaviour
 
     IEnumerator Co_WaitUntilPlayers()
     {
-        while (characterManager.playerIndex < 3)
+        if (!localMPIndexer)
+        {
+            Debug.LogError("Set An MP Screen Partitioner on this object", this);
+        }
+
+        while (localMPIndexer.playerIndex < 1)
         {
             yield return null;
         }
 
         List<CharacterManager> managers = FindObjectsOfType<CharacterManager>().ToList();
-        List<CharacterManager> charList = new List<CharacterManager>();
-
-        for (int i = 0; i < managers.Count; ++i)
-        {
-            if (managers[i].GetComponent<PlayerCamera>())
-            {
-                Debug.Log(managers[i].name);
-                charList.Add(managers[i]);
-            }
-        }
 
         //This will be done on round start and use non spectator characters in actual version
-        _currentGamemode.SetActivePlayers(charList.ToArray());
+        _currentGamemode.SetActivePlayers(managers.ToArray());
 
         //This will be delegated to the gamemode at some point
-        initialTagged = initialTagged ?? charList[0]._tracker;
+        initialTagged = initialTagged ?? managers[0]._tracker;
         currentTagged = initialTagged;
 
         currentTagged.PlayerTagged();
