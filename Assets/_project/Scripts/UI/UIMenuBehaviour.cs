@@ -58,7 +58,11 @@ public class UIMenuBehaviour : MonoBehaviour
 
     void UpdateCoreUIObjectsState(bool newState)
     {
-        sM.PlaySound(clickSound);
+        if (sM)
+        {
+            sM.PlaySound(clickSound);
+        }
+
         //uiMenuCameraObject.SetActive(newState);
         uiMenuCanvasObject.SetActive(newState);
     }

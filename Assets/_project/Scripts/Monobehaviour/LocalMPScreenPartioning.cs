@@ -53,7 +53,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
             {
                 cameras[i].playerIndex = i;
                 cameras[i].SetPlayerColor();
-                Debug.Log(playerIndex + "PLAYER INDEX");
+                //Debug.Log(playerIndex + "PLAYER INDEX");
                 Debug.Log(i + "Current player");
                 switch (playerIndex)
                 {

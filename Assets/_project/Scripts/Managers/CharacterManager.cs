@@ -9,12 +9,13 @@
 //This script uses these namespaces
 using UnityEngine;
 
-//The class needs these other components on the object (Tagged Tracker, but dont add requires component because you cant remove them after)
+[RequireComponent(typeof(TaggedTracker))]
 public class CharacterManager : MonoBehaviour
 {  
     public TaggedTracker _tracker;
     private PlayerController _movement;
     private Renderer _rend;
+    private PlayerCamera _cam;
 
     //Just for testing
     [SerializeField]
@@ -28,8 +29,9 @@ public class CharacterManager : MonoBehaviour
     private void Awake()
     {
         trigger = TestStartTrigger.instance;
-        _tracker = GetComponent<TaggedTracker>();
-        _movement = GetComponent<PlayerController>();
+        _tracker = _tracker ?? GetComponent<TaggedTracker>();
+        _movement = _movement ?? GetComponent<PlayerController>();
+        _cam = _cam ?? GetComponent<PlayerCamera>();
         _rend = GetComponent<Renderer>();
     }
 
@@ -119,6 +121,11 @@ public class CharacterManager : MonoBehaviour
     {
         //Play VFX + Sound
         //Lerp into first person camera mode
+        if (_cam)
+        {
+            GetComponent<PlayerCamera>().SetCameraView(false);
+        }
+
         //Animation for regaining potato
     }
 
@@ -126,5 +133,9 @@ public class CharacterManager : MonoBehaviour
     {
         //Play VFX + Sound
         //Lerp into thrid person camera mode Note: this should be quicker than the lerp when you're tagged
+        if (_cam)
+        {
+            GetComponent<PlayerCamera>().SetCameraView(false);
+        }
     }
 }
