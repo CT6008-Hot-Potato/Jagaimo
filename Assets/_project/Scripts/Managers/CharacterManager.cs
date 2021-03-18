@@ -9,27 +9,18 @@
 //This script uses these namespaces
 using UnityEngine;
 
-//The class needs these other components on the object
 [RequireComponent(typeof(TaggedTracker))]
 public class CharacterManager : MonoBehaviour
 {  
     public TaggedTracker _tracker;
     private PlayerController _movement;
     private Renderer _rend;
-    public int playerIndex;
-    private int playerIndexPrior;
+    private PlayerCamera _cam;
+
     //Just for testing
     [SerializeField]
     private Material eliminatedMat;
-    [SerializeField]
-    private PlayerCamera[] playerCameras;
-    [SerializeField]
-    private GameObject playerPrefab;
-    [SerializeField]
-    private GameObject playerManager;
-    [SerializeField]
-    private bool singleLocalPlayer;
-    public bool isActive { get; private set; }
+
     public bool isPlayer { get; private set; }
 
     [SerializeField]
@@ -38,22 +29,10 @@ public class CharacterManager : MonoBehaviour
     private void Awake()
     {
         trigger = TestStartTrigger.instance;
-
-        if (singleLocalPlayer)
-        {
-            playerManager.SetActive(false);
-            Instantiate(playerPrefab, new Vector3(0, 1, 0),playerPrefab.transform.rotation);
-        }
-        _tracker = GetComponent<TaggedTracker>();
-        _movement = GetComponent<PlayerController>();
+        _tracker = _tracker ?? GetComponent<TaggedTracker>();
+        _movement = _movement ?? GetComponent<PlayerController>();
+        _cam = _cam ?? GetComponent<PlayerCamera>();
         _rend = GetComponent<Renderer>();
-        playerCameras = FindObjectsOfType<PlayerCamera>();
-        playerIndex = (playerCameras.Length - 1) / 2;
-        for (int i = 0; i > playerIndex;i++)
-        {
-            playerCameras[i].playerIndex = i;
-        }
-        playerIndexPrior = playerIndex;
     }
 
 
@@ -78,114 +57,6 @@ public class CharacterManager : MonoBehaviour
         {
             isPlayer = false;
         }
-    }
-
-    private void Update()
-    {
-        playerCameras = FindObjectsOfType<PlayerCamera>();
-        playerIndex = (playerCameras.Length - 1);
-        if (playerIndex != playerIndexPrior)
-        {
-            if (!trigger)
-            {
-                trigger = TestStartTrigger.instance;
-                trigger.CanStart();
-            }
-
-            playerIndexPrior = playerIndex;
-            PlayerCamera[] cameras = FindObjectsOfType<PlayerCamera>();
-            for (int i = 0; i < cameras.Length; i++)
-            {
-                cameras[i].playerIndex = i;
-                cameras[i].SetPlayerColor();
-                Debug.Log(playerIndex + "PLAYER INDEX");
-                Debug.Log(i + "Current player");
-                switch (playerIndex)
-                {
-                    case 0:
-                        if (i == 0)
-                        {
-                            cameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
-                            cameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
-                        }
-                        else
-                        {
-                            Debug.Log("Value too high");
-                        }
-                        break;
-                    case 1:
-                        switch (i)
-                        {
-                            case 0:
-                                cameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                                cameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                                break;
-                            case 1:
-                                cameras[1].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
-                                cameras[1].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
-                                break;
-                            default:
-                                Debug.Log("Value too high");
-                                break;
-                        }
-                        break;
-                    case 2:
-                        switch (i)
-                        {
-                            case 0:
-                                cameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                                cameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                                break;
-                            case 1:
-                                cameras[1].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                                cameras[1].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                                break;
-                            case 2:
-                                cameras[2].firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                                cameras[2].thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                                break;
-                            default:
-                                Debug.Log("Value too high");
-                                break;
-                        }
-                        break;
-                    case 3:
-                        switch (i)
-                        {
-                            case 0:
-                                cameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
-                                cameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
-                                break;
-                            case 1:
-                                cameras[1].firstPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-                                cameras[1].thirdPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-                                break;
-                            case 2:
-                                cameras[2].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                                cameras[2].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                                break;
-                            case 3:
-                                cameras[3].firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                                cameras[3].thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                                break;
-                            default:
-                                Debug.Log("Value too high");
-                                break;
-                        }
-                        break;
-                }
-            }
-        }
-    }
-
-    private void OnEnable()
-    {
-
-    }
-
-    private void OnDisable()
-    {
-
     }
 
     //Some Gamemodes will have elimination, some wont
@@ -250,6 +121,11 @@ public class CharacterManager : MonoBehaviour
     {
         //Play VFX + Sound
         //Lerp into first person camera mode
+        if (_cam)
+        {
+            GetComponent<PlayerCamera>().SetCameraView(false);
+        }
+
         //Animation for regaining potato
     }
 
@@ -257,5 +133,9 @@ public class CharacterManager : MonoBehaviour
     {
         //Play VFX + Sound
         //Lerp into thrid person camera mode Note: this should be quicker than the lerp when you're tagged
+        if (_cam)
+        {
+            GetComponent<PlayerCamera>().SetCameraView(false);
+        }
     }
 }

@@ -50,7 +50,7 @@ public class PlayerCamera : MonoBehaviour
     private float controllerCameraSensitivityMultiplier = 1.25f;
     private float pitch;
     private float yaw;
-    private CharacterManager cM;
+    private LocalMPScreenPartioning cM;
     [SerializeField]
     private PlayerInput playerInput = null;
     public PlayerInput PlayerInput => playerInput;
@@ -104,7 +104,7 @@ public class PlayerCamera : MonoBehaviour
     // Assigning audio listeners, setting correct camera state and making sure queriesHitBackfaces is true for raycasting later
     void Start()
     {
-        cM = GetComponent<CharacterManager>();
+        cM = GetComponent<LocalMPScreenPartioning>();
         Physics.queriesHitBackfaces = true;
         SetPlayerColor();
         firstPersonCamPosition = firstPersonCamera.transform.localPosition;

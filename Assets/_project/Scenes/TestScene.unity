@@ -1813,6 +1813,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1095567753 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1765140015, guid: 8cef0e0e385f04f4eb8d02c327e194db,
+    type: 3}
+  m_PrefabInstance: {fileID: 2692320980238218629}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5216b07907d8ea48a5f515f256d726f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1100547725
 GameObject:
   m_ObjectHideFlags: 0
@@ -2976,6 +2988,11 @@ PrefabInstance:
       propertyPath: roundManager
       value: 
       objectReference: {fileID: 683221330}
+    - target: {fileID: 9045296908280678674, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
+        type: 3}
+      propertyPath: iFPSLimit
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ec01ed5da9c4c2479db6938f0cd1761, type: 3}
 --- !u!114 &1977434640991229419 stripped
@@ -3328,6 +3345,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
+        type: 3}
+      propertyPath: localMPIndexer
+      value: 
+      objectReference: {fileID: 1095567753}
     - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
       propertyPath: startCountdown

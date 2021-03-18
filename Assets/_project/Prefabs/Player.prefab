@@ -617,6 +617,7 @@ GameObject:
   - component: {fileID: 4394244838949972465}
   - component: {fileID: 4394244838949972464}
   - component: {fileID: 4394244838949972467}
+  - component: {fileID: 2247912719934754806}
   - component: {fileID: 4394244838949972466}
   - component: {fileID: 4394244838949972471}
   - component: {fileID: 4394244838949972468}
@@ -706,7 +707,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.45
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -726,6 +727,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!65 &2247912719934754806
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4394244838949972448}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9, y: 2, z: 0.9}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4394244838949972466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -738,12 +752,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81daa6c644f3b784d8376c0c90451a51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerIndex: 0
+  _tracker: {fileID: 4394244838949972469}
   eliminatedMat: {fileID: 2100000, guid: 8aa9c9596a408c1449948ec4667597ab, type: 2}
-  playerCameras: []
-  playerPrefab: {fileID: 0}
-  playerManager: {fileID: 0}
-  singleLocalPlayer: 0
+  trigger: {fileID: 0}
 --- !u!114 &4394244838949972471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -798,7 +809,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4394244838949972448}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bce7e5e4b3483ee46b8c4800bfd73e36, type: 3}
   m_Name: 

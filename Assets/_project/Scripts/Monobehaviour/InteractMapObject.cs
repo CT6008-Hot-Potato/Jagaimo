@@ -7,8 +7,6 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InteractMapObject : MonoBehaviour, IInteractable
@@ -24,10 +22,10 @@ public class InteractMapObject : MonoBehaviour, IInteractable
     void IInteractable.Interact() => Interact();
     private void Interact()
     {
-        if (Debug.isDebugBuild)
-        {
-            Debug.Log("Hit Interactable Map Object", this);
-        }
+        //if (Debug.isDebugBuild)
+        //{
+        //    Debug.Log("Hit Interactable Map Object", this);
+        //}
 
         if (obj_anim)
         {
