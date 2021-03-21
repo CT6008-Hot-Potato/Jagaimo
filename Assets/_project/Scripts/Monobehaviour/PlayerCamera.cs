@@ -61,6 +61,10 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     private GameObject[] character;
     [SerializeField]
+    private GameObject[] characterArms;
+    [SerializeField]
+    private LayerMask[] mask;
+    [SerializeField]
     private GameObject playerFirstPerson;
     [SerializeField]
     private GameObject playerThirdPerson;
@@ -99,6 +103,7 @@ public class PlayerCamera : MonoBehaviour
         {
             cameraState = cS.THIRDPERSON;
         }
+        SetPlayerMask();
     }
 
     // Assigning audio listeners, setting correct camera state and making sure queriesHitBackfaces is true for raycasting later
@@ -106,14 +111,10 @@ public class PlayerCamera : MonoBehaviour
     {
         cM = GetComponent<LocalMPScreenPartioning>();
         Physics.queriesHitBackfaces = true;
-        SetPlayerColor();
+        SetPlayerMask();
         firstPersonCamPosition = firstPersonCamera.transform.localPosition;
         collider = GetComponent<CapsuleCollider>();
         pC = GetComponent<PlayerController>();
-        if (FindObjectOfType<AudioListener>())
-        {
-            playerIndex = 1;
-        }
         //Set to first person
         if (cameraState != cS.FIRSTPERSON)
         {
@@ -134,20 +135,36 @@ public class PlayerCamera : MonoBehaviour
                 Debug.Log("Character model null");
             }
         }
-        //SetupCameraAspectRatio();
+        SetPlayerMask();
     }
 
-    public void SetPlayerColor()
+    public void SpinCamera()
+    {
+        firstPersonCamera.transform.eulerAngles = new UnityEngine.Vector3(0, yaw - 180, 0);
+    }
+
+    public void SetPlayerMask()
     { 
         for (int i = 0;i < 4;i++)
         {
             if (i == playerIndex)
             {
                 character[i].SetActive(true);
+                characterArms[i].SetActive(true);
+
+                if (firstPersonCamera.enabled)
+                {
+                    firstPersonCamera.cullingMask = mask[i + 4];
+                }
+                else
+                {
+                    thirdPersonCamera.cullingMask = mask[i];
+                }
             }
             else
             {
                 character[i].SetActive(false);
+                characterArms[i].SetActive(false);
             }
         }
     }
@@ -236,6 +253,15 @@ public class PlayerCamera : MonoBehaviour
 
     void Update()
     {
+        if (firstPersonCamera.enabled)
+        {
+            //firstPersonCamera.cullingMask == LayerMask.NameToLayer("");
+        }
+        else
+        {
+
+        }
+
         //Function for aspects of the player movement to if the camera is in third or first person mode
         CameraType();
     }
@@ -246,12 +272,47 @@ public class PlayerCamera : MonoBehaviour
         zoomInPosition.localPosition = Vector3.zero;
     }
     //Called to uncrouch the player
-    public void UnCrouch()
+    public bool UnCrouch()
     {
-        firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0.75f, 0);
-        zoomInPosition.localPosition = Vector3.zero;
+        //Raycast from first person camera
+        ray = new Ray(firstPersonCamera.transform.position, firstPersonCamera.transform.up);
+        //Do a raycast and check if facing wall
+        Physics.Raycast(ray, out hit, 0.5f);
+        if (hit.collider != null)
+        {
+            return false;
+        }
+        else 
+        {
+            firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0.75f, 0);
+            zoomInPosition.localPosition = Vector3.zero;
+            return true;
+        }
     }
 
+    //Check if able to perform a wall kick by checking how close to a collider
+    public bool WallKick()
+    {
+        //Raycast from first person camera
+        ray = new Ray(firstPersonCamera.transform.position, firstPersonCamera.transform.forward);
+        //Do a raycast and check if facing wall
+        Physics.Raycast(ray, out hit, 0.5f);
+
+        if (hit.rigidbody == null && hit.collider != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    public void ChangeYaw()
+    {
+        yaw = yaw - 180;
+    }
 
     //Camera type function which is responsible for managing the rotation and type of camera which the player utilises
     void CameraType()
@@ -267,6 +328,7 @@ public class PlayerCamera : MonoBehaviour
                     {
                         thirdPersonCamera.enabled = false;
                         firstPersonCamera.enabled = true;
+                        SetPlayerMask();
                     }
                     else
                     {
@@ -446,11 +508,12 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
-    //Function to enable third person mode camera, vfx and audio listener
+    //Function to enable third person mode camera
     void EnableThirdPerson()
     {
         thirdPersonCamera.enabled = true;
         firstPersonCamera.enabled = false;
+        SetPlayerMask();
     }
 
     public void Camera(InputAction.CallbackContext ctx)

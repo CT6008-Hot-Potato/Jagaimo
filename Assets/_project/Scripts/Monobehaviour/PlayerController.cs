@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     private float downForce = 15;
     private bool grounded = false;
     private bool sliding = false;
+    private bool climbing = false;
     private PlayerCamera pC;
     private LocalMPScreenPartioning cM;
     private CapsuleCollider collider;
@@ -136,9 +137,18 @@ public class PlayerController : MonoBehaviour
                 //Jumpine velocity for the player
                 rb.velocity = new Vector3(velocity.x, Mathf.Sqrt(jumpVelocity), velocity.z);
             }
-            else if (grounded == false)
+            else if (!grounded && !climbing)
             {
-                downForce = 22;
+
+                if (jumpValue > 0.1f && pC.WallKick())
+                {
+                    climbing = true;
+                    StartCoroutine(Co_ClimbTime());
+                }
+                else
+                {
+                    downForce = 22;
+                }
             }
             else if (downForce != 15)
             {
@@ -197,7 +207,6 @@ public class PlayerController : MonoBehaviour
                 //Checks for player walking
                 if (movementValue != Vector3.zero)
                 {
-                    //rebindingDisplay.DisplayBindingMenu(false);
                     //Unlock cursor
                     uiMenu.UpdateUIMenuState(false);
                     UnityEngine.Cursor.lockState = CursorLockMode.Locked;
@@ -215,13 +224,15 @@ public class PlayerController : MonoBehaviour
                 {
                     if (crouchValue > 0.1f || sprintValue > 0.1f)
                     {
-                        sM.PlaySound(crouchSound);
-                        crouching = true;
-                        speed = walkSpeed;
-                        collider.center = new Vector3(0, 0, 0);
-                        collider.height = 2;
-                        pC.UnCrouch();
-                        playerMovement = pM.WALKING;
+                        if (pC.UnCrouch())
+                        {
+                            sM.PlaySound(crouchSound);
+                            crouching = true;
+                            speed = walkSpeed;
+                            collider.center = new Vector3(0, 0, 0);
+                            collider.height = 2;
+                            playerMovement = pM.WALKING;
+                        }
                     }
                 }
                 else if (crouching && crouchValue == 0)
@@ -236,18 +247,25 @@ public class PlayerController : MonoBehaviour
                     collider.center = new Vector3(0, -0.5f, 0);
                     collider.height = 1;
                     pC.Crouch();
-                    if (speed == runSpeed && movementValue.z > 0.1f)
+                    if (grounded)
                     {
-                        sliding = true;
-                        sM.PlaySound(slideSound);
-                        StartCoroutine(Co_SlideTime());
+                        if (speed == runSpeed && movementValue.z > 0.1f)
+                        {
+                            sliding = true;
+                            sM.PlaySound(slideSound);
+                            StartCoroutine(Co_SlideTime());
+                        }
+                        else
+                        {
+                            sM.PlaySound(crouchSound);
+                            crouching = true;
+                            speed = crouchSpeed;
+                            playerMovement = pM.CROUCHING;
+                        }
                     }
                     else
                     {
-                        sM.PlaySound(crouchSound);
-                        crouching = true;
-                        speed = crouchSpeed;
-                        playerMovement = pM.CROUCHING;
+                        rb.AddForce(-transform.up , ForceMode.Impulse);
                     }
                 }
                 else if (crouching && crouchValue == 0)
@@ -267,6 +285,21 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Given value for MovementType is too high.");
                 break;
         }
+    }
+
+    private IEnumerator Co_ClimbTime()
+    {
+        timer = new Timer(0.125f);
+        while (timer.isActive)
+        {
+            timer.Tick(Time.deltaTime);
+            rb.AddForce(transform.up, ForceMode.Impulse);       
+            yield return null;
+        }
+        rb.AddForce(-rotationPosition.forward * 75, ForceMode.Impulse);
+        rb.velocity = Vector3.zero;
+        pC.ChangeYaw();
+        climbing = false;
     }
 
     private IEnumerator Co_SlideTime()
