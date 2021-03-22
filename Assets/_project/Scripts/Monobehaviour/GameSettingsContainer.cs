@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////////////// 
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameSettingsContainer : MonoBehaviour
 {
@@ -20,9 +21,19 @@ public class GameSettingsContainer : MonoBehaviour
     public PackagedMutator[] gamemodeMutators;
     public PackagedMutator[] mapMutators;
 
+    public int iPlayercount = 0;
+    public PlayerInput[] LocalPlayerInputs = new PlayerInput[4];
+
     #endregion
 
     #region Public Methods
+
+    //Resetting these variables
+    public void ClearPlayers()
+    {
+        iPlayercount = 0;
+        LocalPlayerInputs = new PlayerInput[4];
+    }
 
     public void StoreMutators(PackagedMutator[] genMutators, PackagedMutator[] gmodeMutators, PackagedMutator[] mMutators)
     {
