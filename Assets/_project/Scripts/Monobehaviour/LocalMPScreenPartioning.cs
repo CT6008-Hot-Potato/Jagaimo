@@ -8,6 +8,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class LocalMPScreenPartioning : MonoBehaviour
 {
@@ -23,12 +24,44 @@ public class LocalMPScreenPartioning : MonoBehaviour
     private bool singleLocalPlayer;
     public bool isActive { get; private set; }
 
+    GameSettingsContainer settings;
+
+    [SerializeField]
+    PlayerInputManager manager;
+
     private void Awake()
     {
+        settings = GameSettingsContainer.instance;
+        manager = manager ?? GetComponent<PlayerInputManager>();
+
+        if (settings)
+        {
+            if (settings.iPlayercount > 1)
+            {
+                singleLocalPlayer = false;
+
+                for (int i = 0; i < settings.iPlayercount; ++i)
+                {
+                    PlayerInput inputToUse = settings.LocalPlayerInputs[i];
+                    Destroy(settings.LocalPlayerInputs[i].gameObject);
+
+                    manager.JoinPlayer(inputToUse.playerIndex, inputToUse.splitScreenIndex, inputToUse.currentControlScheme);
+                }
+            }
+            else
+            {
+                singleLocalPlayer = true;
+            }
+        }
+
         if (singleLocalPlayer)
         {
             playerManager.SetActive(false);
             Instantiate(playerPrefab, new Vector3(0, 1, 0), playerPrefab.transform.rotation);
+        }
+        else if (!manager.joiningEnabled)
+        {
+            manager.EnableJoining();
         }
 
         playerCameras = FindObjectsOfType<PlayerCamera>();

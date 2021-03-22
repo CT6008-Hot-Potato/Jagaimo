@@ -111,8 +111,8 @@ public class GameCreationSettings : MonoBehaviour
     {
         if (Debug.isDebugBuild)
         {
-            Debug.Log("Map Chosen is: " + iCurrentMapSelection.ToString());
-            Debug.Log("Gamemode Chosen is: " + iCurrentGamemodeSelection.ToString());
+            //Debug.Log("Map Chosen is: " + iCurrentMapSelection.ToString());
+            //Debug.Log("Gamemode Chosen is: " + iCurrentGamemodeSelection.ToString());
             
             foreach (MutatorUI mutator in SelectedGamemode.GamemodeMutators)
             {
