@@ -24,27 +24,15 @@ public class CharacterManager : MonoBehaviour
     public bool isPlayer { get; private set; }
 
     [SerializeField]
-    TestStartTrigger trigger;
+    GameObject taggedDisplayObject;
 
     private void Awake()
     {
-        trigger = TestStartTrigger.instance;
         _tracker = _tracker ?? GetComponent<TaggedTracker>();
         _movement = _movement ?? GetComponent<PlayerController>();
         _cam = _cam ?? GetComponent<PlayerCamera>();
         _rend = GetComponent<Renderer>();
     }
-
-
-    //public void RedoIndex()
-    //{
-    //    playerCameras = FindObjectsOfType<PlayerCamera>();
-    //    playerIndex = (playerCameras.Length - 1) / 2;
-    //    for (int i = 0; i > playerIndex; i++)
-    //    {
-    //        playerCameras[i].playerIndex = i;
-    //    }
-    //}
 
     private void Start()
     {
@@ -73,7 +61,7 @@ public class CharacterManager : MonoBehaviour
                 Debug.Log("Eliminated player shown", this);
             }
 
-            transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            //TODO: Send the player into "spectator" mode (No model, no colliders)
             gameObject.SetActive(false);
 
             if (_rend)
@@ -95,11 +83,6 @@ public class CharacterManager : MonoBehaviour
 
         return this;
     }
-
-    //public void EliminatePlayer()
-    //{
-    //
-    //}
 
     //Function to have the player locked in a position (so they cant move or rotate the camera)
     private void LockPlayer()
@@ -126,6 +109,11 @@ public class CharacterManager : MonoBehaviour
             GetComponent<PlayerCamera>().SetCameraView(false);
         }
 
+        if (taggedDisplayObject)
+        {
+            taggedDisplayObject.SetActive(true);
+        }
+
         //Animation for regaining potato
     }
 
@@ -136,6 +124,11 @@ public class CharacterManager : MonoBehaviour
         if (_cam)
         {
             GetComponent<PlayerCamera>().SetCameraView(false);
+        }
+
+        if (taggedDisplayObject)
+        {
+            taggedDisplayObject.SetActive(false);
         }
     }
 }

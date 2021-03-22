@@ -23,6 +23,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     void IGamemode.AddActivePlayer(CharacterManager charToAdd) => AddActivePlayer(charToAdd);
     void IGamemode.RemoveActivePlayer(CharacterManager charToRemove) => RemoveActivePlayer(charToRemove);
 
+    //This gamemode is infected: when people are tagged, they join the tagged team, until the timer runs out or everyone is tagged
     void IGamemode.RoundStarted() => RoundStarting();
     void IGamemode.RoundEnded() => RoundEnding();
     void IGamemode.CountdownStarted() => CountdownStarting();
@@ -79,7 +80,6 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         //Make sure everything is in order... small cooldown before countdown to get everything
     }
 
-    //A podium scene which ragdoll the players in order of elimination but doesnt go back to menu/lobby unless hit max round
     private void RoundEnding()
     {
 
@@ -88,8 +88,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
-        //Tags previously tagged character if there was one, if not choose a random character 
-        //Spawns all character on random points (out of a set number of points) in an arena section
+        //Choosing a random person(s) to be infected
     }
 
     //When the countdown ends
@@ -119,9 +118,16 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         activeSurvivors.Remove(charTagged);
         activeInfected.Add(charTagged);
 
+        //Telling the character that they've been tagged
+        charTagged.ThisPlayerTagged();
+
+        //TODO: Make 2 types of tagged "Forceably" (which multiplies the potatoes in the game) and "Softly" (which retains the potato it was tagged by)
+        //TODO NOTE: This might be on the tagged tracker? and this gamemode will switch the one used
+
         //Since someone is tagged, the infected could have won
         if (ThisWinCondition())
         {
+            infectedWon = true;
             //The infected has tagged the last player
         }
     }
@@ -145,6 +151,6 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     public GAMEMODE_INDEX Return_Mode()
     {
-        return GAMEMODE_INDEX.CLASSIC;
+        return GAMEMODE_INDEX.INFECTED;
     }
 }
