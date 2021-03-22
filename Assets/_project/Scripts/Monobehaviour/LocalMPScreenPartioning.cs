@@ -5,8 +5,6 @@
 // Brief: This script determines the camera's view of the screen in relation to each player
 //////////////////////////////////////////////////////////// 
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -73,6 +71,16 @@ public class LocalMPScreenPartioning : MonoBehaviour
         playerIndexPrior = playerIndex;
     }
 
+    //public void RedoIndex()
+    //{
+    //    playerCameras = FindObjectsOfType<PlayerCamera>();
+    //    playerIndex = (playerCameras.Length - 1) / 2;
+    //    for (int i = 0; i > playerIndex; i++)
+    //    {
+    //        playerCameras[i].playerIndex = i;
+    //    }
+    //}
+
     // Update is called once per frame
     void Update()
     {
@@ -87,7 +95,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
                 cameras[i].playerIndex = i;
                 cameras[i].SetPlayerMask();
                 //Debug.Log(playerIndex + "PLAYER INDEX");
-                Debug.Log(i + "Current player");
+                //Debug.Log(i + "Current player");
                 switch (playerIndex)
                 {
                     case 0:

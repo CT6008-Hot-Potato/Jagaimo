@@ -2,16 +2,11 @@
 //
 //  Script Name: Interactable.cs
 //  Creator: Charles Carter
-//  Description: An interfact for anything that interacts with the potato
+//  Description: An interface for anything that interacts with the potato
 //  
 /////////////////////////////////////////////////////////////
 
-//This script uses these namespaces
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-//The interfact itself
+//The interface itself for everything that reacts when triggered by the potato
 public interface IInteractable
 {
     //The contracted functions

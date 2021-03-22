@@ -54,6 +54,10 @@ public class RoundManager : MonoBehaviour
     [SerializeField]
     GameSettingsContainer settings;
 
+    //Starting when the players are in, false for using the trigger
+    [SerializeField]
+    bool startWhenReady = true;
+
     private void Awake()
     {
         //Making sure there's only 1 round manager instance on the scene
@@ -119,14 +123,18 @@ public class RoundManager : MonoBehaviour
             Debug.LogError("Set An MP Screen Partitioner on this object", this);
         }
 
-        while (localMPIndexer.playerIndex < 2)
+        while (localMPIndexer.playerIndex < 1)
         {
             yield return null;
         }
 
         //This will be done on round start and use non spectator characters in actual version
         _currentGamemode.SetActivePlayers(FindObjectsOfType<CharacterManager>());
-        startCountdown.CallOnTimerStart();
+
+        if (startWhenReady)
+        {
+            startCountdown.CallOnTimerStart();
+        }
     }
 
     //Calling the RoundStarted Delegate Event
