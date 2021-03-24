@@ -808,8 +808,8 @@ MonoBehaviour:
   velocityClamp: 10
   jumpVelocity: 66
   speedMultiplier: 0.5
-  walkSpeed: 10
-  runSpeed: 20
+  walkSpeed: 15
+  runSpeed: 30
   crouchSpeed: 7.5
   slideTime: 0.6
   rotationPosition: {fileID: 4394244838949972449}
@@ -867,7 +867,7 @@ MonoBehaviour:
   clampDegree: 85
   cameraPushSpeed: 90
   cameraZoomSpeed: 0.35
-  cameraTransferDistance: 0.1
+  cameraTransferDistance: 1
   firstPersonCamera: {fileID: 4394244838949972474}
   thirdPersonCamera: {fileID: 4394244838949972477}
   zoomOutPosition: {fileID: 4394244838949972476}

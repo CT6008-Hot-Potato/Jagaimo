@@ -275,11 +275,12 @@ public class PlayerCamera : MonoBehaviour
     public bool UnCrouch()
     {
         //Raycast from first person camera
-        ray = new Ray(firstPersonCamera.transform.position, firstPersonCamera.transform.up);
+        ray = new Ray(new Vector3 (firstPersonCamera.transform.position.x, firstPersonCamera.transform.position.y - 0.25f, firstPersonCamera.transform.position.z) , firstPersonCamera.transform.up);
         //Do a raycast and check if facing wall
-        Physics.Raycast(ray, out hit, 0.5f);
+        Physics.Raycast(ray, out hit, 0.75f);
         if (hit.collider != null)
         {
+            Debug.Log("Here");
             return false;
         }
         else 

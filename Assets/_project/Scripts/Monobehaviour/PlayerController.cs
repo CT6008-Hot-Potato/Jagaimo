@@ -318,11 +318,20 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
 
+        if (!pC.UnCrouch())
+        {
+            crouching = true;
+            speed = crouchSpeed;
+            playerMovement = pM.CROUCHING;
+        }
+        else
+        {
+            speed = walkSpeed;
+            collider.center = new Vector3(0, 0, 0);
+            collider.height = 2;
+        }
+
         sliding = false;
-        speed = walkSpeed;
-        collider.center = new Vector3(0, 0, 0);
-        collider.height = 2;
-        pC.UnCrouch();
         if (slowStand)
         {
             movementValue = new Vector3(0, 0, 0);

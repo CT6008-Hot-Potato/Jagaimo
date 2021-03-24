@@ -14,6 +14,7 @@ public class Rotate : MonoBehaviour
     [SerializeField]
     private float rotateSpeed;
     private bool playerEntered;
+    private List<GameObject> players = new List<GameObject>();
     private enum directions
     {
         FORWARDS,
@@ -31,6 +32,8 @@ public class Rotate : MonoBehaviour
         if (other.tag == "Player")
         {
             other.transform.parent = transform;
+
+                players.Add(other.gameObject);
             playerEntered = true;
         }
     }
@@ -42,11 +45,19 @@ public class Rotate : MonoBehaviour
             playerEntered = false;
             transform.GetChild(0).transform.eulerAngles = new Vector3(0, 0, 0);
             collider.transform.parent = null;
+            players.Remove(collider.gameObject);
         }
     }
     //Rotate around in update
     void Update()
     {
+        if (players != null )
+        {
+            for (int i = 0; i < players.Count;i++)
+            {
+                players[i].transform.rotation = Quaternion.Euler(0,0, 0);
+            }
+        }
         //Rotate object around
         switch (dir)
         {
@@ -80,12 +91,12 @@ public class Rotate : MonoBehaviour
         }
 
         //Stabalise player rotation
-        if (playerEntered)
-        {
-            if (transform.GetChild(0).tag == "Player")
-            {
-                transform.GetChild(0).transform.eulerAngles = new Vector3(0, 0, 0);
-            }
-        }
+        //if (playerEntered)
+        //{
+        //    if (transform.GetChild(0).tag == "Player")
+        //    {
+        //        transform.GetChild(0).transform.eulerAngles = new Vector3(0, 0, 0);
+        //    }
+        //}
     }
 }
