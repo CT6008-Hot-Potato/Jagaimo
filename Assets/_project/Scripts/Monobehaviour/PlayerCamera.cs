@@ -280,7 +280,6 @@ public class PlayerCamera : MonoBehaviour
         Physics.Raycast(ray, out hit, 0.75f);
         if (hit.collider != null)
         {
-            Debug.Log("Here");
             return false;
         }
         else 
@@ -295,7 +294,7 @@ public class PlayerCamera : MonoBehaviour
     public bool WallKick()
     {
         //Raycast from first person camera
-        ray = new Ray(firstPersonCamera.transform.position, firstPersonCamera.transform.forward);
+        ray = new Ray(new Vector3 (firstPersonCamera.transform.position.x, firstPersonCamera.transform.position.y - 0.5f, firstPersonCamera.transform.position.z), firstPersonCamera.transform.forward);
         //Do a raycast and check if facing wall
         Physics.Raycast(ray, out hit, 0.5f);
 

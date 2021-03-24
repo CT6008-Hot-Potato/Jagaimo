@@ -320,7 +320,6 @@ public class PlayerController : MonoBehaviour
 
         if (!pC.UnCrouch())
         {
-            crouching = true;
             speed = crouchSpeed;
             playerMovement = pM.CROUCHING;
         }
@@ -331,10 +330,12 @@ public class PlayerController : MonoBehaviour
             collider.height = 2;
         }
 
+        crouching = true;
         sliding = false;
         if (slowStand)
         {
             movementValue = new Vector3(0, 0, 0);
+            Debug.Log("Here2");
         }
     }
 
@@ -360,8 +361,7 @@ public class PlayerController : MonoBehaviour
 
     public void Crouch(InputAction.CallbackContext ctx)
     {
-
-        crouchValue = ctx.ReadValue<float>();
+            crouchValue = ctx.ReadValue<float>();
     }
 
     public void Sprint(InputAction.CallbackContext ctx)
