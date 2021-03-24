@@ -318,14 +318,24 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
 
+        if (!pC.UnCrouch())
+        {
+            speed = crouchSpeed;
+            playerMovement = pM.CROUCHING;
+        }
+        else
+        {
+            speed = walkSpeed;
+            collider.center = new Vector3(0, 0, 0);
+            collider.height = 2;
+        }
+
+        crouching = true;
         sliding = false;
-        speed = walkSpeed;
-        collider.center = new Vector3(0, 0, 0);
-        collider.height = 2;
-        pC.UnCrouch();
         if (slowStand)
         {
             movementValue = new Vector3(0, 0, 0);
+            Debug.Log("Here2");
         }
     }
 
@@ -351,8 +361,7 @@ public class PlayerController : MonoBehaviour
 
     public void Crouch(InputAction.CallbackContext ctx)
     {
-
-        crouchValue = ctx.ReadValue<float>();
+            crouchValue = ctx.ReadValue<float>();
     }
 
     public void Sprint(InputAction.CallbackContext ctx)

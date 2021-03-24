@@ -106,10 +106,9 @@ public class MoveObject : MonoBehaviour
                     movingObject.transform.parent = movingParent.transform;
                     //The collider component on movingObject is assigned the collider type of that of the movingParent and it's collision is then adjusted to the correct type accordingly. 
                     SetComponent(movingObject.GetComponent<Collider>(), movingParent);
-                    AdjustCollision();
                     //Set the smaller trigger component to true
                     movingParent.GetComponent<Collider>().isTrigger = true;
-                    SetComponent(movingObject.GetComponent<Collider>(), movingParent);
+                    AdjustCollision(movingObject);
                     movingObject.GetComponent<Collider>().enabled = false;
                     //Assign the parent rigidbody to the moving parent rigidbody and setting aspects of it true and false
                     rbParent = movingParent.AddComponent<Rigidbody>();
@@ -156,24 +155,24 @@ public class MoveObject : MonoBehaviour
     }
 
     //This function will set the paramaters of the collision for a carried object based upon what type of colliders it is
-    private void AdjustCollision()
+    private void AdjustCollision(GameObject movingObject)
     {
         if (movingParent.TryGetComponent(out Collider cD))
         {
             //Set collision parameters if box collider
             if (cD.GetType() == typeof(BoxCollider))
             {
-                cD.GetComponent<BoxCollider>().size = new Vector3(cD.GetComponent<BoxCollider>().size.x * 0.5f, cD.GetComponent<BoxCollider>().size.y * 0.5f, cD.GetComponent<BoxCollider>().size.z * 0.5f);
+                cD.GetComponent<BoxCollider>().size = new Vector3(cD.GetComponent<BoxCollider>().size.x * movingObject.transform.localScale.x, cD.GetComponent<BoxCollider>().size.y * movingObject.transform.localScale.y,cD.GetComponent<BoxCollider>().size.z * movingObject.transform.localScale.z);
             }
             //Set collision parameters if sphere collider
             else if (cD.GetType() == typeof(SphereCollider))
             {
-                cD.GetComponent<SphereCollider>().radius = cD.GetComponent<SphereCollider>().radius * 0.5f;
+                cD.GetComponent<SphereCollider>().radius = cD.GetComponent<SphereCollider>().radius * movingObject.transform.localScale.x;
             }
             else if (cD.GetType() == typeof(CapsuleCollider))
             {
-                cD.GetComponent<CapsuleCollider>().height = cD.GetComponent<CapsuleCollider>().height * 0.5f;
-                cD.GetComponent<CapsuleCollider>().radius = cD.GetComponent<CapsuleCollider>().radius * 0.5f;
+                cD.GetComponent<CapsuleCollider>().height = cD.GetComponent<CapsuleCollider>().height * movingObject.transform.localScale.y;
+                cD.GetComponent<CapsuleCollider>().radius = cD.GetComponent<CapsuleCollider>().radius * movingObject.transform.localScale.x;
             }
             //Debug if other type of collider
             else
