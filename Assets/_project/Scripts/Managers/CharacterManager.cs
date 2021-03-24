@@ -9,55 +9,30 @@
 //This script uses these namespaces
 using UnityEngine;
 
-//The class needs these other components on the object
 [RequireComponent(typeof(TaggedTracker))]
 public class CharacterManager : MonoBehaviour
 {  
-    private TaggedTracker _tracker;
+    public TaggedTracker _tracker;
     private PlayerController _movement;
     private Renderer _rend;
-    public int playerIndex;
+    private PlayerCamera _cam;
+
     //Just for testing
     [SerializeField]
     private Material eliminatedMat;
-    [SerializeField]
-    private PlayerCamera[] playerCameras;
-    [SerializeField]
-    private GameObject playerPrefab;
-    [SerializeField]
-    private GameObject playerManager;
-    [SerializeField]
-    private bool singleLocalPlayer;
-    public bool isActive { get; private set; }
+
     public bool isPlayer { get; private set; }
+
+    [SerializeField]
+    GameObject taggedDisplayObject;
 
     private void Awake()
     {
-        if (singleLocalPlayer)
-        {
-            playerManager.SetActive(false);
-            Instantiate(playerPrefab, new Vector3(0, 1, 0),playerPrefab.transform.rotation);
-        }
-        _tracker = GetComponent<TaggedTracker>();
-        _movement = GetComponent<PlayerController>();
+        _tracker = _tracker ?? GetComponent<TaggedTracker>();
+        _movement = _movement ?? GetComponent<PlayerController>();
+        _cam = _cam ?? GetComponent<PlayerCamera>();
         _rend = GetComponent<Renderer>();
-        playerCameras = FindObjectsOfType<PlayerCamera>();
-        playerIndex = (playerCameras.Length - 1) / 2;
-        for (int i = 0; i > playerIndex;i++)
-        {
-            playerCameras[i].playerIndex = i;
-        }
     }
-
-    //public void RedoIndex()
-    //{
-    //    playerCameras = FindObjectsOfType<PlayerCamera>();
-    //    playerIndex = (playerCameras.Length - 1) / 2;
-    //    for (int i = 0; i > playerIndex; i++)
-    //    {
-    //        playerCameras[i].playerIndex = i;
-    //    }
-    //}
 
     private void Start()
     {
@@ -70,16 +45,6 @@ public class CharacterManager : MonoBehaviour
         {
             isPlayer = false;
         }
-    }
-
-    private void OnEnable()
-    {
-
-    }
-
-    private void OnDisable()
-    {
-
     }
 
     //Some Gamemodes will have elimination, some wont
@@ -96,7 +61,13 @@ public class CharacterManager : MonoBehaviour
                 Debug.Log("Eliminated player shown", this);
             }
 
-            _rend.material = eliminatedMat;
+            //TODO: Send the player into "spectator" mode (No model, no colliders)
+            gameObject.SetActive(false);
+
+            if (_rend)
+            {
+                _rend.material = eliminatedMat;
+            }
         }
         else
         {
@@ -133,6 +104,16 @@ public class CharacterManager : MonoBehaviour
     {
         //Play VFX + Sound
         //Lerp into first person camera mode
+        if (_cam)
+        {
+            GetComponent<PlayerCamera>().SetCameraView(false);
+        }
+
+        if (taggedDisplayObject)
+        {
+            taggedDisplayObject.SetActive(true);
+        }
+
         //Animation for regaining potato
     }
 
@@ -140,5 +121,14 @@ public class CharacterManager : MonoBehaviour
     {
         //Play VFX + Sound
         //Lerp into thrid person camera mode Note: this should be quicker than the lerp when you're tagged
+        if (_cam)
+        {
+            GetComponent<PlayerCamera>().SetCameraView(false);
+        }
+
+        if (taggedDisplayObject)
+        {
+            taggedDisplayObject.SetActive(false);
+        }
     }
 }

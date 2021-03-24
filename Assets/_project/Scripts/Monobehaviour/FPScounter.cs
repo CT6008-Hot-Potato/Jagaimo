@@ -9,25 +9,43 @@
 //This script uses these namespaces
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 //We may want to make our own FPS Display at some point
 public class FPScounter : MonoBehaviour
 {
-    int current_fps;
+    [SerializeField]
+    int iFPSLimit = 60;
+
+    float current_fps;
     int highest_fps;
     int lowest_fps;
 
-    Text fpsText;
+    [SerializeField]
+    TextMeshProUGUI fpsText;
+    [SerializeField]
+    bool showFPS;
 
-    // Start is called before the first frame update
-    //void Start()
-    //{
-        
-    //}
+    void Start()
+    {
+        if (iFPSLimit == 0)
+        {
+            Application.targetFrameRate = 999;
+        }
+        else
+        {
+            Application.targetFrameRate = iFPSLimit;
+        }
+    }
 
-    // Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
+    //Update is called once per frame
+    void Update()
+    {
+        current_fps = 1 / Time.unscaledDeltaTime;
+
+        if (fpsText && showFPS)
+        {
+            fpsText.text = "" + (int)current_fps;
+        }
+    }
 }

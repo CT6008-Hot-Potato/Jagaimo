@@ -11,10 +11,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(RoundManager))]
 //This will mostly be in the other scripts anyway
 public class DefaultGamemode : MonoBehaviour, IGamemode
 {
     //Fulfilling the interfaces contracted functions
+    GAMEMODE_INDEX IGamemode.Return_Mode() => Return_Mode();
+    
     //These 3 functions will be the same on every gamemode I think
     void IGamemode.SetActivePlayers(CharacterManager[] charArray)        => SettingActivePlayers(charArray);
     void IGamemode.AddActivePlayer(CharacterManager charToAdd)          => AddActivePlayer(charToAdd);
@@ -24,19 +27,33 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     void IGamemode.RoundEnded()        => RoundEnding();
     void IGamemode.CountdownStarted()  => CountdownStarting();
     void IGamemode.CountdownEnded()    => CountdownEnding();
-    void IGamemode.PlayerTagged()      => PlayerTagged();
+    void IGamemode.PlayerTagged(CharacterManager charTagged)      => PlayerTagged(charTagged);
     bool IGamemode.WinCondition()      => ThisWinCondition();
 
     //Variables needed for the gamemode
     [SerializeField]
     private RoundManager roundManager;
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
+    CharacterManager playerWhoWon;
+
+    //The only trackers needed for mechanics in an overall round
+    public CharacterManager currentTagged { get; private set; }
+    public CharacterManager previousTagged { get; private set; }
+
+    //How many countdowns have happened so far
+    private int iCountdownIndex = 0;
+
+    #region Unity Methods
 
     //Getting the needed components
-    private void Awake()
+    private void OnEnable()
     {
-        
+        roundManager = roundManager ?? GetComponent<RoundManager>();
     }
+
+    #endregion
+
+    #region Interface Methods
 
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
@@ -51,6 +68,9 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         {
             Debug.Log("Active players set, Amount of Active players: " + currentActivePlayers.Count, this);
         }
+
+        //Using this instead of the function here because of the scroller text
+        roundManager.OnPlayerTagged(getRandomCharacter());
     }
 
     //Someone joins the game
@@ -61,8 +81,9 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
 
     //Someone dies or leaves the game
     private void RemoveActivePlayer(CharacterManager characterLeft)
-    {
+    {       
         currentActivePlayers.Remove(characterLeft);
+        //Debug.Log(currentActivePlayers.Count);
     }
 
     //This runs when the round is about to start/ during the initial timer
@@ -80,34 +101,96 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
-        //Tags previously tagged character if there was one, if not choose a random character 
-        //Spawns all character on random points (out of a set number of points) in an arena section
+        if (iCountdownIndex > 0)
+        {
+            //Tags previously tagged character if there was one, if not choose a random character 
+            if (previousTagged)
+            {
+                roundManager.OnPlayerTagged(previousTagged);
+            }
+            else
+            {
+                roundManager.OnPlayerTagged(getRandomCharacter());
+            }
+        }
+
+        //TODO: Spawns all character on random points (out of a set number of points) in an arena section
     }
 
     //When the countdown ends
     private void CountdownEnding()
     {
+        int iplayercount = currentActivePlayers.Count;
+
         //Exploding the tagged player and removing from active players
         foreach (CharacterManager cManager in currentActivePlayers)
         {
             if (cManager.CheckIfEliminated())
             {
+                Debug.Log("Countdown End");
                 RemoveActivePlayer(cManager);
+                currentTagged = null;
                 break;
             }
+        }
+
+        if (iplayercount == currentActivePlayers.Count)
+        {
+            Debug.Log(previousTagged.name);
+            //RemoveActivePlayer(currentActivePlayers[0]);           
         }
 
         //Each countdown in this gamemode could be the end of this game
         if (ThisWinCondition())
         {
+            roundManager.CallOnRoundEnd();
+
             //Moving to podium screen with a lobby countdown
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log("Player Won: " + playerWhoWon.name, this);
+            }
+        }
+        //It's not the end of the game
+        else
+        {
+            iCountdownIndex++;
+            roundManager.CallOnCountdownStart();
         }
     }
 
-    //Doesnt really do anything in this gamemode
-    private void PlayerTagged()
+    //Doesnt really do anything in this gamemode apart from manage who might be tagged at the start of next round
+    private void PlayerTagged(CharacterManager manager)
     {
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log(manager.name + " tagged");
+        }
 
+        //Getting the newly tagged player's tracker
+        TaggedTracker tracker = manager._tracker;
+
+        //If there is someone tagged when this is called
+        if (currentTagged)
+        {
+            //They are now the previously tagged
+            previousTagged = currentTagged;
+
+            //If the previously tagged player isnt the one eliminated from another countdown
+            if (currentActivePlayers.Contains(previousTagged) || iCountdownIndex == 0)
+            {
+                //Turn their tracker back on
+                previousTagged._tracker.enabled = true;
+                //Old tagged now should track if they're hit
+                previousTagged._tracker.PlayerUnTagged();
+            }
+        }
+
+        //The current tagged is now the person tagged
+        currentTagged = manager;
+
+        //Telling the player that they should run their tagged function
+        tracker.PlayerTagged();
     }
 
     //When only 1 person is active in the game, return true
@@ -119,10 +202,25 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         //1 player is left so someone has won this round
         if (currentActivePlayers.Count == 1)
         {
+            //Keeping a record of who won
+            playerWhoWon = currentActivePlayers[0];
             return true;
         }
 
         //There's more than 1 person left active
         return false;
+    }
+
+    public GAMEMODE_INDEX Return_Mode()
+    {
+        return GAMEMODE_INDEX.CLASSIC;
+    }
+
+    #endregion
+
+    private CharacterManager getRandomCharacter()
+    {
+        int i = Random.Range(0, currentActivePlayers.Count);
+        return currentActivePlayers[i];
     }
 }

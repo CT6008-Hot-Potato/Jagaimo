@@ -9,6 +9,9 @@
 public interface IGamemode
 {
     //The contracted functions and variables that every gamemode will have
+    //Based Gamemode Identifier
+    GAMEMODE_INDEX Return_Mode();
+
     //Controlling active players
     void SetActivePlayers(CharacterManager[] charactersInGame);
     void RemoveActivePlayer(CharacterManager charToRemove);
@@ -19,6 +22,6 @@ public interface IGamemode
     void RoundEnded();
     void CountdownStarted();
     void CountdownEnded();
-    void PlayerTagged();
+    void PlayerTagged(CharacterManager charTagged);
     bool WinCondition();
 }

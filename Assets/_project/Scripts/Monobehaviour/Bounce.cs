@@ -13,6 +13,10 @@ public class Bounce : MonoBehaviour
     //Variables
     [SerializeField]
     private float force;
+    [SerializeField]
+    private AudioClip bounceSound;
+    private SoundManager sM;
+
     private enum directions
     {
         FORWARDS,
@@ -24,11 +28,18 @@ public class Bounce : MonoBehaviour
     }
     [SerializeField]
     private directions dir;
+
+    private void Awake()
+    {
+        sM = FindObjectOfType<SoundManager>();
+    }
+
     //On trigger stay will apply force to player in the direction selected
     private void OnTriggerStay(Collider other)
     {
         if (other.TryGetComponent(out Rigidbody rB) && other.tag == "Player")
         {
+            sM.PlaySound(bounceSound);
             switch (dir)
             {
                 //Forward

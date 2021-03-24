@@ -2,14 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerUI : MonoBehaviour
+/////////////////////////////////////////////////////////////
+//
+//  Script Name: PkayerUI.cs
+//  Creator: James Bradbury
+//  Description: A script that expands the timer to render the ui for the player timer
+//  
+/////////////////////////////////////////////////////////////
+
+
+public class PlayerUI : CountdownTimer
 {
     // Start is called before the first frame update
 
-    [SerializeField] int Mode; // 0 = debug, 1 = 1st person, 2 = 2nd person
+   // [SerializeField] int Mode; // 0 = debug, 1 = 1st person, 2 = 2nd person
 
     [SerializeField] GameObject PotatoObject, PotatoMask;
-    [SerializeField] float timerStart, timerEnd, timer, MaskSizeStart, MaskSizeEnd, vibrateMagnitude;
+    [SerializeField] float /*timerStart, timerEnd, timer,*/ MaskSizeStart, MaskSizeEnd, vibrateMagnitude;
     
     SpriteRenderer PotatoSprite;
     RectTransform PotatoOrigin, MaskOrigin;
@@ -20,7 +29,6 @@ public class PlayerUI : MonoBehaviour
 
     void Start()
     {
-        timer           = timerStart;
         PotatoSprite    = PotatoObject.GetComponent<SpriteRenderer>();
         PotatoOrigin    = PotatoObject.GetComponent<RectTransform>();
         MaskOrigin      = PotatoMask.GetComponent<RectTransform>();
@@ -30,11 +38,10 @@ public class PlayerUI : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if(timer > timerEnd)
+        if(GetCurrentTime() > GetMinTime())
         {
-            timer -= Time.deltaTime;
 
-            float LerpAmount = Mathf.InverseLerp(timerStart, timerEnd, timer);
+            float LerpAmount = Mathf.InverseLerp(GetMaxTime(), GetMinTime(), GetCurrentTime());
 
             LerpAmount = LerpAmount * LerpAmount;
             LerpPotato(LerpAmount);
@@ -61,7 +68,6 @@ public class PlayerUI : MonoBehaviour
         float DisplacementY = (Time.deltaTime % 0.001f) * 1000;
 
         Vector2 Displacement = new Vector2(Mathf.Lerp(-OffsetMagnitude, OffsetMagnitude, DisplacementX), Mathf.Lerp(-OffsetMagnitude, OffsetMagnitude, DisplacementY));
-
 
         PotatoOrigin.anchoredPosition = Displacement + PotatoPosition;
 

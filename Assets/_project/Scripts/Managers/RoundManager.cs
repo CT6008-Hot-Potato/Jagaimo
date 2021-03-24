@@ -8,13 +8,25 @@
 
 //This script uses these namespaces
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-//A class to hold the events that happen throughout the round, a round is a full game where everyone is alive to the last player left
+//A small reference to the 2 main scripts of the characters
+public class PlayerCharacter
+{
+    TaggedTracker pcTracker;
+    CharacterManager pcManager;
+}
+
+//A class to hold the events that happen throughout the round, a round is a full game where the win condition of the gamemode is met
 public class RoundManager : MonoBehaviour
 {
+    //There should only be 1 on scenes
+    public static RoundManager roundManager;
+
     //The current gamemode
-    [SerializeField]
     IGamemode _currentGamemode;
 
     //Defining Delegate
@@ -27,37 +39,102 @@ public class RoundManager : MonoBehaviour
     public static event CountdownEvent CountdownStarted;
     public static event CountdownEvent CountdownEnded;
 
-    //For multiplayer
+    //For multiplayer ?
     //public static event CountdownEvent CountdownPauseToggle;
 
-    //The only trackers needed for mechanics in an overall round
-    public TaggedTracker currentTagged  { get; private set; }
-    public TaggedTracker previousTagged { get; private set; }
-
-    //The person who starts as tagged each countdown
+    //Bits and pieces that will be in some of the game scenes
     [SerializeField]
-    private TaggedTracker initialTagged;
+    BasicTimerBehaviour startCountdown;
+    [SerializeField]
+    ScrollerText eventText;
+
+    //Scripts specifically for local scenes
+    [SerializeField]
+    LocalMPScreenPartioning localMPIndexer;
+    [SerializeField]
+    GameSettingsContainer settings;
+
+    //Starting when the players are in, false for using the trigger
+    [SerializeField]
+    bool startWhenReady = true;
 
     private void Awake()
     {
-        //Adding the default gamemode if it doesnt have one
-        _currentGamemode = _currentGamemode ?? gameObject.AddComponent<DefaultGamemode>();
+        //Making sure there's only 1 round manager instance on the scene
+        if (!roundManager)
+        {
+            roundManager = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
 
-        //If there is a gamemode already on the object or is current gamemode is set but not on the object 
+        //Getting the game settings saved over from the main menu
+        GameSettingsContainer settingsContainer = GameSettingsContainer.instance;
+
+        //There are settings to use
+        if (settingsContainer)
+        {
+            //Depending on which gamemode, a different script is added
+            switch (settingsContainer.index)
+            {
+                case GAMEMODE_INDEX.CLASSIC:
+                    _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
+                    break;
+                case GAMEMODE_INDEX.INFECTED:
+                    _currentGamemode = gameObject.AddComponent<InfectedGamemode>();
+                    break;
+                case GAMEMODE_INDEX.FOOTBALL:
+                    _currentGamemode = gameObject.AddComponent<FootballGamemode>();
+                    break;
+                case GAMEMODE_INDEX.SABOTAGE:
+                    _currentGamemode = gameObject.AddComponent<SabotageGamemode>();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //If there is a gamemode already on the object
         if (!TryGetComponent<IGamemode>(out var gamemode))
         {
             _currentGamemode = gamemode;
-            Type type = gamemode.GetType();
-            gameObject.AddComponent(type);
+        }
+
+        //For some reason no gamemode was applied and none was on the objectwhat
+        if (_currentGamemode == null)
+        {
+            _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
+        }
+    }
+
+    private void Start()
+    {
+        //Waiting for the players
+        StartCoroutine(Co_WaitUntilPlayers());
+    }
+
+    //The coroutine that waits for players before setting the active players
+    IEnumerator Co_WaitUntilPlayers()
+    {
+        if (!localMPIndexer && Debug.isDebugBuild)
+        {
+            Debug.LogError("Set An MP Screen Partitioner on this object", this);
+        }
+
+        while (localMPIndexer.playerIndex < 1)
+        {
+            yield return null;
         }
 
         //This will be done on round start and use non spectator characters in actual version
         _currentGamemode.SetActivePlayers(FindObjectsOfType<CharacterManager>());
 
-        //This will be delegated to the gamemode at some point
-        initialTagged = initialTagged ?? FindObjectOfType<TaggedTracker>();
-        currentTagged = initialTagged;
-        currentTagged.PlayerTagged();
+        if (startWhenReady)
+        {
+            startCountdown.CallOnTimerStart();
+        }
     }
 
     //Calling the RoundStarted Delegate Event
@@ -109,20 +186,15 @@ public class RoundManager : MonoBehaviour
     }
 
     //A player has been tagged
-    public void OnPlayerTagged(TaggedTracker Tagged)
+    public void OnPlayerTagged(CharacterManager charManager)
     {
-        //Variable management
-        previousTagged = currentTagged;
-        if (previousTagged && !previousTagged.enabled)
+        //Telling the gamemode script that this manager is tagged
+        _currentGamemode.PlayerTagged(charManager);
+
+        //Adding it to the scroller text
+        if (eventText)
         {
-            //Old tagged now should track if they're hit
-            previousTagged.enabled = true;
-            previousTagged.PlayerUnTagged();
+            eventText.AddTaggedText();
         }
-
-        currentTagged = Tagged;
-
-        currentTagged.PlayerTagged();
-        _currentGamemode.PlayerTagged();
     }
 }

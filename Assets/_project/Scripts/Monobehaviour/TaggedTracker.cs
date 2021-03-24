@@ -9,6 +9,8 @@
 //This script uses these namespaces
 using UnityEngine;
 
+//The class needs these other components on the object (the CharacterManager script
+// but dont add requires component because you cant remove them after)
 public class TaggedTracker : MonoBehaviour, IInteractable
 {
     //The main bool for the tracker
@@ -22,6 +24,12 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     {
         roundManager = roundManager ?? FindObjectOfType<RoundManager>();
         playerManager = GetComponent<CharacterManager>();
+        isTagged = false;
+    }
+
+    private void Update()
+    {
+        //Checking enabled/disabled in inspector
     }
 
     //Triggering the tagged function if interact is called on the object
@@ -39,17 +47,17 @@ public class TaggedTracker : MonoBehaviour, IInteractable
         }
 
         //Telling the round manager that this was tagged
-        roundManager.OnPlayerTagged(this);
-
-        //Set the bool and turn off the component so the potato doesnt trigger it
-        //Should change camera etc
+        roundManager.OnPlayerTagged(playerManager);
         PlayerTagged();
     }
 
     //This player isnt tagged anymore
     public void PlayerUnTagged()
     {
+        Debug.Log(name + " Untagged");
+
         isTagged = false;
+        playerManager.ThisPlayerUnTagged();
 
         if (Debug.isDebugBuild)
         {
@@ -61,6 +69,8 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     public void PlayerTagged()
     {
         isTagged = true;
+        playerManager.ThisPlayerTagged();
+
         enabled = false;
     }
 }
