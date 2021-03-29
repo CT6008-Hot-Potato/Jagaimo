@@ -95,6 +95,22 @@ public class GameSettingsContainer : MonoBehaviour
         return false;
     }
 
+    public bool HasGamMutator(int ID)
+    {
+        if (gamemodeMutators.Length > 0)
+        {
+            for (int i = 0; i < gamemodeMutators.Length; ++i)
+            {
+                if (ID == gamemodeMutators[i].ID)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     #endregion
 
     #region Unity Methods

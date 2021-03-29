@@ -34,17 +34,25 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //Variables needed for the gamemode
     [SerializeField]
     private RoundManager roundManager;
+
+    [SerializeField]
+    private GameSettingsContainer settings;
+
+    //The players within the game
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
 
+    //The survivors and infected 
     public List<CharacterManager> activeSurvivors = new List<CharacterManager>();
     public List<CharacterManager> activeInfected = new List<CharacterManager>();
 
+    //Knowing whether the infected won or not
     bool infectedWon = false;
 
     //Getting the needed components
     private void OnEnable()
     {
         roundManager = roundManager ?? GetComponent<RoundManager>();
+        settings = GameSettingsContainer.instance;
     }
 
     //A way for the round manager to set the active players at the start of the game
@@ -54,7 +62,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
-        }
+        }        
 
         if (Debug.isDebugBuild)
         {
@@ -78,6 +86,8 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     private void RoundStarting()
     {
         //Make sure everything is in order... small cooldown before countdown to get everything
+
+        activeSurvivors = currentActivePlayers;
     }
 
     private void RoundEnding()
@@ -89,26 +99,59 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     private void CountdownStarting()
     {
         //Choosing a random person(s) to be infected
+
+        //If there are settings
+        if (settings)
+        {
+            //If the settings include a change to the base infected count
+            if (settings.HasGamMutator(2))
+            {
+                Debug.Log("Based Infected Count Raised To: " + ((int)settings.FindGamemodeMutatorValue(2)).ToString());
+
+                List<CharacterManager> chars = currentActivePlayers;
+                int iInfectedCount = (int)settings.FindGamemodeMutatorValue(2);
+
+                //If there are enough players to infected without the game just being over
+                if (iInfectedCount < currentActivePlayers.Count)
+                {
+                    //Going through the active players, tagging them and moving them to the correct lists
+                    for (int i = 0; i < iInfectedCount; ++i)
+                    {
+                        int iRandomPlayer = Random.Range(0, chars.Count - 1);
+                        chars.RemoveAt(iRandomPlayer);
+                        roundManager.OnPlayerTagged(chars[iRandomPlayer]);
+                    }
+                }
+                else
+                {
+                    //Only tag 1 player randomly
+                    int iRandomPlayer = Random.Range(0, currentActivePlayers.Count - 1);
+                    roundManager.OnPlayerTagged(currentActivePlayers[iRandomPlayer]);
+                }
+            }
+        }
+        else
+        {
+            //Only tag 1 player randomly
+            int iRandomPlayer = Random.Range(0, currentActivePlayers.Count - 1);
+            roundManager.OnPlayerTagged(currentActivePlayers[iRandomPlayer]);
+        }
     }
 
     //When the countdown ends
     private void CountdownEnding()
-    {
-        //Exploding the tagged player and removing from active players
-        foreach (CharacterManager cManager in currentActivePlayers)
-        {
-            if (cManager.CheckIfEliminated())
-            {
-                RemoveActivePlayer(cManager);
-                break;
-            }
-        }
-
-        //At the end of the first countdown, doing a last check if survivors won
+    {      
+        //At the end of the countdown, doing a last check if survivors won
         if (ThisWinCondition())
         {
-
+            //Infected Won
         }
+        else
+        {
+            //Survivors Won
+        }
+
+        roundManager.CallOnRoundEnd();
     }
 
     //Doesnt really do anything in this gamemode
