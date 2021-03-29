@@ -70,7 +70,11 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         }
 
         //Using this instead of the function here because of the scroller text
-        roundManager.OnPlayerTagged(getRandomCharacter());
+        CharacterManager manager = getRandomCharacter();
+        if (manager)
+        {
+            roundManager.OnPlayerTagged(manager);
+        }
     }
 
     //Someone joins the game
@@ -220,7 +224,14 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
 
     private CharacterManager getRandomCharacter()
     {
-        int i = Random.Range(0, currentActivePlayers.Count);
-        return currentActivePlayers[i];
+        if (currentActivePlayers.Count > 0)
+        {
+            int i = Random.Range(0, currentActivePlayers.Count);
+            return currentActivePlayers[i];
+        }
+        else
+        {
+            return null;
+        }
     }
 }

@@ -32,6 +32,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
         settings = GameSettingsContainer.instance;
         manager = manager ?? GetComponent<PlayerInputManager>();
 
+        //If there are settings to take values from
         if (settings)
         {
             if (settings.iPlayercount > 1)
@@ -46,17 +47,22 @@ public class LocalMPScreenPartioning : MonoBehaviour
                     manager.JoinPlayer(inputToUse.playerIndex, inputToUse.splitScreenIndex, inputToUse.currentControlScheme);
                 }
             }
+            else if (settings.iPlayercount == 1)
+            {
+                singleLocalPlayer = false;
+                PlayerInput inputToUse = settings.LocalPlayerInputs[0];
+                Destroy(settings.LocalPlayerInputs[0].gameObject);
+                manager.JoinPlayer(inputToUse.playerIndex, inputToUse.splitScreenIndex, inputToUse.currentControlScheme);
+            }
             else
             {
+                //No players joined, so it was single player from the main menu
                 singleLocalPlayer = true;
+                playerManager.SetActive(false);
+                Instantiate(playerPrefab, new Vector3(0, 1, 0), playerPrefab.transform.rotation);
             }
         }
-
-        if (singleLocalPlayer)
-        {
-            playerManager.SetActive(false);
-            Instantiate(playerPrefab, new Vector3(0, 1, 0), playerPrefab.transform.rotation);
-        }
+        //Was played from the scene, anyone can join
         else if (!manager.joiningEnabled)
         {
             manager.EnableJoining();
