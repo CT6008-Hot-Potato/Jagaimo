@@ -63,7 +63,12 @@ public class LocalMPScreenPartioning : MonoBehaviour
             }
         }
         //Was played from the scene, anyone can join
-        else if (!manager.joiningEnabled)
+        else if (singleLocalPlayer)
+        {
+            playerManager.SetActive(false);
+            Instantiate(playerPrefab, new Vector3(0, 1, 0), playerPrefab.transform.rotation);
+        }
+        else
         {
             manager.EnableJoining();
         }
