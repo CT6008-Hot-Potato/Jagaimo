@@ -27,7 +27,7 @@ public class MoveObject : MonoBehaviour
     [SerializeField]
     private Transform position;
     [SerializeField]
-    private float throwStrength = 15;
+    private float throwStrength = 10;
     [SerializeField]
     private float grabDistance = 5;
     private Rigidbody rbObject;
@@ -207,7 +207,15 @@ public class MoveObject : MonoBehaviour
                 //When object is being thrown first will check got rigidbody and then throw it
                 if (throwObject)
                 {
-                    rB.AddRelativeForce(transform.forward * throwStrength, ForceMode.Impulse);
+                    if (leftClick > 0.1f)
+                    {
+                        rB.AddRelativeForce(transform.forward * throwStrength, ForceMode.Impulse);
+                    }
+                    else
+                    {
+                        rB.AddRelativeForce(transform.forward * (throwStrength * 0.5f), ForceMode.Impulse);
+                    }
+                    rB.velocity = GetComponent<Rigidbody>().velocity;
                 }
             }
             //Unassign moving object
@@ -241,21 +249,25 @@ public class MoveObject : MonoBehaviour
         return copy;
     }
 
+    //Method for using unity's new input system to detect left click
     public void LeftClick(InputAction.CallbackContext ctx)
     {
         leftClick = ctx.ReadValue<float>();
     }
 
+    //Method for using unity's new input system to detect right click
     public void RightClick(InputAction.CallbackContext ctx)
     {
         rightClick = ctx.ReadValue<float>();
     }
 
+    //Method for using unity's new input system to detect zooming in
     public void ZoomIn(InputAction.CallbackContext ctx)
     {
         zoomIn = ctx.ReadValue<float>();
     }
 
+    //Method for using unity's new input system to detect zooming out
     public void ZoomOut(InputAction.CallbackContext ctx)
     {
         zoomOut = ctx.ReadValue<float>();

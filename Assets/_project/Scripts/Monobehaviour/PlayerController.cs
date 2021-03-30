@@ -335,7 +335,6 @@ public class PlayerController : MonoBehaviour
         if (slowStand)
         {
             movementValue = new Vector3(0, 0, 0);
-            Debug.Log("Here2");
         }
     }
 

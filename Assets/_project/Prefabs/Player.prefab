@@ -817,7 +817,7 @@ MonoBehaviour:
   closestPosition: {fileID: 4369198654189538588}
   furthestPosition: {fileID: 4369198653568062970}
   position: {fileID: 4369198653832675790}
-  throwStrength: 15
+  throwStrength: 10
   grabDistance: 5
   playerInput: {fileID: 4394244838949972472}
   grabSound: {fileID: 8300000, guid: ea8308f36b0010b4f80ae9bc1b99afb4, type: 3}
@@ -835,6 +835,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roundManager: {fileID: 0}
+  playerManager: {fileID: 0}
 --- !u!114 &4394244838949972475
 MonoBehaviour:
   m_ObjectHideFlags: 0

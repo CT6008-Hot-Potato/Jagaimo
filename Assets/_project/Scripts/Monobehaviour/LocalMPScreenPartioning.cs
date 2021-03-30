@@ -77,19 +77,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
         playerIndexPrior = playerIndex;
     }
 
-    //public void RedoIndex()
-    //{
-    //    playerCameras = FindObjectsOfType<PlayerCamera>();
-    //    playerIndex = (playerCameras.Length - 1) / 2;
-    //    for (int i = 0; i > playerIndex; i++)
-    //    {
-    //        playerCameras[i].playerIndex = i;
-    //    }
-    //}
-
-    // Update is called once per frame
-    void Update()
-    {
+    public void OnPlayerJoined(PlayerInput playerInput) {
         playerCameras = FindObjectsOfType<PlayerCamera>();
         playerIndex = (playerCameras.Length - 1);
         if (playerIndex != playerIndexPrior && !singleLocalPlayer)
@@ -179,4 +167,5 @@ public class LocalMPScreenPartioning : MonoBehaviour
             }
         }
     }
+
 }
