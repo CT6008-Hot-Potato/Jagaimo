@@ -9,24 +9,17 @@ public class UIMenuBehaviour : MonoBehaviour
 
     [Header("Core Object References")]
 
-    //public PlayerControls playerActionControls;
     [SerializeField]
     private AudioClip clickSound;
 
     public GameObject uiMenuCanvasObject;
   
-    [Header("Player Display")]
-    public Image deviceDisplayIcon;
-    public TextMeshProUGUI IDDisplayText;
     private SoundManager sM;
 
 
     public void Awake()
     {
         sM = FindObjectOfType<SoundManager>();
-        //playerActionControls = new PlayerControls();
-        //playerActionControls.Gameplay.Escape.performed += _ => UpdateUIMenuState(true);
-        //playerActionControls.Menu.Escape.performed += _ => UpdateUIMenuState(false);
         SetupBehaviour();
     }
 
@@ -62,8 +55,10 @@ public class UIMenuBehaviour : MonoBehaviour
         {
             sM.PlaySound(clickSound);
         }
-
-        //uiMenuCameraObject.SetActive(newState);
+        if (newState)
+        { 
+            GetComponent<MenuManager>().SwitchOpenMenu(0); 
+        }
         uiMenuCanvasObject.SetActive(newState);
     }
 

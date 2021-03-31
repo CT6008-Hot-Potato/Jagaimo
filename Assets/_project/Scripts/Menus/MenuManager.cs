@@ -26,11 +26,33 @@ public class MenuManager : MonoBehaviour
     public void LoadScene(string ThisScene)
     {
         if (ThisScene == null) return;
+        CameraBlink[] cameras =  FindObjectsOfType<CameraBlink>();
+        Debug.Log(cameras.Length);
+        if (cameras.Length != 0)
+        {
+            float Fuse = Mathf.Infinity;
+            foreach (CameraBlink blink in cameras)
+            {
+                blink.CloseLens();
 
-        SceneManager.LoadScene(ThisScene);
+                if (blink.TransitionTime < Fuse)
+                    Fuse = blink.TransitionTime;
+            }
+            StartCoroutine(DelayedLoad(Fuse, ThisScene));
+        }
+        else
+        {
+            SceneManager.LoadScene(ThisScene);
+        }
     }
 
-    public void SwitchOpenMenu(int SelectedMenu)
+    IEnumerator DelayedLoad(float Delay, string Scene)
+    {
+        yield return new WaitForSeconds(Delay);
+        SceneManager.LoadScene(Scene);
+    }
+
+        public void SwitchOpenMenu(int SelectedMenu)
     {
         for (int i = 0; i < MenuObjects.Length ; i++)
         {
