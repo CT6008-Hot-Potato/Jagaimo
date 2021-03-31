@@ -207,14 +207,7 @@ public class MoveObject : MonoBehaviour
                 //When object is being thrown first will check got rigidbody and then throw it
                 if (throwObject)
                 {
-                    if (leftClick > 0.1f)
-                    {
-                        rB.AddRelativeForce(transform.forward * throwStrength, ForceMode.Impulse);
-                    }
-                    else
-                    {
-                        rB.AddRelativeForce(transform.forward * (throwStrength * 0.5f), ForceMode.Impulse);
-                    }
+                    rB.AddRelativeForce(transform.forward * (throwStrength * 0.5f), ForceMode.Impulse);
                     rB.velocity = GetComponent<Rigidbody>().velocity;
                 }
             }

@@ -269,7 +269,7 @@ public class PlayerCamera : MonoBehaviour
     public void Crouch()
     {
         firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0, 0);
-        zoomInPosition.localPosition = Vector3.zero;
+        //zoomInPosition.localPosition = Vector3.zero;
     }
     //Called to uncrouch the player
     public bool UnCrouch()
@@ -285,7 +285,7 @@ public class PlayerCamera : MonoBehaviour
         else 
         {
             firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0.75f, 0);
-            zoomInPosition.localPosition = Vector3.zero;
+            //zoomInPosition.localPosition = Vector3.zero;
             return true;
         }
     }
@@ -339,7 +339,7 @@ public class PlayerCamera : MonoBehaviour
                             collider.center = new Vector3(0, 0, 0);
                             collider.height = 2f;
                             firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0.75f, 0);
-                            zoomInPosition.localPosition = Vector3.zero;
+                            //zoomInPosition.localPosition = Vector3.zero;
                             GetComponent<PlayerController>().SetMovement(0);
                             //Raycast when in third person checking if there is an obstacle between camera and player
                             ray = firstPersonCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -348,7 +348,7 @@ public class PlayerCamera : MonoBehaviour
                             //If an obstacle is found then zoom in
                             if (hit.transform == null)
                             {
-                                zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, 90 * Time.deltaTime);
+                                zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomOutPosition.position, 90 * Time.deltaTime);
                                 cameraState = cS.THIRDPERSON;
                             }
                             else
@@ -486,7 +486,7 @@ public class PlayerCamera : MonoBehaviour
             //Zoom in
             if (zoomValue > 0f)
             {
-                zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, cameraZoomSpeed/* * Time.deltaTime*/);
+                zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, cameraZoomSpeed);
                 if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < cameraTransferDistance)
                 {
                     cameraState = cS.FIRSTPERSON;
@@ -496,7 +496,8 @@ public class PlayerCamera : MonoBehaviour
             //Zoom out
             else if (zoomValue < 0f)
             {
-                zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomOutPosition.position, cameraZoomSpeed/*/* * Time.deltaTime*/);
+
+                zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomOutPosition.position, cameraZoomSpeed);
             }
             //Added this so that it smooth lerps to a new zoom posiiton rather than imitadly set cam pos. this also fixes a cam issue when interacting 
             thirdPersonCamera.transform.position = Vector3.Lerp(thirdPersonCamera.transform.position, zoomPosition.position, otherCamSpeed * Time.deltaTime);
