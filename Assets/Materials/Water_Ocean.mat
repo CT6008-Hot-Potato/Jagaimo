@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Water
+  m_Name: Water_Ocean
   m_Shader: {fileID: -6465566751694194690, guid: 0334409062bc5244b849b000c7747e5a,
     type: 3}
   m_ShaderKeywords: 
@@ -21,9 +21,9 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
-    - Vector1_3D52F683: 90
+    - Vector1_3D52F683: 1024
     - Vector1_96E541A6: 1.5
-    - Vector1_B8538C67: 7
+    - Vector1_B8538C67: 7.9
     m_Colors:
     - Color_3E69EF71: {r: 0.18431365, g: 0.7605611, b: 1, a: 0}
     - Color_BF740F9E: {r: 0.5529412, g: 1, b: 0.9628428, a: 1}
