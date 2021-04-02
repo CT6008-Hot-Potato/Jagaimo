@@ -115,8 +115,8 @@ public class PlayerController : MonoBehaviour
     //Fixed update function is responsible for jumping and player movement as these need to be done based on fixed update not update
     private void FixedUpdate()
     {
-        //If player movement state isn't iiinteracting
-        if (playerMovement != pM.INTERACTING)
+        //If player movement state isn't interacting
+        if (playerMovement != pM.INTERACTING && pC.cameraState != PlayerCamera.cS.FREECAMUNCONSTRAINED)
         {
             //Calculate how fast player should be moving
             Vector3 targetVelocity = movementValue;
@@ -355,12 +355,26 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext ctx)
     {
-       jumpValue = ctx.ReadValue<float>();
+        if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
+        {
+            pC.MoveFreeCamY(true, ctx.ReadValue<float>());
+        }
+        else if (pC.cameraState == PlayerCamera.cS.FREECAMCONSTRAINED)
+        {
+           jumpValue = ctx.ReadValue<float>();
+        }
     }
 
     public void Crouch(InputAction.CallbackContext ctx)
     {
+        if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
+        {
+            pC.MoveFreeCamY(false, ctx.ReadValue<float>());
+        }
+        else if (pC.cameraState == PlayerCamera.cS.FREECAMCONSTRAINED)
+        { 
             crouchValue = ctx.ReadValue<float>();
+        }
     }
 
     public void Sprint(InputAction.CallbackContext ctx)
