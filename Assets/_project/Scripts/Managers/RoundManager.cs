@@ -13,13 +13,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-//A small reference to the 2 main scripts of the characters
-public class PlayerCharacter
-{
-    TaggedTracker pcTracker;
-    CharacterManager pcManager;
-}
-
 //A class to hold the events that happen throughout the round, a round is a full game where the win condition of the gamemode is met
 public class RoundManager : MonoBehaviour
 {
@@ -44,15 +37,15 @@ public class RoundManager : MonoBehaviour
 
     //Bits and pieces that will be in some of the game scenes
     [SerializeField]
-    BasicTimerBehaviour startCountdown;
+    private BasicTimerBehaviour startCountdown;
     [SerializeField]
-    ScrollerText eventText;
+    private ScrollerText eventText;
 
     //Scripts specifically for local scenes
     [SerializeField]
-    LocalMPScreenPartioning localMPIndexer;
+    private LocalMPScreenPartioning localMPIndexer;
     [SerializeField]
-    GameSettingsContainer settings;
+    private GameSettingsContainer settings;
 
     //Starting when the players are in, false for using the trigger
     [SerializeField]
@@ -94,6 +87,8 @@ public class RoundManager : MonoBehaviour
                 default:
                     break;
             }
+
+
         }
 
         //If there is a gamemode already on the object
@@ -102,7 +97,7 @@ public class RoundManager : MonoBehaviour
             _currentGamemode = gamemode;
         }
 
-        //For some reason no gamemode was applied and none was on the objectwhat
+        //For some reason no gamemode was applied and none was on the object
         if (_currentGamemode == null)
         {
             _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
@@ -116,14 +111,15 @@ public class RoundManager : MonoBehaviour
     }
 
     //The coroutine that waits for players before setting the active players
-    IEnumerator Co_WaitUntilPlayers()
+    private IEnumerator Co_WaitUntilPlayers()
     {
         if (!localMPIndexer && Debug.isDebugBuild)
         {
-            Debug.LogError("Set An MP Screen Partitioner on this object", this);
+            Debug.Log("Set An MP Screen Partitioner on this object", this);
+            StopCoroutine(Co_WaitUntilPlayers());
         }
 
-        while (localMPIndexer.playerIndex < 1)
+        while (localMPIndexer.playerIndex == 0)
         {
             yield return null;
         }
@@ -134,6 +130,7 @@ public class RoundManager : MonoBehaviour
         if (startWhenReady)
         {
             startCountdown.CallOnTimerStart();
+            CallOnRoundStart();
         }
     }
 
@@ -147,6 +144,7 @@ public class RoundManager : MonoBehaviour
             {
                 Debug.Log("Round Started", this);
             }
+
             RoundStarted.Invoke();
             _currentGamemode.RoundStarted();
         }
@@ -188,6 +186,14 @@ public class RoundManager : MonoBehaviour
     //A player has been tagged
     public void OnPlayerTagged(CharacterManager charManager)
     {
+        if (!(MonoBehaviour)_currentGamemode  || !charManager)
+        {
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log("Gamemode: " + _currentGamemode.ToString() + " or no char manager: " + charManager.gameObject.name);
+            }
+        }
+
         //Telling the gamemode script that this manager is tagged
         _currentGamemode.PlayerTagged(charManager);
 

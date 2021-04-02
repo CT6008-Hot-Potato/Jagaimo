@@ -18,12 +18,13 @@ public class TaggedTracker : MonoBehaviour, IInteractable
 
     [SerializeField]
     private RoundManager roundManager;
+    [SerializeField]
     private CharacterManager playerManager;
 
     private void Awake()
     {
         roundManager = roundManager ?? FindObjectOfType<RoundManager>();
-        playerManager = GetComponent<CharacterManager>();
+        playerManager = playerManager ?? GetComponent<CharacterManager>();
         isTagged = false;
     }
 

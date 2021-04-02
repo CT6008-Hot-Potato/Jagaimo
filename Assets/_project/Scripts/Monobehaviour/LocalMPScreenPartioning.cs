@@ -32,6 +32,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
         settings = GameSettingsContainer.instance;
         manager = manager ?? GetComponent<PlayerInputManager>();
 
+        //If there are settings to take values from
         if (settings)
         {
             if (settings.iPlayercount > 1)
@@ -46,18 +47,28 @@ public class LocalMPScreenPartioning : MonoBehaviour
                     manager.JoinPlayer(inputToUse.playerIndex, inputToUse.splitScreenIndex, inputToUse.currentControlScheme);
                 }
             }
+            else if (settings.iPlayercount == 1)
+            {
+                singleLocalPlayer = false;
+                PlayerInput inputToUse = settings.LocalPlayerInputs[0];
+                Destroy(settings.LocalPlayerInputs[0].gameObject);
+                manager.JoinPlayer(inputToUse.playerIndex, inputToUse.splitScreenIndex, inputToUse.currentControlScheme);
+            }
             else
             {
+                //No players joined, so it was single player from the main menu
                 singleLocalPlayer = true;
+                playerManager.SetActive(false);
+                Instantiate(playerPrefab, new Vector3(0, 1, 0), playerPrefab.transform.rotation);
             }
         }
-
-        if (singleLocalPlayer)
+        //Was played from the scene, anyone can join
+        else if (singleLocalPlayer)
         {
             playerManager.SetActive(false);
             Instantiate(playerPrefab, new Vector3(0, 1, 0), playerPrefab.transform.rotation);
         }
-        else if (!manager.joiningEnabled)
+        else
         {
             manager.EnableJoining();
         }
@@ -71,19 +82,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
         playerIndexPrior = playerIndex;
     }
 
-    //public void RedoIndex()
-    //{
-    //    playerCameras = FindObjectsOfType<PlayerCamera>();
-    //    playerIndex = (playerCameras.Length - 1) / 2;
-    //    for (int i = 0; i > playerIndex; i++)
-    //    {
-    //        playerCameras[i].playerIndex = i;
-    //    }
-    //}
-
-    // Update is called once per frame
-    void Update()
-    {
+    public void OnPlayerJoined(PlayerInput playerInput) {
         playerCameras = FindObjectsOfType<PlayerCamera>();
         playerIndex = (playerCameras.Length - 1);
         if (playerIndex != playerIndexPrior && !singleLocalPlayer)
@@ -173,4 +172,5 @@ public class LocalMPScreenPartioning : MonoBehaviour
             }
         }
     }
+
 }

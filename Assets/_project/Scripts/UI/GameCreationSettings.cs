@@ -142,8 +142,8 @@ public class GameCreationSettings : MonoBehaviour
         {
             if (Debug.isDebugBuild)
             {
-                Debug.Log("New Gamemode: " + newMapGroup);
-                Debug.Log("Current Selection: " + iCurrentGamemodeSelection);
+                //Debug.Log("New Gamemode: " + newMapGroup);
+                //Debug.Log("Current Selection: " + iCurrentGamemodeSelection);
             }
 
             //Changing the maps shown

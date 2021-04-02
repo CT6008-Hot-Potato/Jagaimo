@@ -10,6 +10,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
 // Class inherits from Ipointerenter & IPointExit for detecting when the mouse is over the Element
 public class PopUpText : PopUpObject
@@ -21,51 +22,71 @@ public class PopUpText : PopUpObject
 
     protected override void InstantiateAsset()  // Instantiates a gameobject using the image, scale, etc provided in the inspector, ready for use 
     {
-        if (MyGameObject.TryGetComponent(out Text MyText))
+
+
+        if (MyGameObject.TryGetComponent(out Text MyText) )
         {
             MyText.text = text[0];
             MyText.color = textcolor;
             MyText.font = textFont;
             return;
         }
-        else 
-        {
-            Text[] MyTexts =  MyGameObject.GetComponentsInChildren<Text>();
-            if (MyTexts.Length != 0)
-            {
-                for( int i = 0; i< text.Length; i ++)
-                {
-                    if (i < MyTexts.Length)
-                        MyTexts[i].text = text[i];
-                        MyTexts[i].color = textcolor;
-                        MyTexts[i].font = textFont;
-                }
-                return;
-            }
-        }
-
-
-        if (MyGameObject.TryGetComponent(out TextMeshPro MyTMProText))
+        else if (MyGameObject.TryGetComponent(out TextMeshProUGUI MyTMProText) )
         {
             MyTMProText.text = text[0];
             MyTMProText.color = textcolor;
             return;
         }
-        else
-        {
-            TextMeshPro[] MyTexts = MyGameObject.GetComponentsInChildren<TextMeshPro>();
-            if (MyTexts.Length != 0)
-            {
-                for (int i = 0; i < text.Length; i++)
-                {
-                    if (i < MyTexts.Length)
-                        MyTexts[i].text = text[i];
-                        MyTexts[i].color = textcolor;
 
+        TextMeshProUGUI[] MyChildTMProText = MyGameObject.GetComponentsInChildren<TextMeshProUGUI>();
+        
+        if (MyChildTMProText.Length > 0)
+        {
+            for (int i = 0; i < MyChildTMProText.Length; i++)
+            {
+                if (i < text.Length)
+                {
+        
+                    MyChildTMProText[i].text = text[i];
+                    MyChildTMProText[i].color = textcolor;
                 }
-                return;
             }
+            return;
         }
+
+        //else
+        //{
+        //    Text[] MyTexts =  MyGameObject.GetComponentsInChildren<Text>();
+        //    if (MyTexts.Length != 0)
+        //    {
+        //        for( int i = 0; i< text.Length; i ++)
+        //        {
+        //            if (i < MyTexts.Length)
+        //                MyTexts[i].text = text[i];
+        //                MyTexts[i].color = textcolor;
+        //                MyTexts[i].font = textFont;
+        //        }
+        //        return;
+        //    }
+        //}
+
+
+
+        //else
+        //{
+        //    TextMeshPro[] MyTexts = MyGameObject.GetComponentsInChildren<TextMeshPro>();
+        //    if (MyTexts.Length != 0)
+        //    {
+        //        for (int i = 0; i < text.Length; i++)
+        //        {
+        //            if (i < MyTexts.Length)
+        //                MyTexts[i].text = text[i];
+        //                MyTexts[i].color = textcolor;
+
+        //        }
+        //        return;
+        //    }
+        //}
 
         Text NewText = MyGameObject.AddComponent<Text>();
         NewText.text = "";
@@ -83,14 +104,45 @@ public class PopUpText : PopUpObject
     public override void UpdateContent(string content)  // updates content after creation
     {
         if (MyGameObject.TryGetComponent(out Text MyText))
+        { 
             MyText.text = content;
-        if (MyGameObject.TryGetComponent(out TextMeshPro MyTMProText))
+            return;
+        }
+        if (MyGameObject.TryGetComponent(out TextMeshProUGUI MyTMProText))
+        {
             MyTMProText.text = content;
-                
-                
-       }
+            return;
+        }
+
+        TextMeshProUGUI[] MyChildTMProText = MyGameObject.GetComponentsInChildren<TextMeshProUGUI>();
+
+        if (MyChildTMProText.Length > 0)
+        {
+            for (int i = 0; i < MyChildTMProText.Length; i++)
+            {
+                if (i < text.Length)
+                {
+                    MyChildTMProText[i].text = text[i];
+                }
+            }
+            return;
+        }
+
+    }
+
+    public override void OnPointerEnter(PointerEventData eventData) // When the mouse pointer enters the UI Element, make the tooltip appear 
+    {
+        MyGameObject.SetActive(true);
+
+        TextMeshProUGUI[] MyChildTMProText = MyGameObject.GetComponentsInChildren<TextMeshProUGUI>();
+
+        if (MyChildTMProText.Length > 0)
+        {
+            UpdateContent(text[0]);
+
+        }
 
 
-
+    }
 
 }

@@ -28,7 +28,7 @@ public class CarryCollision : MonoBehaviour
     //Drop the carried object when it something is within it's collision
     private void OnTriggerStay(Collider collider)
     {
-        if (canCollide && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
+        if (canCollide && collider.gameObject != moveObject.gameObject && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
         {
             moveObject.Drop(false);
         }
