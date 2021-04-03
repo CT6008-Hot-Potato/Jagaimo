@@ -68,6 +68,10 @@ public class PlayerCamera : MonoBehaviour
     private GameObject playerFirstPerson;
     [SerializeField]
     private GameObject playerThirdPerson;
+    private Vector3 cameraMovementValue = Vector3.zero;
+    private Vector3 freecamRotation;
+    private float freeCamValueY;
+    public bool freecamLock = false;
     #endregion Variables
 
     #region Enums
@@ -84,7 +88,8 @@ public class PlayerCamera : MonoBehaviour
     {
         FIRSTPERSON,
         THIRDPERSON,
-        FREECAM,
+        FREECAMCONSTRAINED,
+        FREECAMUNCONSTRAINED
     }
     [SerializeField]
     private mI mouseInversion;
@@ -374,12 +379,12 @@ public class PlayerCamera : MonoBehaviour
                         //Begins freecam movement
                         if (cameraRotateValue > 0.1f)
                         {
-                            cameraState = cS.FREECAM;
+                            cameraState = cS.FREECAMCONSTRAINED;
                         }
                     }
                     break;
                 //Free camera
-                case cS.FREECAM:
+                case cS.FREECAMCONSTRAINED:
                     //Check if wrong camera enabled and if so setup correct camera
                     if (firstPersonCamera.enabled)
                     {
@@ -387,6 +392,7 @@ public class PlayerCamera : MonoBehaviour
                     }
                     else
                     {
+
                         if (GetComponent<MoveObject>() && GetComponent<MoveObject>().enabled)
                             GetComponent<MoveObject>().Drop(false);
                         DoOnEitherThirdPersonMode();
@@ -394,7 +400,38 @@ public class PlayerCamera : MonoBehaviour
                         {
                             cameraState = cS.THIRDPERSON;
                         }
+                        else if (cameraMovementValue != Vector3.zero)
+                        {
+                            //thirdPersonCamera.gameObject.AddComponent<SphereCollider>();
+                            freecamRotation = thirdPersonCamera.transform.rotation.eulerAngles;
+                            cameraState = cS.FREECAMUNCONSTRAINED;
+                        }
                     }
+                    break;
+                case cS.FREECAMUNCONSTRAINED:
+                    if (cameraRotateValue <= 0.1f && !freecamLock)
+                    {
+                        if (thirdPersonCamera.gameObject.GetComponent<Rigidbody>() != null)
+                        {
+                            Destroy(thirdPersonCamera.gameObject.GetComponent<Rigidbody>());
+                        }
+                        thirdPersonCamera.transform.rotation = Quaternion.Euler(freecamRotation);
+                        //Destroy(thirdPersonCamera.gameObject.GetComponent<SphereCollider>());
+                        cameraState = cS.THIRDPERSON;
+                    }   
+                    else if (thirdPersonCamera.gameObject.GetComponent<Rigidbody>() != null)
+                    {
+                        if (Vector3.Distance(thirdPersonCamera.transform.position, Vector3.zero) < 150)
+                        {
+                            Destroy(thirdPersonCamera.gameObject.GetComponent<Rigidbody>());
+                        }
+                    }
+                    else if (Vector3.Distance(thirdPersonCamera.transform.position,Vector3.zero) > 200)
+                    {
+                        thirdPersonCamera.gameObject.AddComponent<Rigidbody>().mass = 1000;
+                    }
+                    thirdPersonCamera.transform.position = new Vector3(thirdPersonCamera.transform.position.x, thirdPersonCamera.transform.position.y + freeCamValueY, thirdPersonCamera.transform.position.z);
+                    thirdPersonCamera.transform.Translate(cameraMovementValue * 0.1f,thirdPersonCamera.transform);
                     break;
             }
 
@@ -440,7 +477,14 @@ public class PlayerCamera : MonoBehaviour
                     break;
             }
             //Vector3 currentRotation
-            firstPersonCamera.transform.eulerAngles = new UnityEngine.Vector3(pitch, yaw, 0.0f);
+            if (cameraState != cS.FREECAMUNCONSTRAINED)
+            {
+                firstPersonCamera.transform.eulerAngles = new UnityEngine.Vector3(pitch, yaw, 0.0f);
+            }
+            else
+            {
+                thirdPersonCamera.transform.eulerAngles = new UnityEngine.Vector3(pitch, yaw, 0.0f);
+            }
         }
         else
         {
@@ -463,6 +507,23 @@ public class PlayerCamera : MonoBehaviour
             }
 
         }
+    }
+
+    public void MoveFreeCamY(bool upward,float value)
+    {
+        if (upward)
+        {
+            freeCamValueY = value;
+        }
+        else if (value != 0)
+        {
+            freeCamValueY = -value;
+        }
+        else
+        {
+            freeCamValueY = 0;
+        }
+        freeCamValueY = (freeCamValueY * Time.deltaTime) * 12;
     }
 
     //This function managed zooming and mesh clipping avoidance for the third person camera if it is 
@@ -543,5 +604,10 @@ public class PlayerCamera : MonoBehaviour
     {
         pC.uiMenu.UpdateUIMenuState(!pC.uiMenu.GetMenuStatus());
         escapeValue = ctx.ReadValue<float>();
+    }
+
+    public void FreeCameraMovement(InputAction.CallbackContext ctx)
+    {
+        cameraMovementValue = new Vector3(ctx.ReadValue<Vector2>().x, 0, ctx.ReadValue<Vector2>().y);
     }
 }
