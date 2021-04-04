@@ -38,11 +38,11 @@ public class PlayerController : MonoBehaviour
     private bool sliding = false;
     private bool climbing = false;
     private PlayerCamera pC;
-    private LocalMPScreenPartioning cM;
     private CapsuleCollider collider;
     private bool crouching = false;
     private bool slowStand = false;
     public PlayerInput PlayerInput => playerInput;
+    //Values to be assigned via inputaction
     private Vector3 movementValue = Vector3.zero;
     private float jumpValue = 0;
     private float crouchValue = 0;
@@ -78,7 +78,6 @@ public class PlayerController : MonoBehaviour
         sM = FindObjectOfType<SoundManager>();
         rebindingDisplay = FindObjectOfType<RebindingDisplay>();
         speed = walkSpeed;
-        cM = GetComponent<LocalMPScreenPartioning>();
         Physics.queriesHitBackfaces = true;
         pC = GetComponent<PlayerCamera>();
         playerMovement = pM.INTERACTING;
@@ -106,7 +105,7 @@ public class PlayerController : MonoBehaviour
         {
             if (collision.gameObject.name == "CarryPosition")
             {
-                GetComponent<MoveObject>().Drop(true);
+                GetComponent<PlayerInteraction>().Drop(true);
             }
             grounded = true;
         }
@@ -137,19 +136,22 @@ public class PlayerController : MonoBehaviour
                 //Jumpine velocity for the player
                 rb.velocity = new Vector3(velocity.x, Mathf.Sqrt(jumpVelocity), velocity.z);
             }
+            //Else if not grounded and not climbing can be pushed down stronger or do wall kick
             else if (!grounded && !climbing)
             {
-
+                //If jump button pressed and wall kick returns true then do a wall kick effect
                 if (jumpValue > 0.1f && pC.WallKick())
                 {
                     climbing = true;
                     StartCoroutine(Co_ClimbTime());
                 }
+                //Else push down more intense
                 else
                 {
                     downForce = 22;
                 }
             }
+            //Default force pushed down with 
             else if (downForce != 15)
             {
                 downForce = 15;
@@ -212,6 +214,7 @@ public class PlayerController : MonoBehaviour
                     UnityEngine.Cursor.lockState = CursorLockMode.Locked;
                     playerMovement = pM.WALKING;
                 }
+                //Else if cursor is locked set it to not be locked
                 else if (UnityEngine.Cursor.lockState == CursorLockMode.Locked)
                 {
                     UnityEngine.Cursor.lockState = CursorLockMode.None;
@@ -220,10 +223,12 @@ public class PlayerController : MonoBehaviour
             //Crouching
             case pM.CROUCHING:
                 speed = crouchSpeed;
+                //If crouching is false check if crouch button lifted up or sprinting key pressed and uncrouch
                 if (crouching == false)
                 {
                     if (crouchValue > 0.1f || sprintValue > 0.1f)
                     {
+                        //Uncrouch
                         if (pC.UnCrouch())
                         {
                             sM.PlaySound(crouchSound);
@@ -235,6 +240,7 @@ public class PlayerController : MonoBehaviour
                         }
                     }
                 }
+                //Crouching set to false when key lifted
                 else if (crouching && crouchValue == 0)
                 {
                     crouching = false;
@@ -287,21 +293,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //This coroutine is called to climb up and turn around when doing a wall click
     private IEnumerator Co_ClimbTime()
     {
         timer = new Timer(0.125f);
+        //Push up while timer active
         while (timer.isActive)
         {
             timer.Tick(Time.deltaTime);
             rb.AddForce(transform.up, ForceMode.Impulse);       
             yield return null;
         }
+        //Flip around
         rb.AddForce(-rotationPosition.forward * 75, ForceMode.Impulse);
         rb.velocity = Vector3.zero;
         pC.ChangeYaw();
         climbing = false;
     }
 
+    //This corouting is called to climb and
     private IEnumerator Co_SlideTime()
     {
         timer = new Timer(slideTime);
@@ -318,11 +328,13 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
 
+        //If can't uncrouch then stay crouch
         if (!pC.UnCrouch())
         {
             speed = crouchSpeed;
             playerMovement = pM.CROUCHING;
         }
+        //Else uncrouch
         else
         {
             speed = walkSpeed;
@@ -330,8 +342,10 @@ public class PlayerController : MonoBehaviour
             collider.height = 2;
         }
 
+        //Set crouching true, sliding false
         crouching = true;
         sliding = false;
+        //Stop sliding
         if (slowStand)
         {
             movementValue = new Vector3(0, 0, 0);
@@ -359,7 +373,7 @@ public class PlayerController : MonoBehaviour
         {
             pC.MoveFreeCamY(true, ctx.ReadValue<float>());
         }
-        else if (pC.cameraState == PlayerCamera.cS.FREECAMCONSTRAINED)
+        else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED)
         {
            jumpValue = ctx.ReadValue<float>();
         }
@@ -371,7 +385,7 @@ public class PlayerController : MonoBehaviour
         {
             pC.MoveFreeCamY(false, ctx.ReadValue<float>());
         }
-        else if (pC.cameraState == PlayerCamera.cS.FREECAMCONSTRAINED)
+        else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED)
         { 
             crouchValue = ctx.ReadValue<float>();
         }
