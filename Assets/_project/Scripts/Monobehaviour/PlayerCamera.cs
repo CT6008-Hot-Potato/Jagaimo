@@ -46,24 +46,29 @@ public class PlayerCamera : MonoBehaviour
     private CapsuleCollider collider;
     [SerializeField]
     private float cameraSensitivity;
+    //Amplify camera sensitivity specific to controllers
     [SerializeField]
     private float controllerCameraSensitivityMultiplier = 1.25f;
+    //Pitch and yaw speed for camera
     private float pitch;
     private float yaw;
     private LocalMPScreenPartioning cM;
     [SerializeField]
     private PlayerInput playerInput = null;
     public PlayerInput PlayerInput => playerInput;
+    //For input system 
     private float zoomValue = 0;
     private float cameraRotateValue = 0;
     private float escapeValue = 0;
     private Vector2 cameraValue = Vector2.zero;
+    //Character type related arrays
     [SerializeField]
     private GameObject[] character;
     [SerializeField]
     private GameObject[] characterArms;
     [SerializeField]
     private LayerMask[] mask;
+    //First and third person cameras
     [SerializeField]
     private GameObject playerFirstPerson;
     [SerializeField]
@@ -143,15 +148,18 @@ public class PlayerCamera : MonoBehaviour
         SetPlayerMask();
     }
 
+    //Function called to spin player around after wall kick
     public void SpinCamera()
     {
         firstPersonCamera.transform.eulerAngles = new UnityEngine.Vector3(0, yaw - 180, 0);
     }
 
+    //Function for setting the correct player mask up
     public void SetPlayerMask()
     { 
         for (int i = 0;i < 4;i++)
         {
+            //If on correct player infex use this character and arms and set it's culling mask
             if (i == playerIndex)
             {
                 character[i].SetActive(true);
@@ -166,6 +174,7 @@ public class PlayerCamera : MonoBehaviour
                     thirdPersonCamera.cullingMask = mask[i];
                 }
             }
+            //Set other elements for character and arms false in the arrays
             else
             {
                 character[i].SetActive(false);
@@ -174,8 +183,10 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
+    //This function sets up the correct camera aspect ratio according to the number of players within the game locally, this is checked via character manager
     public void SetupCameraAspectRatio()
     {
+        //Switch value based upon character managers player index
         switch (cM.playerIndex)
         {
             //Player 1
@@ -256,26 +267,20 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
+    //Update function calles camera type function constantly
     void Update()
     {
-        if (firstPersonCamera.enabled)
-        {
-            //firstPersonCamera.cullingMask == LayerMask.NameToLayer("");
-        }
-        else
-        {
-
-        }
-
         //Function for aspects of the player movement to if the camera is in third or first person mode
         CameraType();
     }
+
     //Called to crouch the player
     public void Crouch()
     {
         firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0, 0);
         //zoomInPosition.localPosition = Vector3.zero;
     }
+
     //Called to uncrouch the player
     public bool UnCrouch()
     {
@@ -314,6 +319,7 @@ public class PlayerCamera : MonoBehaviour
 
     }
 
+    //Function to set yaw valye
     public void ChangeYaw()
     {
         yaw = yaw - 180;
@@ -322,6 +328,7 @@ public class PlayerCamera : MonoBehaviour
     //Camera type function which is responsible for managing the rotation and type of camera which the player utilises
     void CameraType()
     {
+        //If the players movement type if not interact
         if (pC.GetMovement() != 0)
         {
             switch (cameraState)
@@ -383,7 +390,7 @@ public class PlayerCamera : MonoBehaviour
                         }
                     }
                     break;
-                //Free camera
+                //Free camera constrainged
                 case cS.FREECAMCONSTRAINED:
                     //Check if wrong camera enabled and if so setup correct camera
                     if (firstPersonCamera.enabled)
@@ -392,9 +399,9 @@ public class PlayerCamera : MonoBehaviour
                     }
                     else
                     {
-
-                        if (GetComponent<MoveObject>() && GetComponent<MoveObject>().enabled)
-                            GetComponent<MoveObject>().Drop(false);
+                        //Drop a picked up object if currently being held when in this state
+                        if (GetComponent<PlayerInteraction>() && GetComponent<PlayerInteraction>().enabled)
+                            GetComponent<PlayerInteraction>().Drop(false);
                         DoOnEitherThirdPersonMode();
                         if (cameraRotateValue <= 0.1f)
                         {
@@ -408,28 +415,38 @@ public class PlayerCamera : MonoBehaviour
                         }
                     }
                     break;
+                //Free camera unconstrained
                 case cS.FREECAMUNCONSTRAINED:
+                    //If freecam button lifted up and freecam is not locked go back to third person
                     if (cameraRotateValue <= 0.1f && !freecamLock)
                     {
+                        //If there is a rigidbody attached to the camera destroy it and destroy sphere collider
                         if (thirdPersonCamera.gameObject.GetComponent<Rigidbody>() != null)
                         {
                             Destroy(thirdPersonCamera.gameObject.GetComponent<Rigidbody>());
+                            Destroy(thirdPersonCamera.gameObject.AddComponent<SphereCollider>());
                         }
                         thirdPersonCamera.transform.rotation = Quaternion.Euler(freecamRotation);
                         //Destroy(thirdPersonCamera.gameObject.GetComponent<SphereCollider>());
                         cameraState = cS.THIRDPERSON;
                     }   
+                    //If rigidbody component attached
                     else if (thirdPersonCamera.gameObject.GetComponent<Rigidbody>() != null)
                     {
+                        //Remove it and sphere collider when within 150 metres of the centre of map
                         if (Vector3.Distance(thirdPersonCamera.transform.position, Vector3.zero) < 150)
                         {
                             Destroy(thirdPersonCamera.gameObject.GetComponent<Rigidbody>());
+                            Destroy(thirdPersonCamera.gameObject.AddComponent<SphereCollider>());
                         }
                     }
+                    //Else if beyond 200 metres from centre of map add rigidbody & collider
                     else if (Vector3.Distance(thirdPersonCamera.transform.position,Vector3.zero) > 200)
                     {
-                        thirdPersonCamera.gameObject.AddComponent<Rigidbody>().mass = 1000;
+                        thirdPersonCamera.gameObject.AddComponent<Rigidbody>().mass = 10000;
+                        thirdPersonCamera.gameObject.AddComponent<SphereCollider>().radius = 0.25f;
                     }
+                    //Moving third person camera position around freely
                     thirdPersonCamera.transform.position = new Vector3(thirdPersonCamera.transform.position.x, thirdPersonCamera.transform.position.y + freeCamValueY, thirdPersonCamera.transform.position.z);
                     thirdPersonCamera.transform.Translate(cameraMovementValue * 0.1f,thirdPersonCamera.transform);
                     break;
@@ -476,7 +493,8 @@ public class PlayerCamera : MonoBehaviour
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
             }
-            //Vector3 currentRotation
+
+            //If camera is not freecamunconstrained then move first person camera else move third person camera
             if (cameraState != cS.FREECAMUNCONSTRAINED)
             {
                 firstPersonCamera.transform.eulerAngles = new UnityEngine.Vector3(pitch, yaw, 0.0f);
@@ -509,30 +527,31 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
+    //Function called from player controller to move camera y value via jumping and crouching input action values
     public void MoveFreeCamY(bool upward,float value)
     {
+        //Move up
         if (upward)
         {
             freeCamValueY = value;
         }
+        //Move down
         else if (value != 0)
         {
             freeCamValueY = -value;
         }
+        //Set to 0
         else
         {
             freeCamValueY = 0;
         }
+        //Apply delta time and multiplay value
         freeCamValueY = (freeCamValueY * Time.deltaTime) * 12;
     }
 
     //This function managed zooming and mesh clipping avoidance for the third person camera if it is 
     void DoOnEitherThirdPersonMode()
     {
-        //if (thirdPersonCamera.transform.rotation.x < 15)
-        //{
-        //    thirdPersonCamera.transform.localRotation = Quaternion.Lerp(thirdPersonCamera.transform.rotation, Quaternion.Euler(15, thirdPersonCamera.transform.rotation.y, thirdPersonCamera.transform.rotation.z), 1);
-        //}
         //If an obstacle is found then zoom in
         if (Physics.Linecast(firstPersonCamera.transform.position, zoomPosition.transform.position, out hit) && hit.collider.gameObject != gameObject && !hit.collider.isTrigger)
         {
@@ -578,6 +597,7 @@ public class PlayerCamera : MonoBehaviour
         SetPlayerMask();
     }
 
+    //Function for getting camera input value as vector 3
     public void Camera(InputAction.CallbackContext ctx)
     {
         if (ctx.action.ToString() == "Gameplay/Camera[/XInputControllerWindows/rightStick]")
@@ -590,22 +610,26 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
+    //Function for getting camera zoom input value
     public void CameraZoom(InputAction.CallbackContext ctx)
     {
         zoomValue = ctx.ReadValue<float>();
     }
 
+    //Function for gettting camera rotation input value
     public void CameraRotate(InputAction.CallbackContext ctx)
     {
         cameraRotateValue = ctx.ReadValue<float>();
     }
 
+    //Function for getting escape input value
     public void Escape(InputAction.CallbackContext ctx)
     {
         pC.uiMenu.UpdateUIMenuState(!pC.uiMenu.GetMenuStatus());
         escapeValue = ctx.ReadValue<float>();
     }
 
+    //Function for freecamera movement input value
     public void FreeCameraMovement(InputAction.CallbackContext ctx)
     {
         cameraMovementValue = new Vector3(ctx.ReadValue<Vector2>().x, 0, ctx.ReadValue<Vector2>().y);

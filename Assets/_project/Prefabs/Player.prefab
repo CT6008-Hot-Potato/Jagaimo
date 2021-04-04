@@ -814,7 +814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movingParent: {fileID: 4369198653127604791}
-  mainCamera: {fileID: 4369198653734221144}
+  firstPersonCamera: {fileID: 4369198653734221144}
   closestPosition: {fileID: 4369198654189538588}
   furthestPosition: {fileID: 4369198653568062970}
   position: {fileID: 4369198653832675790}
@@ -894,6 +894,7 @@ MonoBehaviour:
     m_Bits: 69121
   playerFirstPerson: {fileID: 5398224648384810738}
   playerThirdPerson: {fileID: 5242775968663630942}
+  freecamLock: 0
   mouseInversion: 3
   cameraState: 1
 --- !u!114 &4394244838949972472
