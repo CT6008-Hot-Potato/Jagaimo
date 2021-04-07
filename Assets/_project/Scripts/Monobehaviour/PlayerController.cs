@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     private bool sliding = false;
     private bool climbing = false;
     private PlayerCamera pC;
+    private PlayerInteraction pI;
     private CapsuleCollider collider;
     private bool crouching = false;
     private bool slowStand = false;
@@ -72,9 +73,10 @@ public class PlayerController : MonoBehaviour
 
     #endregion Enum
 
-    //Start function sets up numerous aspects of the player ready for use
-    void Start()
+    //Setting up and assigning on awake
+    private void Awake()
     {
+        pI = FindObjectOfType<PlayerInteraction>();
         sM = FindObjectOfType<SoundManager>();
         rebindingDisplay = FindObjectOfType<RebindingDisplay>();
         speed = walkSpeed;
@@ -88,8 +90,7 @@ public class PlayerController : MonoBehaviour
         if (!uiMenu)
         {
             Debug.LogWarning("Missing ui menu reference!");
-        }
-        
+        }        
     }
 
 
@@ -140,7 +141,7 @@ public class PlayerController : MonoBehaviour
             else if (!grounded && !climbing)
             {
                 //If jump button pressed and wall kick returns true then do a wall kick effect
-                if (jumpValue > 0.1f && pC.WallKick())
+                if (jumpValue > 0.1f && pI.WallKick())
                 {
                     climbing = true;
                     StartCoroutine(Co_ClimbTime());
@@ -229,7 +230,7 @@ public class PlayerController : MonoBehaviour
                     if (crouchValue > 0.1f || sprintValue > 0.1f)
                     {
                         //Uncrouch
-                        if (pC.UnCrouch())
+                        if (pI.UnCrouch())
                         {
                             sM.PlaySound(crouchSound);
                             crouching = true;
@@ -252,7 +253,7 @@ public class PlayerController : MonoBehaviour
                 {
                     collider.center = new Vector3(0, -0.5f, 0);
                     collider.height = 1;
-                    pC.Crouch();
+                    pI.Crouch();
                     if (grounded)
                     {
                         if (speed == runSpeed && movementValue.z > 0.1f)
@@ -329,7 +330,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //If can't uncrouch then stay crouch
-        if (!pC.UnCrouch())
+        if (!pI.UnCrouch())
         {
             speed = crouchSpeed;
             playerMovement = pM.CROUCHING;

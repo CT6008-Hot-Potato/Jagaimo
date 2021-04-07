@@ -274,51 +274,6 @@ public class PlayerCamera : MonoBehaviour
         CameraType();
     }
 
-    //Called to crouch the player
-    public void Crouch()
-    {
-        firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0, 0);
-        //zoomInPosition.localPosition = Vector3.zero;
-    }
-
-    //Called to uncrouch the player
-    public bool UnCrouch()
-    {
-        //Raycast from first person camera
-        ray = new Ray(new Vector3 (firstPersonCamera.transform.position.x, firstPersonCamera.transform.position.y - 0.25f, firstPersonCamera.transform.position.z) , firstPersonCamera.transform.up);
-        //Do a raycast and check if facing wall
-        Physics.Raycast(ray, out hit, 0.75f);
-        if (hit.collider != null)
-        {
-            return false;
-        }
-        else 
-        {
-            firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0.75f, 0);
-            //zoomInPosition.localPosition = Vector3.zero;
-            return true;
-        }
-    }
-
-    //Check if able to perform a wall kick by checking how close to a collider
-    public bool WallKick()
-    {
-        //Raycast from first person camera
-        ray = new Ray(new Vector3 (firstPersonCamera.transform.position.x, firstPersonCamera.transform.position.y - 0.5f, firstPersonCamera.transform.position.z), firstPersonCamera.transform.forward);
-        //Do a raycast and check if facing wall
-        Physics.Raycast(ray, out hit, 0.5f);
-
-        if (hit.rigidbody == null && hit.collider != null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    }
-
     //Function to set yaw valye
     public void ChangeYaw()
     {
