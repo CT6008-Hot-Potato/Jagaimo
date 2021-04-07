@@ -14,11 +14,14 @@ public class CarryCollision : MonoBehaviour
     PlayerInteraction playerInteraction;
     private bool canCollide = false;
     //Start function gettiing moveobject
-    private void Start()
+
+    //Corouting for waiting before collider can be dropped called and playerinteraction component found
+    private void Awake()
     {
         playerInteraction = gameObject.transform.parent.parent.GetComponent<PlayerInteraction>();
-        StartCoroutine("WaitFirst");
+        StartCoroutine("WaitFirst");        
     }
+
     //Coroutine giving brief window of pickup from position without collision
     IEnumerator WaitFirst()
     {
