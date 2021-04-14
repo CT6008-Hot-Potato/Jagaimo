@@ -306,8 +306,6 @@ public class PlayerCamera : MonoBehaviour
                             collider.center = new Vector3(0, 0, 0);
                             collider.height = 2f;
                             firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0.75f, 0);
-                            //zoomInPosition.localPosition = Vector3.zero;
-                            GetComponent<PlayerController>().SetMovement(0);
                             //Raycast when in third person checking if there is an obstacle between camera and player
                             ray = firstPersonCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
                             ray.direction *= -1;
@@ -411,9 +409,8 @@ public class PlayerCamera : MonoBehaviour
             if (escapeValue > 0.1f)
             {
                 pC.SetMovement(0);
-                UnityEngine.Cursor.lockState = CursorLockMode.None;
-                thirdPersonCamera.enabled = false;
-                firstPersonCamera.enabled = true;
+                UnityEngine.Cursor.lockState = CursorLockMode.None;                
+                
             }
             else if (UnityEngine.Cursor.lockState == CursorLockMode.None)
             {
@@ -459,27 +456,27 @@ public class PlayerCamera : MonoBehaviour
                 thirdPersonCamera.transform.eulerAngles = new UnityEngine.Vector3(pitch, yaw, 0.0f);
             }
         }
-        else
-        {
-            //Enable correct camera based on state
-            switch (cameraState)
-            {
-                //First person camera
-                case cS.FIRSTPERSON:
-                    thirdPersonCamera.enabled = false;
-                    firstPersonCamera.enabled = true;
-                    break;
-                //Third person camera
-                case cS.THIRDPERSON:
-                    thirdPersonCamera.enabled = true;
-                    firstPersonCamera.enabled = false;
-                    break;
-                default:
-                    Debug.Log("Different value given.");
-                    break;
-            }
-
-        }
+        //else
+        //{
+        //    //Enable correct camera based on state
+        //    switch (cameraState)
+        //    {
+        //        //First person camera
+        //        case cS.FIRSTPERSON:
+        //            thirdPersonCamera.enabled = false;
+        //            firstPersonCamera.enabled = true;
+        //            break;
+        //        //Third person camera
+        //        case cS.THIRDPERSON:
+        //            thirdPersonCamera.enabled = true;
+        //            firstPersonCamera.enabled = false;
+        //            break;
+        //        default:
+        //            Debug.Log("Different value given.");
+        //            break;
+        //    }
+        //
+        //}
     }
 
     //Function called from player controller to move camera y value via jumping and crouching input action values
