@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c34649316769f243973e4dd4d8d6279, type: 3}
+  m_Name: SoundProfile
+  m_EditorClassIdentifier: 
+  soundPalette:
+  - name: 0
+    file:
+    - {fileID: 8300000, guid: d5d912fca71255242b599d4d24633199, type: 3}
+    audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
+      type: 2}
+    defaultVolume: 0
+    pitchVariation: 0
+  - name: 1
+    file:
+    - {fileID: 8300000, guid: d91927db172dc454ea5b6abbb43be482, type: 3}
+    - {fileID: 8300000, guid: 4ca2d3700ecdad44a9b2275c090c0f7c, type: 3}
+    audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
+      type: 2}
+    defaultVolume: 1
+    pitchVariation: 1
+  - name: 2
+    file:
+    - {fileID: 8300000, guid: 3debdf6c21e18ec4ba1e383ea1391cb6, type: 3}
+    - {fileID: 0}
+    audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
+      type: 2}
+    defaultVolume: 1
+    pitchVariation: 0.5
+  - name: 4
+    file:
+    - {fileID: 0}
+    audioMixer: {fileID: 7834759804706455165, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
+      type: 2}
+    defaultVolume: 1
+    pitchVariation: 0
+  - name: 5
+    file:
+    - {fileID: 8300000, guid: 4ca2d3700ecdad44a9b2275c090c0f7c, type: 3}
+    - {fileID: 8300000, guid: 52d751f819a3fdd4cbfc53912d81c177, type: 3}
+    audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
+      type: 2}
+    defaultVolume: 1
+    pitchVariation: 0.5
+  - name: 6
+    file:
+    - {fileID: 8300000, guid: bca0190dcf2d3ca499971dd6dbb0a897, type: 3}
+    - {fileID: 8300000, guid: 27ec3b76a4f3c4740a7711de4d8b5e55, type: 3}
+    audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
+      type: 2}
+    defaultVolume: 1
+    pitchVariation: 0.2
+  - name: 7
+    file:
+    - {fileID: 8300000, guid: d5d912fca71255242b599d4d24633199, type: 3}
+    - {fileID: 8300000, guid: ea8308f36b0010b4f80ae9bc1b99afb4, type: 3}
+    audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
+      type: 2}
+    defaultVolume: 0.7
+    pitchVariation: 0.4
+  - name: 8
+    file:
+    - {fileID: 8300000, guid: d5d912fca71255242b599d4d24633199, type: 3}
+    - {fileID: 8300000, guid: cdc3772dabee5ff4c9c1f0b6d9eb5c93, type: 3}
+    audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
+      type: 2}
+    defaultVolume: 0.5
+    pitchVariation: 0.2
+  - name: 9
+    file:
+    - {fileID: 8300000, guid: ceff911c51efc244094e401a3e60f87a, type: 3}
+    - {fileID: 8300000, guid: d965ffe85c628524fafc495f4dae8f63, type: 3}
+    audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
+      type: 2}
+    defaultVolume: 0.5
+    pitchVariation: 0.5
