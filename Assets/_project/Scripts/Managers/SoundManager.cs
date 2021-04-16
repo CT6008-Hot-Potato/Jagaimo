@@ -37,21 +37,25 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySound(ScriptableSounds.Sounds Sound)
     {
-        ScriptableSounds.SoundIdentity i = SoundBoard.GetSoundFromPalette(Sound);
-        AudioClip PlayMe = i.file[Random.Range(0, i.file.Length)];
+        if (Sound != 0)
+        {
+            ScriptableSounds.SoundIdentity i = SoundBoard.GetSoundFromPalette(Sound);
+            AudioClip PlayMe = i.file[Random.Range(0, i.file.Length)];
 
-        GameObject MyObject = new GameObject(PlayMe.name);
-        MyObject.transform.parent = transform;
-        MyObject.transform.position = Vector3.zero;
-        AudioSource MyAudio = MyObject.AddComponent<AudioSource>();
+            GameObject MyObject = new GameObject(PlayMe.name);
+            MyObject.transform.parent = transform;
+            MyObject.transform.position = Vector3.zero;
+            AudioSource MyAudio = MyObject.AddComponent<AudioSource>();
 
-        MyAudio.volume = i.defaultVolume;
-        MyAudio.pitch = MyAudio.pitch + Random.Range(-i.pitchVariation, i.pitchVariation);
-        MyAudio.clip = PlayMe;
-        MyAudio.outputAudioMixerGroup = i.audioMixer;
+            MyAudio.volume = i.defaultVolume;
+            MyAudio.pitch = MyAudio.pitch + Random.Range(-i.pitchVariation, i.pitchVariation);
+            MyAudio.clip = PlayMe;
+            MyAudio.outputAudioMixerGroup = i.audioMixer;
 
-        MyAudio.Play();
-        Destroy(MyObject, PlayMe.length);
+            MyAudio.Play();
+            Destroy(MyObject, PlayMe.length);
+
+        }
     }
 
 
