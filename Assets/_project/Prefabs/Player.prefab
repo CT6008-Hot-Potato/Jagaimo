@@ -798,9 +798,9 @@ MonoBehaviour:
   slideTime: 0.6
   rotationPosition: {fileID: 4394244838949972449}
   uiMenu: {fileID: 3288555664286428951}
-  slideSound: {fileID: 8300000, guid: ea8308f36b0010b4f80ae9bc1b99afb4, type: 3}
-  crouchSound: {fileID: 8300000, guid: cdc3772dabee5ff4c9c1f0b6d9eb5c93, type: 3}
-  jumpSound: {fileID: 8300000, guid: 52d751f819a3fdd4cbfc53912d81c177, type: 3}
+  slideSound: 7
+  crouchSound: 8
+  jumpSound: 9
 --- !u!114 &4394244838949972468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -821,8 +821,8 @@ MonoBehaviour:
   throwStrength: 10
   grabDistance: 5
   playerInput: {fileID: 4394244838949972472}
-  grabSound: {fileID: 8300000, guid: ea8308f36b0010b4f80ae9bc1b99afb4, type: 3}
-  throwSound: {fileID: 8300000, guid: c805fb41a251c6a4b95df7ca2311266b, type: 3}
+  grabSound: 5
+  throwSound: 6
 --- !u!114 &4394244838949972469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4023,12 +4023,17 @@ PrefabInstance:
     - target: {fileID: 6863599625228453314, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}
       propertyPath: clickSound
-      value: 
-      objectReference: {fileID: 8300000, guid: d91927db172dc454ea5b6abbb43be482, type: 3}
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6863599625228453315, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}
       propertyPath: m_Name
       value: Pause Menu Prefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 6863599625228453315, guid: 2acc603870376c84d855aaa426892b4f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6863599625228453318, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}

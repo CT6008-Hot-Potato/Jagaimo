@@ -52,11 +52,7 @@ public class PlayerController : MonoBehaviour
     private Timer timer;
     public UIMenuBehaviour uiMenu;
     [SerializeField]
-    private AudioClip slideSound;
-    [SerializeField]  
-    private AudioClip crouchSound;
-    [SerializeField]  
-    private AudioClip jumpSound;
+    private ScriptableSounds.Sounds slideSound, crouchSound, jumpSound;
     private SoundManager sM;
     #endregion
     //Enums

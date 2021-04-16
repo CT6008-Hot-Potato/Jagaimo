@@ -14,7 +14,7 @@ public class Bounce : MonoBehaviour
     [SerializeField]
     private float force;
     [SerializeField]
-    private AudioClip bounceSound;
+    private ScriptableSounds.Sounds bounceSound;
     private SoundManager sM;
 
     private enum directions

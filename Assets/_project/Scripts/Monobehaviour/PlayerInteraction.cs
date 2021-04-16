@@ -37,9 +37,8 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField]
     private PlayerInput playerInput = null;
     [SerializeField]
-    private AudioClip grabSound;
-    [SerializeField]
-    private AudioClip throwSound;
+    private ScriptableSounds.Sounds grabSound, throwSound;
+
     private SoundManager sM;
     public PlayerInput PlayerInput => playerInput;
     private float leftClick = 0;

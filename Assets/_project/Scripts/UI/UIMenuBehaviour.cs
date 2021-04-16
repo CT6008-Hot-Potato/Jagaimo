@@ -10,7 +10,7 @@ public class UIMenuBehaviour : MonoBehaviour
     [Header("Core Object References")]
 
     [SerializeField]
-    private AudioClip clickSound;
+    private ScriptableSounds.Sounds clickSound;
 
     public GameObject uiMenuCanvasObject;
   
