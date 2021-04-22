@@ -63,9 +63,11 @@ public class PlayerCamera : MonoBehaviour
     private Vector2 cameraValue = Vector2.zero;
     //Character type related arrays
     [SerializeField]
-    private GameObject[] character;
+    private GameObject character;
     [SerializeField]
-    private GameObject[] characterArms;
+    private GameObject characterArms;
+    [SerializeField]
+    private Material[] materials;
     [SerializeField]
     private LayerMask[] mask;
     //First and third person cameras
@@ -125,6 +127,7 @@ public class PlayerCamera : MonoBehaviour
         firstPersonCamPosition = firstPersonCamera.transform.localPosition;
         collider = GetComponent<CapsuleCollider>();
         pC = GetComponent<PlayerController>();
+
         //Set to first person
         if (cameraState != cS.FIRSTPERSON)
         {
@@ -157,13 +160,16 @@ public class PlayerCamera : MonoBehaviour
     //Function for setting the correct player mask up
     public void SetPlayerMask()
     { 
+        character.SetActive(true);
+        characterArms.SetActive(true);
+        character.layer = 9 + (int)playerIndex;
+        characterArms.layer = 13 + (int)playerIndex;
+        characterArms.GetComponentInChildren<SkinnedMeshRenderer>().material = character.GetComponentInChildren<SkinnedMeshRenderer>().material = materials[(int)playerIndex];
         for (int i = 0;i < 4;i++)
         {
             //If on correct player infex use this character and arms and set it's culling mask
             if (i == playerIndex)
             {
-                character[i].SetActive(true);
-                characterArms[i].SetActive(true);
 
                 if (firstPersonCamera.enabled)
                 {
@@ -173,12 +179,6 @@ public class PlayerCamera : MonoBehaviour
                 {
                     thirdPersonCamera.cullingMask = mask[i];
                 }
-            }
-            //Set other elements for character and arms false in the arrays
-            else
-            {
-                character[i].SetActive(false);
-                characterArms[i].SetActive(false);
             }
         }
     }
@@ -282,8 +282,8 @@ public class PlayerCamera : MonoBehaviour
 
     //Camera type function which is responsible for managing the rotation and type of camera which the player utilises
     void CameraType()
-    {
-        //If the players movement type if not interact
+    {        
+
         if (pC.GetMovement() != 0)
         {
             switch (cameraState)

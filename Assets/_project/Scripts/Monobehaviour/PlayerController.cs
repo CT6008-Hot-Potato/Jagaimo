@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
     #endregion Enum
 
     //Setting up and assigning on awake
-    private void Awake()
+    private void Start()
     {
         pI = FindObjectOfType<PlayerInteraction>();
         sM = FindObjectOfType<SoundManager>();
