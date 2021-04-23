@@ -15,7 +15,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
+  m_Fog: 1
   m_FogColor: {r: 1, g: 0.4273501, b: 0, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.002
@@ -1000,6 +1000,8 @@ Transform:
   - {fileID: 629590209}
   - {fileID: 1627829612}
   - {fileID: 1234889559}
+  - {fileID: 367116739}
+  - {fileID: 2066442101}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7812,7 +7814,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!212 &367116738
 SpriteRenderer:
@@ -7876,8 +7878,8 @@ Transform:
   m_LocalPosition: {x: 55.45, y: 36.40804, z: -30.74604}
   m_LocalScale: {x: 0.78084713, y: 0.69839925, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 39
+  m_Father: {fileID: 45351436}
+  m_RootOrder: 58
   m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
 --- !u!1001 &391568585
 PrefabInstance:
@@ -14774,7 +14776,7 @@ PrefabInstance:
     - target: {fileID: 4858424760194719546, guid: 0e478610eb6fcc74ca41cd35806e1c5b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4858424760194719546, guid: 0e478610eb6fcc74ca41cd35806e1c5b,
         type: 3}
@@ -16599,7 +16601,7 @@ Transform:
   - {fileID: 1049001615}
   - {fileID: 1924301759}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &887949656
 GameObject:
@@ -18822,7 +18824,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh19958
+  m_Name: pb_Mesh20116
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -34770,7 +34772,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20256
+  m_Name: pb_Mesh20562
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -38966,7 +38968,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!212 &2066442100
 SpriteRenderer:
@@ -39030,8 +39032,8 @@ Transform:
   m_LocalPosition: {x: 54.92, y: 36.40804, z: -30.74604}
   m_LocalScale: {x: 0.78084713, y: 0.69839925, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 40
+  m_Father: {fileID: 45351436}
+  m_RootOrder: 59
   m_LocalEulerAnglesHint: {x: 0, y: 450, z: 0}
 --- !u!1 &2084121291
 GameObject:

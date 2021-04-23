@@ -78,6 +78,7 @@ public class PlayerCamera : MonoBehaviour
     private Vector3 cameraMovementValue = Vector3.zero;
     private Vector3 freecamRotation;
     private float freeCamValueY;
+    public bool flipSpin;
     public bool freecamLock = false;
     #endregion Variables
 
@@ -149,12 +150,6 @@ public class PlayerCamera : MonoBehaviour
             }
         }
         SetPlayerMask();
-    }
-
-    //Function called to spin player around after wall kick
-    public void SpinCamera()
-    {
-        firstPersonCamera.transform.eulerAngles = new UnityEngine.Vector3(0, yaw - 180, 0);
     }
 
     //Function for setting the correct player mask up
@@ -277,7 +272,14 @@ public class PlayerCamera : MonoBehaviour
     //Function to set yaw valye
     public void ChangeYaw()
     {
-        yaw = yaw - 180;
+        if (flipSpin)
+        {
+            yaw = yaw - Time.deltaTime * 700;
+        }
+        else
+        {
+            yaw = yaw + Time.deltaTime * 700;
+        }
     }
 
     //Camera type function which is responsible for managing the rotation and type of camera which the player utilises
@@ -321,7 +323,6 @@ public class PlayerCamera : MonoBehaviour
                                 zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, hit.point, 90 * Time.deltaTime);
                             }
                         }
-                        //firstPersonCamera.transform.localPosition = Vector3.Lerp(firstPersonCamera.transform.localPosition, firstPersonCamPosition, otherCamSpeed * 0.5f * Time.deltaTime);
                         firstPersonCamera.transform.localRotation = Quaternion.Lerp(firstPersonCamera.transform.localRotation, Quaternion.Euler(0, 0, 0), otherCamSpeed * 0.5f * Time.deltaTime);
                     }
                     break;
@@ -362,9 +363,11 @@ public class PlayerCamera : MonoBehaviour
                         }
                         else if (cameraMovementValue != Vector3.zero)
                         {
-                            //thirdPersonCamera.gameObject.AddComponent<SphereCollider>();
+                            thirdPersonCamera.gameObject.AddComponent<SphereCollider>().radius = 0.25f;
                             freecamRotation = thirdPersonCamera.transform.rotation.eulerAngles;
                             cameraState = cS.FREECAMUNCONSTRAINED;
+                            thirdPersonCamera.gameObject.AddComponent<Rigidbody>().useGravity = false;
+                            thirdPersonCamera.gameObject.AddComponent<CameraCollision>();
                         }
                     }
                     break;
@@ -377,31 +380,27 @@ public class PlayerCamera : MonoBehaviour
                         if (thirdPersonCamera.gameObject.GetComponent<Rigidbody>() != null)
                         {
                             Destroy(thirdPersonCamera.gameObject.GetComponent<Rigidbody>());
-                            Destroy(thirdPersonCamera.gameObject.AddComponent<SphereCollider>());
+                            Destroy(thirdPersonCamera.gameObject.GetComponent<SphereCollider>());
+                            Destroy(thirdPersonCamera.gameObject.GetComponent<CameraCollision>());
                         }
                         thirdPersonCamera.transform.rotation = Quaternion.Euler(freecamRotation);
-                        //Destroy(thirdPersonCamera.gameObject.GetComponent<SphereCollider>());
+                        Destroy(thirdPersonCamera.gameObject.GetComponent<SphereCollider>());
                         cameraState = cS.THIRDPERSON;
                     }   
-                    //If rigidbody component attached
-                    else if (thirdPersonCamera.gameObject.GetComponent<Rigidbody>() != null)
-                    {
-                        //Remove it and sphere collider when within 150 metres of the centre of map
-                        if (Vector3.Distance(thirdPersonCamera.transform.position, Vector3.zero) < 150)
-                        {
-                            Destroy(thirdPersonCamera.gameObject.GetComponent<Rigidbody>());
-                            Destroy(thirdPersonCamera.gameObject.AddComponent<SphereCollider>());
-                        }
-                    }
                     //Else if beyond 200 metres from centre of map add rigidbody & collider
                     else if (Vector3.Distance(thirdPersonCamera.transform.position,Vector3.zero) > 200)
                     {
-                        thirdPersonCamera.gameObject.AddComponent<Rigidbody>().mass = 10000;
-                        thirdPersonCamera.gameObject.AddComponent<SphereCollider>().radius = 0.25f;
+                        thirdPersonCamera.gameObject.GetComponent<Rigidbody>().useGravity = true;
+                        thirdPersonCamera.gameObject.GetComponent<Rigidbody>().mass = 10000;
+                    }
+                    //Remove it and sphere collider when within 150 metres of the centre of map
+                    if (Vector3.Distance(thirdPersonCamera.transform.position, Vector3.zero) < 150)
+                    {
+                        thirdPersonCamera.gameObject.GetComponent<Rigidbody>().useGravity = false;
                     }
                     //Moving third person camera position around freely
                     thirdPersonCamera.transform.position = new Vector3(thirdPersonCamera.transform.position.x, thirdPersonCamera.transform.position.y + freeCamValueY, thirdPersonCamera.transform.position.z);
-                    thirdPersonCamera.transform.Translate(cameraMovementValue * 0.1f,thirdPersonCamera.transform);
+                    thirdPersonCamera.transform.Translate(cameraMovementValue * 0.1f,thirdPersonCamera.transform);                   
                     break;
             }
 
@@ -456,27 +455,7 @@ public class PlayerCamera : MonoBehaviour
                 thirdPersonCamera.transform.eulerAngles = new UnityEngine.Vector3(pitch, yaw, 0.0f);
             }
         }
-        //else
-        //{
-        //    //Enable correct camera based on state
-        //    switch (cameraState)
-        //    {
-        //        //First person camera
-        //        case cS.FIRSTPERSON:
-        //            thirdPersonCamera.enabled = false;
-        //            firstPersonCamera.enabled = true;
-        //            break;
-        //        //Third person camera
-        //        case cS.THIRDPERSON:
-        //            thirdPersonCamera.enabled = true;
-        //            firstPersonCamera.enabled = false;
-        //            break;
-        //        default:
-        //            Debug.Log("Different value given.");
-        //            break;
-        //    }
-        //
-        //}
+
     }
 
     //Function called from player controller to move camera y value via jumping and crouching input action values

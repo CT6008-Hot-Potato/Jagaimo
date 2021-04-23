@@ -845,7 +845,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clampDegree: 85
   cameraPushSpeed: 90
-  cameraZoomSpeed: 0.35
+  cameraZoomSpeed: 0.3
   cameraTransferDistance: 0.1
   firstPersonCamera: {fileID: 4394244838949972474}
   thirdPersonCamera: {fileID: 4394244838949972477}

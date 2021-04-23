@@ -293,18 +293,22 @@ public class PlayerController : MonoBehaviour
     //This coroutine is called to climb up and turn around when doing a wall click
     private IEnumerator Co_ClimbTime()
     {
-        timer = new Timer(0.125f);
+        rb.useGravity = false;
+        timer = new Timer(0.25f);
         //Push up while timer active
         while (timer.isActive)
         {
             timer.Tick(Time.deltaTime);
-            rb.AddForce(transform.up, ForceMode.Impulse);       
+            pC.ChangeYaw();
             yield return null;
         }
-        //Flip around
-        rb.AddForce(-rotationPosition.forward * 75, ForceMode.Impulse);
         rb.velocity = Vector3.zero;
-        pC.ChangeYaw();
+        rb.AddForce(transform.up * 20, ForceMode.Impulse);       
+        rb.AddForce(rotationPosition.forward * 50, ForceMode.Impulse);
+        rb.useGravity = true;
+        //Flip around
+        pC.flipSpin = !pC.flipSpin;
+        rb.velocity = Vector3.zero;
         climbing = false;
     }
 

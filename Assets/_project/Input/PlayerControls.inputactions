@@ -332,8 +332,41 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "1D Axis",
+                    "id": "7d651a64-8bec-41da-9e7e-2145a2db8e96",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraScroll",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "6ea53950-4e63-45b9-b367-fe058340d3c3",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraScroll",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "d7aee551-7abf-4326-b5a5-a7c9c5e514a0",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraScroll",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
-                    "id": "a9e196d5-0e3c-4c2b-9b91-f7d02a038676",
+                    "id": "391f73f2-89d4-462e-927c-03852a6b8d6b",
                     "path": "<Gamepad>/dpad/y",
                     "interactions": "",
                     "processors": "",
@@ -356,7 +389,18 @@
                 {
                     "name": "",
                     "id": "d59a4dfe-2af6-4295-bc54-c22d1fbb9cc7",
-                    "path": "<Gamepad>/rightStick/down",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraLock",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1b39e154-b1ff-442b-b9f8-c14824ad0729",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
