@@ -116,10 +116,13 @@ public class CountdownTimer : MonoBehaviour
 
     //Dev Options
 
-    //Toggles Locked/Unlocked (For Dev UI)
+    //Toggles Locked/Unlocked
     public void LockTimer(bool newLocked)
     {
-        roundTimer.isLocked = newLocked;
+        if (roundTimer != null)
+        {
+            roundTimer.isLocked = newLocked;
+        }
     }
 
     //Changing the time by an amount given

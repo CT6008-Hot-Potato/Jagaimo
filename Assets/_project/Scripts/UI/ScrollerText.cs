@@ -18,6 +18,8 @@ public class ScrollerText : MonoBehaviour
         TAGGED      = 1,
         ELIMINATED  = 2,
         PLAYERS_WON  = 3,
+        BLUE_TEAM_GOAL = 4,
+        RED_TEAM_GOAL = 5
     }
 
     [SerializeField]
@@ -109,6 +111,18 @@ public class ScrollerText : MonoBehaviour
     public void AddWinText()
     {
         AddText(RoundTexts.PLAYERS_WON);
+    }
+
+    public void AddGoalText(bool blueTeamScored)
+    {
+        if (blueTeamScored)
+        {
+            AddText(RoundTexts.BLUE_TEAM_GOAL);
+        }
+        else
+        {
+            AddText(RoundTexts.RED_TEAM_GOAL);
+        }
     }
 
     //Instantiating the text object and adding it to the queue, then checking to see if a text needs removing

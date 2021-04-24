@@ -20,7 +20,7 @@ public class RoundManager : MonoBehaviour
     public static RoundManager roundManager;
 
     //The current gamemode
-    IGamemode _currentGamemode;
+    public IGamemode _currentGamemode;
 
     //Defining Delegate
     public delegate void RoundEvent();
@@ -63,12 +63,25 @@ public class RoundManager : MonoBehaviour
             Destroy(this);
         }
 
+        //If there is a gamemode already on the object
+        if (TryGetComponent<IGamemode>(out var gamemode))
+        {
+            _currentGamemode = gamemode;
+        }
+
         //Getting the game settings saved over from the main menu
         GameSettingsContainer settingsContainer = GameSettingsContainer.instance;
 
         //There are settings to use
         if (settingsContainer)
         {
+            //There is a current gamemode already
+            if (_currentGamemode != null)
+            {
+                Destroy((MonoBehaviour)_currentGamemode);
+                _currentGamemode = null; 
+            }
+
             //Depending on which gamemode, a different script is added
             switch (settingsContainer.index)
             {
@@ -85,16 +98,9 @@ public class RoundManager : MonoBehaviour
                     _currentGamemode = gameObject.AddComponent<SabotageGamemode>();
                     break;
                 default:
+                    _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
                     break;
             }
-
-
-        }
-
-        //If there is a gamemode already on the object
-        if (!TryGetComponent<IGamemode>(out var gamemode))
-        {
-            _currentGamemode = gamemode;
         }
 
         //For some reason no gamemode was applied and none was on the object

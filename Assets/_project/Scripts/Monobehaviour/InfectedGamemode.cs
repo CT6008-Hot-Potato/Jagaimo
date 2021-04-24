@@ -111,6 +111,13 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
                 List<CharacterManager> chars = currentActivePlayers;
                 int iInfectedCount = (int)settings.FindGamemodeMutatorValue(2);
 
+                if (iInfectedCount == 0)
+                {
+                    int iRandomPlayer = Random.Range(0, currentActivePlayers.Count - 1);
+                    roundManager.OnPlayerTagged(currentActivePlayers[iRandomPlayer]);
+                    return;
+                }
+
                 //If there are enough players to infected without the game just being over
                 if (iInfectedCount < currentActivePlayers.Count)
                 {
@@ -145,10 +152,12 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         if (ThisWinCondition())
         {
             //Infected Won
+            infectedWon = true;
         }
         else
         {
             //Survivors Won
+            infectedWon = false;
         }
 
         roundManager.CallOnRoundEnd();
@@ -195,5 +204,19 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     public GAMEMODE_INDEX Return_Mode()
     {
         return GAMEMODE_INDEX.INFECTED;
+    }
+
+    private void WinScreen(bool infectedwin)
+    {
+        //if infected won
+        if (infectedwin)
+        {
+
+        }
+        //if survivors won
+        else
+        {
+
+        }
     }
 }

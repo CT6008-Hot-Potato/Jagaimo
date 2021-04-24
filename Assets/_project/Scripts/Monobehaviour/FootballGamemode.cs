@@ -7,7 +7,6 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,12 +33,35 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     [SerializeField]
     private RoundManager roundManager;
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
-    CharacterManager playerWhoWon;
+    
+    private List<CharacterManager> blueTeam = new List<CharacterManager>();
+    private List<CharacterManager> orangeTeam = new List<CharacterManager>();
+
+    //x magnitude is blue goals
+    //y magnitude is orange goals
+    private Vector2 score;
+
+    [SerializeField]
+    private CountdownTimer countdownTimer;
+
+    [SerializeField]
+    private ScrollerText scrollerText;
+    [SerializeField]
+    private ScoreboardText scoreboard;
+
+    [SerializeField]
+    private ArenaManager arenaManager;
 
     //Getting the needed components
     private void OnEnable()
     {
         roundManager = roundManager ?? GetComponent<RoundManager>();
+        arenaManager = arenaManager ?? GetComponent<ArenaManager>();
+    }
+
+    private void Awake()
+    {
+        
     }
 
     //A way for the round manager to set the active players at the start of the game
@@ -49,6 +71,16 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
+
+            //Even numbers on orange team, odd on blue team
+            if (i % 2 == 0)
+            {
+                orangeTeam.Add(charArray[i]);
+            }
+            else
+            {
+                blueTeam.Add(charArray[i]);
+            }
         }
 
         if (Debug.isDebugBuild)
@@ -63,7 +95,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         currentActivePlayers.Add(newCharacter);
     }
 
-    //Someone dies or leaves the game
+    //Someone leaves the game
     private void RemoveActivePlayer(CharacterManager characterLeft)
     {
         currentActivePlayers.Remove(characterLeft);
@@ -72,10 +104,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //This runs when the round is about to start/ during the initial timer
     private void RoundStarting()
     {
-        //Make sure everything is in order... small cooldown before countdown to get everything
+        PutPlayersInSpawnPoints();
     }
 
-    //A podium scene which ragdoll the players in order of elimination but doesnt go back to menu/lobby unless hit max round
     private void RoundEnding()
     {
 
@@ -84,32 +115,21 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
-        //Tags previously tagged character if there was one, if not choose a random character 
-        //Spawns all character on random points (out of a set number of points) in an arena section
+        //Spawns players on their respective teams' sides
     }
 
     //When the countdown ends
     private void CountdownEnding()
-    {
-        //Exploding the tagged player and removing from active players
-        foreach (CharacterManager cManager in currentActivePlayers)
-        {
-            if (cManager.CheckIfEliminated())
-            {
-                RemoveActivePlayer(cManager);
-                break;
-            }
-        }
-
-        //Each countdown in this gamemode could be the end of this game
+    {       
+        //At the end on the countdown, seeing who has more goals
         if (ThisWinCondition())
         {
-            //Moving to podium screen with a lobby countdown
-            if (Debug.isDebugBuild)
-            {
-                Debug.Log("Player Won: " + playerWhoWon.name, this);
-            }
+            //Blue team won
+            return;
         }
+
+        //Orange team won
+
     }
 
     //Doesnt really do anything in this gamemode
@@ -118,26 +138,91 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
     }
 
-    //When only 1 person is active in the game, return true
+    //Which teams has more goals - blue = return true and orange = return false
     private bool ThisWinCondition()
     {
-        //No one has loaded in/game hasnt started
-        if (currentActivePlayers.Count == 0) return false;
-
-        //1 player is left so someone has won this round
-        if (currentActivePlayers.Count == 1)
+        //Blue team wins
+        if (score.x > score.y)
         {
-            //Keeping a record of who won
-            playerWhoWon = currentActivePlayers[0];
             return true;
         }
 
-        //There's more than 1 person left active
+        //Orange team wins
         return false;
     }
 
     public GAMEMODE_INDEX Return_Mode()
     {
-        return GAMEMODE_INDEX.CLASSIC;
+        return GAMEMODE_INDEX.FOOTBALL;
+    }
+
+    //Either team scores a goal
+    public void Goal(bool blueTeamScore)
+    {
+        //Updating the score
+        if (blueTeamScore)
+        {
+            score.x++;
+
+            if (scoreboard)
+            {
+                scoreboard.UpdateBlueScoreText();
+            }
+        }
+        else
+        {
+            score.y++;
+
+            if (scoreboard)
+            {
+                scoreboard.UpdateRedScoreText();
+            }
+        }
+
+        //Updating the event texts
+        if (scrollerText)
+        {
+            scrollerText.AddGoalText(blueTeamScore);
+        }
+
+        //Stopping the countdown, putting the players and potato back, starting the countdown up again
+        if (countdownTimer)
+        {
+            countdownTimer.LockTimer(true);
+        }
+
+        PutPlayersInSpawnPoints();
+    }
+
+    private void PutPlayersInSpawnPoints()
+    {
+        //Guard clause, nothing should happen without the manager
+        if (!arenaManager) return;
+
+        //Make sure everything is in order... small cooldown before countdown to get everything
+        List<int> spawnSpots = arenaManager.ReturnFootballSpawnIndexers();
+
+        if (orangeTeam != null)
+        {
+            //Doing the loops based on the team amounts not the spot amounts
+            for (int i = 0; i < orangeTeam.Count; ++i)
+            {
+                Transform spotTransform = arenaManager.GettingSpot(0, spawnSpots[i]);
+
+                orangeTeam[i].transform.position = spotTransform.position;
+                orangeTeam[i].transform.rotation = spotTransform.rotation;
+            }
+        }
+
+        if (blueTeam != null)
+        {
+            for (int i = 0; i < blueTeam.Count; ++i)
+            {
+                Transform spotTransform = arenaManager.GettingSpot(0, spawnSpots[i]);
+
+                blueTeam[i].transform.position = spotTransform.position;
+                blueTeam[i].transform.rotation = spotTransform.rotation;
+            }
+        }
     }
 }

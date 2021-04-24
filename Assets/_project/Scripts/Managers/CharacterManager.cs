@@ -13,14 +13,13 @@ using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {  
     public TaggedTracker _tracker;
+
     private PlayerController _movement;
-    private Renderer _rend;
     private PlayerCamera _cam;
 
-    //Just for testing
-    [SerializeField]
-    private Material eliminatedMat;
-
+    private SoundManager sm;
+    private ParticleSystem elimVFX;
+    
     public bool isPlayer { get; private set; }
 
     [SerializeField]
@@ -31,7 +30,8 @@ public class CharacterManager : MonoBehaviour
         _tracker = _tracker ?? GetComponent<TaggedTracker>();
         _movement = _movement ?? GetComponent<PlayerController>();
         _cam = _cam ?? GetComponent<PlayerCamera>();
-        _rend = GetComponent<Renderer>();
+
+        sm = FindObjectOfType<SoundManager>();
     }
 
     private void Start()
@@ -54,32 +54,29 @@ public class CharacterManager : MonoBehaviour
         if (!_tracker.isTagged) return null;
 
         //The player should do whatever the gamemode wants them to (base gamemode will want them to explode)
-        if (eliminatedMat != null)
+        if (Debug.isDebugBuild)
         {
-            if (Debug.isDebugBuild)
-            {
-                Debug.Log("Eliminated player shown", this);
-            }
-
-            //TODO: Send the player into "spectator" mode (No model, no colliders)
-            gameObject.SetActive(false);
-
-            if (_rend)
-            {
-                _rend.material = eliminatedMat;
-            }
+            Debug.Log("Eliminated player shown", this);
         }
-        else
+
+        //Send the player into "spectator" mode (No model, no colliders)
+        if (_cam)
         {
-            if (Debug.isDebugBuild)
-            {
-                Debug.Log("Set an eliminated material in the renderer", this);
-            }
+            _cam.cameraState = PlayerCamera.cS.FREECAMUNCONSTRAINED;
         }
 
         //Play VFX + Sound
+        if (sm)
+        {
+            sm.PlaySound(ScriptableSounds.Sounds.Explosion);
+        }
+
+        if (elimVFX)
+        {
+            elimVFX.Play();
+        }
+
         //Turn all non-important scripts off (ones that allow the player to interact especially)
-        //Make them in spectator camera
 
         return this;
     }
@@ -106,7 +103,7 @@ public class CharacterManager : MonoBehaviour
         //Lerp into first person camera mode
         if (_cam)
         {
-            GetComponent<PlayerCamera>().SetCameraView(false);
+            _cam.SetCameraView(false);
         }
 
         if (taggedDisplayObject)
@@ -123,12 +120,14 @@ public class CharacterManager : MonoBehaviour
         //Lerp into thrid person camera mode Note: this should be quicker than the lerp when you're tagged
         if (_cam)
         {
-            GetComponent<PlayerCamera>().SetCameraView(false);
+            _cam.SetCameraView(false);
         }
 
         if (taggedDisplayObject)
         {
             taggedDisplayObject.SetActive(false);
         }
+
+        //Animations switch back to being without potato
     }
 }
