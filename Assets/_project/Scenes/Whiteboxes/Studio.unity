@@ -11464,7 +11464,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh39148
+  m_Name: pb_Mesh-16426
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -18312,6 +18312,11 @@ PrefabInstance:
       propertyPath: m_JoinBehavior
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2692320980931498880, guid: 8cef0e0e385f04f4eb8d02c327e194db,
+        type: 3}
+      propertyPath: m_MaxPlayerCount
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 2692320980931498881, guid: 8cef0e0e385f04f4eb8d02c327e194db,
         type: 3}
       propertyPath: m_RootOrder
@@ -19377,7 +19382,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh39554
+  m_Name: pb_Mesh-16418
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
