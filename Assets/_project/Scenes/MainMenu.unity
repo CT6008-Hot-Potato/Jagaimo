@@ -2099,9 +2099,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 117288098}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3aeaf8953e425014cb0b842d0093a453, type: 3}
+  m_Script: {fileID: 11500000, guid: a0f9ffa545bdde243a846415ba3a0aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jagaimoNetworkManger: {fileID: 2007231262}
+  mpConnectionType: {fileID: 0}
 --- !u!114 &117288101
 MonoBehaviour:
   m_ObjectHideFlags: 0
