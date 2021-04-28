@@ -18,12 +18,6 @@ using TMPro;
 public class MenuManager : MonoBehaviour
 {
     
-    /// --- Multiplayer stuff should be on its own script! - James B
-    //[SerializeField] 
-    //private JagaimoNetworkManagerLobby jagaimoNetworkManger = null;
-
-    //[Header("Multiplayer UI")] [SerializeField]
-    //private GameObject mpConnectionType = null;
 
 
     [SerializeField]
@@ -270,11 +264,6 @@ public class MenuManager : MonoBehaviour
             }
 
         }
-        //else if (Displacement == 0)
-        //{
-        //    j.MainObject.SetActive(false);
-        //}
-
 
     }
 
@@ -285,11 +274,5 @@ public class MenuManager : MonoBehaviour
         Application.Quit();
     }
 
-    /// --- Multiplayer stuff should be on its own script! - James B
-    //public void HostLobby()
-    //{
-    //    jagaimoNetworkManger.StartHost();
-    //}
-    
-
+   
 }
