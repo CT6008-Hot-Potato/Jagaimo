@@ -130,6 +130,14 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Any"",
+                    ""type"": ""Button"",
+                    ""id"": ""7ec4e526-9f73-453a-a01c-e6566f1d66eb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -583,6 +591,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""894a9e85-93d4-46f6-ba12-cbd193b4f9d4"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -642,6 +661,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Gameplay_CameraScroll = m_Gameplay.FindAction("CameraScroll", throwIfNotFound: true);
         m_Gameplay_CameraLock = m_Gameplay.FindAction("CameraLock", throwIfNotFound: true);
         m_Gameplay_Movement = m_Gameplay.FindAction("Movement", throwIfNotFound: true);
+        m_Gameplay_Any = m_Gameplay.FindAction("Any", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Escape = m_Menu.FindAction("Escape", throwIfNotFound: true);
@@ -717,6 +737,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_CameraScroll;
     private readonly InputAction m_Gameplay_CameraLock;
     private readonly InputAction m_Gameplay_Movement;
+    private readonly InputAction m_Gameplay_Any;
     public struct GameplayActions
     {
         private @PlayerControls m_Wrapper;
@@ -734,6 +755,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @CameraScroll => m_Wrapper.m_Gameplay_CameraScroll;
         public InputAction @CameraLock => m_Wrapper.m_Gameplay_CameraLock;
         public InputAction @Movement => m_Wrapper.m_Gameplay_Movement;
+        public InputAction @Any => m_Wrapper.m_Gameplay_Any;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -782,6 +804,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Movement.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement;
                 @Movement.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement;
                 @Movement.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement;
+                @Any.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAny;
+                @Any.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAny;
+                @Any.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAny;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -825,6 +850,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Movement.started += instance.OnMovement;
                 @Movement.performed += instance.OnMovement;
                 @Movement.canceled += instance.OnMovement;
+                @Any.started += instance.OnAny;
+                @Any.performed += instance.OnAny;
+                @Any.canceled += instance.OnAny;
             }
         }
     }
@@ -877,6 +905,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnCameraScroll(InputAction.CallbackContext context);
         void OnCameraLock(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
+        void OnAny(InputAction.CallbackContext context);
     }
     public interface IMenuActions
     {
