@@ -10,7 +10,7 @@ public class PlayAnimation : MonoBehaviour
 //    [SerializeField] Animator AnimationComponent;
     private void OnEnable()
     {
-        Debug.Log(Playme.name);
+
         Playme.Play();
     }
 
