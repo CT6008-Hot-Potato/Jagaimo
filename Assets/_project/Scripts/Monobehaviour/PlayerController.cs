@@ -370,6 +370,17 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext ctx)
     {
+
+        Debug.Log("Jump " + ctx);
+        //if (pC.PlayerInput.currentActionMap.name == "Menu")
+        //{
+        //    pC.PlayerInput.SwitchCurrentActionMap("Menu");
+        //}
+        //else
+        //{
+        //    pC.PlayerInput.SwitchCurrentActionMap("Gameplay");
+        //}
+
         if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
         {
             pC.MoveFreeCamY(true, ctx.ReadValue<float>());
