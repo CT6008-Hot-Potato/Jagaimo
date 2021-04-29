@@ -370,6 +370,8 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext ctx)
     {
+
+        Debug.Log("Jump " + ctx);
         //if (pC.PlayerInput.currentActionMap.name == "Menu")
         //{
         //    pC.PlayerInput.SwitchCurrentActionMap("Menu");
