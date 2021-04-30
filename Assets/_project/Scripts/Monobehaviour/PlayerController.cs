@@ -54,7 +54,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private ScriptableSounds.Sounds slideSound, crouchSound, jumpSound;
     private SoundManager sM;
-    private PlayerAnimation pA;
     #endregion
     //Enums
     #region Enums
@@ -73,7 +72,6 @@ public class PlayerController : MonoBehaviour
     //Setting up and assigning on awake
     private void Start()
     {
-        pA = FindObjectOfType<PlayerAnimation>();
         pI = FindObjectOfType<PlayerInteraction>();
         sM = FindObjectOfType<SoundManager>();
         rebindingDisplay = FindObjectOfType<RebindingDisplay>();
@@ -131,7 +129,6 @@ public class PlayerController : MonoBehaviour
             // Jump if grounded and input for jump pressed
             if (grounded && jumpValue > 0.1f)
             {
-                pA.CheckToChangeState("Jump");
                 sM.PlaySound(jumpSound);
                 //Jumpine velocity for the player
                 rb.velocity = new Vector3(velocity.x, Mathf.Sqrt(jumpVelocity), velocity.z);
@@ -139,21 +136,15 @@ public class PlayerController : MonoBehaviour
             //Else if not grounded and not climbing can be pushed down stronger or do wall kick
             else if (!grounded && !climbing)
             {
-
                 //If jump button pressed and wall kick returns true then do a wall kick effect
                 if (jumpValue > 0.1f && pI.WallKick())
                 {
-                    pA.CheckToChangeState("JumpFromWall");
                     climbing = true;
                     StartCoroutine(Co_ClimbTime());
                 }
                 //Else push down more intense
                 else
                 {
-                    if (!sliding)
-                    {
-                        pA.CheckToChangeState("FallingIdle");
-                    }
                     downForce = 22;
                 }
             }
@@ -161,63 +152,6 @@ public class PlayerController : MonoBehaviour
             else if (downForce != 15)
             {
                 downForce = 15;
-            }
-            else if (!sliding)
-            {
-                if (movementValue == Vector3.zero)
-                {
-                    if (playerMovement == pM.CROUCHING)
-                    {
-                        pA.CheckToChangeState("CrouchingIdle");
-                    }
-                    else
-                    {
-                        pA.CheckToChangeState("Idle");
-                    }
-                }
-                else
-                {
-                    if (playerMovement == pM.CROUCHING)
-                    {
-                        pA.CheckToChangeState("CrouchedWalking");
-                    }
-                    else
-                    {
-                        if (sprintValue >= 0.1f)
-                        {
-                            if (movementValue.z > 0)
-                            {
-                                pA.CheckToChangeState("Running");
-                            }
-                            else if (movementValue.z < 0)
-                            {
-                                pA.CheckToChangeState("RunBackward");
-                            }
-                        }
-                        else
-                        {
-                            if (movementValue.z > 0)
-                            {
-                                pA.CheckToChangeState("JogForward");
-                            }
-                            else if (movementValue.z < 0)
-                            {
-                                pA.CheckToChangeState("JogBackward");
-                            }
-                            else
-                            {
-                                if (movementValue.x > 0)
-                                {
-                                    pA.CheckToChangeState("RightStrafe");
-                                }
-                                else if (movementValue.x < 0)
-                                {
-                                    pA.CheckToChangeState("LeftStrafe");
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
 
@@ -386,7 +320,7 @@ public class PlayerController : MonoBehaviour
         while (timer.isActive)
         {
             timer.Tick(Time.deltaTime);
-            pA.CheckToChangeState("ActionPose");
+
             movementValue = new Vector3(0, 0, 1);
             if (speed != (runSpeed * 2))
             {
@@ -421,7 +355,6 @@ public class PlayerController : MonoBehaviour
 
     public void Movement(InputAction.CallbackContext ctx)
     {
-
         if (ctx.ReadValue<Vector2>().y <= 0 && sliding)
         {
             slowStand = true;
@@ -438,6 +371,16 @@ public class PlayerController : MonoBehaviour
     public void Jump(InputAction.CallbackContext ctx)
     {
 
+        Debug.Log("Jump " + ctx);
+        //if (pC.PlayerInput.currentActionMap.name == "Menu")
+        //{
+        //    pC.PlayerInput.SwitchCurrentActionMap("Menu");
+        //}
+        //else
+        //{
+        //    pC.PlayerInput.SwitchCurrentActionMap("Gameplay");
+        //}
+
         if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
         {
             pC.MoveFreeCamY(true, ctx.ReadValue<float>());
@@ -450,18 +393,6 @@ public class PlayerController : MonoBehaviour
 
     public void Crouch(InputAction.CallbackContext ctx)
     {
-        if (!grounded)
-        {
-            if (crouchValue >= 0.1f)
-            {
-                pA.CheckToChangeState("CrouchingIdle");
-            }
-            else
-            {
-                pA.CheckToChangeState("Idle");
-            }
-        }
-
         if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
         {
             pC.MoveFreeCamY(false, ctx.ReadValue<float>());
