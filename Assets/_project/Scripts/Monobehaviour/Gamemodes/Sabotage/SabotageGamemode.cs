@@ -7,7 +7,6 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,14 +26,25 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     void IGamemode.RoundEnded() => RoundEnding();
     void IGamemode.CountdownStarted() => CountdownStarting();
     void IGamemode.CountdownEnded() => CountdownEnding();
-    void IGamemode.PlayerTagged(CharacterManager charTagged) => PlayerTagged();
+    void IGamemode.PlayerTagged(CharacterManager charTagged) => PlayerTagged(charTagged);
     bool IGamemode.WinCondition() => ThisWinCondition();
 
     //Variables needed for the gamemode
     [SerializeField]
     private RoundManager roundManager;
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
-    CharacterManager playerWhoWon;
+    //Whoever escaped without the potato... or potentially the person with the potato if the time ran out
+    private List<CharacterManager> playersWhoWon = new List<CharacterManager>();
+
+    [SerializeField]
+    private CountdownTimer countdownTimer;
+
+    [SerializeField]
+    SabotageEscapeManager escapeManager;
+
+    //Variables for tracking complete generators
+    private int iCurrentGeneratorsComplete = 0;
+    private int iGeneratorsNeeded = 3;
 
     //Getting the needed components
     private void OnEnable()
@@ -84,60 +94,75 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
-        //Tags previously tagged character if there was one, if not choose a random character 
-        //Spawns all character on random points (out of a set number of points) in an arena section
+
     }
 
     //When the countdown ends
     private void CountdownEnding()
-    {
-        //Exploding the tagged player and removing from active players
-        foreach (CharacterManager cManager in currentActivePlayers)
-        {
-            if (cManager.CheckIfEliminated())
-            {
-                RemoveActivePlayer(cManager);
-                break;
-            }
-        }
-
-        //Each countdown in this gamemode could be the end of this game
+    {       
+        //This countdown ending determines that someone must have won
         if (ThisWinCondition())
         {
             //Moving to podium screen with a lobby countdown
             if (Debug.isDebugBuild)
             {
-                Debug.Log("Player Won: " + playerWhoWon.name, this);
+               
             }
         }
     }
 
-    //Doesnt really do anything in this gamemode
-    private void PlayerTagged()
+    //Should stop the person from interacting with the generators, and kick them out of any generator they're currently fixing
+    private void PlayerTagged(CharacterManager charTagged)
     {
-
+        //Getting the script which allows them to interact with the generator
+        //PogChamp champ = charTagged.GetComponent<PogChamp>();
+        //if (champ)
+        //{
+            //Having the character stop interacting with the generator forcefully
+            //champ.StopInteracting();
+            //champ.SetAbilityToInteract(false);
+        //}
     }
 
-    //When only 1 person is active in the game, return true
+    //When everyone has escaped or the time ran out with people still in the arena
     private bool ThisWinCondition()
     {
-        //No one has loaded in/game hasnt started
-        if (currentActivePlayers.Count == 0) return false;
-
-        //1 player is left so someone has won this round
-        if (currentActivePlayers.Count == 1)
-        {
-            //Keeping a record of who won
-            playerWhoWon = currentActivePlayers[0];
-            return true;
-        }
-
-        //There's more than 1 person left active
         return false;
     }
 
     public GAMEMODE_INDEX Return_Mode()
     {
-        return GAMEMODE_INDEX.CLASSIC;
+        return GAMEMODE_INDEX.SABOTAGE;
     }
+
+    #region Public Methods
+
+    /// <summary>
+    /// The general functions specific to this gamemode
+    /// </summary>
+
+    public void SetEscapeManager(SabotageEscapeManager newManager)
+    {
+        escapeManager = newManager;
+    }
+
+    //One of the sabotage points have been completed
+    public void SabotageObjectFinished()
+    {
+        iCurrentGeneratorsComplete++;
+
+        if (iCurrentGeneratorsComplete >= iGeneratorsNeeded)
+        {
+            escapeManager.OpenEscapes();
+        }
+    }
+
+    //Someone escaped
+    public void CharacterEscapes(CharacterManager charWhoEscaped)
+    {
+        //That player won
+        playersWhoWon.Add(charWhoEscaped);
+    }
+
+    #endregion
 }

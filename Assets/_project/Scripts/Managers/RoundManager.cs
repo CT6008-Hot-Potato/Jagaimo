@@ -49,7 +49,7 @@ public class RoundManager : MonoBehaviour
 
     //Starting when the players are in, false for using the trigger
     [SerializeField]
-    bool startWhenReady = true;
+    private bool startWhenReady = true;
 
     private void Awake()
     {
