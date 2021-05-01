@@ -23,6 +23,7 @@ public class Potato : MonoBehaviour
         //Run it's interact function if the script is enabled
         if (((MonoBehaviour)interactable).enabled)
         {
+            other.gameObject.GetComponent<PlayerAnimation>().CheckToChangeState("FallingBackDeath", true);
             interactable.Interact();
         }
     }

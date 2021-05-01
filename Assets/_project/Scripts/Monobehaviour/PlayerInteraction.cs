@@ -38,7 +38,7 @@ public class PlayerInteraction : MonoBehaviour
     private PlayerInput playerInput = null;
     [SerializeField]
     private ScriptableSounds.Sounds grabSound, throwSound;
-
+    private PlayerAnimation pA;
     private SoundManager sM;
     public PlayerInput PlayerInput => playerInput;
     private float leftClick = 0;
@@ -50,6 +50,7 @@ public class PlayerInteraction : MonoBehaviour
     //Start method setting up and assigning values
     void Start()
     {
+        pA = GetComponent<PlayerAnimation>();
         sM = FindObjectOfType<SoundManager>();
         cM = GameObject.FindObjectOfType<LocalMPScreenPartioning>();
         position.position = movingParent.transform.position;
@@ -293,12 +294,14 @@ public class PlayerInteraction : MonoBehaviour
     public void LeftClick(InputAction.CallbackContext ctx)
     {
         leftClick = ctx.ReadValue<float>();
+        pA.CheckToChangeState("Grab", true);
     }
 
     //Method for using unity's new input system to detect right click
     public void RightClick(InputAction.CallbackContext ctx)
     {
         rightClick = ctx.ReadValue<float>();
+        pA.CheckToChangeState("Throw", true);
     }
 
     //Method for using unity's new input system to detect zooming in
