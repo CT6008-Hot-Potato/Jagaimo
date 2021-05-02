@@ -29,6 +29,8 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     void IGamemode.PlayerTagged(CharacterManager charTagged) => PlayerTagged();
     bool IGamemode.WinCondition() => ThisWinCondition();
 
+    [Header("Core Game Elements")]
+
     //Variables needed for the gamemode
     [SerializeField]
     private RoundManager roundManager;
@@ -41,6 +43,8 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //y magnitude is orange goals
     private Vector2 score;
 
+    [Header("UI Elements")]
+
     [SerializeField]
     private CountdownTimer countdownTimer;
 
@@ -49,8 +53,18 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     [SerializeField]
     private ScoreboardText scoreboard;
 
+    [Header("Spawning Variables")]
+
     [SerializeField]
     private ArenaManager arenaManager;
+
+    [SerializeField]
+    private List<int> spawnSpots = new List<int>();
+
+    [Header("Misc Variables")]
+
+    [SerializeField]
+    private Rigidbody potatoRB;
 
     //Getting the needed components
     private void OnEnable()
@@ -59,14 +73,37 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         arenaManager = arenaManager ?? GetComponent<ArenaManager>();
     }
 
-    private void Awake()
-    {
-        
-    }
-
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
     {
+        //If there's no arenamanager, there's nothing more to do
+        if (!arenaManager)
+        {
+            Debug.Log("There's no arena manager", this);
+
+            //Still need to add the active players for testing
+            for (int i = 0; i < charArray.Length; ++i)
+            {
+                currentActivePlayers.Add(charArray[i]);
+
+                //Even numbers on orange team, odd on blue team
+                if (i % 2 == 0)
+                {
+                    orangeTeam.Add(charArray[i]);
+                }
+                else
+                {
+                    blueTeam.Add(charArray[i]);
+                }
+            }
+
+            return;
+        }
+
+        spawnSpots = arenaManager.ReturnFootballSpawnIndexers(charArray.Length);
+        Transform spotTransform;
+        int spotUsed = 0;
+
         //Going through the give array and adding it to the list
         for (int i = 0; i < charArray.Length; ++i)
         {
@@ -75,18 +112,27 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             //Even numbers on orange team, odd on blue team
             if (i % 2 == 0)
             {
+                spotTransform = arenaManager.GettingSpot(1, spawnSpots[spotUsed]);
                 orangeTeam.Add(charArray[i]);
             }
             else
             {
+                spotTransform = arenaManager.GettingSpot(0, spawnSpots[spotUsed]);
                 blueTeam.Add(charArray[i]);
+
+                //Only increment it at the end of odd numbers so both teams get the same spot before it moves to the next
+                spotUsed++;
             }
+
+            charArray[i].transform.position = spotTransform.position;
+            charArray[i].transform.rotation = spotTransform.rotation;
         }
 
         if (Debug.isDebugBuild)
         {
             Debug.Log("Active players set, Amount of Active players: " + currentActivePlayers.Count, this);
         }
+
     }
 
     //Someone joins the game
@@ -104,7 +150,11 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //This runs when the round is about to start/ during the initial timer
     private void RoundStarting()
     {
-        PutPlayersInSpawnPoints();
+        //Having the potato fall
+        if (potatoRB)
+        {
+            potatoRB.isKinematic = false;
+        }
     }
 
     private void RoundEnding()
@@ -199,15 +249,14 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         //Guard clause, nothing should happen without the manager
         if (!arenaManager) return;
 
-        //Make sure everything is in order... small cooldown before countdown to get everything
-        List<int> spawnSpots = arenaManager.ReturnFootballSpawnIndexers();
+        spawnSpots = arenaManager.ReturnFootballSpawnIndexers(currentActivePlayers.Count);
 
         if (orangeTeam != null)
         {
             //Doing the loops based on the team amounts not the spot amounts
             for (int i = 0; i < orangeTeam.Count; ++i)
             {
-                Transform spotTransform = arenaManager.GettingSpot(0, spawnSpots[i]);
+                Transform spotTransform = arenaManager.GettingSpot(1, spawnSpots[i]);
 
                 orangeTeam[i].transform.position = spotTransform.position;
                 orangeTeam[i].transform.rotation = spotTransform.rotation;

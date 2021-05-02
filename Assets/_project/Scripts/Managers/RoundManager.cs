@@ -50,6 +50,9 @@ public class RoundManager : MonoBehaviour
     //Starting when the players are in, false for using the trigger
     [SerializeField]
     private bool startWhenReady = true;
+    //The amount starts from 0, since it's compared to an index
+    [SerializeField]
+    private int iAmountOfExpectedPlayers = 1;
 
     private void Awake()
     {
@@ -75,6 +78,8 @@ public class RoundManager : MonoBehaviour
         //There are settings to use
         if (settingsContainer)
         {
+            iAmountOfExpectedPlayers = settingsContainer.iPlayercount;
+
             //There is a current gamemode already
             if (_currentGamemode != null)
             {
@@ -125,7 +130,7 @@ public class RoundManager : MonoBehaviour
             StopCoroutine(Co_WaitUntilPlayers());
         }
 
-        while (localMPIndexer.playerIndex == 0)
+        while (localMPIndexer.playerIndex < iAmountOfExpectedPlayers)
         {
             yield return null;
         }
@@ -152,8 +157,9 @@ public class RoundManager : MonoBehaviour
             }
 
             RoundStarted.Invoke();
-            _currentGamemode.RoundStarted();
         }
+
+        _currentGamemode.RoundStarted();
     }
 
     //Calling the RoundEnded Delegate Event
@@ -163,8 +169,9 @@ public class RoundManager : MonoBehaviour
         if (RoundEnded != null)
         {
             RoundEnded.Invoke();
-            _currentGamemode.RoundEnded();
         }
+
+        _currentGamemode.RoundEnded();
     }
 
     //Calling the CountdownStarted Delegate Event
@@ -174,8 +181,9 @@ public class RoundManager : MonoBehaviour
         if (CountdownStarted != null)
         {
             CountdownStarted.Invoke();
-            _currentGamemode.CountdownStarted();
         }
+
+        _currentGamemode.CountdownStarted();
     }
 
     //Calling the CountdownEnded Delegate Event
@@ -185,8 +193,9 @@ public class RoundManager : MonoBehaviour
         if (CountdownEnded != null)
         {
             CountdownEnded.Invoke();
-            _currentGamemode.CountdownEnded();
         }
+
+        _currentGamemode.CountdownEnded();
     }
 
     //A player has been tagged

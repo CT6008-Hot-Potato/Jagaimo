@@ -46,7 +46,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     public List<CharacterManager> activeInfected = new List<CharacterManager>();
 
     //Knowing whether the infected won or not
-    bool infectedWon = false;
+    private bool infectedWon = false;
 
     //Getting the needed components
     private void OnEnable()
@@ -92,7 +92,8 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     private void RoundEnding()
     {
-
+        //The round has ended, it's win screen time...
+        WinScreen();
     }
 
     //This is what happens when this countdown starts
@@ -181,6 +182,8 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         {
             infectedWon = true;
             //The infected has tagged the last player
+
+            WinScreen();
         }
     }
 
@@ -206,10 +209,10 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         return GAMEMODE_INDEX.INFECTED;
     }
 
-    private void WinScreen(bool infectedwin)
+    private void WinScreen()
     {
         //if infected won
-        if (infectedwin)
+        if (infectedWon)
         {
 
         }

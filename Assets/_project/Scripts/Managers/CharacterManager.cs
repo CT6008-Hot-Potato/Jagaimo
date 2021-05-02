@@ -16,10 +16,11 @@ public class CharacterManager : MonoBehaviour
 
     private PlayerController _movement;
     private PlayerCamera _cam;
+    private PlayerAnimation _playerAnimation;
 
     private SoundManager sm;
     private ParticleSystem elimVFX;
-    
+
     public bool isPlayer { get; private set; }
 
     [SerializeField]
@@ -30,6 +31,7 @@ public class CharacterManager : MonoBehaviour
         _tracker = _tracker ?? GetComponent<TaggedTracker>();
         _movement = _movement ?? GetComponent<PlayerController>();
         _cam = _cam ?? GetComponent<PlayerCamera>();
+        _playerAnimation = _playerAnimation ?? GetComponent<PlayerAnimation>();
 
         sm = FindObjectOfType<SoundManager>();
     }
@@ -103,7 +105,7 @@ public class CharacterManager : MonoBehaviour
         //Lerp into first person camera mode
         if (_cam)
         {
-            _cam.SetCameraView(false);
+            _cam.SetCameraView(true);
         }
 
         if (taggedDisplayObject)
@@ -111,7 +113,17 @@ public class CharacterManager : MonoBehaviour
             taggedDisplayObject.SetActive(true);
         }
 
+        if (sm)
+        {
+            //Play the tagged sound
+            //sm.PlaySound();
+        }
+
         //Animation for regaining potato
+        if (_playerAnimation)
+        {
+            _playerAnimation.CheckToChangeState("FallingBackDeath", true);
+        }
     }
 
     public void ThisPlayerUnTagged()
@@ -128,6 +140,6 @@ public class CharacterManager : MonoBehaviour
             taggedDisplayObject.SetActive(false);
         }
 
-        //Animations switch back to being without potato
+        //Animations switch back to being without potato (?)
     }
 }

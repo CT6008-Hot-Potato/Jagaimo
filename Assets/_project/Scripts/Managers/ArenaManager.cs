@@ -49,20 +49,48 @@ public class ArenaManager : MonoBehaviour
     }
 
     //This is for consistent spawn points for the football gamemode, the other team will use the same points from arena 1
-    public List<int> ReturnFootballSpawnIndexers()
+    public List<int> ReturnFootballSpawnIndexers(int iPlayerCount)
     {
         List<int> points = new List<int>();
+        points.Clear();
 
-        int randSpot = Random.Range(0, arenaSpots[0].spots.Length);
-        int randSpotTwo = Random.Range(0, arenaSpots[0].spots.Length);
-
-        while (randSpot == randSpotTwo)
+        //Making sure there's no errors when it comes to moving the players
+        if (arenaSpots[0].spots.Length != arenaSpots[1].spots.Length && Debug.isDebugBuild)
         {
-            randSpotTwo = Random.Range(0, arenaSpots[0].spots.Length);
+            Debug.LogWarning("There should be the same amount of spots in the arenas in this gamemode");
         }
 
-        points.Add(randSpot);
-        points.Add(randSpotTwo);
+        //Rand can only be 0, 1 or 2
+        //Get 1 spot for upto 2 players
+        if (iPlayerCount < 3)
+        {
+            points.Add(Random.Range(0, arenaSpots[0].spots.Length));
+        }
+        //Get 2 spots for upto 4 players
+        else if (iPlayerCount < 5)
+        {
+            int spotOne = Random.Range(0, arenaSpots[0].spots.Length);
+            int spotTwo = Random.Range(0, arenaSpots[0].spots.Length);
+
+            //This should never lead to infinite recursion
+            if (arenaSpots[0].spots.Length > 1)
+            {
+                while (spotOne == spotTwo)
+                {
+                    spotTwo = Random.Range(0, arenaSpots[0].spots.Length);
+                }
+            }
+
+            points.Add(spotOne);
+            points.Add(spotTwo);
+        }
+        //Add all 3 spots
+        else
+        {
+            points.Add(0);
+            points.Add(1);
+            points.Add(2);
+        }
 
         return points;
     }

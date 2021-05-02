@@ -7,8 +7,6 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 //The never changes itself, only triggers other things
@@ -23,16 +21,7 @@ public class Potato : MonoBehaviour
         //Run it's interact function if the script is enabled
         if (((MonoBehaviour)interactable).enabled)
         {
-            other.gameObject.GetComponent<PlayerAnimation>().CheckToChangeState("FallingBackDeath", true);
             interactable.Interact();
         }
     }
-
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.tag == "Player")
-    //    {
-    //        collision.gameObject.SetActive(false);
-    //    }
-    //}
 }

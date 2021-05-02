@@ -262,6 +262,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1765140015, guid: 8cef0e0e385f04f4eb8d02c327e194db, type: 3}
+      propertyPath: singleLocalPlayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2692320980931498880, guid: 8cef0e0e385f04f4eb8d02c327e194db,
+        type: 3}
+      propertyPath: m_AllowJoining
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2692320980931498881, guid: 8cef0e0e385f04f4eb8d02c327e194db,
         type: 3}
       propertyPath: m_RootOrder
@@ -5319,6 +5328,8 @@ MonoBehaviour:
   scrollerText: {fileID: 1919196162}
   scoreboard: {fileID: 395635035}
   arenaManager: {fileID: 1444861162}
+  spawnSpots: 
+  potatoRB: {fileID: 1802334129}
 --- !u!1 &460976386
 GameObject:
   m_ObjectHideFlags: 0
@@ -5369,7 +5380,7 @@ PrefabInstance:
     - target: {fileID: 3936309112493092399, guid: f7f0b863eae4bcc488ea60be2536dc48,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5
+      value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 3936309112493092399, guid: f7f0b863eae4bcc488ea60be2536dc48,
         type: 3}
@@ -5415,6 +5426,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Potato
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936309112493092563, guid: f7f0b863eae4bcc488ea60be2536dc48,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7f0b863eae4bcc488ea60be2536dc48, type: 3}
@@ -5924,6 +5940,11 @@ PrefabInstance:
       propertyPath: startCountdown
       value: 
       objectReference: {fileID: 1919196161}
+    - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
+        type: 3}
+      propertyPath: iAmountOfExpectedPlayers
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7172547651974387218, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
       propertyPath: m_Name
@@ -6359,6 +6380,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1802334129 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 3936309112493092563, guid: f7f0b863eae4bcc488ea60be2536dc48,
+    type: 3}
+  m_PrefabInstance: {fileID: 536252711}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1905994706
 Mesh:
   m_ObjectHideFlags: 0
