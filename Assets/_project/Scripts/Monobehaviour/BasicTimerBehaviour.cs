@@ -24,8 +24,8 @@ public class BasicTimerBehaviour : MonoBehaviour
     [Header("If there's UI needed")]
     [SerializeField]
     private Text timerText;
-    [SerializeField]
-    private bool isDramatic = false;
+    //[SerializeField]
+    //private bool isDramatic = false;
 
     //Starting the timer
     public void CallOnTimerStart()
