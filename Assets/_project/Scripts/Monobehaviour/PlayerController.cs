@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
     private bool grounded = false;
     private bool sliding = false;
     private bool climbing = false;
+    private bool touchingWall;
     private PlayerCamera pC;
     private PlayerInteraction pI;
     private CapsuleCollider collider;
@@ -99,6 +100,8 @@ public class PlayerController : MonoBehaviour
         Vector3 dir = collision.contacts[0].point - transform.position;
         //Normalise it
         dir = -dir.normalized;
+
+
         //Check the normalised y is greater or equal to 0.9 (0.9 generally sprinting while 1.0 standing stil)
         if (dir.y >= 0.9f)
         {
@@ -107,6 +110,18 @@ public class PlayerController : MonoBehaviour
                 GetComponent<PlayerInteraction>().Drop(true);
             }
             grounded = true;
+        }
+        else
+        {
+            touchingWall = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (!grounded)
+        {
+            touchingWall = false;
         }
     }
 
@@ -149,6 +164,10 @@ public class PlayerController : MonoBehaviour
                 //Else push down more intense
                 else
                 {
+                    if (touchingWall)
+                    {
+                        rb.AddForce((-rotationPosition.TransformDirection(movementValue) * Time.deltaTime) * 500, ForceMode.Impulse);
+                    }
                     if (!sliding)
                     {
                         pA.CheckToChangeState("FallingIdle");
@@ -219,10 +238,10 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-        // We apply gravity manually for more tuning control
-        rb.AddForce(new Vector3(0, -downForce * rb.mass, 0));
-
-        grounded = false;
+        }
+            // We apply gravity manually for more tuning control
+            rb.AddForce(new Vector3(0, -downForce * rb.mass, 0));
+            grounded = false;
     }
     //Update method calls camera type and movement type constantly
     private void Update()
@@ -435,7 +454,6 @@ public class PlayerController : MonoBehaviour
     public void Jump(InputAction.CallbackContext ctx)
     {
 
-        Debug.Log("Jump " + ctx);
         //if (pC.PlayerInput.currentActionMap.name == "Menu")
         //{
         //    pC.PlayerInput.SwitchCurrentActionMap("Menu");

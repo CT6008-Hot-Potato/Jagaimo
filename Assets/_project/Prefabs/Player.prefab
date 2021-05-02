@@ -812,7 +812,7 @@ MonoBehaviour:
   closestPosition: {fileID: 4369198654189538588}
   furthestPosition: {fileID: 4369198653568062970}
   position: {fileID: 4369198653832675790}
-  throwStrength: 10
+  throwStrength: 11
   grabDistance: 5
   playerInput: {fileID: 4394244838949972472}
   grabSound: 5
@@ -1161,7 +1161,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animation: {fileID: 4530223987346305413}
-  sliding: 0
 --- !u!111 &4530223987346305413
 Animation:
   m_ObjectHideFlags: 0
