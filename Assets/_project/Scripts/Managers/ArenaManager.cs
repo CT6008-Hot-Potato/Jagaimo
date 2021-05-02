@@ -5,8 +5,11 @@
 // Brief: The script that determines and store positions in which the players can spawn in
 //////////////////////////////////////////////////////////// 
 
+//Namespaces required
 using System.Collections.Generic;
 using UnityEngine;
+
+#region Internal Classes
 
 [System.Serializable]
 //Each potential spot
@@ -23,6 +26,8 @@ class Arena
     public SpawningSpot[] spots;
 }
 
+#endregion
+
 public class ArenaManager : MonoBehaviour
 {
     #region Variables Needed
@@ -38,6 +43,7 @@ public class ArenaManager : MonoBehaviour
 
     #region Public Methods
 
+    //General Methods for utility
     public Transform GettingSpot(int arenaIndex, int SpotIndex)
     {
         return arenaSpots[arenaIndex].spots[SpotIndex].spotTransform;

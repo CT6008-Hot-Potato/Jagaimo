@@ -14,6 +14,8 @@ using UnityEngine;
 //This will mostly be in the other scripts anyway
 public class FootballGamemode : MonoBehaviour, IGamemode
 {
+    #region Interfact Contract Expressions
+
     //Fulfilling the interfaces contracted functions
     GAMEMODE_INDEX IGamemode.Return_Mode() => Return_Mode();
 
@@ -28,6 +30,10 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     void IGamemode.CountdownEnded() => CountdownEnding();
     void IGamemode.PlayerTagged(CharacterManager charTagged) => PlayerTagged();
     bool IGamemode.WinCondition() => ThisWinCondition();
+
+    #endregion
+
+    #region Variables Needed
 
     [Header("Core Game Elements")]
 
@@ -66,12 +72,67 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     [SerializeField]
     private Rigidbody potatoRB;
 
+    #endregion
+
+    #region Unity Methods
+
     //Getting the needed components
     private void OnEnable()
     {
         roundManager = roundManager ?? GetComponent<RoundManager>();
         arenaManager = arenaManager ?? GetComponent<ArenaManager>();
     }
+
+    #endregion
+
+    #region Public Methods
+
+    public GAMEMODE_INDEX Return_Mode()
+    {
+        return GAMEMODE_INDEX.FOOTBALL;
+    }
+
+    //Either team scores a goal
+    public void Goal(bool blueTeamScore)
+    {
+        //Updating the score
+        if (blueTeamScore)
+        {
+            score.x++;
+
+            if (scoreboard)
+            {
+                scoreboard.UpdateBlueScoreText();
+            }
+        }
+        else
+        {
+            score.y++;
+
+            if (scoreboard)
+            {
+                scoreboard.UpdateRedScoreText();
+            }
+        }
+
+        //Updating the event texts
+        if (scrollerText)
+        {
+            scrollerText.AddGoalText(blueTeamScore);
+        }
+
+        //Stopping the countdown, putting the players and potato back, starting the countdown up again
+        if (countdownTimer)
+        {
+            countdownTimer.LockTimer(true);
+        }
+
+        PutPlayersInSpawnPoints();
+    }
+
+    #endregion
+
+    #region Interface Methods
 
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
@@ -170,7 +231,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
     //When the countdown ends
     private void CountdownEnding()
-    {       
+    {
         //At the end on the countdown, seeing who has more goals
         if (ThisWinCondition())
         {
@@ -201,48 +262,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         return false;
     }
 
-    public GAMEMODE_INDEX Return_Mode()
-    {
-        return GAMEMODE_INDEX.FOOTBALL;
-    }
+    #endregion
 
-    //Either team scores a goal
-    public void Goal(bool blueTeamScore)
-    {
-        //Updating the score
-        if (blueTeamScore)
-        {
-            score.x++;
-
-            if (scoreboard)
-            {
-                scoreboard.UpdateBlueScoreText();
-            }
-        }
-        else
-        {
-            score.y++;
-
-            if (scoreboard)
-            {
-                scoreboard.UpdateRedScoreText();
-            }
-        }
-
-        //Updating the event texts
-        if (scrollerText)
-        {
-            scrollerText.AddGoalText(blueTeamScore);
-        }
-
-        //Stopping the countdown, putting the players and potato back, starting the countdown up again
-        if (countdownTimer)
-        {
-            countdownTimer.LockTimer(true);
-        }
-
-        PutPlayersInSpawnPoints();
-    }
+    #region Private Methods
 
     private void PutPlayersInSpawnPoints()
     {
@@ -274,4 +296,6 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             }
         }
     }
+
+    #endregion
 }

@@ -10,11 +10,20 @@ using UnityEngine;
 
 public class SabotageObject : MonoBehaviour
 {
+    #region Variables Needed
+
+    [Header("Main Components Needed")]
+
     [SerializeField]
     private RoundManager rManager;
 
     [SerializeField]
     private SabotageGamemode gamemode;
+
+    [SerializeField]
+    private SoundManager soundManager;
+
+    [Header("Variables for fixing the object")]
 
     //The timer before this object is finished
     private Timer sabotageTimer;
@@ -26,8 +35,17 @@ public class SabotageObject : MonoBehaviour
     [SerializeField]
     private List<CharacterManager> charsInteracting;
 
+    #endregion
+
+    #region Unity Methods
+
+    private void Awake()
+    {
+        soundManager = soundManager ?? FindObjectOfType<SoundManager>();
+    }
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         if (rManager)
         {
@@ -42,7 +60,7 @@ public class SabotageObject : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (isBeingUsed)
         {
@@ -59,19 +77,35 @@ public class SabotageObject : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Public Methods
+
     public void StartUsage(CharacterManager charInteracting)
     {
         isBeingUsed = true;
         charsInteracting.Add(charInteracting);
+
+        if (soundManager)
+        {
+            //Start fixing sound
+        }
     }
 
     public void StopUsage()
     {
         isBeingUsed = false;
+
+        if (soundManager)
+        {
+            //Stop fixing sound
+        }
     }
 
     public void SetGamemodeObject(SabotageGamemode sabotageGamemode)
     {
         gamemode = sabotageGamemode;
     }
+
+    #endregion
 }

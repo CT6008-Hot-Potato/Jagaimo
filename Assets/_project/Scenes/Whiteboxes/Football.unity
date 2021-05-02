@@ -264,7 +264,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1765140015, guid: 8cef0e0e385f04f4eb8d02c327e194db, type: 3}
       propertyPath: singleLocalPlayer
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2692320980931498880, guid: 8cef0e0e385f04f4eb8d02c327e194db,
         type: 3}
@@ -6666,6 +6666,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerUICanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977434641621943112, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
+        type: 3}
+      propertyPath: TimerBehaviour.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1444861161}
+    - target: {fileID: 1977434641621943112, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
+        type: 3}
+      propertyPath: TimerBehaviour.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CallOnCountdownStart
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977434641884713763, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
+        type: 3}
+      propertyPath: duration
+      value: 301
       objectReference: {fileID: 0}
     - target: {fileID: 1977434641884713763, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
         type: 3}

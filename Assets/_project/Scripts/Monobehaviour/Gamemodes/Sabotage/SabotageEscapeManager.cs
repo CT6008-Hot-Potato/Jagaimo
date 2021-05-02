@@ -11,8 +11,13 @@ using UnityEngine;
 
 public class SabotageEscapeManager : MonoBehaviour
 {
+    #region Variables Needed
+
     RoundManager roundManager;
     private SabotageGamemode gamemode;
+
+    [SerializeField]
+    private SoundManager soundManager;
 
     //Things needed specifically for the sabotage gamemode
     //Generators on the map
@@ -24,10 +29,15 @@ public class SabotageEscapeManager : MonoBehaviour
     //Barracades for the escape points on the map
     [SerializeField]
     private GameObject BParent;
-    
+
+    #endregion
+
+    #region Unity Methods
+
     private void Awake()
     {
         roundManager = roundManager ?? RoundManager.roundManager;
+        soundManager = soundManager ?? FindObjectOfType<SoundManager>();
     }
 
     // Start is called before the first frame update
@@ -41,8 +51,12 @@ public class SabotageEscapeManager : MonoBehaviour
         }
     }
 
+    #endregion
+
     public void OpenEscapes()
     {
         ECParent.SetActive(true);
+
+        //Play escape "siren" (?)
     }
 }
