@@ -15,6 +15,8 @@ using UnityEngine;
 //This will mostly be in the other scripts anyway
 public class InfectedGamemode : MonoBehaviour, IGamemode
 {
+    #region Interfact Contract Expressions
+
     //Fulfilling the interfaces contracted functions
     GAMEMODE_INDEX IGamemode.Return_Mode() => Return_Mode();
 
@@ -30,6 +32,10 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     void IGamemode.CountdownEnded() => CountdownEnding();
     void IGamemode.PlayerTagged(CharacterManager charTagged) => PlayerTagged(charTagged);
     bool IGamemode.WinCondition() => ThisWinCondition();
+
+    #endregion
+
+    #region Variables Needed
 
     //Variables needed for the gamemode
     [SerializeField]
@@ -48,12 +54,20 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //Knowing whether the infected won or not
     private bool infectedWon = false;
 
+    #endregion
+
+    #region Unity Methods
+
     //Getting the needed components
     private void OnEnable()
     {
         roundManager = roundManager ?? GetComponent<RoundManager>();
         settings = GameSettingsContainer.instance;
     }
+
+    #endregion
+
+    #region Interface Methods
 
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
@@ -209,6 +223,10 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         return GAMEMODE_INDEX.INFECTED;
     }
 
+    #endregion
+
+    #region Private Methods
+
     private void WinScreen()
     {
         //if infected won
@@ -222,4 +240,6 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
         }
     }
+
+    #endregion
 }

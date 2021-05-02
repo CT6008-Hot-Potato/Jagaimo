@@ -7,20 +7,13 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 //A class to hold the events that happen throughout the round, a round is a full game where the win condition of the gamemode is met
 public class RoundManager : MonoBehaviour
 {
-    //There should only be 1 on scenes
-    public static RoundManager roundManager;
-
-    //The current gamemode
-    public IGamemode _currentGamemode;
+    #region Delegate Events 
 
     //Defining Delegate
     public delegate void RoundEvent();
@@ -34,6 +27,16 @@ public class RoundManager : MonoBehaviour
 
     //For multiplayer ?
     //public static event CountdownEvent CountdownPauseToggle;
+
+    #endregion
+
+    #region Variables Needed
+
+    //There should only be 1 on scenes
+    public static RoundManager roundManager;
+
+    //The current gamemode
+    public IGamemode _currentGamemode;
 
     //Bits and pieces that will be in some of the game scenes
     [SerializeField]
@@ -53,6 +56,10 @@ public class RoundManager : MonoBehaviour
     //The amount starts from 0, since it's compared to an index
     [SerializeField]
     private int iAmountOfExpectedPlayers = 1;
+
+    #endregion
+
+    #region Unity Methods
 
     private void Awake()
     {
@@ -121,29 +128,9 @@ public class RoundManager : MonoBehaviour
         StartCoroutine(Co_WaitUntilPlayers());
     }
 
-    //The coroutine that waits for players before setting the active players
-    private IEnumerator Co_WaitUntilPlayers()
-    {
-        if (!localMPIndexer && Debug.isDebugBuild)
-        {
-            Debug.Log("Set An MP Screen Partitioner on this object", this);
-            StopCoroutine(Co_WaitUntilPlayers());
-        }
+    #endregion
 
-        while (localMPIndexer.playerIndex < iAmountOfExpectedPlayers)
-        {
-            yield return null;
-        }
-
-        //This will be done on round start and use non spectator characters in actual version
-        _currentGamemode.SetActivePlayers(FindObjectsOfType<CharacterManager>());
-
-        if (startWhenReady)
-        {
-            startCountdown.CallOnTimerStart();
-            CallOnRoundStart();
-        }
-    }
+    #region Public Methods
 
     //Calling the RoundStarted Delegate Event
     public void CallOnRoundStart()
@@ -201,7 +188,7 @@ public class RoundManager : MonoBehaviour
     //A player has been tagged
     public void OnPlayerTagged(CharacterManager charManager)
     {
-        if (!(MonoBehaviour)_currentGamemode  || !charManager)
+        if (!(MonoBehaviour)_currentGamemode || !charManager)
         {
             if (Debug.isDebugBuild)
             {
@@ -218,4 +205,34 @@ public class RoundManager : MonoBehaviour
             eventText.AddTaggedText();
         }
     }
+
+    #endregion
+
+    #region Private Methods
+
+    //The coroutine that waits for players before setting the active players
+    private IEnumerator Co_WaitUntilPlayers()
+    {
+        if (!localMPIndexer && Debug.isDebugBuild)
+        {
+            Debug.Log("Set An MP Screen Partitioner on this object", this);
+            StopCoroutine(Co_WaitUntilPlayers());
+        }
+
+        while (localMPIndexer.playerIndex < iAmountOfExpectedPlayers)
+        {
+            yield return null;
+        }
+
+        //This will be done on round start and use non spectator characters in actual version
+        _currentGamemode.SetActivePlayers(FindObjectsOfType<CharacterManager>());
+
+        if (startWhenReady)
+        {
+            startCountdown.CallOnTimerStart();
+            CallOnRoundStart();
+        }
+    }
+
+    #endregion
 }
