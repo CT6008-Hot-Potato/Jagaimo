@@ -14,8 +14,14 @@ public class CharacterManager : MonoBehaviour
 {
     #region Variables Needed
 
+    //The tracker attached to the object
     public TaggedTracker _tracker;
+
+    //A potentially useful bool for AI production
     public bool isPlayer { get; private set; }
+
+    //A public variable for scripts to check if this player is locked
+    public bool isPlayerLocked { private get; set; } = false;
 
     //Components already on this object
     [SerializeField]
@@ -148,15 +154,17 @@ public class CharacterManager : MonoBehaviour
         //Animations switch back to being without potato (?)
     }
 
-    #endregion
-
-    #region Private Methods
+    /// <summary>
+    /// BE CAREFUL WHEN USING THESE
+    /// </summary>
 
     //Function to have the player locked in a position (so they cant move or rotate the camera)
-    private void LockPlayer()
+    public void LockPlayer()
     {
         //Guard clause to make sure the components are correct
         if (!_cam || !_movement) return;
+
+        isPlayerLocked = true;
 
         //Stop movement in the movement script, dont disable or deactive player input (they couldn't pause then)
         //_movement.StopMovement();
@@ -167,10 +175,12 @@ public class CharacterManager : MonoBehaviour
         //Note: option to have them switch to a different camera for cinematics
     }
 
-    private void UnLockPlayer()
+    public void UnLockPlayer()
     {
         //Guard clause to make sure the components are correct
         if (!_cam || !_movement) return;
+
+        isPlayerLocked = false;
 
         //Start player movement
         //_movement.StartMovement();

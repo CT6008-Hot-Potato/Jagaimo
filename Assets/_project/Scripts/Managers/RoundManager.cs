@@ -53,7 +53,7 @@ public class RoundManager : MonoBehaviour
     //Starting when the players are in, false for using the trigger
     [SerializeField]
     private bool startWhenReady = true;
-    //The amount starts from 0, since it's compared to an index
+    //The amount starts from 0, since it's compared to an index (this is for testing in scene)
     [SerializeField]
     private int iAmountOfExpectedPlayers = 1;
 
@@ -85,7 +85,8 @@ public class RoundManager : MonoBehaviour
         //There are settings to use
         if (settingsContainer)
         {
-            iAmountOfExpectedPlayers = settingsContainer.iPlayercount;
+            //The player count here starts from 0 but the settings one starts from 1
+            iAmountOfExpectedPlayers = (settingsContainer.iPlayercount - 1);
 
             //There is a current gamemode already
             if (_currentGamemode != null)

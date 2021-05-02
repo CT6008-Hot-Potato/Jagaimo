@@ -7,6 +7,7 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -71,6 +72,8 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
     [SerializeField]
     private Rigidbody potatoRB;
+    [SerializeField]
+    private BasicTimerBehaviour goalPauseTimer;
 
     #endregion
 
@@ -127,7 +130,23 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             countdownTimer.LockTimer(true);
         }
 
-        PutPlayersInSpawnPoints();
+        //Having a few seconds before everything resets
+        StartCoroutine(Co_GoalWait(5f));
+    }
+
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void UnlockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].UnLockPlayer();
+            }
+        }
     }
 
     #endregion
@@ -295,6 +314,32 @@ public class FootballGamemode : MonoBehaviour, IGamemode
                 blueTeam[i].transform.rotation = spotTransform.rotation;
             }
         }
+    }
+
+    private IEnumerator Co_GoalWait(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        //Locking both players for the pause timer to unlock
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            if (currentActivePlayers[i])
+            {
+                currentActivePlayers[i].LockPlayer();
+            }
+        }
+
+        //Putting them back in starting points
+        PutPlayersInSpawnPoints();
+
+        //Moving the potato back to the start if this has a reference to it (which it should)
+        if (potatoRB)
+        {
+            potatoRB.transform.position = Vector3.zero;
+        }
+
+        //The reset timer before the play starts up again
+        goalPauseTimer.CallOnTimerStart();
     }
 
     #endregion
