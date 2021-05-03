@@ -19,8 +19,9 @@ MonoBehaviour:
     Duration: 0
   - Name: Fuse
     particle: 1
-    ParticlePrefab: {fileID: 0}
-    Duration: 30
+    ParticlePrefab: {fileID: 7648445947321375022, guid: 4daddea8b9c244346a0a96ae00234a63,
+      type: 3}
+    Duration: 1
   - Name: AimTrail
     particle: 2
     ParticlePrefab: {fileID: 726055801021238971, guid: 21feabf4aed26dd488d666d6b1c9a56d,
