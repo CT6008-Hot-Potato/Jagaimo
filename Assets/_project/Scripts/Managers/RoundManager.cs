@@ -53,6 +53,8 @@ public class RoundManager : MonoBehaviour
     //Starting when the players are in, false for using the trigger
     [SerializeField]
     private bool startWhenReady = true;
+
+    [Header("This is an index so it starts from 0")]
     //The amount starts from 0, since it's compared to an index (this is for testing in scene)
     [SerializeField]
     private int iAmountOfExpectedPlayers = 1;

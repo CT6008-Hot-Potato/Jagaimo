@@ -34,6 +34,11 @@ public class Timer
         isActive = true;
     }
 
+    ~Timer()
+    {
+        //Garbage collection should do this (could implement a dispose if needed)
+    }
+
     //Ticking the timer down
     public void Tick(float delta_time)
     {

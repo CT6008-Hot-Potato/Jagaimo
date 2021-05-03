@@ -29,7 +29,7 @@ public class WorldBounds : MonoBehaviour
         }
         if (Debug.isDebugBuild)
         {
-            Debug.Log("Something left the map", this);
+            Debug.Log("Something left the map: " + other.name, this);
         }
     }
 }

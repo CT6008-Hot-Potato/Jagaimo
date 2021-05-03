@@ -46,7 +46,7 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     private CountdownTimer countdownTimer;
 
     [SerializeField]
-    SabotageEscapeManager escapeManager;
+    private SabotageEscapeManager escapeManager;
 
     //Variables for tracking complete generators
     private int iCurrentGeneratorsComplete = 0;
