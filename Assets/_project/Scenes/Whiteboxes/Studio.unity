@@ -1509,7 +1509,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f2cac5530e6166442ae5f19622c08f73, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.73333335}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -14220,7 +14220,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-53588
+  m_Name: pb_Mesh-292430
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -14585,73 +14585,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1049001614}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1054865306 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3936309112493092562, guid: f7f0b863eae4bcc488ea60be2536dc48,
-    type: 3}
-  m_PrefabInstance: {fileID: 1609325524}
-  m_PrefabAsset: {fileID: 0}
---- !u!108 &1054865313
-Light:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1054865306}
-  m_Enabled: 1
-  serializedVersion: 10
-  m_Type: 2
-  m_Shape: 0
-  m_Color: {r: 1, g: 0.9858713, b: 0.69411767, a: 1}
-  m_Intensity: 2
-  m_Range: 14
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 2
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.02
-    m_NormalBias: 0.1
-    m_NearPlane: 0.1
-    m_CullingMatrixOverride:
-      e00: 1
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 1
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-    m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingLayerMask: 1
-  m_Lightmapping: 4
-  m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 0
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_UseBoundingSphereOverride: 0
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
 --- !u!43 &1060514390
 Mesh:
   m_ObjectHideFlags: 0
@@ -18998,6 +18931,7 @@ MonoBehaviour:
   bDestroyOnHit: 0
   bDropOnHit: 1
   obj_anim: {fileID: 0}
+  _rb: {fileID: 1432166107}
 --- !u!65 &1432166106
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19011,6 +18945,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.021, y: 0.042, z: 0.021}
   m_Center: {x: 0, y: -0.000000014901161, z: 0.000000014901161}
+--- !u!54 &1432166107
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432166103}
+  serializedVersion: 2
+  m_Mass: 50
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!4 &1440263377 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3410799540207019649, guid: 0895b1f72187efe4e96178effba6ed02,
@@ -20419,6 +20369,11 @@ PrefabInstance:
     - target: {fileID: 8836912532491795093, guid: a387dd94e34472a4ca6037293cde41bb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9018946839170489724, guid: a387dd94e34472a4ca6037293cde41bb,
+        type: 3}
+      propertyPath: m_Convex
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -21942,6 +21897,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ShippingContainerSemiClosed (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5382262883210059646, guid: d699db357585d814bb47210715aeff58,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d699db357585d814bb47210715aeff58, type: 3}
@@ -23904,7 +23864,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-53580
+  m_Name: pb_Mesh-292422
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -28151,6 +28111,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 2024615821}
+    - target: {fileID: 4095084197508385649, guid: 7c8b39eda00985148a21934898af9923,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0.69411767
+      objectReference: {fileID: 0}
     - target: {fileID: 4095084197644214804, guid: 7c8b39eda00985148a21934898af9923,
         type: 3}
       propertyPath: m_Mesh
@@ -29061,6 +29026,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 2097819988}
+    - target: {fileID: 4095084199206661575, guid: 7c8b39eda00985148a21934898af9923,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0.69411767
+      objectReference: {fileID: 0}
     - target: {fileID: 4095084199224369277, guid: 7c8b39eda00985148a21934898af9923,
         type: 3}
       propertyPath: m_Mesh
