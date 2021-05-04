@@ -37,9 +37,6 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     private List<CharacterManager> playersWhoWon = new List<CharacterManager>();
 
     [SerializeField]
-    private CountdownTimer countdownTimer;
-
-    [SerializeField]
     private SabotageEscapeManager escapeManager;
 
     //Variables for tracking complete generators

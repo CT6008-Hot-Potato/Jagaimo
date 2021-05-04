@@ -14,10 +14,14 @@ public class InteractMapObject : MonoBehaviour, IInteractable
     //Does it get destroyed on hit
     [SerializeField]
     private bool bDestroyOnHit;
+    [SerializeField]
+    private bool bDropOnHit;
 
     //Playing an animation
     [SerializeField]
     private Animation obj_anim;
+    [SerializeField]
+    private Rigidbody _rb;
 
     void IInteractable.Interact() => Interact();
     private void Interact()
@@ -37,6 +41,16 @@ public class InteractMapObject : MonoBehaviour, IInteractable
         if (bDestroyOnHit)
         {
             Destroy(gameObject);
+        }
+        else if (bDropOnHit)
+        {
+            Debug.Log("Here");
+            Destroy(obj_anim);
+            
+            if (_rb)
+            {
+                _rb.isKinematic = false;
+            }
         }
     }
 }
