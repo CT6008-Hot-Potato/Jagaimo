@@ -59,6 +59,10 @@ public class RoundManager : MonoBehaviour
     [SerializeField]
     private int iAmountOfExpectedPlayers = 1;
 
+    //Change this to quickly test gamemodes in scenes
+    [SerializeField]
+    private GAMEMODE_INDEX testMode;
+
     #endregion
 
     #region Unity Methods
@@ -113,7 +117,6 @@ public class RoundManager : MonoBehaviour
                     _currentGamemode = gameObject.AddComponent<SabotageGamemode>();
                     break;
                 default:
-                    _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
                     break;
             }
         }
@@ -121,7 +124,22 @@ public class RoundManager : MonoBehaviour
         //For some reason no gamemode was applied and none was on the object
         if (_currentGamemode == null)
         {
-            _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
+            //Depending on the test mode variable set in the inspector, add a different gamemode
+            switch (testMode)
+            {
+                case GAMEMODE_INDEX.INFECTED:
+                    _currentGamemode = gameObject.AddComponent<InfectedGamemode>();
+                    break;
+                case GAMEMODE_INDEX.SABOTAGE:
+                    _currentGamemode = gameObject.AddComponent<SabotageGamemode>();
+                    break;
+                case GAMEMODE_INDEX.FOOTBALL:
+                    _currentGamemode = gameObject.AddComponent<FootballGamemode>();
+                    break;
+                default:
+                    _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
+                    break;
+            }
         }
     }
 
