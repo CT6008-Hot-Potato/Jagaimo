@@ -1,4 +1,11 @@
-﻿using System;
+﻿////////////////////////////////////////////////////////////
+// File: Scriptable sound
+// Author: James Bradbury
+// Date Created: 1/04/21
+// Brief: A script to handle profiling of sound assets
+//////////////////////////////////////////////////////////// 
+
+using System;
 using UnityEngine;
 using UnityEngine.Audio;
 

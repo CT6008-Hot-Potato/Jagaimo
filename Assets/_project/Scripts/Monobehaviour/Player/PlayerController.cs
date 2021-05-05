@@ -10,9 +10,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
-     //Variables
+    //Variables
     #region Variables
-    [SerializeField] 
+    [SerializeField]
     private PlayerInput playerInput = null;
     [SerializeField]
     private float velocityClamp = 10f;
@@ -37,7 +37,6 @@ public class PlayerController : MonoBehaviour
     private bool grounded = false;
     private bool sliding = false;
     private bool climbing = false;
-    private bool touchingWall;
     private PlayerCamera pC;
     private PlayerInteraction pI;
     private CapsuleCollider collider;
@@ -89,7 +88,7 @@ public class PlayerController : MonoBehaviour
         if (!uiMenu)
         {
             Debug.LogWarning("Missing ui menu reference!");
-        }        
+        }
     }
 
 
@@ -100,8 +99,6 @@ public class PlayerController : MonoBehaviour
         Vector3 dir = collision.contacts[0].point - transform.position;
         //Normalise it
         dir = -dir.normalized;
-
-
         //Check the normalised y is greater or equal to 0.9 (0.9 generally sprinting while 1.0 standing stil)
         if (dir.y >= 0.9f)
         {
@@ -110,18 +107,6 @@ public class PlayerController : MonoBehaviour
                 GetComponent<PlayerInteraction>().Drop(true);
             }
             grounded = true;
-        }
-        else
-        {
-            touchingWall = true;
-        }
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (!grounded)
-        {
-            touchingWall = false;
         }
     }
 
@@ -164,10 +149,6 @@ public class PlayerController : MonoBehaviour
                 //Else push down more intense
                 else
                 {
-                    if (touchingWall)
-                    {
-                        rb.AddForce((-rotationPosition.TransformDirection(movementValue) * Time.deltaTime) * 500, ForceMode.Impulse);
-                    }
                     if (!sliding)
                     {
                         pA.CheckToChangeState("FallingIdle");
@@ -238,268 +219,272 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-        }
             // We apply gravity manually for more tuning control
             rb.AddForce(new Vector3(0, -downForce * rb.mass, 0));
+
             grounded = false;
-    }
-    //Update method calls camera type and movement type constantly
-    private void Update()
-    {
-        //Function hecks and manages aspects of player movement relevant to movement type 
-        MovementType();
-    }
-    //Simple public function for changing movement state
-    public void SetMovement(int state)
-    {
-        //Movement states
-        switch (state)
-        {
-            case 0:
-                //rebindingDisplay.DisplayBindingMenu(true);
-                playerMovement = pM.INTERACTING;
-                break;
-            case 1:
-                //rebindingDisplay.DisplayBindingMenu(false);
-                playerMovement = pM.CROUCHING;
-                break;
-            case 2:
-                //rebindingDisplay.DisplayBindingMenu(false);
-                playerMovement = pM.WALKING;
-                break;
-            default:
-                Debug.Log("Given value for ChangeMovement is too high.");
-                break;
         }
     }
 
-    //Simple public function
-    public int GetMovement()
-    {
-        return (int)playerMovement;
-    }
-
-    //Function for the movement types if the player
-    void MovementType()
-    {
-        //Switch for different movement types
-        switch (playerMovement)
+        //Update method calls camera type and movement type constantly
+        private void Update()
         {
-            case pM.INTERACTING:
-                //Checks for player walking
-                if (movementValue != Vector3.zero)
-                {
-                    //Unlock cursor
-                    uiMenu.UpdateUIMenuState(false);
-                    UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+            //Function hecks and manages aspects of player movement relevant to movement type 
+            MovementType();
+        }
+
+        //Simple public function for changing movement state
+        public void SetMovement(int state)
+        {
+            //Movement states
+            switch (state)
+            {
+                case 0:
+                    //rebindingDisplay.DisplayBindingMenu(true);
+                    playerMovement = pM.INTERACTING;
+                    break;
+                case 1:
+                    //rebindingDisplay.DisplayBindingMenu(false);
+                    playerMovement = pM.CROUCHING;
+                    break;
+                case 2:
+                    //rebindingDisplay.DisplayBindingMenu(false);
                     playerMovement = pM.WALKING;
-                }
-                //Else if cursor is locked set it to not be locked
-                else if (UnityEngine.Cursor.lockState == CursorLockMode.Locked)
-                {
-                    UnityEngine.Cursor.lockState = CursorLockMode.None;
-                }
-                break;
-            //Crouching
-            case pM.CROUCHING:
-                speed = crouchSpeed;
-                //If crouching is false check if crouch button lifted up or sprinting key pressed and uncrouch
-                if (crouching == false)
-                {
-                    if (crouchValue > 0.1f || sprintValue > 0.1f)
+                    break;
+                default:
+                    Debug.Log("Given value for ChangeMovement is too high.");
+                    break;
+            }
+        }
+
+        //Simple public function
+        public int GetMovement()
+        {
+            return (int)playerMovement;
+        }
+
+        //Function for the movement types if the player
+        void MovementType()
+        {
+            //Switch for different movement types
+            switch (playerMovement)
+            {
+                case pM.INTERACTING:
+                    //Checks for player walking
+                    if (movementValue != Vector3.zero)
                     {
-                        //Uncrouch
-                        if (pI.UnCrouch())
+                        //Unlock cursor
+                        uiMenu.UpdateUIMenuState(false);
+                        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+                        playerMovement = pM.WALKING;
+                    }
+                    //Else if cursor is locked set it to not be locked
+                    else if (UnityEngine.Cursor.lockState == CursorLockMode.Locked)
+                    {
+                        UnityEngine.Cursor.lockState = CursorLockMode.None;
+                    }
+                    break;
+                //Crouching
+                case pM.CROUCHING:
+                    speed = crouchSpeed;
+                    //If crouching is false check if crouch button lifted up or sprinting key pressed and uncrouch
+                    if (crouching == false)
+                    {
+                        if (crouchValue > 0.1f || sprintValue > 0.1f)
                         {
-                            sM.PlaySound(crouchSound);
-                            crouching = true;
-                            speed = walkSpeed;
-                            collider.center = new Vector3(0, 0, 0);
-                            collider.height = 2;
-                            playerMovement = pM.WALKING;
+                            //Uncrouch
+                            if (pI.UnCrouch())
+                            {
+                                sM.PlaySound(crouchSound);
+                                crouching = true;
+                                speed = walkSpeed;
+                                collider.center = new Vector3(0, 0, 0);
+                                collider.height = 2;
+                                playerMovement = pM.WALKING;
+                            }
                         }
                     }
-                }
-                //Crouching set to false when key lifted
-                else if (crouching && crouchValue == 0)
-                {
-                    crouching = false;
-                }
-                break;
-            //Walking
-            case pM.WALKING:
-                if (crouchValue > 0.1f && crouching == false && sliding == false)
-                {
-                    collider.center = new Vector3(0, -0.5f, 0);
-                    collider.height = 1;
-                    pI.Crouch();
-                    if (grounded)
+                    //Crouching set to false when key lifted
+                    else if (crouching && crouchValue == 0)
                     {
-                        if (speed == runSpeed && movementValue.z > 0.1f)
+                        crouching = false;
+                    }
+                    break;
+                //Walking
+                case pM.WALKING:
+                    if (crouchValue > 0.1f && crouching == false && sliding == false)
+                    {
+                        collider.center = new Vector3(0, -0.5f, 0);
+                        collider.height = 1;
+                        pI.Crouch();
+                        if (grounded)
                         {
-                            sliding = true;
-                            sM.PlaySound(slideSound);
-                            StartCoroutine(Co_SlideTime());
+                            if (speed == runSpeed && movementValue.z > 0.1f)
+                            {
+                                sliding = true;
+                                sM.PlaySound(slideSound);
+                                StartCoroutine(Co_SlideTime());
+                            }
+                            else
+                            {
+                                sM.PlaySound(crouchSound);
+                                crouching = true;
+                                speed = crouchSpeed;
+                                playerMovement = pM.CROUCHING;
+                            }
                         }
                         else
                         {
-                            sM.PlaySound(crouchSound);
-                            crouching = true;
-                            speed = crouchSpeed;
-                            playerMovement = pM.CROUCHING;
+                            rb.AddForce(-transform.up, ForceMode.Impulse);
                         }
                     }
-                    else
+                    else if (crouching && crouchValue == 0)
                     {
-                        rb.AddForce(-transform.up , ForceMode.Impulse);
+                        crouching = false;
                     }
-                }
-                else if (crouching && crouchValue == 0)
-                {
-                    crouching = false;
-                }
-                if (sprintValue > 0.1f && !sliding)
-                {
-                    speed = runSpeed;
-                }
-                else if (speed == runSpeed && !sliding)
-                {
-                    speed = walkSpeed;
-                }
-                break;
-            default:
-                Debug.Log("Given value for MovementType is too high.");
-                break;
-        }
-    }
-
-    //This coroutine is called to climb up and turn around when doing a wall click
-    private IEnumerator Co_ClimbTime()
-    {
-        rb.useGravity = false;
-        timer = new Timer(0.25f);
-        //Push up while timer active
-        while (timer.isActive)
-        {
-            timer.Tick(Time.deltaTime);
-            pC.ChangeYaw();
-            yield return null;
-        }
-        rb.velocity = Vector3.zero;
-        rb.AddForce(transform.up * 20, ForceMode.Impulse);       
-        rb.AddForce(rotationPosition.forward * 50, ForceMode.Impulse);
-        rb.useGravity = true;
-        //Flip around
-        pC.flipSpin = !pC.flipSpin;
-        rb.velocity = Vector3.zero;
-        climbing = false;
-    }
-
-    //This corouting is called to climb and
-    private IEnumerator Co_SlideTime()
-    {
-        timer = new Timer(slideTime);
-
-        while (timer.isActive)
-        {
-            timer.Tick(Time.deltaTime);
-            pA.CheckToChangeState("ActionPose");
-            movementValue = new Vector3(0, 0, 1);
-            if (speed != (runSpeed * 2))
-            {
-                speed = (runSpeed * 2);
+                    if (sprintValue > 0.1f && !sliding)
+                    {
+                        speed = runSpeed;
+                    }
+                    else if (speed == runSpeed && !sliding)
+                    {
+                        speed = walkSpeed;
+                    }
+                    break;
+                default:
+                    Debug.Log("Given value for MovementType is too high.");
+                    break;
             }
-            yield return null;
         }
 
-        //If can't uncrouch then stay crouch
-        if (!pI.UnCrouch())
+        //This coroutine is called to climb up and turn around when doing a wall click
+        private IEnumerator Co_ClimbTime()
         {
-            speed = crouchSpeed;
-            playerMovement = pM.CROUCHING;
-        }
-        //Else uncrouch
-        else
-        {
-            speed = walkSpeed;
-            collider.center = new Vector3(0, 0, 0);
-            collider.height = 2;
-        }
-
-        //Set crouching true, sliding false
-        crouching = true;
-        sliding = false;
-        //Stop sliding
-        if (slowStand)
-        {
-            movementValue = new Vector3(0, 0, 0);
-        }
-    }
-
-    public void Movement(InputAction.CallbackContext ctx)
-    {
-        if (ctx.ReadValue<Vector2>().y <= 0 && sliding)
-        {
-            slowStand = true;
-        }
-        else if (slowStand == true){
-            slowStand = false;
-        }
-        if (!sliding)
-        {
-            movementValue = new Vector3 (ctx.ReadValue<Vector2>().x,0, ctx.ReadValue<Vector2>().y);
-        }
-    }
-
-    public void Jump(InputAction.CallbackContext ctx)
-    {
-
-        //if (pC.PlayerInput.currentActionMap.name == "Menu")
-        //{
-        //    pC.PlayerInput.SwitchCurrentActionMap("Menu");
-        //}
-        //else
-        //{
-        //    pC.PlayerInput.SwitchCurrentActionMap("Gameplay");
-        //}
-
-        if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
-        {
-            pC.MoveFreeCamY(true, ctx.ReadValue<float>());
-        }
-        else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED)
-        {
-           jumpValue = ctx.ReadValue<float>();
-        }
-    }
-
-    public void Crouch(InputAction.CallbackContext ctx)
-    {
-        if (!grounded)
-        {
-            if (crouchValue >= 0.1f)
+            rb.useGravity = false;
+            timer = new Timer(0.25f);
+            //Push up while timer active
+            while (timer.isActive)
             {
-                pA.CheckToChangeState("CrouchingIdle");
+                timer.Tick(Time.deltaTime);
+                pC.ChangeYaw();
+                yield return null;
             }
+            rb.velocity = Vector3.zero;
+            rb.AddForce(transform.up * 20, ForceMode.Impulse);
+            rb.AddForce(rotationPosition.forward * 50, ForceMode.Impulse);
+            rb.useGravity = true;
+            //Flip around
+            pC.flipSpin = !pC.flipSpin;
+            rb.velocity = Vector3.zero;
+            climbing = false;
+        }
+
+        //This corouting is called to climb and
+        private IEnumerator Co_SlideTime()
+        {
+            timer = new Timer(slideTime);
+
+            while (timer.isActive)
+            {
+                timer.Tick(Time.deltaTime);
+                pA.CheckToChangeState("ActionPose");
+                movementValue = new Vector3(0, 0, 1);
+                if (speed != (runSpeed * 2))
+                {
+                    speed = (runSpeed * 2);
+                }
+                yield return null;
+            }
+
+            //If can't uncrouch then stay crouch
+            if (!pI.UnCrouch())
+            {
+                speed = crouchSpeed;
+                playerMovement = pM.CROUCHING;
+            }
+            //Else uncrouch
             else
             {
-                pA.CheckToChangeState("Idle");
+                speed = walkSpeed;
+                collider.center = new Vector3(0, 0, 0);
+                collider.height = 2;
+            }
+
+            //Set crouching true, sliding false
+            crouching = true;
+            sliding = false;
+            //Stop sliding
+            if (slowStand)
+            {
+                movementValue = new Vector3(0, 0, 0);
             }
         }
 
-            if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
+        public void Movement(InputAction.CallbackContext ctx)
         {
-            pC.MoveFreeCamY(false, ctx.ReadValue<float>());
+            if (ctx.ReadValue<Vector2>().y <= 0 && sliding)
+            {
+                slowStand = true;
+            }
+            else if (slowStand == true) {
+                slowStand = false;
+            }
+            if (!sliding)
+            {
+                movementValue = new Vector3(ctx.ReadValue<Vector2>().x, 0, ctx.ReadValue<Vector2>().y);
+            }
         }
-        else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED)
-        { 
-            crouchValue = ctx.ReadValue<float>();
-        }
-    }
 
-    public void Sprint(InputAction.CallbackContext ctx)
-    {
-        sprintValue = ctx.ReadValue<float>();
-    }
+        public void Jump(InputAction.CallbackContext ctx)
+        {
+
+            Debug.Log("Jump " + ctx);
+            //if (pC.PlayerInput.currentActionMap.name == "Menu")
+            //{
+            //    pC.PlayerInput.SwitchCurrentActionMap("Menu");
+            //}
+            //else
+            //{
+            //    pC.PlayerInput.SwitchCurrentActionMap("Gameplay");
+            //}
+
+            if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
+            {
+                pC.MoveFreeCamY(true, ctx.ReadValue<float>());
+            }
+            else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED)
+            {
+                jumpValue = ctx.ReadValue<float>();
+            }
+        }
+
+        public void Crouch(InputAction.CallbackContext ctx)
+        {
+            if (!grounded)
+            {
+                if (crouchValue >= 0.1f)
+                {
+                    pA.CheckToChangeState("CrouchingIdle");
+                }
+                else
+                {
+                    pA.CheckToChangeState("Idle");
+                }
+            }
+
+            if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
+            {
+                pC.MoveFreeCamY(false, ctx.ReadValue<float>());
+            }
+            else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED)
+            {
+                crouchValue = ctx.ReadValue<float>();
+            }
+        }
+
+        public void Sprint(InputAction.CallbackContext ctx)
+        {
+            sprintValue = ctx.ReadValue<float>();
+        }
 
 }

@@ -22,8 +22,6 @@ public class GoalObject : MonoBehaviour, IInteractable
 
     #endregion
 
-    #region Unity Methods
-
     void Start()
     {
         //It should always be this gamemode if this script is running
@@ -48,10 +46,6 @@ public class GoalObject : MonoBehaviour, IInteractable
         }
     }
 
-    #endregion
-
-    #region Interface Methods
-
     //The potato hit the goal collider, meaning it crossed the goal line
     public void Interact()
     {
@@ -75,6 +69,4 @@ public class GoalObject : MonoBehaviour, IInteractable
             }
         }
     }
-
-    #endregion
 }

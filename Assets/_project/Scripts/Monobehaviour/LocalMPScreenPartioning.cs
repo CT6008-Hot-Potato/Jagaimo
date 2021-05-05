@@ -10,8 +10,6 @@ using UnityEngine.InputSystem;
 
 public class LocalMPScreenPartioning : MonoBehaviour
 {
-    #region Variables Needed
-
     public int playerIndex;
     private int playerIndexPrior;
     [SerializeField]
@@ -28,10 +26,6 @@ public class LocalMPScreenPartioning : MonoBehaviour
 
     [SerializeField]
     PlayerInputManager manager;
-
-    #endregion
-
-    #region Unity Methods
 
     private void Awake()
     {
@@ -88,12 +82,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
         playerIndexPrior = playerIndex;
     }
 
-    #endregion
-
-    #region Public Methods
-
-    public void OnPlayerJoined(PlayerInput playerInput)
-    {
+    public void OnPlayerJoined(PlayerInput playerInput) {
         playerCameras = FindObjectsOfType<PlayerCamera>();
         playerIndex = (playerCameras.Length - 1);
         if (playerIndex != playerIndexPrior && !singleLocalPlayer)
@@ -184,5 +173,4 @@ public class LocalMPScreenPartioning : MonoBehaviour
         }
     }
 
-    #endregion
 }

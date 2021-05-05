@@ -13,8 +13,6 @@ using UnityEngine;
 // but dont add requires component because you cant remove them after)
 public class TaggedTracker : MonoBehaviour, IInteractable
 {
-    #region Variables Needed
-
     //The main bool for the tracker
     public bool isTagged { get; private set; }
 
@@ -22,10 +20,6 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     private RoundManager roundManager;
     [SerializeField]
     private CharacterManager playerManager;
-
-    #endregion
-
-    #region Unity Methods
 
     private void Awake()
     {
@@ -38,10 +32,6 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     {
         //Checking enabled/disabled in inspector
     }
-
-    #endregion
-
-    #region Interface Contract
 
     //Triggering the tagged function if interact is called on the object
     void IInteractable.Interact() => Hit();
@@ -61,10 +51,6 @@ public class TaggedTracker : MonoBehaviour, IInteractable
         roundManager.OnPlayerTagged(playerManager);
         PlayerTagged();
     }
-
-    #endregion
-
-    #region Public Methods
 
     //This player isnt tagged anymore
     public void PlayerUnTagged()
@@ -88,6 +74,4 @@ public class TaggedTracker : MonoBehaviour, IInteractable
 
         enabled = false;
     }
-
-    #endregion
 }

@@ -14,8 +14,6 @@ using UnityEngine;
 //This will mostly be in the other scripts anyway
 public class SabotageGamemode : MonoBehaviour, IGamemode
 {
-    #region Interfact Contract Expressions
-
     //Fulfilling the interfaces contracted functions
     GAMEMODE_INDEX IGamemode.Return_Mode() => Return_Mode();
 
@@ -31,10 +29,6 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     void IGamemode.PlayerTagged(CharacterManager charTagged) => PlayerTagged(charTagged);
     bool IGamemode.WinCondition() => ThisWinCondition();
 
-    #endregion
-
-    #region Variables Needed
-
     //Variables needed for the gamemode
     [SerializeField]
     private RoundManager roundManager;
@@ -49,19 +43,11 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     private int iCurrentGeneratorsComplete = 0;
     private int iGeneratorsNeeded = 3;
 
-    #endregion
-
-    #region Unity Methods
-
     //Getting the needed components
     private void OnEnable()
     {
         roundManager = roundManager ?? GetComponent<RoundManager>();
     }
-
-    #endregion
-
-    #region Interface Methods
 
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
@@ -145,8 +131,6 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     {
         return GAMEMODE_INDEX.SABOTAGE;
     }
-
-    #endregion
 
     #region Public Methods
 

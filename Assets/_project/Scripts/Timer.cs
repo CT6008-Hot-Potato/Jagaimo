@@ -9,8 +9,6 @@
 //A class not attached to unity to handle the timer float
 public class Timer
 {
-    #region Variables Needed
-
     //Could be locked
     public bool isLocked;
     public bool isActive;
@@ -20,10 +18,6 @@ public class Timer
 
     public float min_time { get; private set; }
     public float current_time { get; private set; }
-
-    #endregion
-
-    #region Public Methods
 
     //Constructor
     public Timer(float duration)
@@ -49,17 +43,7 @@ public class Timer
 
         current_time -= delta_time;
         EndCheck();
-    }
-
-    //If something wants to add/remove time
-    public void OverrideCurrentTime(float amountToChangeBy)
-    {
-        current_time += amountToChangeBy;
-    }
-
-    #endregion
-
-    #region Private Methods
+    } 
 
     //Function to check if timer ran out
     private void EndCheck()
@@ -72,5 +56,9 @@ public class Timer
         }
     }
 
-    #endregion
+    //If something wants to add/remove time
+    public void OverrideCurrentTime(float amountToChangeBy)
+    {
+        current_time += amountToChangeBy;
+    }
 }
