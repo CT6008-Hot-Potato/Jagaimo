@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a03df156711afa148a19bd2e2d710127, type: 3}
+  m_Name: ParticleProfile
+  m_EditorClassIdentifier: 
+  Particles:
+  - Name: Fuse
+    particle: 1
+    ParticlePrefab: {fileID: 7648445947321375022, guid: 4daddea8b9c244346a0a96ae00234a63,
+      type: 3}
+    Duration: 1
+  - Name: AimTrail
+    particle: 2
+    ParticlePrefab: {fileID: 726055801021238971, guid: 21feabf4aed26dd488d666d6b1c9a56d,
+      type: 3}
+    Duration: 1
+  - Name: AirImpact
+    particle: 3
+    ParticlePrefab: {fileID: 8092683677805224588, guid: e34abebb1ef6ccf4d947e5ab52a9cca9,
+      type: 3}
+    Duration: 0.375
+  - Name: Bloodburst
+    particle: 4
+    ParticlePrefab: {fileID: 7165264528115669479, guid: 25008307b674fb04e948eb85a642cc1a,
+      type: 3}
+    Duration: 1
+  - Name: ConfettiBurst
+    particle: 5
+    ParticlePrefab: {fileID: 1303839264007751347, guid: 277a38b7978478446ad7c60d1f9b2819,
+      type: 3}
+    Duration: 0.5
+  - Name: Jump Dust
+    particle: 7
+    ParticlePrefab: {fileID: 2882717948819486401, guid: 1893f7997a5c31345a5de51996cf5a54,
+      type: 3}
+    Duration: 0.5
+  - Name: Land Impact
+    particle: 8
+    ParticlePrefab: {fileID: 8675475674887668326, guid: 3ad784ebfe6f1fb42854b11141a95642,
+      type: 3}
+    Duration: 0.5

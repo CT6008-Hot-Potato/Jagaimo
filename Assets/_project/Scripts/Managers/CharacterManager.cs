@@ -35,7 +35,19 @@ public class CharacterManager : MonoBehaviour
     [SerializeField]
     private SoundManager soundManager;
     [SerializeField]
-    private ParticleSystem elimVFX;
+    private GameSettingsContainer settings;
+
+    //[SerializeField]
+    //private bool bUsingConfettiVFX = false;
+    [SerializeField]
+    private ScriptableParticles particlePlayer;
+    [SerializeField]
+    private ScriptableParticles.Particle elimVFX = ScriptableParticles.Particle.BloodBurst;
+    [SerializeField]
+    private ScriptableParticles.Particle confettiElimVFX = ScriptableParticles.Particle.ConfettiBurst;
+    //Where the particles are played from when the player is eliminated
+    [SerializeField]
+    private Transform headTransform;
     [SerializeField]
     private GameObject taggedDisplayObject;
 
@@ -51,6 +63,7 @@ public class CharacterManager : MonoBehaviour
         _playerAnimation = _playerAnimation ?? GetComponent<PlayerAnimation>();
 
         soundManager = FindObjectOfType<SoundManager>();
+        settings = GameSettingsContainer.instance;
     }
 
     private void Start()
@@ -63,6 +76,17 @@ public class CharacterManager : MonoBehaviour
         else
         {
             isPlayer = false;
+        }
+
+        if (settings)
+        {
+            //The mutator for using confetti is true, so swap out the elim vfx for the confetti one
+            if (settings.HasGenMutator(14))
+            {
+                //bUsingConfettiVFX = true;
+                //Not sure if this works tbh (test this)
+                elimVFX = confettiElimVFX;
+            }
         }
     }
 
@@ -88,15 +112,30 @@ public class CharacterManager : MonoBehaviour
             _cam.cameraState = PlayerCamera.cS.FREECAMUNCONSTRAINED;
         }
 
-        //Play VFX + Sound
+        //Play Sound
         if (soundManager)
         {
             soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
         }
 
-        if (elimVFX)
+        //Play vfx
+        if (particlePlayer)
         {
-            elimVFX.Play();
+            //Play it on the head spot
+            if (headTransform)
+            {
+                Instantiate(particlePlayer.CreateParticle(elimVFX, Vector3.zero), headTransform);
+            }
+            else
+            {
+                //Play it from the feet?
+                Instantiate(particlePlayer.CreateParticle(elimVFX, Vector3.zero), transform);
+
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("No head transform given", this);
+                }
+            }
         }
 
         //Turn all non-important scripts off (ones that allow the player to interact especially)
