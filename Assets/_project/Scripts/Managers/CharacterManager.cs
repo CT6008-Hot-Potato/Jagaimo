@@ -35,7 +35,14 @@ public class CharacterManager : MonoBehaviour
     [SerializeField]
     private SoundManager soundManager;
     [SerializeField]
+    private GameSettingsContainer settings;
+
+    //[SerializeField]
+    //private bool bUsingConfettiVFX = false;
+    [SerializeField]
     private ParticleSystem elimVFX;
+    [SerializeField]
+    private ParticleSystem confettiElimVFX;
     [SerializeField]
     private GameObject taggedDisplayObject;
 
@@ -51,6 +58,7 @@ public class CharacterManager : MonoBehaviour
         _playerAnimation = _playerAnimation ?? GetComponent<PlayerAnimation>();
 
         soundManager = FindObjectOfType<SoundManager>();
+        settings = GameSettingsContainer.instance;
     }
 
     private void Start()
@@ -63,6 +71,17 @@ public class CharacterManager : MonoBehaviour
         else
         {
             isPlayer = false;
+        }
+
+        if (settings)
+        {
+            //The mutator for using confetti is true, so swap out the elim vfx for the confetti one
+            if (settings.HasGenMutator(14))
+            {
+                //bUsingConfettiVFX = true;
+                //Not sure if this works tbh (test this)
+                elimVFX = confettiElimVFX;
+            }
         }
     }
 
