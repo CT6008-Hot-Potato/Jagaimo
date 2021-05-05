@@ -80,6 +80,7 @@ public class PlayerCamera : MonoBehaviour
     private float freeCamValueY;
     public bool flipSpin;
     public bool freecamLock = false;
+    public bool cameraRotationLock = false;
     #endregion Variables
 
     #region Enums
@@ -286,7 +287,7 @@ public class PlayerCamera : MonoBehaviour
     void CameraType()
     {        
 
-        if (pC.GetMovement() != 0)
+        if (pC.GetMovement() != 0 && cameraRotationLock == false)
         {
             switch (cameraState)
             {
