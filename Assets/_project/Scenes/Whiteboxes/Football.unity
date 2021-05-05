@@ -6000,11 +6000,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
-      propertyPath: testMode
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
-        type: 3}
       propertyPath: eventText
       value: 
       objectReference: {fileID: 1919196162}
