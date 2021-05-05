@@ -23,7 +23,7 @@ public class WorldBounds : MonoBehaviour
         {
             other.transform.position = new Vector3(0, 5, 0);
         }
-        else
+        else if (other.tag != "PositionStay")
         {
             other.transform.position = position;
         }
