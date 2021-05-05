@@ -14,6 +14,7 @@ public class WorldBounds : MonoBehaviour
 {
     [SerializeField]
     private Vector3 position;
+
     //When something enters the bounds
     private void OnTriggerEnter(Collider other)
     {

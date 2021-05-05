@@ -25,7 +25,7 @@ public class CarryCollision : MonoBehaviour
     //Coroutine giving brief window of pickup from position without collision
     IEnumerator WaitFirst()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(1f);
         canCollide = true;
     }
     //Drop the carried object when it something is within it's collision
