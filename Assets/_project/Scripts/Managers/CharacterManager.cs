@@ -40,9 +40,14 @@ public class CharacterManager : MonoBehaviour
     //[SerializeField]
     //private bool bUsingConfettiVFX = false;
     [SerializeField]
-    private ParticleSystem elimVFX;
+    private ScriptableParticles particlePlayer;
     [SerializeField]
-    private ParticleSystem confettiElimVFX;
+    private ScriptableParticles.Particle elimVFX = ScriptableParticles.Particle.BloodBurst;
+    [SerializeField]
+    private ScriptableParticles.Particle confettiElimVFX = ScriptableParticles.Particle.ConfettiBurst;
+    //Where the particles are played from when the player is eliminated
+    [SerializeField]
+    private Transform headTransform;
     [SerializeField]
     private GameObject taggedDisplayObject;
 
@@ -107,15 +112,30 @@ public class CharacterManager : MonoBehaviour
             _cam.cameraState = PlayerCamera.cS.FREECAMUNCONSTRAINED;
         }
 
-        //Play VFX + Sound
+        //Play Sound
         if (soundManager)
         {
             soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
         }
 
-        if (elimVFX)
+        //Play vfx
+        if (particlePlayer)
         {
-            elimVFX.Play();
+            //Play it on the head spot
+            if (headTransform)
+            {
+                Instantiate(particlePlayer.CreateParticle(elimVFX, Vector3.zero), headTransform);
+            }
+            else
+            {
+                //Play it from the feet?
+                Instantiate(particlePlayer.CreateParticle(elimVFX, Vector3.zero), transform);
+
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("No head transform given", this);
+                }
+            }
         }
 
         //Turn all non-important scripts off (ones that allow the player to interact especially)

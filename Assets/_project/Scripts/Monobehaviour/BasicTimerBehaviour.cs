@@ -46,6 +46,11 @@ public class BasicTimerBehaviour : MonoBehaviour
         StartCoroutine(Co_RunTimer());
     }
 
+    public void SetDuration(float newDuration)
+    {
+        duration = newDuration;
+    }
+
     #endregion
 
     #region Private Methods
