@@ -8,7 +8,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#region Mutator Class
+#region Mutator Classes
 
 //A more concise version of MutatorUI to be sent over scenes/ networks with less information
 [System.Serializable]
@@ -32,12 +32,17 @@ public class PackagedMutator
 
 public class MutatorPackager : MonoBehaviour
 {
-    #region Variables Needed
+    #region Public Fields
 
     public static MutatorPackager instance;
 
     //A reference to the current gamemode selected
     public GAMEMODE_INDEX Gamemode = GAMEMODE_INDEX.CLASSIC;
+
+    #endregion
+
+    #region Private Variables
+
 
     #endregion
 

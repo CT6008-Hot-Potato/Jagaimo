@@ -12,7 +12,6 @@ using UnityEngine;
 
 public class ScrollerText : MonoBehaviour
 {
-    #region Class Enum
     private enum RoundTexts
     {
         START       = 0, 
@@ -20,14 +19,8 @@ public class ScrollerText : MonoBehaviour
         ELIMINATED  = 2,
         PLAYERS_WON  = 3,
         BLUE_TEAM_GOAL = 4,
-        RED_TEAM_GOAL = 5,
-        BLUE_TEAM_WIN = 6,
-        RED_TEAM_WIN = 7
+        RED_TEAM_GOAL = 5
     }
-
-    #endregion
-
-    #region Variables Needed
 
     [SerializeField]
     private RoundManager manager;
@@ -47,56 +40,19 @@ public class ScrollerText : MonoBehaviour
     [SerializeField]
     private List<RectTransform> rectTransforms;
 
-    #endregion
-
-    #region Unity Methods
-
     private void OnEnable()
     {
         RoundManager.CountdownStarted += AddGameStartText;
+        RoundManager.CountdownEnded += AddEliminationText;
         RoundManager.RoundEnded += AddWinText;
     }
 
     private void OnDisable()
     {
         RoundManager.CountdownStarted -= AddGameStartText;
+        RoundManager.CountdownEnded -= AddEliminationText;
         RoundManager.RoundEnded -= AddWinText;
     }
-
-    #endregion
-
-    #region Public Methods
-
-    public void AddTaggedText()
-    {
-        AddText(RoundTexts.TAGGED);
-    }
-
-    public void AddEliminationText()
-    {
-        AddText(RoundTexts.ELIMINATED);
-    }
-
-    public void AddWinText()
-    {
-        AddText(RoundTexts.PLAYERS_WON);
-    }
-
-    public void AddGoalText(bool blueTeamScored)
-    {
-        if (blueTeamScored)
-        {
-            AddText(RoundTexts.BLUE_TEAM_GOAL);
-        }
-        else
-        {
-            AddText(RoundTexts.RED_TEAM_GOAL);
-        }
-    }
-
-    #endregion
-
-    #region Private Methods
 
     //Checking the current queue
     private void CheckQueue()
@@ -142,6 +98,33 @@ public class ScrollerText : MonoBehaviour
         AddText(RoundTexts.START);
     }
 
+    public void AddTaggedText()
+    {
+        AddText(RoundTexts.TAGGED);
+    }
+
+    public void AddEliminationText()
+    {
+        AddText(RoundTexts.ELIMINATED);
+    }
+
+    public void AddWinText()
+    {
+        AddText(RoundTexts.PLAYERS_WON);
+    }
+
+    public void AddGoalText(bool blueTeamScored)
+    {
+        if (blueTeamScored)
+        {
+            AddText(RoundTexts.BLUE_TEAM_GOAL);
+        }
+        else
+        {
+            AddText(RoundTexts.RED_TEAM_GOAL);
+        }
+    }
+
     //Instantiating the text object and adding it to the queue, then checking to see if a text needs removing
     private void AddText(RoundTexts REvent)
     {
@@ -158,6 +141,4 @@ public class ScrollerText : MonoBehaviour
         //Seeing if the top text needs to be removed
         CheckTop();
     }
-
-    #endregion
 }

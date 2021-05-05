@@ -92,9 +92,7 @@ public class GameCreationSettings : MonoBehaviour
         UpdateMapGroup(0);
 
         //Change the map mutators section
-        MutatorUI.UpdateAllMutatorValues();
-        SelectedGamemode = Current_GamemodesUI[0];
-        MutatorUI.UpdateAllMutatorTexts(iCurrentMapSelection);
+        MutatorUI.UpdateMapMutators(iCurrentMapSelection);
     }
 
     //A different gamemode was selected
@@ -129,26 +127,7 @@ public class GameCreationSettings : MonoBehaviour
         MutatorPackager.instance.MakeChangedMutatorArrays(bLocalPlayerSettings, GeneralMutators, SelectedGamemode.GamemodeMutators, MapMutators);
 
         //Loading the right map, other scripts in scene will make the relevant changes based on gamemode then mutators
-        switch (iCurrentMapSelection) 
-        {
-            case MAP_INDEX.STUDIO:
-                //If the map mutator "flipped" is ticked on
-                if (!MapMutators[1].isDefaultValue)
-                {
-                    SceneManager.LoadScene("Studio_Flipped");
-                }
-                else
-                {
-                    SceneManager.LoadScene("Studio");
-                }
-                break;
-            case MAP_INDEX.STADIUM:
-                //This map is... the same when flipped since it's symmetrical
-                SceneManager.LoadScene("Football");
-                break;
-            default:
-                break;
-        }
+        SceneManager.LoadScene("Studio");
     }
 
     #endregion

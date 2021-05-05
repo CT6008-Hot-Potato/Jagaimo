@@ -14,8 +14,6 @@ using TMPro;
 //We may want to make our own FPS Display at some point
 public class FPScounter : MonoBehaviour
 {
-    #region Variables Needed
-
     [SerializeField]
     int iFPSLimit = 60;
 
@@ -27,10 +25,6 @@ public class FPScounter : MonoBehaviour
     TextMeshProUGUI fpsText;
     [SerializeField]
     bool showFPS;
-
-    #endregion
-
-    #region Unity Methods
 
     void Start()
     {
@@ -54,6 +48,4 @@ public class FPScounter : MonoBehaviour
             fpsText.text = "" + (int)current_fps;
         }
     }
-
-    #endregion
 }

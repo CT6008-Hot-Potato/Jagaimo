@@ -2,7 +2,7 @@
 //
 //  Script Name: GameManager.cs
 //  Creator: Charles Carter
-//  Description: A manager script for the game as a whole (might not be needed)
+//  Description: A manager script for the game as a whole
 //  
 /////////////////////////////////////////////////////////////
 

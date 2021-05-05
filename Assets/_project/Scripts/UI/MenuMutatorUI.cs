@@ -88,28 +88,18 @@ public class MenuMutatorUI : MonoBehaviour
 
     #region Unity Methods
 
+    private void Awake()
+    {
+        UpdateAllMutatorValues();
+
+        creationSettings.SelectedGamemode = creationSettings.Current_GamemodesUI[0];
+
+        UpdateAllMutatorTexts();
+    }
 
     #endregion
 
     #region Public Methods
-    public void UpdateAllMutatorValues()
-    {
-        creationSettings.GeneralMutators = GeneralMutators;
-
-        creationSettings.Current_GamemodesUI[(int)GAMEMODE_INDEX.CLASSIC].GamemodeMutators = ClassicMutators;
-        creationSettings.Current_GamemodesUI[(int)GAMEMODE_INDEX.INFECTED].GamemodeMutators = InfectedMutators;
-        creationSettings.Current_GamemodesUI[(int)GAMEMODE_INDEX.FOOTBALL].GamemodeMutators = FootballMutators;
-        creationSettings.Current_GamemodesUI[(int)GAMEMODE_INDEX.SABOTAGE].GamemodeMutators = SabotageMutators;
-
-        creationSettings.MapMutators = MapMutators;
-    }
-
-    public void UpdateAllMutatorTexts(MAP_INDEX currentMap)
-    {
-        UpdateAllGeneralMutatorTexts();
-        UpdateAllGamemodeMutatorTexts();
-        UpdateMapMutators(currentMap);
-    }
 
     //Updating all of the gamemode mutator texts
     public void UpdateAllGeneralMutatorTexts()
@@ -163,7 +153,7 @@ public class MenuMutatorUI : MonoBehaviour
         if (creationSettings)
         {
             creationSettings.MapMutators[mutatorID].value = newValue;
-            UpdateMapMutatorText(mutatorID);
+            UpdateSpecificGamemodeMutatorText(mutatorID);
         }
     }
 
@@ -230,6 +220,25 @@ public class MenuMutatorUI : MonoBehaviour
     #endregion
 
     #region Private Methods
+
+    private void UpdateAllMutatorValues()
+    {
+        creationSettings.GeneralMutators = GeneralMutators;
+
+        creationSettings.Current_GamemodesUI[(int)GAMEMODE_INDEX.CLASSIC].GamemodeMutators = ClassicMutators;
+        creationSettings.Current_GamemodesUI[(int)GAMEMODE_INDEX.INFECTED].GamemodeMutators = InfectedMutators;
+        creationSettings.Current_GamemodesUI[(int)GAMEMODE_INDEX.FOOTBALL].GamemodeMutators = FootballMutators;
+        creationSettings.Current_GamemodesUI[(int)GAMEMODE_INDEX.SABOTAGE].GamemodeMutators = SabotageMutators;
+
+        creationSettings.MapMutators = MapMutators;
+    }
+
+    private void UpdateAllMutatorTexts()
+    {
+        UpdateAllGeneralMutatorTexts();
+        UpdateAllGamemodeMutatorTexts();
+        UpdateMapMutators(MAP_INDEX.STUDIO);
+    }
 
     //Updating all of the texts for all gamemodes
     private void UpdateAllGamemodeMutatorTexts()
