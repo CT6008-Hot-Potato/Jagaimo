@@ -22,6 +22,10 @@ public class Potato : MonoBehaviour
     private Collider _coll;
     [SerializeField]
     private PhysicMaterial bouncyMaterial;
+    [SerializeField]
+    private ScriptableParticles particlePlayer;
+    [SerializeField]
+    private Transform fusePoint;
 
     #endregion
 
@@ -43,6 +47,13 @@ public class Potato : MonoBehaviour
                 //Making the potato bouncy
                 _coll.material = bouncyMaterial;
             }
+        }
+
+        //If there is a player set and a position to put it
+        if (particlePlayer && fusePoint)
+        {
+            //Instantiating the correct prefab under the right transform
+            Instantiate(particlePlayer.CreateParticle(ScriptableParticles.Particle.Fuse, Vector3.zero), fusePoint);
         }
     }
 
