@@ -15,6 +15,8 @@ using UnityEngine;
 //This will mostly be in the other scripts anyway
 public class DefaultGamemode : MonoBehaviour, IGamemode
 {
+    #region Interfact Contract Expressions
+
     //Fulfilling the interfaces contracted functions
     GAMEMODE_INDEX IGamemode.Return_Mode() => Return_Mode();
     
@@ -30,6 +32,10 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     void IGamemode.PlayerTagged(CharacterManager charTagged)      => PlayerTagged(charTagged);
     bool IGamemode.WinCondition()      => ThisWinCondition();
 
+    #endregion
+
+    #region Variables Needed
+
     //Variables needed for the gamemode
     [SerializeField]
     private RoundManager roundManager;
@@ -42,6 +48,8 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
 
     //How many countdowns have happened so far
     private int iCountdownIndex = 0;
+
+    #endregion
 
     #region Unity Methods
 
@@ -222,6 +230,8 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
 
     #endregion
 
+    #region Private Methods
+
     private CharacterManager getRandomCharacter()
     {
         if (currentActivePlayers.Count > 0)
@@ -234,4 +244,6 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
             return null;
         }
     }
+
+    #endregion
 }

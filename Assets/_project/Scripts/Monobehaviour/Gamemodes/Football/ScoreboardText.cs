@@ -12,6 +12,7 @@ public class ScoreboardText : MonoBehaviour
 {
     #region Variables Needed
 
+    [Header("Text variables")]
     //The score texts
     [SerializeField]
     private TextMeshProUGUI redScoreText;
@@ -19,8 +20,8 @@ public class ScoreboardText : MonoBehaviour
     private TextMeshProUGUI blueScoreText;
 
     //Instead of passing over the score, just having an internal reference doesnt take up too much space
-    int BlueScore = 0;
-    int RedScore = 0;
+    private int BlueScore = 0;
+    private int RedScore = 0;
 
     #endregion
 
