@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Transform rotationPosition;
     private Rigidbody rb;
-    private float speed;
+    public float speed;
     private float downForce = 15;
     public bool grounded = false;
     private bool sliding = false;
@@ -386,7 +386,7 @@ public class PlayerController : MonoBehaviour
         while (timer.isActive)
         {
             timer.Tick(Time.deltaTime);
-            pC.ChangeYaw();
+            pC.ChangeYaw(720);
             yield return null;
         }
         rb.velocity = Vector3.zero;

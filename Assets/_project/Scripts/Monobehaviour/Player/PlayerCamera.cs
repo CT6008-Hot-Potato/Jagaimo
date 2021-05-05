@@ -271,15 +271,15 @@ public class PlayerCamera : MonoBehaviour
     }
 
     //Function to set yaw valye
-    public void ChangeYaw()
+    public void ChangeYaw(float timeMultiplier)
     {
         if (flipSpin)
         {
-            yaw = yaw - Time.deltaTime * 700;
+            yaw = yaw - Time.deltaTime * timeMultiplier;
         }
         else
         {
-            yaw = yaw + Time.deltaTime * 700;
+            yaw = yaw + Time.deltaTime * timeMultiplier;
         }
     }
 
