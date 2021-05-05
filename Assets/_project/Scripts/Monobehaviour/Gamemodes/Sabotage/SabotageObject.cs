@@ -78,6 +78,7 @@ public class SabotageObject : MonoBehaviour, IInteractable
             //The timer is over
             if (!sabotageTimer.isActive)
             {
+                //So tell the manager the generator is finished
                 sabotageManager.GeneratorFinished(this);
             }
         }
@@ -100,9 +101,11 @@ public class SabotageObject : MonoBehaviour, IInteractable
         isBeingUsed = true;
         charsInteracting.Add(charInteracting);
 
-        if (soundManager)
+        //There is a sound manager, and there's only 1 character interacting with this generator
+        if (soundManager && charsInteracting.Count == 1)
         {
             //Start fixing sound
+            soundManager.PlaySound(ScriptableSounds.Sounds.PowerUp, transform.position);
         }
     }
 
@@ -113,6 +116,7 @@ public class SabotageObject : MonoBehaviour, IInteractable
         if (soundManager)
         {
             //Stop fixing sound
+            soundManager.PlaySound(ScriptableSounds.Sounds.Grabbing, transform.position);
         }
 
         if (charsInteracting.Count == 0)
