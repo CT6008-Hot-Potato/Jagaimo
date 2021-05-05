@@ -265,7 +265,7 @@ public class PlayerInteraction : MonoBehaviour
                 //When object is being thrown first will check got rigidbody and then throw it
                 if (throwObject)
                 {
-                    rB.AddForce(firstPersonCamera.transform.forward * throwStrength, ForceMode.Impulse);
+                    rB.AddForce(firstPersonCamera.transform.forward * pC.speed, ForceMode.Impulse);
                     //rB.velocity = GetComponent<Rigidbody>().velocity;
                 }
             }
