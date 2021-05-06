@@ -1,5 +1,5 @@
 ﻿////////////////////////////////////////////////////////////
-// File: LocalPlayMutatorContainer
+// File: GameSettingsContainer
 // Author: Charles Carter
 // Date Created: 18/02/21
 // Brief: The class which holds the mutators, gamemode and other data across local scenes

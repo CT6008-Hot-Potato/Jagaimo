@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7172547651974387216}
   - component: {fileID: 7172547651974387217}
+  - component: {fileID: 263327767283779295}
   m_Layer: 0
   m_Name: RoundManager
   m_TagString: Untagged
@@ -43,4 +44,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bdec4ac71d9c244fbae67423d897b75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialTagged: {fileID: 0}
+  startCountdown: {fileID: 0}
+  eventText: {fileID: 0}
+  localMPIndexer: {fileID: 0}
+  settings: {fileID: 0}
+  startWhenReady: 1
+--- !u!114 &263327767283779295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7172547651974387218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59eaf81da9931004bb3a48657a3bdf4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allSpots:
+    spots: []
+  arenaSpots: []

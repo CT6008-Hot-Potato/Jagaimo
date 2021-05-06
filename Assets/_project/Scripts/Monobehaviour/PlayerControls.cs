@@ -130,6 +130,14 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Any"",
+                    ""type"": ""Button"",
+                    ""id"": ""7ec4e526-9f73-453a-a01c-e6566f1d66eb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -354,8 +362,41 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""7d651a64-8bec-41da-9e7e-2145a2db8e96"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraScroll"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""6ea53950-4e63-45b9-b367-fe058340d3c3"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraScroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""d7aee551-7abf-4326-b5a5-a7c9c5e514a0"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraScroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
-                    ""id"": ""a9e196d5-0e3c-4c2b-9b91-f7d02a038676"",
+                    ""id"": ""391f73f2-89d4-462e-927c-03852a6b8d6b"",
                     ""path"": ""<Gamepad>/dpad/y"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -378,7 +419,18 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""d59a4dfe-2af6-4295-bc54-c22d1fbb9cc7"",
-                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraLock"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1b39e154-b1ff-442b-b9f8-c14824ad0729"",
+                    ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -539,6 +591,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""894a9e85-93d4-46f6-ba12-cbd193b4f9d4"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -598,6 +661,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Gameplay_CameraScroll = m_Gameplay.FindAction("CameraScroll", throwIfNotFound: true);
         m_Gameplay_CameraLock = m_Gameplay.FindAction("CameraLock", throwIfNotFound: true);
         m_Gameplay_Movement = m_Gameplay.FindAction("Movement", throwIfNotFound: true);
+        m_Gameplay_Any = m_Gameplay.FindAction("Any", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Escape = m_Menu.FindAction("Escape", throwIfNotFound: true);
@@ -673,6 +737,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_CameraScroll;
     private readonly InputAction m_Gameplay_CameraLock;
     private readonly InputAction m_Gameplay_Movement;
+    private readonly InputAction m_Gameplay_Any;
     public struct GameplayActions
     {
         private @PlayerControls m_Wrapper;
@@ -690,6 +755,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @CameraScroll => m_Wrapper.m_Gameplay_CameraScroll;
         public InputAction @CameraLock => m_Wrapper.m_Gameplay_CameraLock;
         public InputAction @Movement => m_Wrapper.m_Gameplay_Movement;
+        public InputAction @Any => m_Wrapper.m_Gameplay_Any;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -738,6 +804,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Movement.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement;
                 @Movement.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement;
                 @Movement.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement;
+                @Any.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAny;
+                @Any.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAny;
+                @Any.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAny;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -781,6 +850,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Movement.started += instance.OnMovement;
                 @Movement.performed += instance.OnMovement;
                 @Movement.canceled += instance.OnMovement;
+                @Any.started += instance.OnAny;
+                @Any.performed += instance.OnAny;
+                @Any.canceled += instance.OnAny;
             }
         }
     }
@@ -833,6 +905,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnCameraScroll(InputAction.CallbackContext context);
         void OnCameraLock(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
+        void OnAny(InputAction.CallbackContext context);
     }
     public interface IMenuActions
     {

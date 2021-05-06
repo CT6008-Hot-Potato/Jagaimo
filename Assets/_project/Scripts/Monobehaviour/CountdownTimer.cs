@@ -10,11 +10,12 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 
 //Bit different from other basic timers as it needs dev options
 public class CountdownTimer : MonoBehaviour
 {
+    #region Variables Needed
+
     [SerializeField]
     private RoundManager roundManager;
     private GameSettingsContainer settings;
@@ -28,10 +29,14 @@ public class CountdownTimer : MonoBehaviour
     [SerializeField]
     private Text timerText;
 
+    #endregion
+
+    #region Unity Methods
+
     private void Awake()
     {
         settings = GameSettingsContainer.instance;
-        roundManager = roundManager ?? FindObjectOfType<RoundManager>();
+        roundManager = roundManager ?? RoundManager.roundManager;
         timerText = timerText ?? GetComponent<Text>();
     }
 
@@ -69,12 +74,9 @@ public class CountdownTimer : MonoBehaviour
         RoundManager.RoundEnded -= RoundEnded;
     }
 
-    //Start the timer
-    private void StartTimer()
-    {
-        timerText.enabled = true;
-        StartCoroutine(Co_TimerBehaviour());
-    }
+    #endregion
+
+    #region Public Methods
 
     //End the timer forcefully
     public void TimerEndedDebug()
@@ -89,6 +91,44 @@ public class CountdownTimer : MonoBehaviour
     {
         enabled = false;
     }
+
+    //Dev Options
+    //Toggles Locked/Unlocked
+    public void LockTimer(bool newLocked)
+    {
+        if (roundTimer != null)
+        {
+            roundTimer.isLocked = newLocked;
+        }
+    }
+
+    //Changing the time by an amount given
+    public void EditTime(float change)
+    {
+        if (roundTimer.current_time + change < 0)
+        {
+            return;
+        }
+
+        roundTimer.OverrideCurrentTime(change);
+    }
+
+    //Reset really just starts a new timer
+    public void ResetTimer()
+    {
+        StartTimer();
+    }
+
+    //Start the timer
+    private void StartTimer()
+    {
+        timerText.enabled = true;
+        StartCoroutine(Co_TimerBehaviour());
+    }
+
+    #endregion
+
+    #region Private Methods
 
     //The timer behaviour (maybe should be refactored into a multiuse script)
     private IEnumerator Co_TimerBehaviour()
@@ -114,41 +154,24 @@ public class CountdownTimer : MonoBehaviour
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
-    //Dev Options
+    #endregion
 
-    //Toggles Locked/Unlocked (For Dev UI)
-    public void LockTimer(bool newLocked)
-    {
-        roundTimer.isLocked = newLocked;
-    }
-
-    //Changing the time by an amount given
-    public void EditTime(float change)
-    {
-        if (roundTimer.current_time + change < 0)
-        {
-            return;
-        }
-
-        roundTimer.OverrideCurrentTime(change);
-    }
-
-    //Reset really just starts a new timer
-    public void ResetTimer()
-    {
-        StartTimer();
-    }
+    #region Protected Methods
 
     protected float GetCurrentTime()
     {
         return roundTimer.current_time;
     }
+
     protected float GetMaxTime()
     {
         return roundTimer.max_time;
     }
+
     protected float GetMinTime()
     {
         return roundTimer.min_time;
     }
+
+    #endregion
 }

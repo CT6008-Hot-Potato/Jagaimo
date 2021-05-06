@@ -14,6 +14,7 @@ public class WorldBounds : MonoBehaviour
 {
     [SerializeField]
     private Vector3 position;
+
     //When something enters the bounds
     private void OnTriggerEnter(Collider other)
     {
@@ -22,13 +23,13 @@ public class WorldBounds : MonoBehaviour
         {
             other.transform.position = new Vector3(0, 5, 0);
         }
-        else
+        else if (other.tag != "PositionStay")
         {
             other.transform.position = position;
         }
         if (Debug.isDebugBuild)
         {
-            Debug.Log("Something left the map", this);
+            Debug.Log("Something left the map: " + other.name, this);
         }
     }
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4e806337da62ed64ea0c8ee91b430636
+guid: f9d3667a32702dc48a3083674474b128
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -10,7 +10,8 @@ TrueTypeFontImporter:
   includeFontData: 1
   fontNames:
   - Cosmic Blaster
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 4e806337da62ed64ea0c8ee91b430636, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

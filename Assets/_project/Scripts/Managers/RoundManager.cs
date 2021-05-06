@@ -7,20 +7,13 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 //A class to hold the events that happen throughout the round, a round is a full game where the win condition of the gamemode is met
 public class RoundManager : MonoBehaviour
 {
-    //There should only be 1 on scenes
-    public static RoundManager roundManager;
-
-    //The current gamemode
-    IGamemode _currentGamemode;
+    #region Delegate Events 
 
     //Defining Delegate
     public delegate void RoundEvent();
@@ -34,6 +27,16 @@ public class RoundManager : MonoBehaviour
 
     //For multiplayer ?
     //public static event CountdownEvent CountdownPauseToggle;
+
+    #endregion
+
+    #region Variables Needed
+
+    //There should only be 1 on scenes
+    public static RoundManager roundManager;
+
+    //The current gamemode
+    public IGamemode _currentGamemode;
 
     //Bits and pieces that will be in some of the game scenes
     [SerializeField]
@@ -49,7 +52,20 @@ public class RoundManager : MonoBehaviour
 
     //Starting when the players are in, false for using the trigger
     [SerializeField]
-    bool startWhenReady = true;
+    private bool startWhenReady = true;
+
+    [Header("This is an index so it starts from 0")]
+    //The amount starts from 0, since it's compared to an index (this is for testing in scene)
+    [SerializeField]
+    private int iAmountOfExpectedPlayers = 1;
+
+    //Change this to quickly test gamemodes in scenes
+    [SerializeField]
+    private GAMEMODE_INDEX testMode;
+
+    #endregion
+
+    #region Unity Methods
 
     private void Awake()
     {
@@ -63,12 +79,28 @@ public class RoundManager : MonoBehaviour
             Destroy(this);
         }
 
+        //If there is a gamemode already on the object
+        if (TryGetComponent<IGamemode>(out var gamemode))
+        {
+            _currentGamemode = gamemode;
+        }
+
         //Getting the game settings saved over from the main menu
         GameSettingsContainer settingsContainer = GameSettingsContainer.instance;
 
         //There are settings to use
         if (settingsContainer)
         {
+            //The player count here starts from 0 but the settings one starts from 1
+            iAmountOfExpectedPlayers = (settingsContainer.iPlayercount - 1);
+
+            //There is a current gamemode already
+            if (_currentGamemode != null)
+            {
+                Destroy((MonoBehaviour)_currentGamemode);
+                _currentGamemode = null; 
+            }
+
             //Depending on which gamemode, a different script is added
             switch (settingsContainer.index)
             {
@@ -87,20 +119,27 @@ public class RoundManager : MonoBehaviour
                 default:
                     break;
             }
-
-
-        }
-
-        //If there is a gamemode already on the object
-        if (!TryGetComponent<IGamemode>(out var gamemode))
-        {
-            _currentGamemode = gamemode;
         }
 
         //For some reason no gamemode was applied and none was on the object
         if (_currentGamemode == null)
         {
-            _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
+            //Depending on the test mode variable set in the inspector, add a different gamemode
+            switch (testMode)
+            {
+                case GAMEMODE_INDEX.INFECTED:
+                    _currentGamemode = gameObject.AddComponent<InfectedGamemode>();
+                    break;
+                case GAMEMODE_INDEX.SABOTAGE:
+                    _currentGamemode = gameObject.AddComponent<SabotageGamemode>();
+                    break;
+                case GAMEMODE_INDEX.FOOTBALL:
+                    _currentGamemode = gameObject.AddComponent<FootballGamemode>();
+                    break;
+                default:
+                    _currentGamemode = gameObject.AddComponent<DefaultGamemode>();
+                    break;
+            }
         }
     }
 
@@ -110,29 +149,9 @@ public class RoundManager : MonoBehaviour
         StartCoroutine(Co_WaitUntilPlayers());
     }
 
-    //The coroutine that waits for players before setting the active players
-    private IEnumerator Co_WaitUntilPlayers()
-    {
-        if (!localMPIndexer && Debug.isDebugBuild)
-        {
-            Debug.Log("Set An MP Screen Partitioner on this object", this);
-            StopCoroutine(Co_WaitUntilPlayers());
-        }
+    #endregion
 
-        while (localMPIndexer.playerIndex == 0)
-        {
-            yield return null;
-        }
-
-        //This will be done on round start and use non spectator characters in actual version
-        _currentGamemode.SetActivePlayers(FindObjectsOfType<CharacterManager>());
-
-        if (startWhenReady)
-        {
-            startCountdown.CallOnTimerStart();
-            CallOnRoundStart();
-        }
-    }
+    #region Public Methods
 
     //Calling the RoundStarted Delegate Event
     public void CallOnRoundStart()
@@ -146,8 +165,9 @@ public class RoundManager : MonoBehaviour
             }
 
             RoundStarted.Invoke();
-            _currentGamemode.RoundStarted();
         }
+
+        _currentGamemode.RoundStarted();
     }
 
     //Calling the RoundEnded Delegate Event
@@ -157,8 +177,9 @@ public class RoundManager : MonoBehaviour
         if (RoundEnded != null)
         {
             RoundEnded.Invoke();
-            _currentGamemode.RoundEnded();
         }
+
+        _currentGamemode.RoundEnded();
     }
 
     //Calling the CountdownStarted Delegate Event
@@ -168,8 +189,9 @@ public class RoundManager : MonoBehaviour
         if (CountdownStarted != null)
         {
             CountdownStarted.Invoke();
-            _currentGamemode.CountdownStarted();
         }
+
+        _currentGamemode.CountdownStarted();
     }
 
     //Calling the CountdownEnded Delegate Event
@@ -179,14 +201,15 @@ public class RoundManager : MonoBehaviour
         if (CountdownEnded != null)
         {
             CountdownEnded.Invoke();
-            _currentGamemode.CountdownEnded();
         }
+
+        _currentGamemode.CountdownEnded();
     }
 
     //A player has been tagged
     public void OnPlayerTagged(CharacterManager charManager)
     {
-        if (!(MonoBehaviour)_currentGamemode  || !charManager)
+        if (!(MonoBehaviour)_currentGamemode || !charManager)
         {
             if (Debug.isDebugBuild)
             {
@@ -203,4 +226,34 @@ public class RoundManager : MonoBehaviour
             eventText.AddTaggedText();
         }
     }
+
+    #endregion
+
+    #region Private Methods
+
+    //The coroutine that waits for players before setting the active players
+    private IEnumerator Co_WaitUntilPlayers()
+    {
+        if (!localMPIndexer && Debug.isDebugBuild)
+        {
+            Debug.Log("Set An MP Screen Partitioner on this object", this);
+            StopCoroutine(Co_WaitUntilPlayers());
+        }
+
+        while (localMPIndexer.playerIndex < iAmountOfExpectedPlayers)
+        {
+            yield return null;
+        }
+
+        //This will be done on round start and use non spectator characters in actual version
+        _currentGamemode.SetActivePlayers(FindObjectsOfType<CharacterManager>());
+
+        if (startWhenReady)
+        {
+            startCountdown.CallOnTimerStart();
+            CallOnRoundStart();
+        }
+    }
+
+    #endregion
 }
