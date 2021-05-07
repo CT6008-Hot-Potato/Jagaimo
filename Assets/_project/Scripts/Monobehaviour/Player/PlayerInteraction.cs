@@ -40,6 +40,7 @@ public class PlayerInteraction : MonoBehaviour
     private ScriptableSounds.Sounds grabSound, throwSound;
     private PlayerAnimation pA;
     private SoundManager sM;
+    private PlayerController pC;
     public PlayerInput PlayerInput => playerInput;
     private float leftClick = 0;
     private float rightClick = 0;
@@ -50,6 +51,7 @@ public class PlayerInteraction : MonoBehaviour
     //Start method setting up and assigning values
     void Start()
     {
+        pC = FindObjectOfType<PlayerController>();
         pA = GetComponent<PlayerAnimation>();
         sM = FindObjectOfType<SoundManager>();
         cM = GameObject.FindObjectOfType<LocalMPScreenPartioning>();
@@ -80,6 +82,14 @@ public class PlayerInteraction : MonoBehaviour
             //Try get cameras and then quickly enable the main camera regardless of if third or first person to do raycast
             ray = new Ray(firstPersonCamera.transform.position, firstPersonCamera.transform.forward);
 
+            if (pC.grounded)
+            {
+                grabDistance = 5;
+            }
+            else
+            {
+                grabDistance = 1;
+            }
 
             //Do a raycast and check if the object needs to be dropped or picked up
             if (Physics.Raycast(ray, out hit, grabDistance))
@@ -255,7 +265,7 @@ public class PlayerInteraction : MonoBehaviour
                 //When object is being thrown first will check got rigidbody and then throw it
                 if (throwObject)
                 {
-                    rB.AddForce(firstPersonCamera.transform.forward * throwStrength, ForceMode.Impulse);
+                    rB.AddForce(firstPersonCamera.transform.forward * pC.speed, ForceMode.Impulse);
                     //rB.velocity = GetComponent<Rigidbody>().velocity;
                 }
             }

@@ -32,9 +32,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Transform rotationPosition;
     private Rigidbody rb;
-    private float speed;
+    public float speed;
     private float downForce = 15;
-    private bool grounded = false;
+    public bool grounded = false;
     private bool sliding = false;
     private bool climbing = false;
     private bool touchingWall;
@@ -65,10 +65,10 @@ public class PlayerController : MonoBehaviour
         INTERACTING,
         CROUCHING,
         WALKING,
+        STANDING
     }
     //Enum variable
     private pM playerMovement;
-
     #endregion Enum
 
     //Setting up and assigning on awake
@@ -129,7 +129,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         //If player movement state isn't interacting
-        if (playerMovement != pM.INTERACTING && pC.cameraState != PlayerCamera.cS.FREECAMUNCONSTRAINED)
+        if (playerMovement != pM.INTERACTING && playerMovement != pM.INTERACTING && pC.cameraState != PlayerCamera.cS.FREECAMUNCONSTRAINED)
         {
             //Calculate how fast player should be moving
             Vector3 targetVelocity = movementValue;
@@ -267,6 +267,10 @@ public class PlayerController : MonoBehaviour
                 //rebindingDisplay.DisplayBindingMenu(false);
                 playerMovement = pM.WALKING;
                 break;
+            case 3:
+                //MAKE SURE PLAYERS CAN EXIT THIS STATE
+                playerMovement = pM.STANDING;
+                break;
             default:
                 Debug.Log("Given value for ChangeMovement is too high.");
                 break;
@@ -382,7 +386,7 @@ public class PlayerController : MonoBehaviour
         while (timer.isActive)
         {
             timer.Tick(Time.deltaTime);
-            pC.ChangeYaw();
+            pC.ChangeYaw(720);
             yield return null;
         }
         rb.velocity = Vector3.zero;
