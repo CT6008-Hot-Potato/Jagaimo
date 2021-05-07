@@ -33,7 +33,14 @@ public class UIMenuBehaviour : MonoBehaviour
     //}
 
     public void SetupBehaviour()
-    {   
+    {
+        StartCoroutine(CountdownCoroutine());
+    }
+
+
+    IEnumerator CountdownCoroutine()
+    {
+        yield return new WaitForSeconds(3);
         UpdateUIMenuState(false);
     }
 
