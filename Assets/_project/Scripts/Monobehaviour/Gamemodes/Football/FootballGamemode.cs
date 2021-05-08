@@ -367,7 +367,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         {
             potatoRB.transform.position = Vector3.zero;
         }
-
+        
         //Having the time go to zero and go upwards
         countdownTimer.CountUpwards();
 

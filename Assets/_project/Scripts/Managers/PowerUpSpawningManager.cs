@@ -19,6 +19,9 @@ public class PowerUpSpawningManager : MonoBehaviour
     public GameObject[] powerUpPrefabs;
 
     [SerializeField]
+    private RoundManager rManager;
+
+    [SerializeField]
     private GameSettingsContainer settings;
 
     [SerializeField]
@@ -38,7 +41,15 @@ public class PowerUpSpawningManager : MonoBehaviour
     private bool waitingForPowerUpSpot = false;
     //The duration before the next power up is spawned
     [SerializeField]
-    private float spawningDuration = 20;
+    private float spawningDuration = 5;
+
+    //Incase the scroller text wants to say that there's a power up taken/spawned
+    [SerializeField]
+    private ScrollerText scroller;
+
+    //This is to use in the inspector to force the mutator to be on
+    [SerializeField]
+    private bool bSpawnPowerUps = false;
 
     #endregion
 
@@ -51,25 +62,39 @@ public class PowerUpSpawningManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        rManager = RoundManager.roundManager;
+
         //If there are local settings
         if (settings)
         {
             //Get the power ups mutator
-            if (settings.HasGenMutator(14))
+            if (settings.HasGenMutator(7) || bSpawnPowerUps)
             {
                 //Since there's a value, it must be true
                 spawnNextPowerUp = true;
                 waitingForPowerUpSpot = false;
+
+                waitTimer.SetDuration(spawningDuration);
             }
             //It doesnt have a value
             else
             {
-                //So this script is redundant
+                //So this script is redundant (which stops the timer from starting when the countdown starts)
                 enabled = false;
             }
         }
+    }
+
+    private void OnEnable()
+    {
+        RoundManager.CountdownStarted += StartPowerUpTimer;
+    }
+
+    private void OnDisable()
+    {
+        RoundManager.CountdownStarted -= StartPowerUpTimer;
     }
 
     #endregion
@@ -87,9 +112,15 @@ public class PowerUpSpawningManager : MonoBehaviour
                 //Finding the a spot and trying to spawn a random power up there
                 if (SpawnPowerUp(spawningManager.ReturnFreePowerUpSpot()))
                 {
+                    scroller.AddPowerUpSpawnText();
+
                     //The timer resets within this function
                     waitTimer.CallOnTimerStart();
                 }
+            }
+            else
+            {
+                waitingForPowerUpSpot = true;
             }
         }
     }
@@ -98,6 +129,17 @@ public class PowerUpSpawningManager : MonoBehaviour
 
     #region Private Methods
 
+    private void StartPowerUpTimer()
+    {
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Waiting for first power up", this);
+        }
+
+        //The timer resets within this function
+        waitTimer.CallOnTimerStart();
+    }
+
     //The spawning function, which might need some overrides/overloads at some point
     private bool SpawnPowerUp(Vector3 positionToSpawn)
     {
@@ -105,7 +147,12 @@ public class PowerUpSpawningManager : MonoBehaviour
         {
             int iRandPowerUp = Random.Range(0, powerUpPrefabs.Length);
 
-            Instantiate(powerUpPrefabs[iRandPowerUp], transform);
+            Instantiate(powerUpPrefabs[iRandPowerUp], positionToSpawn, Quaternion.identity, transform);
+
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log("Power Up: " + iRandPowerUp + " spawned", this);
+            }
 
             return true;
         }

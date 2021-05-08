@@ -117,7 +117,7 @@ public class CharacterManager : MonoBehaviour
         //Play Sound
         if (soundManager)
         {
-            soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
+            //soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
         }
 
         //Play vfx
