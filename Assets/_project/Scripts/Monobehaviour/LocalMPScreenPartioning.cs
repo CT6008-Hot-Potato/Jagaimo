@@ -72,7 +72,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
         //Was played from the scene, anyone can join
         else if (singleLocalPlayer)
         {
-            playerManager.SetActive(false);
+            //playerManager.SetActive(false);
             Instantiate(playerPrefab, new Vector3(0, 1, 0), playerPrefab.transform.rotation);
         }
         else
@@ -105,6 +105,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
             PlayerCamera[] cameras = FindObjectsOfType<PlayerCamera>();
             for (int i = 0; i < cameras.Length; i++)
             {
+                Debug.Log(playerIndex);
                 cameras[i].playerIndex = i;
                 cameras[i].SetPlayerMask();
                 //Debug.Log(playerIndex + "PLAYER INDEX");
@@ -186,6 +187,5 @@ public class LocalMPScreenPartioning : MonoBehaviour
             }
         }
     }
-
     #endregion
 }

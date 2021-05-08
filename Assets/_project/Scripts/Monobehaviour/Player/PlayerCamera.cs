@@ -501,6 +501,7 @@ public class PlayerCamera : MonoBehaviour
                 zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, cameraZoomSpeed);
                 if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < cameraTransferDistance)
                 {
+
                     cameraState = cS.FIRSTPERSON;
                     transform.localRotation = Quaternion.Euler(0, thirdPersonCamera.transform.rotation.y, thirdPersonCamera.transform.rotation.z);
                 }
