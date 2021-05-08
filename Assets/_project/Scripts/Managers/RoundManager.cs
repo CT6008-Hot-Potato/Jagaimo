@@ -226,14 +226,9 @@ public class RoundManager : MonoBehaviour
 
             if (startWhenReady)
             {
-                startCountdown.CallOnTimerStart();
                 CallOnRoundStart();
+                startCountdown.CallOnTimerStart();
             }
-        }
-
-        if (Debug.isDebugBuild)
-        {
-            Debug.Log(playerJoinManager.playerCount + " to meet: " + iAmountOfExpectedPlayers);
         }
 
         while (playerJoinManager.playerCount < iAmountOfExpectedPlayers)
@@ -241,19 +236,10 @@ public class RoundManager : MonoBehaviour
             yield return null;
         }
 
-        if (Debug.isDebugBuild)
-        {
-            Debug.Log("Setting Active players");
-        }
-
         if (_currentGamemode != null)
         {
             //Tell the gamemode to get everything ready
             _currentGamemode.SetActivePlayers(GameObject.FindObjectsOfType<CharacterManager>());
-        }
-        else
-        {
-            Debug.Log("There's no gamemode to prepare"); 
         }
 
         if (startWhenReady)
