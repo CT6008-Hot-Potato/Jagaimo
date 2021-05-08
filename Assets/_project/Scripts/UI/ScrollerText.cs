@@ -21,8 +21,8 @@ public class ScrollerText : MonoBehaviour
         PLAYERS_WON  = 3,
         BLUE_TEAM_GOAL = 4,
         RED_TEAM_GOAL = 5,
-        BLUE_TEAM_WIN = 6,
-        RED_TEAM_WIN = 7
+        POWER_UP_SPAWNED = 6,
+        POWER_UP_TAKEN = 7
     }
 
     #endregion
@@ -97,6 +97,16 @@ public class ScrollerText : MonoBehaviour
         {
             AddText(RoundTexts.RED_TEAM_GOAL);
         }
+    }
+
+    public void AddPowerUpSpawnText()
+    {
+        AddText(RoundTexts.POWER_UP_SPAWNED);
+    }
+
+    public void AddPowerUpTakeText()
+    {
+        AddText(RoundTexts.POWER_UP_TAKEN);
     }
 
     #endregion
