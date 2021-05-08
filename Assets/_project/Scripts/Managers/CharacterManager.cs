@@ -213,7 +213,7 @@ public class CharacterManager : MonoBehaviour
         if (!_cam || !_movement) return;
 
         isPlayerLocked = false;
-
+         
         //Start player movement
         _movement.SetMovement(2);
 

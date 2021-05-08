@@ -51,6 +51,11 @@ public class ScrollerText : MonoBehaviour
 
     #region Unity Methods
 
+    private void Start()
+    {
+        manager = manager ?? RoundManager.roundManager;
+    }
+
     private void OnEnable()
     {
         RoundManager.CountdownStarted += AddGameStartText;

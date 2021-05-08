@@ -80,8 +80,6 @@ public class RoundManager : MonoBehaviour
             Destroy(this);
         }
 
-        playerJoinManager = PlayerInputManager.instance;
-
         //If there is a gamemode already on the object
         if (TryGetComponent<IGamemode>(out var gamemode))
         {
@@ -126,6 +124,8 @@ public class RoundManager : MonoBehaviour
 
     void Start()
     {
+        playerJoinManager = playerJoinManager ?? PlayerInputManager.instance;
+
         //Waiting for the players
         StartCoroutine(Co_WaitUntilPlayers());
     }
@@ -219,16 +219,6 @@ public class RoundManager : MonoBehaviour
         {
             Debug.Log("Set a player join manager here", this);
             StopCoroutine(Co_WaitUntilPlayers());
-
-            //Start anyways
-            //Tell the gamemode to get everything ready
-            _currentGamemode.SetActivePlayers(FindObjectsOfType<CharacterManager>());
-
-            if (startWhenReady)
-            {
-                CallOnRoundStart();
-                startCountdown.CallOnTimerStart();
-            }
         }
 
         while (playerJoinManager.playerCount < iAmountOfExpectedPlayers)
