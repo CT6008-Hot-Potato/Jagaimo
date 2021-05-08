@@ -13,7 +13,7 @@ using UnityEngine;
 
 [System.Serializable]
 //Each potential spot
-class SpawningSpot
+public class SpawningSpot
 {
     public Transform spotTransform;
     public bool isUsed;
@@ -21,7 +21,7 @@ class SpawningSpot
 
 [System.Serializable]
 //Each "arena" of spots
-class Arena
+public class Arena
 {
     public SpawningSpot[] spots;
 }
@@ -70,6 +70,19 @@ public class ArenaManager : MonoBehaviour
         }
 
         return arenaSpots[ArenaIndex].spots[randSpot].spotTransform.position;
+    }
+
+    //If I need the transform and rotation
+    public SpawningSpot ReturnRandomSpotForArena(int ArenaIndex)
+    {
+        int randSpot = Random.Range(0, arenaSpots[ArenaIndex].spots.Length);
+
+        while (arenaSpots[ArenaIndex].spots[randSpot].isUsed)
+        {
+            randSpot = Random.Range(0, arenaSpots[ArenaIndex].spots.Length);
+        }
+
+        return arenaSpots[ArenaIndex].spots[randSpot];
     }
 
     //Clearing known usage from a given arena

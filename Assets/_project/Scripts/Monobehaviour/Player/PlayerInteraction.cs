@@ -59,7 +59,7 @@ public class PlayerInteraction : MonoBehaviour
             if (settings.HasGamMutator(4))
             {
                 //Adding on 50% of the strength * the multiplier from the mutator
-                throwStrength += throwStrength * 0.5f * (int)settings.FindGeneralMutatorValue(4);
+                throwStrength += throwStrength * 0.2f * (int)settings.FindGeneralMutatorValue(4);
             }
         }
         //End of mutator intergration code

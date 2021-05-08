@@ -2578,7 +2578,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: f9d3667a32702dc48a3083674474b128, type: 3}
     m_FontSize: 250
     m_FontStyle: 1
     m_BestFit: 0
@@ -2620,7 +2620,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   timerText: {fileID: 1977434641621943114}
-  isDramatic: 0
 --- !u!1 &1977434641834430453
 GameObject:
   m_ObjectHideFlags: 0
@@ -2854,7 +2853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roundManager: {fileID: 0}
-  duration: 10
+  duration: 301
   timerText: {fileID: 1977434641884713773}
 --- !u!1 &1977434641915687142
 GameObject:
@@ -3250,4 +3249,6 @@ MonoBehaviour:
   - {fileID: 3416580257283484015, guid: a0d44876b9d26844681693e7623b7774, type: 3}
   - {fileID: 8385051375282115002, guid: 4f154b9900128b24394f537cae7f34ae, type: 3}
   - {fileID: 2939271385687439690, guid: 8aea7107a7c9e604e9bff7ca26202fb2, type: 3}
+  - {fileID: 7945729052038371454, guid: 829e154a162417144ba31d821e164f35, type: 3}
+  - {fileID: 4621081681064883030, guid: 95f8b9dd03c01c5478f3c34f30f51dc1, type: 3}
   rectTransforms: []

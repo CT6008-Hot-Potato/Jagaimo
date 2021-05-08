@@ -154,6 +154,7 @@ public class CharacterManager : MonoBehaviour
             _playerAnimation.CheckToChangeState("FallingBackDeath", true);
         }
 
+        LockPlayer();
 
         StartCoroutine(Co_TaggedEffect(2));
         //Wait 2s for animation to complete      
@@ -178,7 +179,11 @@ public class CharacterManager : MonoBehaviour
             taggedDisplayObject.SetActive(false);
         }
 
-        //Animations switch back to being without potato (?)
+        //Animations switch back to being idle
+        if (_playerAnimation)
+        {
+            _playerAnimation.CheckToChangeState("Idle", false); ;
+        }
     }
 
     /// <summary>
@@ -222,16 +227,16 @@ public class CharacterManager : MonoBehaviour
 
     private IEnumerator Co_TaggedEffect(float animDuration)
     {
-        _cam.cameraRotationLock = true;
 
         yield return new WaitForSeconds(animDuration);
+
+        UnLockPlayer();
 
         //Play VFX + Sound
         //Lerp into first person camera mode
         if (_cam)
         {
             _cam.SetCameraView(true);
-            _cam.cameraRotationLock = false;
         }
 
         if (taggedDisplayObject)

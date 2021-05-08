@@ -183,35 +183,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
     {
-        //If there's no arenamanager, there's nothing more to do
-        if (!arenaManager)
-        {
-            Debug.Log("There's no arena manager", this);
-
-            //Still need to add the active players for testing
-            for (int i = 0; i < charArray.Length; ++i)
-            {
-                currentActivePlayers.Add(charArray[i]);
-
-                //Even numbers on orange team, odd on blue team
-                if (i % 2 == 0)
-                {
-                    orangeTeam.Add(charArray[i]);
-                }
-                else
-                {
-                    blueTeam.Add(charArray[i]);
-                }
-            }
-
-            return;
-        }
-
-        spawnSpots = arenaManager.ReturnFootballSpawnIndexers(charArray.Length);
-        Transform spotTransform;
-        int spotUsed = 0;
-
-        //Going through the give array and adding it to the list
+        //Still need to add the active players for testing
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
@@ -219,27 +191,20 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             //Even numbers on orange team, odd on blue team
             if (i % 2 == 0)
             {
-                spotTransform = arenaManager.GettingSpot(1, spawnSpots[spotUsed]);
                 orangeTeam.Add(charArray[i]);
             }
             else
             {
-                spotTransform = arenaManager.GettingSpot(0, spawnSpots[spotUsed]);
                 blueTeam.Add(charArray[i]);
-
-                //Only increment it at the end of odd numbers so both teams get the same spot before it moves to the next
-                spotUsed++;
             }
-
-            charArray[i].transform.position = spotTransform.position;
-            charArray[i].transform.rotation = spotTransform.rotation;
         }
+
+        PutPlayersInSpawnPoints();
 
         if (Debug.isDebugBuild)
         {
             Debug.Log("Active players set, Amount of Active players: " + currentActivePlayers.Count, this);
         }
-
     }
 
     //Someone joins the game
@@ -272,7 +237,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
     private void RoundEnding()
     {
-
+        //The game ends when the countdown ends
     }
 
     //This is what happens when this countdown starts
@@ -334,7 +299,10 @@ public class FootballGamemode : MonoBehaviour, IGamemode
                 Transform spotTransform = arenaManager.GettingSpot(1, spawnSpots[i]);
 
                 orangeTeam[i].transform.position = spotTransform.position;
-                orangeTeam[i].transform.rotation = spotTransform.rotation;
+
+                //This is the "solution" to not being able to turn the player based on the prefab object
+                PlayerCamera camera = orangeTeam[i].GetComponent<PlayerCamera>();
+                camera.ChangeYaw(180 / Time.deltaTime);
             }
         }
 
@@ -345,9 +313,11 @@ public class FootballGamemode : MonoBehaviour, IGamemode
                 Transform spotTransform = arenaManager.GettingSpot(0, spawnSpots[i]);
 
                 blueTeam[i].transform.position = spotTransform.position;
-                blueTeam[i].transform.rotation = spotTransform.rotation;
             }
         }
+
+        //I would've preferred something like this
+        //blueTeam[i].transform.rotation = spotTransform.rotation;
     }
 
     private IEnumerator Co_GoalWait(float duration)

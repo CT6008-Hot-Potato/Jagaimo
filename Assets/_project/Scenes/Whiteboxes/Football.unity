@@ -6064,7 +6064,7 @@ PrefabInstance:
     - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
       propertyPath: iAmountOfExpectedPlayers
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7172547651974387218, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
@@ -6781,22 +6781,6 @@ PrefabInstance:
       propertyPath: TimerBehaviour.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1444861161}
-    - target: {fileID: 1977434641621943112, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: TimerBehaviour.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: CallOnCountdownStart
-      objectReference: {fileID: 0}
-    - target: {fileID: 1977434641621943114, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: m_FontData.m_Font
-      value: 
-      objectReference: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75,
-        type: 3}
-    - target: {fileID: 1977434641884713763, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: duration
-      value: 301
-      objectReference: {fileID: 0}
     - target: {fileID: 1977434641884713763, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
         type: 3}
       propertyPath: roundManager
@@ -6807,23 +6791,6 @@ PrefabInstance:
       propertyPath: manager
       value: 
       objectReference: {fileID: 1444861161}
-    - target: {fileID: 5699254339872500308, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: textMeshPrefabs.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5699254339872500308, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: textMeshPrefabs.Array.data[4]
-      value: 
-      objectReference: {fileID: 7945729052038371454, guid: 829e154a162417144ba31d821e164f35,
-        type: 3}
-    - target: {fileID: 5699254339872500308, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: textMeshPrefabs.Array.data[5]
-      value: 
-      objectReference: {fileID: 4621081681064883030, guid: 95f8b9dd03c01c5478f3c34f30f51dc1,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ec01ed5da9c4c2479db6938f0cd1761, type: 3}
 --- !u!114 &1919196161 stripped

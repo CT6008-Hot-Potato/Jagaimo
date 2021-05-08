@@ -38,6 +38,9 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     //Variables needed for the gamemode
     [SerializeField]
     private RoundManager roundManager;
+    [SerializeField]
+    private ArenaManager arenaManager;
+
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
     //Whoever escaped without the potato... or potentially the person with the potato if the time ran out
     private List<CharacterManager> playersWhoWon = new List<CharacterManager>();
@@ -56,7 +59,8 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     //Getting the needed components
     private void OnEnable()
     {
-        roundManager = roundManager ?? GetComponent<RoundManager>();
+        roundManager = roundManager ?? RoundManager.roundManager;
+        arenaManager = arenaManager ?? GetComponent<ArenaManager>();
     }
 
     #endregion
@@ -93,7 +97,8 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     //This runs when the round is about to start/ during the initial timer
     private void RoundStarting()
     {
-        //Make sure everything is in order... small cooldown before countdown to get everything
+        //Putting people in the correct positions
+        PutCharactersInStartPositions();
     }
 
     //A podium scene which ragdoll the players in order of elimination but doesnt go back to menu/lobby unless hit max round
@@ -175,6 +180,31 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     {
         //That player won
         playersWhoWon.Add(charWhoEscaped);
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private void PutCharactersInStartPositions()
+    {
+        //Putting the characters in random spots of the 0th arena
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If there is a spot (may not be due to inspector not being filled out)
+            if (arenaManager.isPossibleToSpawnIn(0))
+            {
+                SpawningSpot spot = arenaManager.ReturnRandomSpotForArena(0);
+                currentActivePlayers[i].gameObject.transform.position = spot.spotTransform.position;
+
+                //This is the "solution" to not being able to turn the player based on the prefab object
+                PlayerCamera camera = currentActivePlayers[i].GetComponent<PlayerCamera>();
+                camera.ChangeYaw(spot.spotTransform.rotation.eulerAngles.y / Time.deltaTime);
+                camera.flipSpin = !camera.flipSpin;
+
+                spot.isUsed = true;
+            }
+        }
     }
 
     #endregion
