@@ -80,7 +80,10 @@ public class BasicTimerBehaviour : MonoBehaviour
         timerText.enabled = false;
 
         //Run whatever is hooked up in the inspector
-        TimerBehaviour.Invoke();
+        if (TimerBehaviour != null)
+        {
+            TimerBehaviour.Invoke();
+        }
     }
 
     //Updating the timer text

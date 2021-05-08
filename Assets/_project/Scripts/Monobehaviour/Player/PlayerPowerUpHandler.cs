@@ -29,11 +29,7 @@ public class PlayerPowerUpHandler : MonoBehaviour
     {
         _cam = _cam ?? GetComponent<PlayerCamera>();
         _movement = _movement ?? GetComponent<PlayerController>();
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
         settings = GameSettingsContainer.instance;
 
         if (settings)
@@ -45,7 +41,11 @@ public class PlayerPowerUpHandler : MonoBehaviour
                 enabled = false;
             }
         }
+    }
 
+    // Start is called before the first frame update
+    void Start()
+    {
         if (!PowerUp_UI && Debug.isDebugBuild)
         {
             Debug.Log("There's no powerUpUI set", this);

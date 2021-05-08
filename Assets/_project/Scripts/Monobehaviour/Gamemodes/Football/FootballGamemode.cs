@@ -41,6 +41,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //Variables needed for the gamemode
     [SerializeField]
     private RoundManager roundManager;
+    [SerializeField]
+    private FootballObjectContainer footballVariables;
+
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
     
     private List<CharacterManager> blueTeam = new List<CharacterManager>();
@@ -65,6 +68,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     [SerializeField]
     private ArenaManager arenaManager;
 
+    //Dont edit in inspector, it's to view whether the values are correct or not
     [SerializeField]
     private List<int> spawnSpots = new List<int>();
 
@@ -84,6 +88,14 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     {
         roundManager = roundManager ?? GetComponent<RoundManager>();
         arenaManager = arenaManager ?? GetComponent<ArenaManager>();
+
+        footballVariables = footballVariables ?? FootballObjectContainer.footballObjectContainer;
+
+        countdownTimer = footballVariables.countdownTimer;
+        scrollerText = footballVariables.scrollerText;
+        scoreboard = footballVariables.scoreboard;
+        potatoRB = footballVariables.potatoRB;
+        goalPauseTimer = footballVariables.goalPauseTimer;
     }
 
     #endregion
@@ -132,6 +144,21 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
         //Having a few seconds before everything resets
         StartCoroutine(Co_GoalWait(5f));
+    }
+
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void LockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].LockPlayer();
+            }
+        }
     }
 
     //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
@@ -235,6 +262,12 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         {
             potatoRB.isKinematic = false;
         }
+        else if (Debug.isDebugBuild)
+        {          
+            Debug.Log("There's no potato RB", this);
+        }
+
+        LockAllPlayers();
     }
 
     private void RoundEnding()
@@ -245,7 +278,8 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
-        //Spawns players on their respective teams' sides
+        //Players are ready to go
+        UnlockAllPlayers();
     }
 
     //When the countdown ends

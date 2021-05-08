@@ -24,10 +24,10 @@ public class LocalMPScreenPartioning : MonoBehaviour
     private bool singleLocalPlayer;
     public bool isActive { get; private set; }
 
-    GameSettingsContainer settings;
+    private GameSettingsContainer settings;
 
     [SerializeField]
-    PlayerInputManager manager;
+    private PlayerInputManager manager;
 
     #endregion
 
@@ -35,6 +35,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
 
     private void Awake()
     {
+        //Code by Charles Carter
         settings = GameSettingsContainer.instance;
         manager = manager ?? GetComponent<PlayerInputManager>();
 
@@ -78,6 +79,8 @@ public class LocalMPScreenPartioning : MonoBehaviour
         {
             manager.EnableJoining();
         }
+
+        //Code by Charles Carter ends
 
         playerCameras = FindObjectsOfType<PlayerCamera>();
         playerIndex = (playerCameras.Length - 1) / 2;
