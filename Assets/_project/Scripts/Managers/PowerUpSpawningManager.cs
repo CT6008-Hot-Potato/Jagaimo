@@ -49,7 +49,7 @@ public class PowerUpSpawningManager : MonoBehaviour
 
     //This is to use in the inspector to force the mutator to be on
     [SerializeField]
-    private bool bSpawnPowerUps = false;
+    private bool bSpawnPowerUps;
 
     #endregion
 
@@ -70,7 +70,7 @@ public class PowerUpSpawningManager : MonoBehaviour
         if (settings)
         {
             //Get the power ups mutator
-            if (settings.HasGenMutator(7) || bSpawnPowerUps)
+            if (settings.HasGenMutator(7))
             {
                 //Since there's a value, it must be true
                 spawnNextPowerUp = true;
@@ -84,6 +84,13 @@ public class PowerUpSpawningManager : MonoBehaviour
                 //So this script is redundant (which stops the timer from starting when the countdown starts)
                 enabled = false;
             }
+        }
+        else if (bSpawnPowerUps)
+        {
+            spawnNextPowerUp = true;
+            waitingForPowerUpSpot = false;
+
+            waitTimer.SetDuration(spawningDuration);
         }
     }
 
