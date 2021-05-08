@@ -36,12 +36,13 @@ public class CountdownTimer : MonoBehaviour
     private void Awake()
     {
         settings = GameSettingsContainer.instance;
-        roundManager = roundManager ?? RoundManager.roundManager;
         timerText = timerText ?? GetComponent<Text>();
     }
 
     private void Start()
     {
+        roundManager = roundManager ?? RoundManager.roundManager;
+
         if (settings)
         {
             //If any come out with weird values, it'll need a fixing on the menu
@@ -119,6 +120,14 @@ public class CountdownTimer : MonoBehaviour
         StartTimer();
     }
 
+    public void CountUpwards()
+    {
+        //Turning the text back on
+        timerText.enabled = true;
+        //Starting the infinite timer
+        StartCoroutine(Co_InverseTimerBehaviour());
+    }
+
     //Start the timer
     private void StartTimer()
     {
@@ -138,20 +147,40 @@ public class CountdownTimer : MonoBehaviour
         while (roundTimer.isActive)
         {
             roundTimer.Tick(Time.deltaTime);
-            UpdateTimerUI();
+            UpdateTimerUI(false);
             yield return null;
         }
 
         roundManager.CallOnCountdownEnd();
     }
 
+    //Ticking upwards 
+    private IEnumerator Co_InverseTimerBehaviour()
+    {
+        roundTimer = new Timer(0.1f);
+
+        while (roundTimer.isActive)
+        {
+            roundTimer.Tick(-Time.deltaTime);
+            UpdateTimerUI(true);
+            yield return null;
+        }
+    }
+
     //Updates the text UI
-    private void UpdateTimerUI()
+    private void UpdateTimerUI(bool infinite)
     {
         float minutes = Mathf.FloorToInt(roundTimer.current_time / 60);
         float seconds = Mathf.FloorToInt(roundTimer.current_time % 60);
 
-        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        if (!infinite)
+        {
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
+        else
+        {
+            timerText.text = "+" + string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
     }
 
     #endregion

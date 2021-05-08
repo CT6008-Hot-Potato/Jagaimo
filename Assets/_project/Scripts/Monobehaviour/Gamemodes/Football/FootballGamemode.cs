@@ -41,6 +41,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //Variables needed for the gamemode
     [SerializeField]
     private RoundManager roundManager;
+    [SerializeField]
+    private FootballObjectContainer footballVariables;
+
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
     
     private List<CharacterManager> blueTeam = new List<CharacterManager>();
@@ -65,6 +68,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     [SerializeField]
     private ArenaManager arenaManager;
 
+    //Dont edit in inspector, it's to view whether the values are correct or not
     [SerializeField]
     private List<int> spawnSpots = new List<int>();
 
@@ -75,6 +79,8 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     [SerializeField]
     private BasicTimerBehaviour goalPauseTimer;
 
+    private bool bExtraTime = false;
+
     #endregion
 
     #region Unity Methods
@@ -84,6 +90,14 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     {
         roundManager = roundManager ?? GetComponent<RoundManager>();
         arenaManager = arenaManager ?? GetComponent<ArenaManager>();
+
+        footballVariables = footballVariables ?? FootballObjectContainer.footballObjectContainer;
+
+        countdownTimer = footballVariables.countdownTimer;
+        scrollerText = footballVariables.scrollerText;
+        scoreboard = footballVariables.scoreboard;
+        potatoRB = footballVariables.potatoRB;
+        goalPauseTimer = footballVariables.goalPauseTimer;
     }
 
     #endregion
@@ -130,8 +144,31 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             countdownTimer.LockTimer(true);
         }
 
-        //Having a few seconds before everything resets
-        StartCoroutine(Co_GoalWait(5f));
+        if (bExtraTime)
+        {
+            //This goal was scored during extra time
+        }
+        else
+        {
+            //Prepare to start the rest of the game
+            //Having a few seconds before everything resets
+            StartCoroutine(Co_GoalWait(5f));
+        }
+    }
+
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void LockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].LockPlayer();
+            }
+        }
     }
 
     //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
@@ -156,35 +193,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
     {
-        //If there's no arenamanager, there's nothing more to do
-        if (!arenaManager)
-        {
-            Debug.Log("There's no arena manager", this);
-
-            //Still need to add the active players for testing
-            for (int i = 0; i < charArray.Length; ++i)
-            {
-                currentActivePlayers.Add(charArray[i]);
-
-                //Even numbers on orange team, odd on blue team
-                if (i % 2 == 0)
-                {
-                    orangeTeam.Add(charArray[i]);
-                }
-                else
-                {
-                    blueTeam.Add(charArray[i]);
-                }
-            }
-
-            return;
-        }
-
-        spawnSpots = arenaManager.ReturnFootballSpawnIndexers(charArray.Length);
-        Transform spotTransform;
-        int spotUsed = 0;
-
-        //Going through the give array and adding it to the list
+        //Still need to add the active players for testing
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
@@ -192,27 +201,20 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             //Even numbers on orange team, odd on blue team
             if (i % 2 == 0)
             {
-                spotTransform = arenaManager.GettingSpot(1, spawnSpots[spotUsed]);
                 orangeTeam.Add(charArray[i]);
             }
             else
             {
-                spotTransform = arenaManager.GettingSpot(0, spawnSpots[spotUsed]);
                 blueTeam.Add(charArray[i]);
-
-                //Only increment it at the end of odd numbers so both teams get the same spot before it moves to the next
-                spotUsed++;
             }
-
-            charArray[i].transform.position = spotTransform.position;
-            charArray[i].transform.rotation = spotTransform.rotation;
         }
+
+        PutPlayersInSpawnPoints();
 
         if (Debug.isDebugBuild)
         {
             Debug.Log("Active players set, Amount of Active players: " + currentActivePlayers.Count, this);
         }
-
     }
 
     //Someone joins the game
@@ -235,17 +237,24 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         {
             potatoRB.isKinematic = false;
         }
+        else if (Debug.isDebugBuild)
+        {          
+            Debug.Log("There's no potato RB", this);
+        }
+
+        LockAllPlayers();
     }
 
     private void RoundEnding()
     {
-
+        //The game ends when the countdown ends
     }
 
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
-        //Spawns players on their respective teams' sides
+        //Players are ready to go
+        UnlockAllPlayers();
     }
 
     //When the countdown ends
@@ -254,12 +263,12 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         //At the end on the countdown, seeing who has more goals
         if (ThisWinCondition())
         {
-            //Blue team won
+            //A team won
             return;
         }
 
-        //Orange team won
-
+        //A draw
+        StartExtraTime();
     }
 
     //Doesnt really do anything in this gamemode
@@ -271,13 +280,13 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //Which teams has more goals - blue = return true and orange = return false
     private bool ThisWinCondition()
     {
-        //Blue team wins
-        if (score.x > score.y)
+        //Blue or Orange team wins
+        if (score.x != score.y)
         {
             return true;
         }
 
-        //Orange team wins
+        //Draw
         return false;
     }
 
@@ -300,7 +309,10 @@ public class FootballGamemode : MonoBehaviour, IGamemode
                 Transform spotTransform = arenaManager.GettingSpot(1, spawnSpots[i]);
 
                 orangeTeam[i].transform.position = spotTransform.position;
-                orangeTeam[i].transform.rotation = spotTransform.rotation;
+
+                //This is the "solution" to not being able to turn the player based on the prefab object
+                PlayerCamera camera = orangeTeam[i].GetComponent<PlayerCamera>();
+                camera.ChangeYaw(180 / Time.deltaTime);
             }
         }
 
@@ -311,9 +323,11 @@ public class FootballGamemode : MonoBehaviour, IGamemode
                 Transform spotTransform = arenaManager.GettingSpot(0, spawnSpots[i]);
 
                 blueTeam[i].transform.position = spotTransform.position;
-                blueTeam[i].transform.rotation = spotTransform.rotation;
             }
         }
+
+        //I would've preferred something like this
+        //blueTeam[i].transform.rotation = spotTransform.rotation;
     }
 
     private IEnumerator Co_GoalWait(float duration)
@@ -340,6 +354,24 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
         //The reset timer before the play starts up again
         goalPauseTimer.CallOnTimerStart();
+    }
+
+    private void StartExtraTime()
+    {
+        //The game ended in a draw so have the clock tick upwards until a goal
+        //Putting them back in starting points
+        PutPlayersInSpawnPoints();
+
+        //Moving the potato back to the start if this has a reference to it (which it should)
+        if (potatoRB)
+        {
+            potatoRB.transform.position = Vector3.zero;
+        }
+        
+        //Having the time go to zero and go upwards
+        countdownTimer.CountUpwards();
+
+        bExtraTime = true;
     }
 
     #endregion

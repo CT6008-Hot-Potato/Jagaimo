@@ -39,6 +39,9 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     //Variables needed for the gamemode
     [SerializeField]
     private RoundManager roundManager;
+    [SerializeField]
+    private ArenaManager arenaManager;
+
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
     CharacterManager playerWhoWon;
 
@@ -56,7 +59,8 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     //Getting the needed components
     private void OnEnable()
     {
-        roundManager = roundManager ?? GetComponent<RoundManager>();
+        roundManager = roundManager ?? RoundManager.roundManager;
+        arenaManager = arenaManager ?? GetComponent<ArenaManager>();
     }
 
     #endregion
@@ -101,7 +105,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     //This runs when the round is about to start/ during the initial timer
     private void RoundStarting()
     {
-        //Make sure everything is in order... small cooldown before countdown to get everything
+
     }
 
     //A podium scene which ragdoll the players in order of elimination but doesnt go back to menu/lobby unless hit max round
@@ -126,7 +130,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
             }
         }
 
-        //TODO: Spawns all character on random points (out of a set number of points) in an arena section
+        PutCharactersInStartPositions();
     }
 
     //When the countdown ends
@@ -167,6 +171,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         else
         {
             iCountdownIndex++;
+            arenaManager.ClearUsageFromArena(0);
             roundManager.CallOnCountdownStart();
         }
     }
@@ -242,6 +247,27 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         else
         {
             return null;
+        }
+    }
+
+    private void PutCharactersInStartPositions()
+    {
+        //Putting the characters in random spots of the 0th arena
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If there is a spot (may not be due to inspector not being filled out)
+            if (arenaManager.isPossibleToSpawnIn(0))
+            {
+                SpawningSpot spot = arenaManager.ReturnRandomSpotForArena(0);
+                currentActivePlayers[i].gameObject.transform.position = spot.spotTransform.position;
+
+                //This is the "solution" to not being able to turn the player based on the prefab object
+                PlayerCamera camera = currentActivePlayers[i].GetComponent<PlayerCamera>();
+                camera.ChangeYaw(spot.spotTransform.rotation.eulerAngles.y / Time.deltaTime);
+                camera.flipSpin = !camera.flipSpin;
+
+                spot.isUsed = true;
+            }
         }
     }
 

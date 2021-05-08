@@ -372,7 +372,7 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
             default:
-                Debug.Log("Given value for MovementType is too high.");
+                //Debug.Log("Given value for MovementType is too high.");
                 break;
         }
     }

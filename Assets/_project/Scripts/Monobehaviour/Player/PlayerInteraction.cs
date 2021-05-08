@@ -48,6 +48,23 @@ public class PlayerInteraction : MonoBehaviour
     private float zoomOut = 0;
     #endregion Variables
 
+    private void Awake()
+    {
+        //Intergrating the throw speed mutator (Code Here by Charles Carter)
+        GameSettingsContainer settings = GameSettingsContainer.instance;
+
+        if (settings)
+        {
+            //The potato throw strength mutater is changed so the value is not 1
+            if (settings.HasGamMutator(4))
+            {
+                //Adding on 50% of the strength * the multiplier from the mutator
+                throwStrength += throwStrength * 0.2f * (int)settings.FindGeneralMutatorValue(4);
+            }
+        }
+        //End of mutator intergration code
+    }
+
     //Start method setting up and assigning values
     void Start()
     {
@@ -62,7 +79,7 @@ public class PlayerInteraction : MonoBehaviour
         }
         rbObject = movingObject.GetComponent<Rigidbody>();
         //Set the component Rigidbody's useGravity to true in the modelItem.
-        rbObject.useGravity = true;
+        rbObject.useGravity = true;       
     }
 
     //Function to return a ray from camera

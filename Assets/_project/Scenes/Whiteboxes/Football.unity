@@ -215,7 +215,7 @@ RectTransform:
   m_Children:
   - {fileID: 395635033}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -375,7 +375,7 @@ Transform:
   - {fileID: 1931318353}
   - {fileID: 83609967}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &202122550
 GameObject:
@@ -406,7 +406,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &202122552
 MonoBehaviour:
@@ -5214,7 +5214,7 @@ Transform:
   m_LocalScale: {x: 60, y: 30, z: 80}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &287516310
 PrefabInstance:
@@ -5364,33 +5364,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   redScoreText: {fileID: 2021154814}
   blueScoreText: {fileID: 1746452961}
---- !u!1 &435973058 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7172547651974387218, guid: 965db333886fc1b49b56ad328ad99bef,
-    type: 3}
-  m_PrefabInstance: {fileID: 1444861160}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &435973059
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 435973058}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bc605f52b7fe9f4692f11b6c38b2021, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roundManager: {fileID: 1444861161}
-  currentActivePlayers: []
-  countdownTimer: {fileID: 1919196163}
-  scrollerText: {fileID: 1919196162}
-  scoreboard: {fileID: 395635035}
-  arenaManager: {fileID: 1444861162}
-  spawnSpots: 
-  potatoRB: {fileID: 1802334129}
-  goalPauseTimer: {fileID: 202122552}
 --- !u!1 &460976386
 GameObject:
   m_ObjectHideFlags: 0
@@ -5431,7 +5404,7 @@ PrefabInstance:
     - target: {fileID: 3936309112493092399, guid: f7f0b863eae4bcc488ea60be2536dc48,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3936309112493092399, guid: f7f0b863eae4bcc488ea60be2536dc48,
         type: 3}
@@ -5555,6 +5528,18 @@ Transform:
   m_Father: {fileID: 1931318353}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &610020334 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2692320980931498880, guid: 8cef0e0e385f04f4eb8d02c327e194db,
+    type: 3}
+  m_PrefabInstance: {fileID: 85374561}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &637751323
 GameObject:
   m_ObjectHideFlags: 0
@@ -5645,7 +5630,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &658717774
 GameObject:
@@ -5705,7 +5690,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &807015500 stripped
 MonoBehaviour:
@@ -5813,7 +5798,7 @@ Transform:
   m_LocalScale: {x: 15, y: 8, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &825823103
 MonoBehaviour:
@@ -5828,8 +5813,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rManager: {fileID: 1444861161}
-  gamemode: {fileID: 435973059}
+  gamemode: {fileID: 0}
   blueTeamGoal: 0
+--- !u!1 &1064961211
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1064961212}
+  - component: {fileID: 1064961213}
+  m_Layer: 0
+  m_Name: FootballGamemodeContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1064961212
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064961211}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1064961213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064961211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61f8728dac9be9943a7f5ddd80657641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  countdownTimer: {fileID: 1919196163}
+  scrollerText: {fileID: 1919196162}
+  scoreboard: {fileID: 395635035}
+  potatoRB: {fileID: 1802334129}
+  goalPauseTimer: {fileID: 202122552}
 --- !u!850595691 &1370786174
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -6020,8 +6053,18 @@ PrefabInstance:
       objectReference: {fileID: 1919196161}
     - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
+      propertyPath: playerJoinManager
+      value: 
+      objectReference: {fileID: 610020334}
+    - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
+        type: 3}
+      propertyPath: current_Gamemode_Index
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
+        type: 3}
       propertyPath: iAmountOfExpectedPlayers
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7172547651974387218, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
@@ -6036,22 +6079,10 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1444861160}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 435973058}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2bdec4ac71d9c244fbae67423d897b75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1444861162 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 263327767283779295, guid: 965db333886fc1b49b56ad328ad99bef,
-    type: 3}
-  m_PrefabInstance: {fileID: 1444861160}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 435973058}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59eaf81da9931004bb3a48657a3bdf4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1548673364
@@ -6148,7 +6179,7 @@ Transform:
   m_LocalScale: {x: 15, y: 8, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1548673369
 MonoBehaviour:
@@ -6163,7 +6194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rManager: {fileID: 1444861161}
-  gamemode: {fileID: 435973059}
+  gamemode: {fileID: 0}
   blueTeamGoal: 1
 --- !u!1 &1592763137
 GameObject:
@@ -6456,7 +6487,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &1802334129 stripped
 Rigidbody:
@@ -6648,7 +6679,7 @@ PrefabInstance:
     - target: {fileID: 1977434640297366547, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
         type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1977434640297366547, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
         type: 3}
@@ -6750,16 +6781,6 @@ PrefabInstance:
       propertyPath: TimerBehaviour.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1444861161}
-    - target: {fileID: 1977434641621943112, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: TimerBehaviour.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: CallOnCountdownStart
-      objectReference: {fileID: 0}
-    - target: {fileID: 1977434641884713763, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: duration
-      value: 301
-      objectReference: {fileID: 0}
     - target: {fileID: 1977434641884713763, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
         type: 3}
       propertyPath: roundManager
@@ -6770,23 +6791,6 @@ PrefabInstance:
       propertyPath: manager
       value: 
       objectReference: {fileID: 1444861161}
-    - target: {fileID: 5699254339872500308, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: textMeshPrefabs.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5699254339872500308, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: textMeshPrefabs.Array.data[4]
-      value: 
-      objectReference: {fileID: 7945729052038371454, guid: 829e154a162417144ba31d821e164f35,
-        type: 3}
-    - target: {fileID: 5699254339872500308, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: textMeshPrefabs.Array.data[5]
-      value: 
-      objectReference: {fileID: 4621081681064883030, guid: 95f8b9dd03c01c5478f3c34f30f51dc1,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ec01ed5da9c4c2479db6938f0cd1761, type: 3}
 --- !u!114 &1919196161 stripped

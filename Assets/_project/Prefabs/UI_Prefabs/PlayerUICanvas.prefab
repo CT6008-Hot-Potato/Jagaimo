@@ -675,7 +675,6 @@ GameObject:
   - component: {fileID: 1977434640297366546}
   - component: {fileID: 1977434640297366557}
   - component: {fileID: 1977434640297366556}
-  - component: {fileID: 1977434640297366544}
   - component: {fileID: 1977434640297366545}
   m_Layer: 5
   m_Name: PlayerUICanvas
@@ -769,20 +768,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &1977434640297366544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1977434640297366559}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd985a3cc87b9c04582afb80523bf2a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startCountdown: {fileID: 1977434641621943112}
-  playerInput: {fileID: 0}
 --- !u!114 &1977434640297366545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2578,7 +2563,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: f9d3667a32702dc48a3083674474b128, type: 3}
     m_FontSize: 250
     m_FontStyle: 1
     m_BestFit: 0
@@ -2620,7 +2605,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   timerText: {fileID: 1977434641621943114}
-  isDramatic: 0
 --- !u!1 &1977434641834430453
 GameObject:
   m_ObjectHideFlags: 0
@@ -2854,7 +2838,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roundManager: {fileID: 0}
-  duration: 10
+  duration: 30
   timerText: {fileID: 1977434641884713773}
 --- !u!1 &1977434641915687142
 GameObject:
@@ -3249,5 +3233,9 @@ MonoBehaviour:
   - {fileID: 368718271630236431, guid: fd1b1d5ed4e21de44944d6750b6e070f, type: 3}
   - {fileID: 3416580257283484015, guid: a0d44876b9d26844681693e7623b7774, type: 3}
   - {fileID: 8385051375282115002, guid: 4f154b9900128b24394f537cae7f34ae, type: 3}
-  - {fileID: 2939271385687439690, guid: 8aea7107a7c9e604e9bff7ca26202fb2, type: 3}
+  - {fileID: 3349785198417372422, guid: 5f7811b8f2311c644b2b7dfcf012dcb6, type: 3}
+  - {fileID: 7945729052038371454, guid: 829e154a162417144ba31d821e164f35, type: 3}
+  - {fileID: 4621081681064883030, guid: 95f8b9dd03c01c5478f3c34f30f51dc1, type: 3}
+  - {fileID: 8385051375282115002, guid: 4f9ae44df8b1426449afedccaa7ca409, type: 3}
+  - {fileID: 8385051375282115002, guid: 70147ff7468a4604f8f14b366a2132ff, type: 3}
   rectTransforms: []
