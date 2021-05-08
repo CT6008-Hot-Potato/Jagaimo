@@ -7,6 +7,8 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(TaggedTracker))]
@@ -146,29 +148,15 @@ public class CharacterManager : MonoBehaviour
     //Functions to change the player when they're tagged or untagged
     public void ThisPlayerTagged()
     {
-        //Play VFX + Sound
-        //Lerp into first person camera mode
-        if (_cam)
-        {
-            _cam.SetCameraView(true);
-        }
-
-        if (taggedDisplayObject)
-        {
-            taggedDisplayObject.SetActive(true);
-        }
-
-        if (soundManager)
-        {
-            //Play the tagged sound
-            //sm.PlaySound();
-        }
-
         //Animation for regaining potato
         if (_playerAnimation)
         {
             _playerAnimation.CheckToChangeState("FallingBackDeath", true);
         }
+
+
+        StartCoroutine(Co_TaggedEffect(2));
+        //Wait 2s for animation to complete      
     }
 
     public void ThisPlayerUnTagged()
@@ -206,10 +194,10 @@ public class CharacterManager : MonoBehaviour
         isPlayerLocked = true;
 
         //Stop movement in the movement script, dont disable or deactive player input (they couldn't pause then)
-        //_movement.StopMovement();
+        _movement.SetMovement(3);
 
         //Stop camera player camera movement
-        //_cam.StopCamera();
+        _cam.cameraRotationLock = true;
 
         //Note: option to have them switch to a different camera for cinematics
     }
@@ -222,10 +210,40 @@ public class CharacterManager : MonoBehaviour
         isPlayerLocked = false;
 
         //Start player movement
-        //_movement.StartMovement();
+        _movement.SetMovement(2);
 
         //Restart camera movement
-        //_cam.StartCamera();
+        _cam.cameraRotationLock = false;
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private IEnumerator Co_TaggedEffect(float animDuration)
+    {
+        _cam.cameraRotationLock = true;
+
+        yield return new WaitForSeconds(animDuration);
+
+        //Play VFX + Sound
+        //Lerp into first person camera mode
+        if (_cam)
+        {
+            _cam.SetCameraView(true);
+            _cam.cameraRotationLock = false;
+        }
+
+        if (taggedDisplayObject)
+        {
+            taggedDisplayObject.SetActive(true);
+        }
+
+        if (soundManager)
+        {
+            //Play the tagged sound
+            //sm.PlaySound();
+        }
     }
 
     #endregion
