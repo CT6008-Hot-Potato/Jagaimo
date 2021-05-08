@@ -74,8 +74,8 @@ public class PlayerController : MonoBehaviour
     //Setting up and assigning on awake
     private void Start()
     {
-        pA = FindObjectOfType<PlayerAnimation>();
-        pI = FindObjectOfType<PlayerInteraction>();
+        pA = GetComponent<PlayerAnimation>();
+        pI = GetComponent<PlayerInteraction>();
         sM = FindObjectOfType<SoundManager>();
         rebindingDisplay = FindObjectOfType<RebindingDisplay>();
         speed = walkSpeed;
@@ -372,7 +372,7 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
             default:
-                //Debug.Log("Given value for MovementType is too high.");
+                Debug.Log("Given value for MovementType is too high.");
                 break;
         }
     }
