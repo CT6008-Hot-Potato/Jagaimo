@@ -24788,7 +24788,7 @@ MonoBehaviour:
   spawningManager: {fileID: 276064552}
   spawnNextPowerUp: 0
   waitingForPowerUpSpot: 0
-  spawningDuration: 5
+  spawningDuration: 15
   scroller: {fileID: 1762706405}
   bSpawnPowerUps: 1
 --- !u!4 &1919433106

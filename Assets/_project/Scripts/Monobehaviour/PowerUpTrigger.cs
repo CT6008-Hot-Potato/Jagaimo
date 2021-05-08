@@ -29,8 +29,12 @@ public class PowerUpTrigger : MonoBehaviour
         //If it's a player
         if (other.tag.Equals("Player"))
         {
-            //Tell their manager that they've triggered this powerup
-            other.GetComponent<PlayerPowerUpHandler>().PowerUpTriggered(PowerUp_ID);
+            PlayerPowerUpHandler handler = other.GetComponent<PlayerPowerUpHandler>();
+            if (handler)
+            {
+                //Tell their manager that they've triggered this powerup
+                handler.PowerUpTriggered(PowerUp_ID);
+            }
 
             //If there is an arena manager associated with this power up
             if (spawningManager)
