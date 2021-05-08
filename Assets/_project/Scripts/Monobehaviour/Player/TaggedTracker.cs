@@ -29,9 +29,13 @@ public class TaggedTracker : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        roundManager = roundManager ?? FindObjectOfType<RoundManager>();
         playerManager = playerManager ?? GetComponent<CharacterManager>();
         isTagged = false;
+    }
+
+    private void Start()
+    {
+        roundManager = roundManager ?? RoundManager.roundManager;
     }
 
     private void Update()

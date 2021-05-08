@@ -42,6 +42,11 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     private ArenaManager arenaManager;
 
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
+
+    //The only trackers needed for mechanics in an overall round
+    public CharacterManager currentTagged { get; private set; }
+    public CharacterManager previousTagged { get; private set; }
+
     //Whoever escaped without the potato... or potentially the person with the potato if the time ran out
     private List<CharacterManager> playersWhoWon = new List<CharacterManager>();
 
@@ -110,7 +115,8 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
-
+        //Tagging a random character
+        roundManager.OnPlayerTagged(getRandomCharacter());
     }
 
     //When the countdown ends
@@ -130,14 +136,36 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     //Should stop the person from interacting with the generators, and kick them out of any generator they're currently fixing
     private void PlayerTagged(CharacterManager charTagged)
     {
-        //Getting the script which allows them to interact with the generator
-        //PogChamp champ = charTagged.GetComponent<PogChamp>();
-        //if (champ)
+        //Getting the newly tagged player's tracker
+        TaggedTracker tracker = charTagged._tracker;
+
+        //If there is someone tagged when this is called
+        if (currentTagged)
+        {
+            //They are now the previously tagged
+            previousTagged = currentTagged;
+
+            //If the previously tagged player isnt the one eliminated from another countdown
+            if (currentActivePlayers.Contains(previousTagged))
+            {
+                //Turn their tracker back on
+                previousTagged._tracker.enabled = true;
+                previousTagged._tracker.PlayerUnTagged();
+            }
+        }
+
+        //The current tagged is now the person tagged
+        currentTagged = charTagged;
+        currentTagged.ThisPlayerTagged();
+
+        //If that player is interacting with a generator
+        //if (charTagged.isInteracting())
         //{
-            //Having the character stop interacting with the generator forcefully
-            //champ.StopInteracting();
-            //champ.SetAbilityToInteract(false);
+        //  Stop it from interacting with it
+        //    charTagged.StopInteractions();
         //}
+        // and stop it from interacting with the generators while tagged
+        //charTagged.SetInteractionAbility(false);
     }
 
     //When everyone has escaped or the time ran out with people still in the arena
@@ -185,6 +213,19 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     #endregion
 
     #region Private Methods
+
+    private CharacterManager getRandomCharacter()
+    {
+        if (currentActivePlayers.Count > 0)
+        {
+            int i = Random.Range(0, currentActivePlayers.Count);
+            return currentActivePlayers[i];
+        }
+        else
+        {
+            return null;
+        }
+    }
 
     private void PutCharactersInStartPositions()
     {

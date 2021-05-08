@@ -2642,26 +2642,6 @@ PrefabInstance:
       propertyPath: TimerBehaviour.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1226800839}
-    - target: {fileID: 1977434641621943112, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: TimerBehaviour.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: CallOnCountdownStart
-      objectReference: {fileID: 0}
-    - target: {fileID: 1977434641884713763, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: duration
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 1977434641884713763, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: roundManager
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5699254339872500308, guid: 0ec01ed5da9c4c2479db6938f0cd1761,
-        type: 3}
-      propertyPath: manager
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ec01ed5da9c4c2479db6938f0cd1761, type: 3}
 --- !u!114 &160291209 stripped
@@ -19127,7 +19107,7 @@ PrefabInstance:
     - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
       propertyPath: testMode
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
@@ -24625,7 +24605,19 @@ MonoBehaviour:
   duration: 1
   TimerBehaviour:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1919433105}
+        m_TargetAssemblyTypeName: PowerUpSpawningManager, Scripts
+        m_MethodName: WaitTimerRunOut
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   timerText: {fileID: 0}
 --- !u!114 &1919433105
 MonoBehaviour:
