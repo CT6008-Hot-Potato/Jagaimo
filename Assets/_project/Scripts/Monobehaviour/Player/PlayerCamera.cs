@@ -79,6 +79,8 @@ public class PlayerCamera : MonoBehaviour
     public bool flipSpin;
     public bool freecamLock = false;
     public bool cameraRotationLock = false;
+    [SerializeField]
+    private GameObject crosshair;   
     #endregion Variables
 
     #region Enums
@@ -110,10 +112,12 @@ public class PlayerCamera : MonoBehaviour
         if (firstPerson)
         {
             cameraState = cS.FIRSTPERSON;
+            crosshair.SetActive(true);
         }
         else
         {
             cameraState = cS.THIRDPERSON;
+            crosshair.SetActive(false);
         }
     }
 
@@ -195,6 +199,7 @@ public class PlayerCamera : MonoBehaviour
                     //Check if wrong camera enabled and if so setup correct camera
                     if (thirdPersonCamera.enabled)
                     {
+                        crosshair.SetActive(true);
                         thirdPersonCamera.enabled = false;
                         firstPersonCamera.enabled = true;
                     }
@@ -423,6 +428,7 @@ public class PlayerCamera : MonoBehaviour
     //Function to enable third person mode camera
     void EnableThirdPerson()
     {
+        crosshair.SetActive(false);
         thirdPersonCamera.enabled = true;
         firstPersonCamera.enabled = false;
     }
