@@ -154,15 +154,8 @@ public class PlayerCamera : MonoBehaviour
         character.layer = 9 + playerIndex;
         characterArms.layer = 13 + playerIndex;
         characterArms.GetComponentInChildren<SkinnedMeshRenderer>().material = character.GetComponentInChildren<SkinnedMeshRenderer>().material = materials[playerIndex];
-        if (firstPersonCamera.enabled)
-        {
-
-            firstPersonCamera.cullingMask = mask[playerIndex + 4];
-        }
-        else
-        {
-            thirdPersonCamera.cullingMask = mask[playerIndex];
-        }
+        firstPersonCamera.cullingMask = mask[playerIndex + 4];
+        thirdPersonCamera.cullingMask = mask[playerIndex];
     }
 
 
