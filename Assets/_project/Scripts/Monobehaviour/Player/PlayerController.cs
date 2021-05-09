@@ -371,6 +371,8 @@ public class PlayerController : MonoBehaviour
                     speed = walkSpeed;
                 }
                 break;
+            case pM.STANDING:
+                break;
             default:
                 Debug.Log("Given value for MovementType is too high.");
                 break;
