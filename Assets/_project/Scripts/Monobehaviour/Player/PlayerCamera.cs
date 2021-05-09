@@ -161,6 +161,7 @@ public class PlayerCamera : MonoBehaviour
         character.layer = 9 + (int)playerIndex;
         characterArms.layer = 13 + (int)playerIndex;
         characterArms.GetComponentInChildren<SkinnedMeshRenderer>().material = character.GetComponentInChildren<SkinnedMeshRenderer>().material = materials[(int)playerIndex];
+        Debug.Log(playerIndex);
         for (int i = 0;i < 4;i++)
         {
             //If on correct player infex use this character and arms and set it's culling mask
