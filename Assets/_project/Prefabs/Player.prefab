@@ -868,7 +868,7 @@ MonoBehaviour:
   otherCamSpeed: 10
   rotationPosition: {fileID: 4394244838949972449}
   cameraSensitivity: 1
-  controllerCameraSensitivityMultiplier: 1
+  controllerCameraSensitivityMultiplier: 3
   playerInput: {fileID: 4394244838949972472}
   character: {fileID: 5375405951313637728}
   characterArms: {fileID: 5823298452432485094}
