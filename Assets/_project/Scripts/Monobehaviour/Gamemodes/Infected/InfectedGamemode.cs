@@ -42,6 +42,9 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     private RoundManager roundManager;
 
     [SerializeField]
+    private ArenaManager arenaManager;
+
+    [SerializeField]
     private GameSettingsContainer settings;
 
     //The players within the game
@@ -61,7 +64,9 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //Getting the needed components
     private void OnEnable()
     {
-        roundManager = roundManager ?? GetComponent<RoundManager>();
+        roundManager = roundManager ?? RoundManager.roundManager;
+        arenaManager = arenaManager ?? GetComponent<ArenaManager>();
+
         settings = GameSettingsContainer.instance;
     }
 
@@ -102,6 +107,8 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         //Make sure everything is in order... small cooldown before countdown to get everything
 
         activeSurvivors = currentActivePlayers;
+
+        PutCharactersInStartPositions();
     }
 
     private void RoundEnding()
@@ -128,8 +135,8 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
                 if (iInfectedCount == 0)
                 {
-                    int iRandomPlayer = Random.Range(0, currentActivePlayers.Count - 1);
-                    roundManager.OnPlayerTagged(currentActivePlayers[iRandomPlayer]);
+                    int iRandomerPlayer = Random.Range(0, currentActivePlayers.Count - 1);
+                    roundManager.OnPlayerTagged(currentActivePlayers[iRandomerPlayer]);
                     return;
                 }
 
@@ -139,25 +146,19 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
                     //Going through the active players, tagging them and moving them to the correct lists
                     for (int i = 0; i < iInfectedCount; ++i)
                     {
-                        int iRandomPlayer = Random.Range(0, chars.Count - 1);
-                        chars.RemoveAt(iRandomPlayer);
-                        roundManager.OnPlayerTagged(chars[iRandomPlayer]);
+                        int iRandomerPlayer = Random.Range(0, chars.Count - 1);
+                        chars.RemoveAt(iRandomerPlayer);
+                        roundManager.OnPlayerTagged(chars[iRandomerPlayer]);
                     }
-                }
-                else
-                {
-                    //Only tag 1 player randomly
-                    int iRandomPlayer = Random.Range(0, currentActivePlayers.Count - 1);
-                    roundManager.OnPlayerTagged(currentActivePlayers[iRandomPlayer]);
+
+                    return;
                 }
             }
         }
-        else
-        {
-            //Only tag 1 player randomly
-            int iRandomPlayer = Random.Range(0, currentActivePlayers.Count - 1);
-            roundManager.OnPlayerTagged(currentActivePlayers[iRandomPlayer]);
-        }
+
+        //Only tag 1 player randomly
+        int iRandomPlayer = Random.Range(0, currentActivePlayers.Count - 1);
+        roundManager.OnPlayerTagged(currentActivePlayers[iRandomPlayer]);
     }
 
     //When the countdown ends
@@ -175,6 +176,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
             infectedWon = false;
         }
 
+        arenaManager.ClearUsageFromArena(0);
         roundManager.CallOnRoundEnd();
     }
 
@@ -238,6 +240,27 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         else
         {
 
+        }
+    }
+
+    private void PutCharactersInStartPositions()
+    {
+        //Putting the characters in random spots of the 0th arena
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If there is a spot (may not be due to inspector not being filled out)
+            if (arenaManager.isPossibleToSpawnIn(0))
+            {
+                SpawningSpot spot = arenaManager.ReturnRandomSpotForArena(0);
+                currentActivePlayers[i].gameObject.transform.position = spot.spotTransform.position;
+
+                //This is the "solution" to not being able to turn the player based on the prefab object
+                PlayerCamera camera = currentActivePlayers[i].GetComponent<PlayerCamera>();
+                camera.ChangeYaw(spot.spotTransform.rotation.eulerAngles.y / Time.deltaTime);
+                camera.flipSpin = !camera.flipSpin;
+
+                spot.isUsed = true;
+            }
         }
     }
 

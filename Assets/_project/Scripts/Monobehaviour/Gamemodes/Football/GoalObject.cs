@@ -26,6 +26,8 @@ public class GoalObject : MonoBehaviour, IInteractable
 
     void Start()
     {
+        rManager = rManager ?? RoundManager.roundManager;
+
         //It should always be this gamemode if this script is running
         if (rManager)
         {
