@@ -124,6 +124,8 @@ public class MenuManager : MonoBehaviour
     public void SwitchOpenMenu(int SelectedMenu)
 
     {
+        
+
 
         if (SlowTransitions)
         {
@@ -163,6 +165,12 @@ public class MenuManager : MonoBehaviour
 
             }
 
+        }
+
+        Selectable startSelected = MenuObjects[SelectedMenu].GetComponentInChildren<Selectable>();
+        if (startSelected != null)
+        {
+            startSelected.Select();
         }
     }
 
@@ -215,6 +223,12 @@ public class MenuManager : MonoBehaviour
 
 
         yield return new WaitForSeconds(TransitionSpeed);
+
+        Selectable startSelected = GetComponentInChildren<Selectable>();
+        if (startSelected != null)
+        {
+            startSelected.Select();
+        }
     }
 
     void FadeOut(FadeObject i)
