@@ -10,14 +10,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
 
 public class MenuManager : MonoBehaviour
 {
-    
+
+
+
+    [SerializeField] GameObject backButtons;
 
 
     [SerializeField]
@@ -167,11 +170,20 @@ public class MenuManager : MonoBehaviour
 
         }
 
-        Selectable startSelected = MenuObjects[SelectedMenu].GetComponentInChildren<Selectable>();
+
+
+        Button startSelected = MenuObjects[SelectedMenu].GetComponentInChildren<Button>();
         if (startSelected != null)
         {
-            startSelected.Select();
+            SelectThisButton(startSelected.gameObject);
         }
+    }
+
+    void SelectThisButton(GameObject Button)
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(Button);
+
     }
 
     IEnumerator FadeIntermission(GameObject[] ToFadeIn, GameObject[] ToFadeOut)
@@ -224,10 +236,10 @@ public class MenuManager : MonoBehaviour
 
         yield return new WaitForSeconds(TransitionSpeed);
 
-        Selectable startSelected = GetComponentInChildren<Selectable>();
+        Button startSelected = GetComponentInChildren<Button>();
         if (startSelected != null)
         {
-            startSelected.Select();
+            SelectThisButton(startSelected.gameObject);
         }
     }
 
