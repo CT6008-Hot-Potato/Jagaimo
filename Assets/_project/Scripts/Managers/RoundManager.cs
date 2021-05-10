@@ -192,10 +192,7 @@ public class RoundManager : MonoBehaviour
     {
         if (!(MonoBehaviour)_currentGamemode || !charManager)
         {
-            if (Debug.isDebugBuild)
-            {
-                Debug.Log("Gamemode: " + _currentGamemode.ToString() + " or no char manager: " + charManager.gameObject.name);
-            }
+            return;
         }
 
         //Telling the gamemode script that this manager is tagged

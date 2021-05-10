@@ -16,6 +16,7 @@ public class CharacterManager : MonoBehaviour
 {
     #region Variables Needed
 
+    [Header("Public Variables")]
     //The tracker attached to the object
     public TaggedTracker _tracker;
 
@@ -25,6 +26,8 @@ public class CharacterManager : MonoBehaviour
     //A public variable for scripts to check if this player is locked
     public bool isPlayerLocked { private get; set; } = false;
 
+
+    [Header("Componenets Needed")]
     //Components already on this object
     [SerializeField]
     private PlayerController _movement;
@@ -32,6 +35,8 @@ public class CharacterManager : MonoBehaviour
     private PlayerCamera _cam;
     [SerializeField]
     private PlayerAnimation _playerAnimation;
+    [SerializeField]
+    private PlayerInteraction _playerInteraction;
 
     //Other componenets needed
     [SerializeField]
@@ -39,6 +44,7 @@ public class CharacterManager : MonoBehaviour
     [SerializeField]
     private GameSettingsContainer settings;
 
+    [Header("Customization Variables")]
     //[SerializeField]
     //private bool bUsingConfettiVFX = false;
     [SerializeField]
@@ -63,6 +69,7 @@ public class CharacterManager : MonoBehaviour
         _movement = _movement ?? GetComponent<PlayerController>();
         _cam = _cam ?? GetComponent<PlayerCamera>();
         _playerAnimation = _playerAnimation ?? GetComponent<PlayerAnimation>();
+        _playerInteraction = _playerInteraction ?? GetComponent<PlayerInteraction>();
 
         soundManager = FindObjectOfType<SoundManager>();
         settings = GameSettingsContainer.instance;
@@ -219,6 +226,26 @@ public class CharacterManager : MonoBehaviour
 
         //Restart camera movement
         _cam.cameraRotationLock = false;
+    }
+
+    /// <summary>
+    /// BE CAREFUL WHEN USING THESE
+    /// </summary>
+    /// 
+    public void DisablePlayer()
+    {
+        _cam.enabled = false;
+        _movement.enabled = false;
+        _tracker.enabled = false;
+        _playerInteraction.enabled = false;
+    }
+
+    public void EnablePlayer()
+    {
+        _cam.enabled = true;
+        _movement.enabled = true;
+        _tracker.enabled = true;
+        _playerInteraction.enabled = true;
     }
 
     #endregion

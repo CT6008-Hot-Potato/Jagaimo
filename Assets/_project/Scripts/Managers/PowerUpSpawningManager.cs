@@ -127,7 +127,10 @@ public class PowerUpSpawningManager : MonoBehaviour
             }
             else
             {
+                //Start waiting for a spot to clear up
                 waitingForPowerUpSpot = true;
+
+                StartCoroutine(Co_waitForPowerUpSpot());
             }
         }
     }
@@ -165,6 +168,18 @@ public class PowerUpSpawningManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    private IEnumerator Co_waitForPowerUpSpot()
+    {
+        //Keeping an eye on whether it's done
+        while (waitingForPowerUpSpot)
+        {
+            yield return null;
+        }
+
+        //Start the timer again to wait for a power up
+        StartPowerUpTimer();
     }
 
     #endregion

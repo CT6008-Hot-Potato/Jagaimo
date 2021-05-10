@@ -202,6 +202,17 @@ public class ArenaManager : MonoBehaviour
     //Is there a place to spawn in, in a given arena
     public bool isPossibleToSpawnIn(int arenaIndex)
     {
+        //Making sure there's actually an arena that this can look through
+        if (arenaSpots == null || arenaIndex < 0 || arenaSpots.Length < arenaIndex || arenaSpots.Length > 0)
+        {
+            return false;
+        }
+        //Making sure there's spots in this arena to look through
+        else if (arenaSpots[arenaIndex] == null || arenaSpots[arenaIndex].spots == null || arenaSpots[arenaIndex].spots.Length == 0)
+        {
+            return false;
+        }
+
         foreach (SpawningSpot sSpot in arenaSpots[arenaIndex].spots)
         {
             if (!sSpot.isUsed)

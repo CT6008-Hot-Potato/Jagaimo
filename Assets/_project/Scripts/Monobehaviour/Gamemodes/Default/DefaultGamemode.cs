@@ -42,8 +42,12 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     [SerializeField]
     private ArenaManager arenaManager;
 
+    [SerializeField]
+    private WinScreenManager winScreenManager;
+
+    //The players in the game 
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
-    CharacterManager playerWhoWon;
+    private List<CharacterManager> orderOfEliminations = new List<CharacterManager>();
 
     //The only trackers needed for mechanics in an overall round
     public CharacterManager currentTagged { get; private set; }
@@ -61,6 +65,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     {
         roundManager = roundManager ?? RoundManager.roundManager;
         arenaManager = arenaManager ?? GetComponent<ArenaManager>();
+        winScreenManager = winScreenManager ?? WinScreenManager.instance;
     }
 
     #endregion
@@ -164,7 +169,14 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
             //Moving to podium screen with a lobby countdown
             if (Debug.isDebugBuild)
             {
-                Debug.Log("Player Won: " + playerWhoWon.name, this);
+                Debug.Log("Player Won: " + orderOfEliminations[iCountdownIndex].name, this);
+            }
+
+            if (winScreenManager)
+            {
+                //The making the eliminations in the order of first-last
+                orderOfEliminations.Reverse();
+                winScreenManager.PlayWinScreen(Return_Mode(), orderOfEliminations);
             }
         }
         //It's not the end of the game
@@ -220,7 +232,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         if (currentActivePlayers.Count == 1)
         {
             //Keeping a record of who won
-            playerWhoWon = currentActivePlayers[0];
+            orderOfEliminations.Add(currentActivePlayers[0]);
             return true;
         }
 
