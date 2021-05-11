@@ -102,6 +102,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
         playerIndex = (playerCameras.Length - 1);
         if (playerIndex != playerIndexPrior && !singleLocalPlayer)
         {
+            Debug.Log(playerInput.actions.devices.ToString());
             playerIndexPrior = playerIndex;
             PlayerCamera[] cameras = FindObjectsOfType<PlayerCamera>();
             for (int i = 0; i < cameras.Length; i++)
@@ -111,7 +112,6 @@ public class LocalMPScreenPartioning : MonoBehaviour
                     cameras[i].playerIndex = playerIndex;
                 }
                     cameras[i].SetPlayerMask();
-
                 switch (playerIndex)
                 {
                     case 0:

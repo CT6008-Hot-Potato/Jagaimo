@@ -844,6 +844,7 @@ MonoBehaviour:
   slideSound: 7
   crouchSound: 8
   jumpSound: 9
+  particles: {fileID: 11400000, guid: e4907c1dd2137b74ba1f270593241766, type: 2}
 --- !u!114 &4394244838949972468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -908,6 +909,11 @@ MonoBehaviour:
   cameraSensitivity: 1
   controllerCameraSensitivityMultiplier: 3
   playerInput: {fileID: 4394244838949972472}
+  characterMesh:
+  - {fileID: 1949518398929497088, guid: e811d979910a6b0489de60c53c13eae6, type: 3}
+  - {fileID: 8546645980587067942, guid: 8534f6dcfd389ee4cba2fb28dc6bb457, type: 3}
+  - {fileID: -2658392593362127713, guid: ea5e9faa3c0927b46a8c3c07d4d2e383, type: 3}
+  - {fileID: -1891205244011521634, guid: 4aeb175a8b3a8bf45947f8e034bcbc23, type: 3}
   character: {fileID: 5948077367676534744}
   characterArms: {fileID: 4596102465011327382}
   materials:

@@ -56,6 +56,8 @@ public class PlayerController : MonoBehaviour
     private ScriptableSounds.Sounds slideSound, crouchSound, jumpSound;
     private SoundManager sM;
     private PlayerAnimation pA;
+    [SerializeField]
+    private ScriptableParticles particles;
     #endregion
     //Enums
     #region Enums
@@ -146,6 +148,7 @@ public class PlayerController : MonoBehaviour
             // Jump if grounded and input for jump pressed
             if (grounded && jumpValue > 0.1f)
             {
+                particles.CreateParticle(ScriptableParticles.Particle.LandImpact, new Vector3(transform.position.x, transform.position.y - 1, transform.position.z));
                 pA.CheckToChangeState("Jump");
                 sM.PlaySound(jumpSound);
                 //Jumpine velocity for the player
@@ -158,6 +161,7 @@ public class PlayerController : MonoBehaviour
                 if (jumpValue > 0.1f && pI.WallKick())
                 {
                     pA.CheckToChangeState("JumpFromWall");
+                    particles.CreateParticle(ScriptableParticles.Particle.AirImpact, new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.5f));
                     climbing = true;
                     StartCoroutine(Co_ClimbTime());
                 }
@@ -166,7 +170,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (touchingWall)
                     {
-                        rb.AddForce((-rotationPosition.TransformDirection(movementValue) * Time.deltaTime) * 500, ForceMode.Impulse);
+                        rb.AddForce((-rotationPosition.TransformDirection(movementValue) * Time.deltaTime) * 1000, ForceMode.Impulse);
                     }
                     if (!sliding)
                     {
@@ -178,6 +182,7 @@ public class PlayerController : MonoBehaviour
             //Default force pushed down with 
             else if (downForce != 15)
             {
+                particles.CreateParticle(ScriptableParticles.Particle.JumpDust,new Vector3 (transform.position.x, transform.position.y - 1, transform.position.z));
                 downForce = 15;
             }
             else if (!sliding)
@@ -342,6 +347,8 @@ public class PlayerController : MonoBehaviour
                         if (speed == runSpeed && movementValue.z > 0.1f)
                         {
                             sliding = true;
+                            particles.CreateParticle(ScriptableParticles.Particle.Fuse, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z));
+
                             sM.PlaySound(slideSound);
                             StartCoroutine(Co_SlideTime());
                         }
