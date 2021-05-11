@@ -13,23 +13,27 @@ public class SoundSliderScript : MonoBehaviour
     [SerializeField] AudioMixerGroup[] MyMixers;
 
     [SerializeField] float Max, Min, DefaultVal;
-    void Start()
+    void OnEnable()
     {
-        for ( int i = 1; i <=    MyMixers.Length; i++)
+        if(transform.childCount ==0)
         {
-            GameObject newSlider = Instantiate(SliderPrefab, gameObject.transform);
-            newSlider.TryGetComponent(out Slider slider);
-            slider.maxValue = Max;
-            slider.minValue = Min;
-            slider.value = Mathf.Lerp(Min, Max, DefaultVal);
-            slider.GetComponentInChildren<TextMeshProUGUI>().text = MyMixers[i-1].name;
+            for (int i = 1; i <= MyMixers.Length; i++)
+            {
+                GameObject newSlider = Instantiate(SliderPrefab, gameObject.transform);
+                newSlider.TryGetComponent(out Slider slider);
+                slider.maxValue = Max;
+                slider.minValue = Min;
+                slider.value = Mathf.Lerp(Min, Max, DefaultVal);
+                slider.GetComponentInChildren<TextMeshProUGUI>().text = MyMixers[i - 1].name;
 
-            int j = i;
-            ChangeMixVolume(slider.value, j);
+                int j = i;
+                ChangeMixVolume(slider.value, j);
 
 
-            slider.onValueChanged.AddListener(value => ChangeMixVolume(slider.value, j));
+                slider.onValueChanged.AddListener(value => ChangeMixVolume(slider.value, j));
 
+
+            }
 
         }
     }

@@ -111,7 +111,6 @@ public class LocalMPScreenPartioning : MonoBehaviour
                     cameras[i].playerIndex = playerIndex;
                 }
                     cameras[i].SetPlayerMask();
-
                 switch (playerIndex)
                 {
                     case 0:
