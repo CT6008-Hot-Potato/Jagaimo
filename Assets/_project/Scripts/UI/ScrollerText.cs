@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////
 // File: ScrollerText.cs
-// Author: Charles Carter
+// Author: Charles Carter & James Bradbury
 // Date Created: 16/02/21
 // Brief: The text that shows events from the game
 //////////////////////////////////////////////////////////// 
@@ -35,6 +35,10 @@ public class ScrollerText : MonoBehaviour
     //The text queue
     [SerializeField]
     private Queue<GameObject> textmeshlist = new Queue<GameObject>();
+
+    [SerializeField]
+    private float MessageDuration;
+
 
     [SerializeField]
     private int maxText = 4;
@@ -170,8 +174,20 @@ public class ScrollerText : MonoBehaviour
         textmeshlist.Enqueue(gObject);
         rectTransforms.Add(gObject.GetComponent<RectTransform>());
 
+        //Remove text after prerequisite time
+        StartCoroutine(        RemoveText(gObject, MessageDuration));
+
         //Seeing if the top text needs to be removed
         CheckTop();
+    }
+
+    IEnumerator RemoveText(GameObject objectRef, float Duration)
+    {
+
+        yield return new WaitForSeconds(Duration);
+        rectTransforms.Remove(objectRef.GetComponent<RectTransform>());
+        Destroy(objectRef);
+       
     }
 
     #endregion
