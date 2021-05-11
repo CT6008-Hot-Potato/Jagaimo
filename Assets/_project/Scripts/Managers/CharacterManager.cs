@@ -44,6 +44,11 @@ public class CharacterManager : MonoBehaviour
     [SerializeField]
     private GameSettingsContainer settings;
 
+    // 0 - First Person
+    // 1 - Third Person
+    [SerializeField]
+    private Camera[] playerCameras;
+
     [Header("Customization Variables")]
     //[SerializeField]
     //private bool bUsingConfettiVFX = false;
@@ -104,15 +109,15 @@ public class CharacterManager : MonoBehaviour
     #region Public Methods
 
     //Some Gamemodes will have elimination, some wont
-    public CharacterManager CheckIfEliminated()
+    public CharacterManager CheckIfEliminated(int playersLeft)
     {
         //If they arent tagged then do nothing
         if (!_tracker.isTagged) return null;
 
-        //The player should do whatever the gamemode wants them to (base gamemode will want them to explode)
-        if (Debug.isDebugBuild)
+        //The win screen is about to happen, dont change the camera or play the VFX etc
+        if (playersLeft <= 2)
         {
-            Debug.Log("Eliminated player shown", this);
+            return this;
         }
 
         //Send the player into "spectator" mode (No model, no colliders)
@@ -234,10 +239,14 @@ public class CharacterManager : MonoBehaviour
     /// 
     public void DisablePlayer()
     {
+        _playerAnimation.CheckToChangeState("Idle");
+
         _cam.enabled = false;
         _movement.enabled = false;
         _tracker.enabled = false;
         _playerInteraction.enabled = false;
+
+        taggedDisplayObject.SetActive(false);
     }
 
     public void EnablePlayer()
@@ -246,6 +255,11 @@ public class CharacterManager : MonoBehaviour
         _movement.enabled = true;
         _tracker.enabled = true;
         _playerInteraction.enabled = true;
+    }
+
+    public Camera[] ReturnCameras()
+    {
+        return playerCameras;
     }
 
     #endregion

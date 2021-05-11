@@ -47,6 +47,8 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
 
     //The players in the game 
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
+
+    //A way of tracking who was eliminated in what order
     private List<CharacterManager> orderOfEliminations = new List<CharacterManager>();
 
     //The only trackers needed for mechanics in an overall round
@@ -141,24 +143,17 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     //When the countdown ends
     private void CountdownEnding()
     {
-        int iplayercount = currentActivePlayers.Count;
-
         //Exploding the tagged player and removing from active players
         foreach (CharacterManager cManager in currentActivePlayers)
         {
-            if (cManager.CheckIfEliminated())
+            if (cManager.CheckIfEliminated(currentActivePlayers.Count))
             {
                 Debug.Log("Countdown End");
                 RemoveActivePlayer(cManager);
+                orderOfEliminations.Add(cManager);
                 currentTagged = null;
                 break;
             }
-        }
-
-        if (iplayercount == currentActivePlayers.Count)
-        {
-            Debug.Log(previousTagged.name);
-            //RemoveActivePlayer(currentActivePlayers[0]);           
         }
 
         //Each countdown in this gamemode could be the end of this game
@@ -166,17 +161,25 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         {
             roundManager.CallOnRoundEnd();
 
-            //Moving to podium screen with a lobby countdown
-            if (Debug.isDebugBuild)
-            {
-                Debug.Log("Player Won: " + orderOfEliminations[iCountdownIndex].name, this);
-            }
-
             if (winScreenManager)
             {
-                //The making the eliminations in the order of first-last
+                //The making the eliminations in the order of first-last but every player including the winner is included
+                orderOfEliminations.Add(currentActivePlayers[0]);
                 orderOfEliminations.Reverse();
-                winScreenManager.PlayWinScreen(Return_Mode(), orderOfEliminations);
+
+                winScreenManager.PlayWinScreen(Return_Mode(), orderOfEliminations, orderOfEliminations);
+
+                enabled = false;
+                return;
+            }
+            else
+            {
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("No win screen manager", this);
+                }
+
+                UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
             }
         }
         //It's not the end of the game
@@ -231,8 +234,6 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         //1 player is left so someone has won this round
         if (currentActivePlayers.Count == 1)
         {
-            //Keeping a record of who won
-            orderOfEliminations.Add(currentActivePlayers[0]);
             return true;
         }
 

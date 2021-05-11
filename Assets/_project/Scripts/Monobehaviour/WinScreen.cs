@@ -8,101 +8,99 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WinScreen : MonoBehaviour
+public abstract class WinScreen : MonoBehaviour
 {
     #region Variables Needed
 
+    [Header("General Win Screen Variables")]
+    [SerializeField]
+    protected RoundManager rManager;
+
     //Positions to put the players into
     [SerializeField]
-    private Transform[] winningSpots;
+    protected Transform[] winningSpots;
 
     [SerializeField]
-    private Camera viewCam;
+    protected Camera viewCam;
 
     [SerializeField]
-    private List<ParticleSystem> VFXtoPlay = new List<ParticleSystem>();
+    protected List<ParticleSystem> VFXtoPlay = new List<ParticleSystem>();
 
-    public float screenDuration { get; private set; } = 10f;
-    private Camera[] camerasInScene;
+    public float screenDuration = 10f;
+    protected List<Camera> camerasInScene = new List<Camera>();
+
+    protected List<CharacterManager> winningPlayers = new List<CharacterManager>();
 
     #endregion
 
     #region Unity Methods
 
-    private void Start()
+    private void OnEnable()
     {
-        //Probably the only time I'll be using this...
-        camerasInScene = FindObjectsOfType<Camera>();
+        rManager = RoundManager.roundManager;
     }
 
     #endregion
 
     #region Public Methods
 
-    //The movement of the camera/anything, VFX to get played or anything else needed
-    public void StartWinSequence(List<CharacterManager> objectsToPosition)
+    //The movement of the camera/anything, VFX to get played or anything else needed, also can be overriden if needed
+    public virtual void StartWinSequence(List<CharacterManager> players, List<CharacterManager> winners)
     {
-        PositionPlayers(objectsToPosition);
-        CombineCameras();
+        winningPlayers = winners;
 
+        //Going through the managers
+        foreach (CharacterManager manager in players)
+        {
+            //Getting the players' cameras
+            Camera[] camsToAdd = manager.ReturnCameras();
+
+            //Adding them to the list to turn for the screen
+            for (int i = 0; i < camsToAdd.Length; ++i)
+            {
+                camerasInScene.Add(camsToAdd[i]);
+            }
+
+            //Disabling player so they cant move, interact etc
+            manager.DisablePlayer();
+        }
+
+        //Position in the players, making sure it uses the right camera, play the vfx
+        CombineCameras();
+        PlayCorrectVFX(VFXtoPlay);
+
+        PositionPlayers(players);
+    }
+
+    #endregion
+
+    #region Private Methods
+    protected virtual void PositionPlayers(List<CharacterManager> objectsToPosition)
+    {
+        //should be overridden
+    }
+
+    protected virtual void PlayCorrectVFX(List<ParticleSystem> particlesToPlay)
+    {
         //If there are particles systems to play
-        if (VFXtoPlay.Count > 0)
+        if (particlesToPlay.Count > 0)
         {
             //Go through and play them
-            foreach (ParticleSystem particles in VFXtoPlay)
+            foreach (ParticleSystem particles in particlesToPlay)
             {
                 particles.Play();
             }
         }
     }
 
-    #endregion
-
-    #region Private Methods
-    private void PositionPlayers(List<CharacterManager> objectsToPosition)
+    protected virtual void CombineCameras()
     {
-        //if there's no winning spots, just return
-        if (winningSpots.Length == 0)
-        {
-            if (Debug.isDebugBuild)
-            {
-                Debug.Log("Set winning end positions", this);
-            }
+        viewCam.enabled = true;
 
-            return;
-        }
-
-        //Putting the players who won in the winning spots
-        for (int i = 0; i < objectsToPosition.Count; ++i)
-        {
-            if (winningSpots[i] != null)
-            {
-                objectsToPosition[i].transform.position = winningSpots[i].transform.position;
-            }
-            else
-            {
-                if (Debug.isDebugBuild)
-                {
-                    Debug.Log("This spot isnt set", this);
-                }
-            }
-        }
-    }
-
-    private void CombineCameras()
-    {
         //Going through all the cameras and making the 
-        for (int i = 0; i < camerasInScene.Length; ++i)
+        for (int i = 0; i < camerasInScene.Count; ++i)
         {
-            //If it's not the camera needed turn it off, and if it is, turn it on
-            if (camerasInScene[i] != viewCam)
-            {
-                camerasInScene[i].enabled = false;
-            }
-            else
-            {
-                viewCam.enabled = true;
-            }
+            camerasInScene[i].enabled = false;
         }
     }
 

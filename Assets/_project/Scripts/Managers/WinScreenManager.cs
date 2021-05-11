@@ -7,6 +7,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class WinScreenManager : MonoBehaviour
@@ -22,10 +23,16 @@ public class WinScreenManager : MonoBehaviour
     [SerializeField]
     private GameObject[] winScreenPrefabs;
 
-    //The list is in order of 1st-Last 
+    [SerializeField]
+    private WorldBounds worldBounds;
+
+    //The list is in order of 1st-Last (or just the winners depending on the gamemode)
     [SerializeField]
     private List<CharacterManager> charactersWhoWon = new List<CharacterManager>();
+    [SerializeField]
+    private List<CharacterManager> allPlayers = new List<CharacterManager>();
 
+    //The win screen itself (which is on the prefab object)
     private WinScreen winScreen;
 
     #endregion
@@ -43,20 +50,29 @@ public class WinScreenManager : MonoBehaviour
             instance = this;
         }
 
-        menuWaitBehaviour = menuWaitBehaviour ?? GetComponent<BasicTimerBehaviour>();   
+        menuWaitBehaviour = menuWaitBehaviour ?? GetComponent<BasicTimerBehaviour>();
+        worldBounds = worldBounds ?? FindObjectOfType<WorldBounds>();
     }
+
+
 
     #endregion
 
     #region Public Methods
 
     //Playing the win screen (and pass through the gamemode incase of different screens per gamemode)
-    public void PlayWinScreen(GAMEMODE_INDEX gamemode, List<CharacterManager> winningChars)
+    public void PlayWinScreen(GAMEMODE_INDEX gamemode, List<CharacterManager> everyPlayer, List<CharacterManager> winningChars)
     {
+        if (worldBounds)
+        {
+            Destroy(worldBounds);
+        }
+
+        allPlayers = everyPlayer;
         charactersWhoWon = winningChars;
 
         //Going through all the manager 
-        foreach (CharacterManager manager in winningChars)
+        foreach (CharacterManager manager in everyPlayer)
         {
             //Turning off the revelant components;
             manager.DisablePlayer();
@@ -64,14 +80,14 @@ public class WinScreenManager : MonoBehaviour
 
         //There could be a tidier way to do this but for now this will work
         //This will determine what's shown on the screen (so podiums vs football spots vs infected/sabotage scene)
-        //Podiums for classic gamemode
+        //Spinning Podiums for classic gamemode
         //Use football arena for football
-        //Using generator for sabotage
+        //Using a generator scene for sabotage
         //Using a small barn scene for infected
         GameObject go = Instantiate(winScreenPrefabs[(int)gamemode], transform);
         winScreen = go.GetComponent<WinScreen>();
 
-        winScreen.StartWinSequence(winningChars);
+        winScreen.StartWinSequence(allPlayers, winningChars);
 
         //Setting a timer for going back to the menu
         menuWaitBehaviour.SetDuration(winScreen.screenDuration);
