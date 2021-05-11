@@ -34,7 +34,8 @@ public class UIMenuBehaviour : MonoBehaviour
 
     public void SetupBehaviour()
     {
-        StartCoroutine(CountdownCoroutine());
+    //    UpdateUIMenuState(false);
+         StartCoroutine(CountdownCoroutine());
     }
 
 
@@ -58,7 +59,7 @@ public class UIMenuBehaviour : MonoBehaviour
 
     void UpdateCoreUIObjectsState(bool newState)
     {
-        if (sM)
+        if (sM !=null)
         {
             sM.PlaySound(clickSound);
         }
