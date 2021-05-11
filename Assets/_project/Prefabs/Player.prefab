@@ -809,8 +809,12 @@ MonoBehaviour:
   _movement: {fileID: 4394244838949972471}
   _cam: {fileID: 4394244838949972475}
   _playerAnimation: {fileID: 6282555755904903039}
+  _playerInteraction: {fileID: 4394244838949972468}
   soundManager: {fileID: 0}
   settings: {fileID: 0}
+  playerCameras:
+  - {fileID: 4394244838949972474}
+  - {fileID: 4394244838949972477}
   particlePlayer: {fileID: 11400000, guid: e4907c1dd2137b74ba1f270593241766, type: 2}
   elimVFX: 4
   confettiElimVFX: 5

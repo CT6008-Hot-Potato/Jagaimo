@@ -42,6 +42,8 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     [SerializeField]
     private RoundManager roundManager;
     [SerializeField]
+    private WinScreenManager winScreenManager;
+    [SerializeField]
     private FootballObjectContainer footballVariables;
 
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
@@ -52,6 +54,8 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //x magnitude is blue goals
     //y magnitude is orange goals
     private Vector2 score;
+
+    private WinScreenManager wScreenManager;
 
     [Header("UI Elements")]
 
@@ -81,6 +85,10 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
     private bool bExtraTime = false;
 
+    //Knowing who won after the game
+    [SerializeField]
+    private bool blueTeamWon = false;
+
     #endregion
 
     #region Unity Methods
@@ -88,8 +96,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //Getting the needed components
     private void OnEnable()
     {
-        roundManager = roundManager ?? GetComponent<RoundManager>();
+        roundManager = roundManager ?? RoundManager.roundManager;
         arenaManager = arenaManager ?? GetComponent<ArenaManager>();
+        winScreenManager = winScreenManager ?? WinScreenManager.instance;
 
         footballVariables = footballVariables ?? FootballObjectContainer.footballObjectContainer;
 
@@ -146,7 +155,34 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
         if (bExtraTime)
         {
-            //This goal was scored during extra time
+            //Seeing which team won
+            ThisWinCondition();
+
+            if (!winScreenManager)
+            {
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("No win screen manager", this);
+                }
+
+                UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+            }
+            else
+            {
+                //This goal was scored during extra time
+                if (blueTeamWon)
+                {
+                    //Playing the win screen and passing through the blue team as the winners
+                    winScreenManager.PlayWinScreen(Return_Mode(), currentActivePlayers, blueTeam);
+                    enabled = false;
+                }
+                else
+                {
+                    //Playing the win screen and passing through the orange team as the winners
+                    winScreenManager.PlayWinScreen(Return_Mode(), currentActivePlayers, orangeTeam);
+                    enabled = false;
+                }
+            }
         }
         else
         {
@@ -184,6 +220,13 @@ public class FootballGamemode : MonoBehaviour, IGamemode
                 currentActivePlayers[i].UnLockPlayer();
             }
         }
+    }
+
+    //Needed for win screen
+    public bool ReturnWinners()
+    {
+        //only needed for after the game so it shouldn't matter
+        return blueTeamWon;
     }
 
     #endregion
@@ -263,7 +306,27 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         //At the end on the countdown, seeing who has more goals
         if (ThisWinCondition())
         {
+            if (!winScreenManager)
+            {
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("No win screen manager", this);
+                }
+
+                UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+            }
+
             //A team won
+            if (blueTeamWon)
+            {
+                winScreenManager.PlayWinScreen(Return_Mode(),currentActivePlayers, blueTeam);
+                enabled = false;
+            }
+            else
+            {
+                winScreenManager.PlayWinScreen(Return_Mode(), currentActivePlayers, orangeTeam);
+                enabled = false;
+            }
             return;
         }
 
@@ -283,6 +346,16 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         //Blue or Orange team wins
         if (score.x != score.y)
         {
+            //This goal was scored during extra time
+            if (score.x > score.y)
+            {
+                blueTeamWon = true;
+            }
+            else
+            {
+                blueTeamWon = false;
+            }
+
             return true;
         }
 
@@ -306,13 +379,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             //Doing the loops based on the team amounts not the spot amounts
             for (int i = 0; i < orangeTeam.Count; ++i)
             {
-                Transform spotTransform = arenaManager.GettingSpot(1, spawnSpots[i]);
+                Transform spotTransform = arenaManager.GettingSpot(0, spawnSpots[i]);
 
                 orangeTeam[i].transform.position = spotTransform.position;
-
-                //This is the "solution" to not being able to turn the player based on the prefab object
-                PlayerCamera camera = orangeTeam[i].GetComponent<PlayerCamera>();
-                camera.ChangeYaw(180 / Time.deltaTime);
             }
         }
 
@@ -320,9 +389,13 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         {
             for (int i = 0; i < blueTeam.Count; ++i)
             {
-                Transform spotTransform = arenaManager.GettingSpot(0, spawnSpots[i]);
+                Transform spotTransform = arenaManager.GettingSpot(1, spawnSpots[i]);
 
                 blueTeam[i].transform.position = spotTransform.position;
+
+                //This is the "solution" to not being able to turn the player based on the prefab object
+                PlayerCamera camera = blueTeam[i].GetComponent<PlayerCamera>();
+                camera.ChangeYaw(180 / Time.deltaTime);
             }
         }
 

@@ -227,6 +227,15 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     #endregion
 
+    #region Public Methods
+
+    public bool ReturnWinners()
+    {
+        return infectedWon;
+    }
+
+    #endregion
+
     #region Private Methods
 
     private void WinScreen()
