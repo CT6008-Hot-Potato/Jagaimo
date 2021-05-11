@@ -44,6 +44,8 @@ public class InfectedWinScreen : WinScreen
 
     public override void StartWinSequence(List<CharacterManager> players, List<CharacterManager> winners)
     {
+        gamemode = rManager.GetComponent<InfectedGamemode>();
+
         if (gamemode)
         {
             bInfectedWon = gamemode.ReturnWinners();
