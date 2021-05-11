@@ -45,6 +45,9 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     private ArenaManager arenaManager;
 
     [SerializeField]
+    private WinScreenManager winScreenManager;
+
+    [SerializeField]
     private GameSettingsContainer settings;
 
     //The players within the game
@@ -66,6 +69,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     {
         roundManager = roundManager ?? RoundManager.roundManager;
         arenaManager = arenaManager ?? GetComponent<ArenaManager>();
+        winScreenManager = winScreenManager ?? WinScreenManager.instance;
 
         settings = GameSettingsContainer.instance;
     }
@@ -113,7 +117,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     private void RoundEnding()
     {
-        //The round has ended, it's win screen time...
+        //The round has ended, it's win screen time... for the survivors
         WinScreen();
     }
 
@@ -243,13 +247,15 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         //if infected won
         if (infectedWon)
         {
-
+            winScreenManager.PlayWinScreen(Return_Mode(), currentActivePlayers, activeInfected);
         }
         //if survivors won
         else
         {
-
+            winScreenManager.PlayWinScreen(Return_Mode(), currentActivePlayers, activeSurvivors);
         }
+
+        enabled = false;
     }
 
     private void PutCharactersInStartPositions()
