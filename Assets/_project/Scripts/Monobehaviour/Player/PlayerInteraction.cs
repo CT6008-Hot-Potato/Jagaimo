@@ -321,14 +321,20 @@ public class PlayerInteraction : MonoBehaviour
     public void LeftClick(InputAction.CallbackContext ctx)
     {
         leftClick = ctx.ReadValue<float>();
-        pA.CheckToChangeState("Grab", true);
+        if (!pA)
+        {
+            pA.CheckToChangeState("Grab", true);
+        }
     }
 
     //Method for using unity's new input system to detect right click
     public void RightClick(InputAction.CallbackContext ctx)
     {
         rightClick = ctx.ReadValue<float>();
-        pA.CheckToChangeState("Throw", true);
+        if (!pA)
+        {
+            pA.CheckToChangeState("Throw", true);
+        }
     }
 
     //Method for using unity's new input system to detect zooming in
