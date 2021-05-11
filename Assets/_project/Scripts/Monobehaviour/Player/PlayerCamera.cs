@@ -61,7 +61,9 @@ public class PlayerCamera : MonoBehaviour
     private float cameraRotateValue = 0;
     private float escapeValue = 0;
     private Vector2 cameraValue = Vector2.zero;
-    //Character type related arrays
+    //Character related 
+    [SerializeField]
+    private Mesh[] characterMesh;
     [SerializeField]
     private GameObject character;
     [SerializeField]
@@ -70,9 +72,11 @@ public class PlayerCamera : MonoBehaviour
     private Material[] materials;
     [SerializeField]
     private LayerMask[] mask;
-    //First and third person cameras
     [SerializeField]
     private GameObject playerThirdPerson;
+    private SkinnedMeshRenderer characterSkinnedMesh;
+    private SkinnedMeshRenderer characterArmsSkinnedMesh;
+    //First and third person cameras
     private Vector3 cameraMovementValue = Vector3.zero;
     private Vector3 freecamRotation;
     private float freeCamValueY;
@@ -124,6 +128,8 @@ public class PlayerCamera : MonoBehaviour
     // Assigning audio listeners, setting correct camera state and making sure queriesHitBackfaces is true for raycasting later
     void Start()
     {
+        characterArmsSkinnedMesh = characterArms.GetComponent<SkinnedMeshRenderer>();
+        characterSkinnedMesh = character.GetComponent<SkinnedMeshRenderer>();
         cM = GetComponent<LocalMPScreenPartioning>();
         Physics.queriesHitBackfaces = true;
         firstPersonCamPosition = firstPersonCamera.transform.localPosition;
@@ -149,11 +155,15 @@ public class PlayerCamera : MonoBehaviour
     //Function for setting the correct player mask up
     public void SetPlayerMask()
     { 
-        character.SetActive(true);
-        characterArms.SetActive(true);
         character.layer = 9 + playerIndex;
         characterArms.layer = 13 + playerIndex;
-        characterArms.GetComponentInChildren<SkinnedMeshRenderer>().material = character.GetComponentInChildren<SkinnedMeshRenderer>().material = materials[playerIndex];
+        if (!characterSkinnedMesh || !characterArmsSkinnedMesh)
+        {
+            characterArmsSkinnedMesh = characterArms.GetComponent<SkinnedMeshRenderer>();
+            characterSkinnedMesh = character.GetComponent<SkinnedMeshRenderer>();
+        }
+        characterSkinnedMesh.sharedMesh = characterMesh[playerIndex];
+        characterArmsSkinnedMesh.material = characterSkinnedMesh.material = materials[playerIndex];
         firstPersonCamera.cullingMask = mask[playerIndex + 4];
         thirdPersonCamera.cullingMask = mask[playerIndex];
     }

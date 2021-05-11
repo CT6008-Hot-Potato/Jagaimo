@@ -212,7 +212,7 @@ MonoBehaviour:
   master:
     m_OverrideState: 1
     m_Value:
-      <length>k__BackingField: 6
+      <length>k__BackingField: 3
       m_Loop: 0
       m_ZeroValue: 0
       m_Range: 1
@@ -220,46 +220,19 @@ MonoBehaviour:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
-          time: 0.01002735
+          time: 0
           value: 0
-          inSlope: 0.84651625
-          outSlope: 0.84651625
+          inSlope: 0
+          outSlope: 1
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.06016408
-          value: 0
-          inSlope: Infinity
-          outSlope: Infinity
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 0.114858694
-          value: 0.11717147
-          inSlope: 0.7266104
-          outSlope: 0.7266104
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 0.7938835
-          value: 0.86464655
-          inSlope: 2.21784
-          outSlope: 2.21784
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 0.7939835
-          value: 1
-          inSlope: Infinity
-          outSlope: Infinity
+          time: 0.38539553
+          value: 0.33474576
+          inSlope: 1.9879029
+          outSlope: 1.9879029
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
@@ -268,7 +241,7 @@ MonoBehaviour:
           time: 1
           value: 1
           inSlope: 1
-          outSlope: 1
+          outSlope: 0
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
