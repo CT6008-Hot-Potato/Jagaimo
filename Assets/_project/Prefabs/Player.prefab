@@ -867,6 +867,8 @@ MonoBehaviour:
   position: {fileID: 4369198653832675790}
   throwStrength: 11
   grabDistance: 5
+  selectedOutline: {fileID: 2100000, guid: 05963d1085acc8948a1d0974c348640a, type: 2}
+  defaultOutline: {fileID: 2100000, guid: 536a02e14012f12469c53601f399ea77, type: 2}
   playerInput: {fileID: 4394244838949972472}
   grabSound: 5
   throwSound: 6

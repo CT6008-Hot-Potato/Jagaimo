@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4234271753173637676}
   - component: {fileID: 5234400793119169490}
   - component: {fileID: 6345947832456151099}
-  - component: {fileID: 846625669930239681}
   - component: {fileID: 846625669930239682}
+  - component: {fileID: 3726265545058270203}
   m_Layer: 0
   m_Name: Pallet
   m_TagString: Untagged
@@ -84,20 +84,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &846625669930239681
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 846625669930239683}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8429302130186473499, guid: 8ed815f2c333f8043bade066d5b1c392, type: 3}
 --- !u!54 &846625669930239682
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -114,6 +100,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &3726265545058270203
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846625669930239683}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.027687564, y: 0.027477568, z: 0.004230958}
+  m_Center: {x: 1.4469755e-10, y: -8.936843e-11, z: 0.0021645755}
 --- !u!1 &1286695821974108743
 GameObject:
   m_ObjectHideFlags: 0

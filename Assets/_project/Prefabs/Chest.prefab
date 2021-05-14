@@ -92,8 +92,8 @@ GameObject:
   - component: {fileID: 1984894477010013052}
   - component: {fileID: 5077365323649516027}
   - component: {fileID: 4479395352545943776}
-  - component: {fileID: 2352226177862129950}
   - component: {fileID: 2352226177862129949}
+  - component: {fileID: 1532827531485460765}
   m_Layer: 0
   m_Name: Chest
   m_TagString: Untagged
@@ -165,20 +165,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2352226177862129950
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2352226177862129948}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -69760931014144829, guid: 8ed815f2c333f8043bade066d5b1c392, type: 3}
 --- !u!54 &2352226177862129949
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -195,3 +181,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &1532827531485460765
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2352226177862129948}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.007101951, y: 0.014013065, z: 0.004950177}
+  m_Center: {x: 0, y: 0, z: 0.0024951831}
