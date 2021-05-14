@@ -1,19 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿////////////////////////////////////////////////////////////
+// File: SoundSliderScript
+// Author: James Bradbury
+// Brief: A script to create and control sound sliders in the game
+//////////////////////////////////////////////////////////// 
+
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 public class SoundSliderScript : MonoBehaviour
 {
-    // Start is called before the first frame update
+    
+    [SerializeField] GameObject SliderPrefab; // reference to the slider prefab
+    [SerializeField] AudioMixer MyMixer;  //  reference to the games Mixer object
+    [SerializeField] AudioMixerGroup[] MyMixers; // ref to the groups inside the Mixer
 
-    [SerializeField] GameObject SliderPrefab;
-    [SerializeField] AudioMixer MyMixer;
-    [SerializeField] AudioMixerGroup[] MyMixers;
-
-    [SerializeField] float Max, Min, DefaultVal;
-    void OnEnable()
+    [SerializeField] float Max, Min, DefaultVal; // Stores the sliders minimum, max, and default values
+    void OnEnable() // If the soundslider object is enabled and the sliders aren't there already, create them  
     {
         if(transform.childCount ==0)
         {
@@ -38,9 +42,8 @@ public class SoundSliderScript : MonoBehaviour
         }
     }
 
-    void ChangeMixVolume(float newValue, int audioMixerIndex)
+    void ChangeMixVolume(float newValue, int audioMixerIndex) // When a value on the slider is changed, this function changes the corresponding value on the mixer  
     {
-
         if (MyMixer.SetFloat("MyExposedParam" + audioMixerIndex, newValue))
         {
 

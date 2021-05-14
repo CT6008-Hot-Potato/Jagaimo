@@ -1,4 +1,10 @@
-﻿using System;
+﻿////////////////////////////////////////////////////////////
+// File: ScriptablePowerUps
+// Author: James Bradbury
+// Brief: A profiler for powerups in the game
+//////////////////////////////////////////////////////////// 
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

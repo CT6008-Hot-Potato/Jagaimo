@@ -28,11 +28,7 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // Allows the tooltip to be recoloured, intended for elements that should be slightly translucent via assigning a colour with lower alpha. Leave as white if undesired (assigned in inspector)
     [SerializeField] protected Color OverlayColor = Color.white;
 
-    
-
-    
-
-
+  
     public class Tooltip 
     {
         public enum Orientation    // Options for the tooltips relative placement, can be expanded on if neccessary 
@@ -211,11 +207,6 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
 
     }
-
-
-
-   
-    
 
     public virtual void OnPointerEnter(PointerEventData eventData) // When the mouse pointer enters the UI Element, make the tooltip appear 
     {

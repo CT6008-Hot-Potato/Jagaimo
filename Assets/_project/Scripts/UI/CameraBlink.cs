@@ -1,5 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿////////////////////////////////////////////////////////////
+// File: CameraBlink
+// Author: James Bradbury
+// Brief: A script for testing a camera "blinking" animation, by dynamically changining the viewports
+//////////////////////////////////////////////////////////// 
+
+using System.Collections;
 using UnityEngine;
 
 public class CameraBlink: MonoBehaviour
@@ -31,40 +36,34 @@ public class CameraBlink: MonoBehaviour
 
 
         OpenLens();
-    }
+    }// On start of scene, create a new camera which acts as the background viewport for the camera while it is closed
 
 
     public void OpenLens()
     {
         StartCoroutine(LerpCameraBlink(TransformedValue, Constraints, 0));
-    }
+    } // plays the open blink animation
 
     public void CloseLens()
     {
         StartCoroutine(LerpCameraBlink(Constraints, TransformedValue, 0));
-    }
-
-
+    } // plays the close blink animation
 
     IEnumerator LerpCameraBlink(Vector2 Start, Vector2 End, float LerpValue)
     {
-
         LerpValue +=  Speed * Time.deltaTime;
         if (LerpValue > 1)
             LerpValue = 1;
         
         Vector2 LerpedValue = Vector2.Lerp(Start, End, LerpValue );
 
-
         MyCamera.rect = new Rect( (1 - LerpedValue.x) * 0.5f , (1 - LerpedValue.y) *0.5f , LerpedValue.x, LerpedValue.y);
-
-
-        
+       
         yield return null;
 
         if (LerpValue < 1)
             StartCoroutine(LerpCameraBlink(Start, End, LerpValue));
         
-    }
+    } // lerps the camera in or out of position
 
 }

@@ -1,8 +1,8 @@
-﻿/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///RebindButton.cs
-///Developed by James Bradbury
-///
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////
+// File: RebindButton
+// Author: James Bradbury
+// Brief: A script for rebind buttons to rebind controls
+//////////////////////////////////////////////////////////// 
 
 
 using System.Collections;
@@ -18,7 +18,7 @@ public class RebindButton : MonoBehaviour
     public InputAction currentBindingInput;
     private InputAction focusedInputAction;
     public PlayerInput pI;
-    public void UpdateDisplay(string action, string button, InputAction BindingInput)
+    public void UpdateDisplay(string action, string button, InputAction BindingInput) // Updates the text display on the button  
     {
         actionName.text = action;
         buttonName.text = button;
@@ -26,7 +26,7 @@ public class RebindButton : MonoBehaviour
         currentBindingInput = BindingInput;
     }
 
-    public void ButtonPressedStartRebind()
+    public void ButtonPressedStartRebind() // Starts the rebind button process
     {
         pI.enabled = false;
         focusedInputAction = pI.actions.FindAction(currentBindingInput.name);
@@ -41,8 +41,7 @@ public class RebindButton : MonoBehaviour
         rebindOperation.Start();
     }
 
-
-    void RebindCompleted()
+    void RebindCompleted() // After the rebind is accepted, this completes the rebind  
     {
         rebindOperation.Dispose();
         rebindOperation = null;
@@ -50,19 +49,9 @@ public class RebindButton : MonoBehaviour
         UpdateDisplay(currentBindingInput.name, currentBindingInput.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions), currentBindingInput);
         
     }
-
-    public void ButtonPressedResetBinding()
-    {
-        ResetBinding();
-    }
-
-    public void ResetBinding()
+    public void ResetBinding() // Resets button to original binding 
     {
         InputActionRebindingExtensions.RemoveAllBindingOverrides(currentBindingInput);
     }
 
-    void ToggleGameObjectState(GameObject targetGameObject, bool newState)
-    {
-        targetGameObject.SetActive(newState);
-    }
 }

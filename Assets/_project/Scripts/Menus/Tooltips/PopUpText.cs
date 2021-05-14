@@ -54,40 +54,6 @@ public class PopUpText : PopUpObject
             return;
         }
 
-        //else
-        //{
-        //    Text[] MyTexts =  MyGameObject.GetComponentsInChildren<Text>();
-        //    if (MyTexts.Length != 0)
-        //    {
-        //        for( int i = 0; i< text.Length; i ++)
-        //        {
-        //            if (i < MyTexts.Length)
-        //                MyTexts[i].text = text[i];
-        //                MyTexts[i].color = textcolor;
-        //                MyTexts[i].font = textFont;
-        //        }
-        //        return;
-        //    }
-        //}
-
-
-
-        //else
-        //{
-        //    TextMeshPro[] MyTexts = MyGameObject.GetComponentsInChildren<TextMeshPro>();
-        //    if (MyTexts.Length != 0)
-        //    {
-        //        for (int i = 0; i < text.Length; i++)
-        //        {
-        //            if (i < MyTexts.Length)
-        //                MyTexts[i].text = text[i];
-        //                MyTexts[i].color = textcolor;
-
-        //        }
-        //        return;
-        //    }
-        //}
-
         Text NewText = MyGameObject.AddComponent<Text>();
         NewText.text = "";
         NewText.color = textcolor;

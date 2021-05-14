@@ -14,7 +14,7 @@ using UnityEngine;
 
 public class ScriptableParticles : ScriptableObject
 {
-    public enum Particle // All registered game sounds 
+    public enum Particle // All registered game particles 
     {
         None,
         Fuse,
@@ -24,13 +24,14 @@ public class ScriptableParticles : ScriptableObject
         ConfettiBurst,
         Confetti,
         JumpDust,
-        LandImpact
+        LandImpact,
+        GoalExplosion
 
     };
 
 
     [Serializable]
-    public class ParticleSettings // Each palette
+    public class ParticleSettings // Each particle prefab is stored here with a corresponding name for easy finding
     {
         public string Name;
         public Particle particle;
@@ -38,9 +39,9 @@ public class ScriptableParticles : ScriptableObject
         public float Duration;
     }
 
-    public ParticleSettings[] Particles;    // array of all palettes
+    public ParticleSettings[] Particles;    // array of all particles
 
-    public ParticleSettings GetParticleByName(string myName)
+    public ParticleSettings GetParticleByName(string myName) // Returns a registered prefab with a specific string
     {
         foreach (ParticleSettings i in Particles)
         {
@@ -52,7 +53,7 @@ public class ScriptableParticles : ScriptableObject
         return null;
     }
 
-    public ParticleSettings GetParticleByType(Particle myName)
+    public ParticleSettings GetParticleByType(Particle myName) // Returns a registered prefab via enum, which is easier to keep track of
     {
         foreach (ParticleSettings i in Particles)
         {
@@ -64,7 +65,7 @@ public class ScriptableParticles : ScriptableObject
         return null;
     }
 
-    public GameObject CreateParticle(Particle particle, Vector3 AtHere)
+    public GameObject CreateParticle(Particle particle, Vector3 AtHere) // creates a particle at a desired location. It automatically destroys itself after it's lifetime has elapsed
     {
         ParticleSettings i = GetParticleByType(particle);
 
