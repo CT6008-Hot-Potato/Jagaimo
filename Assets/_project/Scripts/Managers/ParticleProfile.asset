@@ -48,3 +48,8 @@ MonoBehaviour:
     ParticlePrefab: {fileID: 8675475674887668326, guid: 3ad784ebfe6f1fb42854b11141a95642,
       type: 3}
     Duration: 0.5
+  - Name: GoalExplosion
+    particle: 9
+    ParticlePrefab: {fileID: 1035918616157787486, guid: 6dfed13658ebe0c4b8cdad70dbf1455c,
+      type: 3}
+    Duration: 3

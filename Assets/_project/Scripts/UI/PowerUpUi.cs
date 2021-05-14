@@ -1,11 +1,15 @@
-﻿using System.Collections;
+﻿////////////////////////////////////////////////////////////
+// File: PowerUpUi
+// Author: James Bradbury
+// Brief: A script for holding PowerUp behaviour
+//////////////////////////////////////////////////////////// 
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PowerUpUi : MonoBehaviour
 {
-    // Start is called before the first frame update
-
 
     enum PowerUp
     {
@@ -18,7 +22,6 @@ public class PowerUpUi : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         

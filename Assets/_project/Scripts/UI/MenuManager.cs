@@ -1,10 +1,8 @@
-﻿/////////////////////////////////////////////////////////////
-//
-//  Script Name: MenuManager.cs
-//  Creator: James Bradbury
-//  Description: A manager script that handles the menu buttons
-//  
-/////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////
+// File: MenuManager
+// Author: James Bradbury
+// Brief: A script to control context menus, for both main menus and game menus
+//////////////////////////////////////////////////////////// 
 
 using System.Collections;
 using System.Collections.Generic;
@@ -18,25 +16,12 @@ using TMPro;
 public class MenuManager : MonoBehaviour
 {
 
+    [SerializeField] private int StartScene; // On start up, opens the menu with this reference
+    [SerializeField] private bool SlowTransitions; // If enabled, uses the fader script to smoothly interpolate between menus
+    [SerializeField] private float TransitionSpeed, TransitionPauseAmount; // When Slow Transitions are enabled, these time values are used
+    [SerializeField] private GameObject[] MenuObjects; // Stores the gameobjects of all menus attached to this object
 
-
-    [SerializeField] GameObject backButtons;
-
-
-    [SerializeField]
-    private int StartScene;
-
-    [SerializeField]
-    private bool SlowTransitions;
-
-    [SerializeField]
-    private float TransitionSpeed, TransitionPauseAmount;
-
-
-    [SerializeField]
-    private GameObject[] MenuObjects;
-
-    public void Start()
+    public void Start() // At start of game, go to start menu  
     {
         SwitchOpenMenu(StartScene);
     }
@@ -90,16 +75,16 @@ public class MenuManager : MonoBehaviour
             }
 
 
-        }
+        } // stores all instances of text assets, text pro assets, and images
 
-    }
+    } // When Fading, all ui objects are stored in these fadeobkects  for lerping
 
 
-    public void LoadScene(string ThisScene)
+    public void LoadScene(string ThisScene) // Loads a scene from a string. If there is a transition camera enabled, close it first   
     {
         if (ThisScene == null) return;
         CameraBlink[] cameras = FindObjectsOfType<CameraBlink>();
-        //     Debug.Log(cameras.Length);
+  
         if (cameras.Length != 0)
         {
             float Fuse = Mathf.Infinity;
@@ -118,13 +103,13 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    IEnumerator DelayedLoad(float Delay, string Scene)
+    IEnumerator DelayedLoad(float Delay, string Scene) // Delays the loading of a scene until after a transition is complete  
     {
         yield return new WaitForSeconds(Delay);
         SceneManager.LoadScene(Scene);
     }
 
-    public void SwitchOpenMenu(int SelectedMenu)
+    public void SwitchOpenMenu(int SelectedMenu) // Switches the current menu to another on the array    
 
     {
         
@@ -179,14 +164,14 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    void SelectThisButton(GameObject Button)
+    void SelectThisButton(GameObject Button) // For controller support, the first button needs to be enabled. This selects an inputted button   
     {
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(Button);
 
     }
 
-    IEnumerator FadeIntermission(GameObject[] ToFadeIn, GameObject[] ToFadeOut)
+    IEnumerator FadeIntermission(GameObject[] ToFadeIn, GameObject[] ToFadeOut) // Fades the menu gradually. First by fading out the original menu, pause for a little time, and then fading in the new menu 
     {
         //Print the time of when the function is first called.
         List<FadeObject> fadeObjects = new List<FadeObject>();
@@ -243,22 +228,18 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    void FadeOut(FadeObject i)
+    void FadeOut(FadeObject i) // Fades the menu out
     {
         StartCoroutine(Fader(0, 0, i));
     }
-    void FadeIn(FadeObject i)
+    void FadeIn(FadeObject i) // Fades the menu in
     {
         StartCoroutine(Fader(0, 1, i));
     }
 
-    IEnumerator Fader(float BlendFactor, float Displacement, FadeObject j)
+    IEnumerator Fader(float BlendFactor, float Displacement, FadeObject j) // Fades a menu in or out using linear interpolation   
     {
-
         BlendFactor += j.FadeSpeed * Time.deltaTime;
-
-        //    Debug.Log(BlendFactor + " = " +j.textProAssets.Count + " " + j.textAssets.Count + " " + j.imageAssets.Count);
-
 
         for (int i = 0; i < j.textProAssets.Count; i++)
             j.textProAssets[i].color = Color.Lerp(j.textProColors[i], Color.clear, Mathf.Abs(Displacement - BlendFactor));
@@ -268,7 +249,6 @@ public class MenuManager : MonoBehaviour
             j.imageAssets[i].color = Color.Lerp(j.imageColors[i], Color.clear, Mathf.Abs(Displacement - BlendFactor));
 
         yield return null;
-        //      yield return new WaitForSeconds(j.FadeSpeed);
 
         if (BlendFactor <= 1)
         {
@@ -295,7 +275,7 @@ public class MenuManager : MonoBehaviour
 
 
 
-    public void CloseGame()
+    public void CloseGame() // Calling this closes the game completely
     {
         Application.Quit();
     }

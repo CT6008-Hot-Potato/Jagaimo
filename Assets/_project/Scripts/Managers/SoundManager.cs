@@ -7,15 +7,13 @@
 //Attach this to a singleton, and call it when you need a sound played!
 //////////////////////////////////////////////////////////// 
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 public class SoundManager : MonoBehaviour
 {
-    [SerializeField] AudioMixerGroup DefaultAudioMixer;
+    [SerializeField] AudioMixerGroup DefaultAudioMixer; // refererence to the audio mixer
   
-    [SerializeField] ScriptableSounds SoundBoard;
+    [SerializeField] ScriptableSounds SoundBoard; // reference to the sound profiler
     public void PlaySound(ScriptableSounds.Sounds Sound, Vector3 AtHere)
     {
         ScriptableSounds.SoundIdentity i = SoundBoard.GetSoundFromPalette(Sound);
@@ -33,7 +31,7 @@ public class SoundManager : MonoBehaviour
 
         MyAudio.Play();
         Destroy(MyObject, PlayMe.length);
-    }
+    } // Plays a sound at a specific location, using a volume in the profiler
 
     public void PlaySound(ScriptableSounds.Sounds Sound)
     {
@@ -56,75 +54,8 @@ public class SoundManager : MonoBehaviour
             Destroy(MyObject, PlayMe.length);
 
         }
-    }
+    } // If no location is supplied, the sound defaults to the position of the main camera
 
 
 
-    //public void PlaySound(AudioClip PlayMe, float PitchVariation)
-    //{
-    //    GameObject MyObject = new GameObject(PlayMe.name);
-    //    MyObject.transform.parent = Camera.main.transform;
-    //    MyObject.transform.position = Vector3.zero;
-
-    //    AudioSource MyAudio = MyObject.AddComponent<AudioSource>();
-
-    //    MyAudio.pitch = MyAudio.pitch + Random.Range(-PitchVariation, PitchVariation);
-    //    MyAudio.clip = PlayMe;
-    //    MyAudio.outputAudioMixerGroup = DefaultAudioMixer;
-
-    //    MyAudio.Play();
-    //    Destroy(MyObject, PlayMe.length);
-    //}
-    //public void PlaySound(AudioClip PlayMe)
-    //{
-    //    GameObject MyObject = new GameObject(PlayMe.name);
-    //    MyObject.transform.parent = transform;
-    //    MyObject.transform.position = Vector3.zero;
-
-    //    AudioSource MyAudio = MyObject.AddComponent<AudioSource>();
-
-    //    MyAudio.clip = PlayMe;
-    //    MyAudio.outputAudioMixerGroup = DefaultAudioMixer;
-
-    //    MyAudio.Play();
-    //    Destroy(MyObject, PlayMe.length);
-    //}
-    //public void PlaySound(AudioClip PlayMe, AudioMixerGroup audioMixer)
-    //{
-    //    GameObject MyObject = new GameObject(PlayMe.name);
-    //    MyObject.transform.parent = Camera.main.transform;
-    //    MyObject.transform.position = Vector3.zero;
-
-    //    AudioSource MyAudio = MyObject.AddComponent<AudioSource>();
-
-    //    MyAudio.clip = PlayMe;
-    //    MyAudio.outputAudioMixerGroup = audioMixer;
-
-    //    MyAudio.Play();
-    //    Destroy(MyObject, PlayMe.length);
-    //}
-    //public void PlaySound(AudioClip PlayMe, Vector3 AtHere, AudioMixerGroup audioMixer)
-    //{
-    //    GameObject MyObject = new GameObject(PlayMe.name);
-    //    MyObject.transform.position = AtHere;
-
-    //    AudioSource MyAudio = MyObject.AddComponent<AudioSource>();
-    //    MyAudio.clip = PlayMe;
-    //    MyAudio.outputAudioMixerGroup = audioMixer;
-    //    MyAudio.Play();
-    //    Destroy(MyObject, PlayMe.length);
-    //}
-    //public void PlaySound(AudioClip PlayMe, Vector3 AtHere, float PitchVariation, AudioMixerGroup audioMixer)
-    //{
-    //    GameObject MyObject = new GameObject(PlayMe.name);
-    //    MyObject.transform.position = AtHere;
-    //    AudioSource MyAudio = MyObject.AddComponent<AudioSource>();
-
-    //    MyAudio.pitch = MyAudio.pitch + Random.Range(-PitchVariation, PitchVariation);
-    //    MyAudio.clip = PlayMe;
-    //    MyAudio.outputAudioMixerGroup = audioMixer;
-
-    //    MyAudio.Play();
-    //    Destroy(MyObject, PlayMe.length);
-    //}
 }

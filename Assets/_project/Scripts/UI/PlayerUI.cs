@@ -6,19 +6,16 @@ using UnityEngine;
 //
 //  Script Name: PkayerUI.cs
 //  Creator: James Bradbury
-//  Description: A script that expands the timer to render the ui for the player timer
+//  Description: A test script that expands the timer to render the ui for the player timer
 //  
 /////////////////////////////////////////////////////////////
 
 
 public class PlayerUI : CountdownTimer
 {
-    // Start is called before the first frame update
-
-   // [SerializeField] int Mode; // 0 = debug, 1 = 1st person, 2 = 2nd person
 
     [SerializeField] GameObject PotatoObject, PotatoMask;
-    [SerializeField] float /*timerStart, timerEnd, timer,*/ MaskSizeStart, MaskSizeEnd, vibrateMagnitude;
+    [SerializeField] float MaskSizeStart, MaskSizeEnd, vibrateMagnitude;
     
     SpriteRenderer PotatoSprite;
     RectTransform PotatoOrigin, MaskOrigin;
@@ -27,7 +24,7 @@ public class PlayerUI : CountdownTimer
     [SerializeField] Color colorStart, colorEnd;
     
 
-    void Start()
+    void Start() // Grabs the sprites for the potato and fuse 
     {
         PotatoSprite    = PotatoObject.GetComponent<SpriteRenderer>();
         PotatoOrigin    = PotatoObject.GetComponent<RectTransform>();
@@ -35,14 +32,11 @@ public class PlayerUI : CountdownTimer
         PotatoPosition  = PotatoOrigin.anchoredPosition;
     }
 
-    // Update is called once per frame
     void LateUpdate()
     {
         if(GetCurrentTime() > GetMinTime())
         {
-
             float LerpAmount = Mathf.InverseLerp(GetMaxTime(), GetMinTime(), GetCurrentTime());
-
             LerpAmount = LerpAmount * LerpAmount;
             LerpPotato(LerpAmount);
         }
@@ -51,9 +45,7 @@ public class PlayerUI : CountdownTimer
             Debug.Log("Boom");
             Destroy(gameObject);
         }
-
-        
-    }
+    } // If the potato hasn't exploded, lerp the mask to make it look like the fuse is shortening
 
     void LerpPotato(float Step)
     {
@@ -71,7 +63,7 @@ public class PlayerUI : CountdownTimer
 
         PotatoOrigin.anchoredPosition = Displacement + PotatoPosition;
 
-    }
+    } // lerps the potato and shakes the potato around to make it appear animated
 
 
 }

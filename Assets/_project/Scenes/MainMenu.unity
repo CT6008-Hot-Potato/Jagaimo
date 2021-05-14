@@ -2159,7 +2159,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7000ac685cc4def49ac6e499f36c486a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backButtons: {fileID: 0}
   StartScene: 5
   SlowTransitions: 1
   TransitionSpeed: 1

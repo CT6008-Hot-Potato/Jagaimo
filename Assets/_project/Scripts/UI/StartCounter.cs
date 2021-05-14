@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///StartCounter.cs
+///Developed by James Bradbury
+///Test script to countdown text
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,17 +13,16 @@ using UnityEngine;
 public class StartCounter : MonoBehaviour
 {
 
-    [SerializeField] string[] ToShow;
+    [SerializeField] string[] ToShow; // Strings to show can be edited in inspector
+    [SerializeField] TextMeshProUGUI textAsset; // Reference to the text component
 
-    [SerializeField] TextMeshProUGUI textAsset;
-
-    private void Start()
+    private void Start() // At the start of the scene, start the countdown
     {
         StartCoroutine(CountdownCoroutine(0));
     }
 
 
-    IEnumerator CountdownCoroutine(int Progress)
+    IEnumerator CountdownCoroutine(int Progress) // A recursive call that iterates through the ToShow array, once per second
     {
         textAsset.text = ToShow[Progress];
         yield return new WaitForSeconds(1);
