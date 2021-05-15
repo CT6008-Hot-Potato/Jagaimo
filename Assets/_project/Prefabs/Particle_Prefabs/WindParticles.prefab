@@ -1,0 +1,199 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3065533118314392914
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4085574592756625233}
+  m_Layer: 0
+  m_Name: WindParticles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4085574592756625233
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3065533118314392914}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -49.96483, y: 62.257336, z: -37.011616}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 5223589042023084902}
+  - {fileID: 9183467215096378974}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6762276464582517193
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9183467215096378974}
+  - component: {fileID: 3779022622220879075}
+  m_Layer: 0
+  m_Name: WindZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9183467215096378974
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6762276464582517193}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 49.96483, y: -62.257336, z: 37.011616}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4085574592756625233}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!182 &3779022622220879075
+WindZone:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6762276464582517193}
+  m_Enabled: 1
+  m_Mode: 0
+  m_Radius: 20
+  m_WindMain: 1
+  m_WindTurbulence: 1
+  m_WindPulseMagnitude: 0.5
+  m_WindPulseFrequency: 0.01
+--- !u!1001 &8220911456359062242
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 4085574592756625233}
+    m_Modifications:
+    - target: {fileID: 4209565921881106820, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106820, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 93.56483
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106820, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 37.742664
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106820, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 17.511616
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106820, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106820, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106820, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106820, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106820, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106820, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106820, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: NoiseModule.frequency
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: ShapeModule.arc.value
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: ShapeModule.arc.spread
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: ShapeModule.donutRadius
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: InitialModule.rotation3D
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: ExternalForcesModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: ShapeModule.arc.speed.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: ExternalForcesModule.multiplierCurve.scalar
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106823, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: m_Name
+      value: Wind Effect
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ec5839ee83179754ca73f416751365da, type: 3}
+--- !u!4 &5223589042023084902 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4209565921881106820, guid: ec5839ee83179754ca73f416751365da,
+    type: 3}
+  m_PrefabInstance: {fileID: 8220911456359062242}
+  m_PrefabAsset: {fileID: 0}
