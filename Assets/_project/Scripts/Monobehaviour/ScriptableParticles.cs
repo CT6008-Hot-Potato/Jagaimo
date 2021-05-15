@@ -79,5 +79,26 @@ public class ScriptableParticles : ScriptableObject
         }
         return instance;
     }
+    public GameObject CreateParticle(Particle particle, Vector3 AtHere, Color OverrideColor) // creates a particle at a desired location with a color overrride  . It automatically destroys itself after it's lifetime has elapsed
+    {
+        ParticleSettings i = GetParticleByType(particle);
+
+        GameObject instance = Instantiate(i.ParticlePrefab);
+        instance.name = i.Name;
+        instance.transform.position = AtHere;
+
+
+        instance.TryGetComponent(out ParticleSystem p);
+        var main = p.main;
+
+        main.startColor = (OverrideColor);
+
+
+        if (i.Duration > 0)
+        {
+            Destroy(instance, i.Duration);
+        }
+        return instance;
+    }
 
 }
