@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿////////////////////////////////////////////////////////////
+// File: TriggerMenuMusic
+// Author: James Bradbury
+// Brief: A script to simply play the main menu music after the game is done loading
+//////////////////////////////////////////////////////////// 
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
