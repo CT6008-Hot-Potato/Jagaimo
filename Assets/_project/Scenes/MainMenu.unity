@@ -28023,7 +28023,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e07eee2e25e7b7f46a01ee0c176ed717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultMusic: {fileID: 8300000, guid: d8419b7edc8114145a7b7d0c4fc60fa1, type: 3}
+  DefaultMusic: {fileID: 8300000, guid: dd4e04c16f5dd5b40a476d793e8fc2a8, type: 3}
   MixerGroup: {fileID: 7834759804706455165, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
     type: 2}
 --- !u!114 &1825971090 stripped
