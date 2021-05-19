@@ -21,7 +21,6 @@ public class SabotageObject : MonoBehaviour, IInteractable
     #region Variables Needed
 
     [Header("Main Components Needed")]
-
     [SerializeField]
     private RoundManager rManager;
     [SerializeField]
@@ -31,19 +30,22 @@ public class SabotageObject : MonoBehaviour, IInteractable
     [SerializeField]
     private SabotageEscapeManager sabotageManager;
     [SerializeField]
-    private List<CharacterManager> charsInteracting;
+    private List<CharacterManager> charsInteracting = new List<CharacterManager>();
 
     [Header("Generator Fixing Variables")]
+    //The untagged player needs to be within the fixing area for a specific amount of time before they start to fix it
+    [SerializeField]
+    private float playerStopDuration = 2f;
+    List<CharacterManager> potentialFixers = new List<CharacterManager>();
 
-    //The timer before this object is finished
+    //The timer before this object is finished after starting to fix it
     private Timer sabotageTimer;
     [SerializeField]
-    private float duration = 10;
+    private float duration = 10f;
     [SerializeField]
     private bool isBeingUsed = false;
 
     [Header("Generator Breaking Variables")]
-
     //The length the generator crashes for when hit by the potato
     [SerializeField]
     private float crash_duration = 10;
@@ -84,6 +86,47 @@ public class SabotageObject : MonoBehaviour, IInteractable
         }
     }
 
+    //Something has entered the area
+    private void OnTriggerEnter(Collider other)
+    {
+        //If it's a player and this generator isnt currently locked
+        if (other.tag.Equals("Player") && !isLocked)
+        {
+            CharacterManager charManager = other.GetComponent<CharacterManager>();
+
+            if (charManager)
+            {
+                //And they are untagged
+                if (!charManager._tracker.isTagged)
+                {
+                    potentialFixers.Add(charManager);
+
+                    StartCoroutine(Co_PlayerInArea(playerStopDuration, charManager));
+                }
+            }
+        }
+    }
+
+    //Something has left the area
+    private void OnTriggerExit(Collider other)
+    {
+        //if it's a player
+        if (other.tag.Equals("Player"))
+        {
+            //And they were in the list, remove them
+            CharacterManager charManager = other.GetComponent<CharacterManager>();
+
+            if (charManager)
+            {
+                //And they are untagged
+                if (potentialFixers.Contains(charManager))
+                {
+                    potentialFixers.Remove(charManager);
+                }
+            }
+        }
+    }
+
     #endregion
 
     #region Public Methods
@@ -97,6 +140,11 @@ public class SabotageObject : MonoBehaviour, IInteractable
     {
         //Guard clause incase someone wants to interact with it during break
         if (isLocked) return;
+
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Player working on generator");
+        }
 
         isBeingUsed = true;
         charsInteracting.Add(charInteracting);
@@ -147,6 +195,8 @@ public class SabotageObject : MonoBehaviour, IInteractable
                 StopUsage(character);
             }
 
+            potentialFixers.Clear();
+
             if (soundManager)
             {
                 //Play "Generator Broken" Sound
@@ -177,6 +227,27 @@ public class SabotageObject : MonoBehaviour, IInteractable
         {
             SmokeVFX.Stop();
         }
+    }
+
+    private IEnumerator Co_PlayerInArea(float duration, CharacterManager cManager)
+    {
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            //The the player is moved or gets moved, restart the timer
+            if (cManager.GetComponent<Rigidbody>().velocity.magnitude > 0.5)
+            {
+                t = 0;
+            }
+
+            if (!potentialFixers.Contains(cManager))
+            {
+                StopCoroutine(Co_PlayerInArea(duration, cManager));
+            }
+
+            yield return null;
+        }
+
+        StartUsage(cManager);
     }
 
     #endregion

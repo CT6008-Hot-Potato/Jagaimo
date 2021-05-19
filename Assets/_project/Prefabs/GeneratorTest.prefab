@@ -4906,6 +4906,7 @@ GameObject:
   - component: {fileID: 7335257332330071601}
   - component: {fileID: 8218370098725886646}
   - component: {fileID: 5374387202258903488}
+  - component: {fileID: 2602106878752978459}
   m_Layer: 0
   m_Name: GeneratorTest
   m_TagString: Untagged
@@ -5008,8 +5009,23 @@ MonoBehaviour:
   soundManager: {fileID: 0}
   sabotageManager: {fileID: 0}
   charsInteracting: []
+  playerStopDuration: 2
   duration: 15
   isBeingUsed: 0
   crash_duration: 4
   isLocked: 0
   SmokeVFX: {fileID: 7743050350174959793}
+--- !u!136 &2602106878752978459
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9136939282759591908}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 2
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
