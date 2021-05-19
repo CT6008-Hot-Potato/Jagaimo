@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿////////////////////////////////////////////////////////////
+// File: UIScriptableObject
+// Author: James Bradbury
+// Brief:  A test script for profiling UI elements
+//////////////////////////////////////////////////////////// 
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +14,6 @@ using UnityEngine;
 public class UIScriptableObject : ScriptableObject
 {
 
-    public Sprite Potato, PotatoAlpha, PotatoFuse, MaskAlpha;      
+    public Sprite Potato, PotatoAlpha, PotatoFuse, MaskAlpha;   // Exposes sprites to the inspector so that sprites can be allocated     
 
 }

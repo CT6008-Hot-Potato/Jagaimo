@@ -1,4 +1,9 @@
-﻿using System;
+﻿////////////////////////////////////////////////////////////
+// File: ScriptableSounds
+// Author: James Bradbury
+// Brief:  A profile which contains all the sound effects in the game for reference
+//////////////////////////////////////////////////////////// 
+using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -20,17 +25,14 @@ public class ScriptableSounds : ScriptableObject
         Jumping
     };
 
-
-
-    [Serializable]
-    public class SoundIdentity 
+    [Serializable]    public class SoundIdentity 
     {
         public Sounds name;
         public AudioClip[]  file;
         public AudioMixerGroup audioMixer;
         public float defaultVolume;
         public float pitchVariation;
-    }
+    }  // Each sound is stored in these classes which are exposed to the inspector
 
     public SoundIdentity[] soundPalette;    // array of all palettes
 
@@ -47,7 +49,7 @@ public class ScriptableSounds : ScriptableObject
             }
         }
         return returnSound;
-    }
+    } // finds a sound by an enum and returns it
 
     
 

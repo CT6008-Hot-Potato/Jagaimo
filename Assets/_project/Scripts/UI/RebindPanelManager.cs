@@ -1,7 +1,7 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///RebindPanelManager.cs
 ///Developed by James Bradbury
-///
+///A component to set rebind buttons ready for rebinding
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -21,8 +21,8 @@ public class RebindPanelManager : MonoBehaviour
     public string MapName; // Name of the list of inputs being changed. (player 1, player 2, etc)
 
     
-    // Start is called before the first frame update
-    void Start()
+
+    void Start() // for each type of button in the input manager, create a rebind button for it and ready it for rebinding   
     {
         inputAction = transform.root.GetComponent<PlayerInput>();
         foreach (InputAction i in ControlScheme.FindActionMap(MapName).actions)

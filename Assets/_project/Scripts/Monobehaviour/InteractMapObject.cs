@@ -20,6 +20,9 @@ public class InteractMapObject : MonoBehaviour, IInteractable
     //Playing an animation
     [SerializeField]
     private Animation obj_anim;
+    [SerializeField]
+    private Rigidbody _rb;
+
     void IInteractable.Interact() => Interact();
     private void Interact()
     {
@@ -43,7 +46,11 @@ public class InteractMapObject : MonoBehaviour, IInteractable
         {
             Debug.Log("Here");
             Destroy(obj_anim);
-            gameObject.AddComponent<Rigidbody>().mass = 5;
+            
+            if (_rb)
+            {
+                _rb.isKinematic = false;
+            }
         }
     }
 }

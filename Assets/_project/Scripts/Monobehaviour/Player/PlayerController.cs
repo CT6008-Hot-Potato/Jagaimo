@@ -32,9 +32,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Transform rotationPosition;
     private Rigidbody rb;
-    private float speed;
+    public float speed;
     private float downForce = 15;
-    private bool grounded = false;
+    public bool grounded = false;
     private bool sliding = false;
     private bool climbing = false;
     private bool touchingWall;
@@ -56,6 +56,8 @@ public class PlayerController : MonoBehaviour
     private ScriptableSounds.Sounds slideSound, crouchSound, jumpSound;
     private SoundManager sM;
     private PlayerAnimation pA;
+    [SerializeField]
+    private ScriptableParticles particles;
     #endregion
     //Enums
     #region Enums
@@ -65,17 +67,17 @@ public class PlayerController : MonoBehaviour
         INTERACTING,
         CROUCHING,
         WALKING,
+        STANDING
     }
     //Enum variable
     private pM playerMovement;
-
     #endregion Enum
 
     //Setting up and assigning on awake
     private void Start()
     {
-        pA = FindObjectOfType<PlayerAnimation>();
-        pI = FindObjectOfType<PlayerInteraction>();
+        pA = GetComponent<PlayerAnimation>();
+        pI = GetComponent<PlayerInteraction>();
         sM = FindObjectOfType<SoundManager>();
         rebindingDisplay = FindObjectOfType<RebindingDisplay>();
         speed = walkSpeed;
@@ -129,7 +131,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         //If player movement state isn't interacting
-        if (playerMovement != pM.INTERACTING && pC.cameraState != PlayerCamera.cS.FREECAMUNCONSTRAINED)
+        if (playerMovement != pM.INTERACTING && playerMovement != pM.INTERACTING && pC.cameraState != PlayerCamera.cS.FREECAMUNCONSTRAINED)
         {
             //Calculate how fast player should be moving
             Vector3 targetVelocity = movementValue;
@@ -146,6 +148,7 @@ public class PlayerController : MonoBehaviour
             // Jump if grounded and input for jump pressed
             if (grounded && jumpValue > 0.1f)
             {
+                particles.CreateParticle(ScriptableParticles.Particle.LandImpact, new Vector3(transform.position.x, transform.position.y - 1, transform.position.z));
                 pA.CheckToChangeState("Jump");
                 sM.PlaySound(jumpSound);
                 //Jumpine velocity for the player
@@ -158,6 +161,7 @@ public class PlayerController : MonoBehaviour
                 if (jumpValue > 0.1f && pI.WallKick())
                 {
                     pA.CheckToChangeState("JumpFromWall");
+                    particles.CreateParticle(ScriptableParticles.Particle.AirImpact, new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.5f));
                     climbing = true;
                     StartCoroutine(Co_ClimbTime());
                 }
@@ -166,7 +170,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (touchingWall)
                     {
-                        rb.AddForce((-rotationPosition.TransformDirection(movementValue) * Time.deltaTime) * 500, ForceMode.Impulse);
+                        rb.AddForce((-rotationPosition.TransformDirection(movementValue) * Time.deltaTime) * 1000, ForceMode.Impulse);
                     }
                     if (!sliding)
                     {
@@ -178,6 +182,7 @@ public class PlayerController : MonoBehaviour
             //Default force pushed down with 
             else if (downForce != 15)
             {
+                particles.CreateParticle(ScriptableParticles.Particle.JumpDust,new Vector3 (transform.position.x, transform.position.y - 1, transform.position.z));
                 downForce = 15;
             }
             else if (!sliding)
@@ -267,6 +272,10 @@ public class PlayerController : MonoBehaviour
                 //rebindingDisplay.DisplayBindingMenu(false);
                 playerMovement = pM.WALKING;
                 break;
+            case 3:
+                //MAKE SURE PLAYERS CAN EXIT THIS STATE
+                playerMovement = pM.STANDING;
+                break;
             default:
                 Debug.Log("Given value for ChangeMovement is too high.");
                 break;
@@ -338,6 +347,8 @@ public class PlayerController : MonoBehaviour
                         if (speed == runSpeed && movementValue.z > 0.1f)
                         {
                             sliding = true;
+                            particles.CreateParticle(ScriptableParticles.Particle.Fuse, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z));
+
                             sM.PlaySound(slideSound);
                             StartCoroutine(Co_SlideTime());
                         }
@@ -367,6 +378,8 @@ public class PlayerController : MonoBehaviour
                     speed = walkSpeed;
                 }
                 break;
+            case pM.STANDING:
+                break;
             default:
                 Debug.Log("Given value for MovementType is too high.");
                 break;
@@ -382,7 +395,7 @@ public class PlayerController : MonoBehaviour
         while (timer.isActive)
         {
             timer.Tick(Time.deltaTime);
-            pC.ChangeYaw();
+            pC.ChangeYaw(720);
             yield return null;
         }
         rb.velocity = Vector3.zero;

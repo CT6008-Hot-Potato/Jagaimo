@@ -19,7 +19,7 @@ public class BasicTimerBehaviour : MonoBehaviour
 
     [Header("The base timer")]
     [SerializeField]
-    private float duration = 1f;
+    private float duration = 5f;
     Timer timer;
     public UnityEvent TimerBehaviour;
 
@@ -44,6 +44,11 @@ public class BasicTimerBehaviour : MonoBehaviour
         }
 
         StartCoroutine(Co_RunTimer());
+    }
+
+    public void SetDuration(float newDuration)
+    {
+        duration = newDuration;
     }
 
     #endregion
@@ -71,11 +76,17 @@ public class BasicTimerBehaviour : MonoBehaviour
             yield return null;
         }
 
-        //The text shouldn't show the timer anymore
-        timerText.enabled = false;
+        //The text shouldn't show the timer anymore if there is a timer
+        if (timerText)
+        {
+            timerText.enabled = false;
+        }
 
         //Run whatever is hooked up in the inspector
-        TimerBehaviour.Invoke();
+        if (TimerBehaviour != null)
+        {
+            TimerBehaviour.Invoke();
+        }
     }
 
     //Updating the timer text

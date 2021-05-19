@@ -26,11 +26,14 @@ public class PlayerAnimation : MonoBehaviour
 
     [SerializeField]
     private Animation animation;
+    [SerializeField]
+    private Animation animationArms;
     private bool animationLock = false;
     private Timer timer;
 
     private void Start()
     {
+        animation.Play("Idle");
         animation.Play("Idle");
     }
 
@@ -43,6 +46,7 @@ public class PlayerAnimation : MonoBehaviour
         else if (!animationLock)
         {
             animation.CrossFade(animationState);
+            animationArms.CrossFade(animationState);
             return true;
         }
         return false;
@@ -58,6 +62,7 @@ public class PlayerAnimation : MonoBehaviour
         {
             animationLock = lockAnimation;
             animation.CrossFade(animationState);
+            animationArms.CrossFade(animationState);
             StartCoroutine(Co_AnimationTime(animation.GetClip(animationState).length));
             return true;
         }
