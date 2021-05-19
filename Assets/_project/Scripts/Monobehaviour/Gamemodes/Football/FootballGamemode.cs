@@ -57,6 +57,13 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
     private WinScreenManager wScreenManager;
 
+    [SerializeField]
+    private Transform[] goalVFXPositions;
+
+    [SerializeField]
+    private ScriptableParticles particlePlayer;
+    private ScriptableParticles.Particle VFX = ScriptableParticles.Particle.GoalExplosion;
+
     [Header("UI Elements")]
 
     [SerializeField]
@@ -107,6 +114,8 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         scoreboard = footballVariables.scoreboard;
         potatoRB = footballVariables.potatoRB;
         goalPauseTimer = footballVariables.goalPauseTimer;
+        goalVFXPositions = footballVariables.vfxPoints;
+        particlePlayer = footballVariables.particleSpawner;
     }
 
     #endregion
@@ -130,6 +139,12 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             {
                 scoreboard.UpdateBlueScoreText();
             }
+
+            //playing vfx in the orange goal's position
+            if (particlePlayer && goalVFXPositions[0])
+            {
+                particlePlayer.CreateParticle(ScriptableParticles.Particle.GoalExplosion, goalVFXPositions[1].position);
+            }
         }
         else
         {
@@ -138,6 +153,12 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             if (scoreboard)
             {
                 scoreboard.UpdateRedScoreText();
+            }
+
+            //Playing vfx in the blue goal's position
+            if (particlePlayer && goalVFXPositions[1])
+            {
+                particlePlayer.CreateParticle(ScriptableParticles.Particle.GoalExplosion, goalVFXPositions[0].position);
             }
         }
 
