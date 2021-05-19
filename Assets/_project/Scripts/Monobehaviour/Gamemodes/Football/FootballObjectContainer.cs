@@ -11,6 +11,8 @@ using UnityEngine;
 
 public class FootballObjectContainer : MonoBehaviour
 {
+    #region Variables for the gamemode script
+
     //There should only be 1 on scenes
     public static FootballObjectContainer footballObjectContainer;
 
@@ -30,6 +32,24 @@ public class FootballObjectContainer : MonoBehaviour
     public Rigidbody potatoRB;
     [SerializeField]
     public BasicTimerBehaviour goalPauseTimer;
+
+    [SerializeField]
+    public ScriptableParticles particleSpawner;
+
+    [SerializeField]
+    public Transform[] vfxPoints;
+
+    #endregion
+
+    #region Variables for this script
+
+    //Potential variables for capture the potato mutator
+    [SerializeField]
+    Transform[] flagpoles;
+    [SerializeField]
+    Transform[] goalObjects;
+
+    #endregion
 
     private void Awake()
     {

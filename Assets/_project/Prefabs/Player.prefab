@@ -294,7 +294,7 @@ GameObject:
   - component: {fileID: 4369198653127604788}
   m_Layer: 0
   m_Name: 'CarryPosition '
-  m_TagString: Untagged
+  m_TagString: PositionStay
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
