@@ -29,7 +29,13 @@ public class Potato : MonoBehaviour
 
     [SerializeField]
     private PotatoMagnetism magnetism;
+    [SerializeField]
     private float fMagnetismStr = 0.5f;
+    [SerializeField]
+    private float fMagnetismDur = 0.5f;
+
+    //A way to force it from the inspector
+    [SerializeField]
     private bool isMagnetised = false;
 
     #endregion
@@ -53,11 +59,15 @@ public class Potato : MonoBehaviour
                 _coll.material = bouncyMaterial;
             }
 
-            if (gameSettings.HasGenMutator(0) && magnetism)
+            //Magnetised mutator
+            if (gameSettings.HasGenMutator(0) || isMagnetised)
             {
-                isMagnetised = true;
-                magnetism.enabled = true;
-                magnetism.SetMagnetismStr(fMagnetismStr);
+                if (magnetism)
+                {
+                    magnetism.enabled = true;
+                    magnetism.SetMagnetismStr(fMagnetismStr);
+                    magnetism.SetMagnetismDur(fMagnetismDur);
+                }
             }
         }
 
