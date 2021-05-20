@@ -558,17 +558,47 @@ PrefabInstance:
     - target: {fileID: 1482666389230259541, guid: 360f15e8b049a344e9682389f1679f3d,
         type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
-      value: 'Resolution - 1024 x 768 '
+      value: '1024x768 '
       objectReference: {fileID: 0}
     - target: {fileID: 1482666389230259541, guid: 360f15e8b049a344e9682389f1679f3d,
         type: 3}
       propertyPath: m_Options.m_Options.Array.data[1].m_Text
-      value: "Resolution -1600 \xD7 900"
+      value: 1600x900
       objectReference: {fileID: 0}
     - target: {fileID: 1482666389230259541, guid: 360f15e8b049a344e9682389f1679f3d,
         type: 3}
       propertyPath: m_Options.m_Options.Array.data[2].m_Text
-      value: "Resolution - 1280 \xD7 800"
+      value: 1280x800
+      objectReference: {fileID: 0}
+    - target: {fileID: 1482666389230259541, guid: 360f15e8b049a344e9682389f1679f3d,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1482666389230259541, guid: 360f15e8b049a344e9682389f1679f3d,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1482666389230259541, guid: 360f15e8b049a344e9682389f1679f3d,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1482666389230259541, guid: 360f15e8b049a344e9682389f1679f3d,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: UpdateResolution
+      objectReference: {fileID: 0}
+    - target: {fileID: 1482666389230259541, guid: 360f15e8b049a344e9682389f1679f3d,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIMenuBehaviour, Scripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 1482666389230259541, guid: 360f15e8b049a344e9682389f1679f3d,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 1998567541889557116, guid: 360f15e8b049a344e9682389f1679f3d,
         type: 3}

@@ -5,7 +5,10 @@
 //////////////////////////////////////////////////////////// 
 
 using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIMenuBehaviour : MonoBehaviour
 {
@@ -16,12 +19,52 @@ public class UIMenuBehaviour : MonoBehaviour
 
     public PlayerCamera CameraManager;
 
+    Resolution[] resolutions;
+    public TMP_Dropdown resolutionsDropdown;
+
+
+    [SerializeField]
+    private TextMeshProUGUI currentResolution; 
 
     public void Awake() // On enable, grab the neccisary scripts and start internal countdown timer
     {
         sM = FindObjectOfType<SoundManager>();
         StartCoroutine(CountdownCoroutine());
     }
+
+
+    public void Start()
+    {
+        resolutions = Screen.resolutions;
+        resolutionsDropdown.ClearOptions();
+        List<string> options = new List<string>();
+        for (int i = 0; i < resolutions.Length; i++)
+        {
+            string option = resolutions[i].width + " x " + resolutions[i].height;
+            if (resolutions[i].width <= Screen.width && resolutions[i].height <= Screen.height)
+            {
+                options.Add(option);
+            }
+        }
+        resolutionsDropdown.AddOptions(options);
+
+        StartCoroutine(LateResolutionChanger());
+    }
+
+    private IEnumerator LateResolutionChanger()
+    {
+        yield return new WaitForSeconds(1);
+        if (PlayerPrefs.GetInt("playerGameResolutionx", 1920) > 0 && PlayerPrefs.GetInt("playerGameResolutionY", 1080) > 0)
+        {
+            currentResolution.text = "1920" + " x " + "1080";
+        }
+        else
+        {
+            currentResolution.text = (PlayerPrefs.GetInt("playerGameResolutionX", 1920).ToString() + " x " + PlayerPrefs.GetInt("playerGameResolutionY", 1080).ToString());
+        }
+     
+    }
+
 
     IEnumerator CountdownCoroutine() // The menu starts enabled for the initial countdown, and then closes
     {
@@ -72,5 +115,18 @@ public class UIMenuBehaviour : MonoBehaviour
         if (CameraManager == null) return;
         CameraManager.otherCamSpeed = i;
     }
+
+    public void UpdateFullScreen(bool i)
+    {
+        Screen.fullScreen = i;
+        Screen.SetResolution(Screen.width, Screen.height, i);
+    }
+
+
+    public void UpdateResolution(int i)
+    {
+        Screen.SetResolution(resolutions[i].width, resolutions[i].height, Screen.fullScreen);
+    }
+
 
 }
