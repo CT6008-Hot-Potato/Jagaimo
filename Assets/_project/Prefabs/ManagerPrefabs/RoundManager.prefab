@@ -44,11 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bdec4ac71d9c244fbae67423d897b75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  potatoPrefab: {fileID: 3936309112493092562, guid: f7f0b863eae4bcc488ea60be2536dc48,
+    type: 3}
   startCountdown: {fileID: 0}
   eventText: {fileID: 0}
-  localMPIndexer: {fileID: 0}
+  playerJoinManager: {fileID: 0}
   settings: {fileID: 0}
   startWhenReady: 1
+  iAmountOfExpectedPlayers: 1
+  testMode: 0
 --- !u!114 &263327767283779295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,3 +68,5 @@ MonoBehaviour:
   allSpots:
     spots: []
   arenaSpots: []
+  powerUpSpots:
+    spots: []

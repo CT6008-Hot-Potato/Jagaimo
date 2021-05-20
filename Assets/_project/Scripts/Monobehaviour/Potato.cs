@@ -27,6 +27,11 @@ public class Potato : MonoBehaviour
     [SerializeField]
     private Transform fusePoint;
 
+    [SerializeField]
+    private PotatoMagnetism magnetism;
+    private float fMagnetismStr = 0.5f;
+    private bool isMagnetised = false;
+
     #endregion
 
     #region Unity Methods
@@ -46,6 +51,13 @@ public class Potato : MonoBehaviour
             {
                 //Making the potato bouncy
                 _coll.material = bouncyMaterial;
+            }
+
+            if (gameSettings.HasGenMutator(0) && magnetism)
+            {
+                isMagnetised = true;
+                magnetism.enabled = true;
+                magnetism.SetMagnetismStr(fMagnetismStr);
             }
         }
 

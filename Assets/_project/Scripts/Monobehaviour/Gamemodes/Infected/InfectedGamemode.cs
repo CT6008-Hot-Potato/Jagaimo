@@ -60,6 +60,9 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //Knowing whether the infected won or not
     private bool infectedWon = false;
 
+    [SerializeField]
+    private GameObject potatoPrefab;
+
     #endregion
 
     #region Unity Methods
@@ -196,6 +199,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
         //TODO: Make 2 types of tagged "Forceably" (which multiplies the potatoes in the game) and "Softly" (which retains the potato it was tagged by)
         //TODO NOTE: This might be on the tagged tracker? and this gamemode will switch the one used
+        Instantiate(potatoPrefab);
 
         //Since someone is tagged, the infected could have won
         if (ThisWinCondition())
