@@ -31,6 +31,8 @@ public class TipLoader : MonoBehaviour
     float sliderProgress;
     InputAction myAction;
 
+    AudioSource myAudio;
+
     void Start()
     {
         if (textObject == null)
@@ -47,7 +49,7 @@ public class TipLoader : MonoBehaviour
 
         menuComponent = menuObject.GetComponent<MenuManager>();
 
-
+        TryGetComponent(out myAudio);
 
 
 
@@ -80,6 +82,11 @@ public class TipLoader : MonoBehaviour
         if (sliderProgress >= 1)
         {
 
+            if (myAudio != null)
+            {
+                myAudio.Play();
+
+            }
             LoadObject.text = LoadPrompt;
 
             myAction = new InputAction(binding: "/*/<button>");

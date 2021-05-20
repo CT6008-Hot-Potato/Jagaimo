@@ -26,10 +26,15 @@ public class SoundManager : MonoBehaviour
 
         MyAudio.volume = i.defaultVolume;
         MyAudio.pitch = MyAudio.pitch + Random.Range(-i.pitchVariation, i.pitchVariation);
+
         MyAudio.clip = PlayMe;
         MyAudio.outputAudioMixerGroup = i.audioMixer;
 
-        MyAudio.Play();
+        if (MyAudio != null)
+        {
+            MyAudio.Play();
+        }
+
         Destroy(MyObject, PlayMe.length);
     } // Plays a sound at a specific location, using a volume in the profiler
 
@@ -50,7 +55,10 @@ public class SoundManager : MonoBehaviour
             MyAudio.clip = PlayMe;
             MyAudio.outputAudioMixerGroup = i.audioMixer;
 
-            MyAudio.Play();
+            if (MyAudio != null)
+            {
+                MyAudio.Play();
+            }
             Destroy(MyObject, PlayMe.length);
 
         }
