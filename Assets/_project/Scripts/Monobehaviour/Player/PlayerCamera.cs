@@ -44,11 +44,6 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     private Transform rotationPosition;
     private CapsuleCollider collider;
-    [SerializeField]
-    private float cameraSensitivity;
-    //Amplify camera sensitivity specific to controllers
-    [SerializeField]
-    private float controllerCameraSensitivityMultiplier = 1.25f;
     //Pitch and yaw speed for camera
     private float pitch;
     private float yaw;
@@ -83,6 +78,9 @@ public class PlayerCamera : MonoBehaviour
     public bool flipSpin;
     public bool freecamLock = false;
     public bool cameraRotationLock = false;
+    public float cameraSensitivity = 1;
+    //Amplify camera sensitivity specific to controllers
+    public float controllerCameraSensitivityMultiplier = 3;
     [SerializeField]
     private GameObject crosshair;   
     #endregion Variables
