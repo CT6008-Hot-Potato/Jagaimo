@@ -14,6 +14,8 @@ public class UIMenuBehaviour : MonoBehaviour
     public GameObject uiMenuCanvasObject; // refferences the menumanager object
     private SoundManager sM; // references the sound manager for sound effects
 
+    public PlayerCamera CameraManager;
+
 
     public void Awake() // On enable, grab the neccisary scripts and start internal countdown timer
     {
@@ -52,5 +54,23 @@ public class UIMenuBehaviour : MonoBehaviour
         uiMenuCanvasObject.SetActive(newState);
     }
 
-    
+
+    public void UpdateMouseSens(float i)
+    {
+        if (CameraManager == null) return;
+        CameraManager.cameraSensitivity = i;
+    }
+
+    public void UpdateControllerSens(float i)
+    {
+        if (CameraManager == null) return;
+        CameraManager.controllerCameraSensitivityMultiplier = i;
+    }
+
+    public void UpdateSpectatorSpeed(float i)
+    {
+        if (CameraManager == null) return;
+        CameraManager.otherCamSpeed = i;
+    }
+
 }
