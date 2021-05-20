@@ -35,6 +35,9 @@ public class WinScreenManager : MonoBehaviour
     //The win screen itself (which is on the prefab object)
     private WinScreen winScreen;
 
+    [SerializeField]
+    private bool bReturnToMenu = true;
+
     #endregion
 
     #region Unity Methods
@@ -74,11 +77,13 @@ public class WinScreenManager : MonoBehaviour
         //Going through all the manager 
         foreach (CharacterManager manager in everyPlayer)
         {
-            //Turning off the revelant components;
-            manager.DisablePlayer();
+            if (manager)
+            {
+                //Turning off the revelant components;
+                manager.DisablePlayer();
+            }
         }
 
-        //There could be a tidier way to do this but for now this will work
         //This will determine what's shown on the screen (so podiums vs football spots vs infected/sabotage scene)
         //Spinning Podiums for classic gamemode
         //Use football arena for football
@@ -90,8 +95,11 @@ public class WinScreenManager : MonoBehaviour
         winScreen.StartWinSequence(allPlayers, winningChars);
 
         //Setting a timer for going back to the menu
-        menuWaitBehaviour.SetDuration(winScreen.screenDuration);
-        menuWaitBehaviour.CallOnTimerStart();
+        if (bReturnToMenu)
+        {
+            menuWaitBehaviour.SetDuration(winScreen.screenDuration);
+            menuWaitBehaviour.CallOnTimerStart();
+        }
     }
 
     //Going back to the main menu
