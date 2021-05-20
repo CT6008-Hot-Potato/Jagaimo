@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿////////////////////////////////////////////////////////////
+// File: PotatoMagnetism.cs
+// Author: Charles Carter
+// Date Created: 20/05/21
+// Brief: The script for the potato to steer towards the neareast untagged player when in range
+////////////////////////////////////////////////////////////
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +19,11 @@ public class PotatoMagnetism : MonoBehaviour
     Transform target;
     Rigidbody _rb;
 
+    bool bCanHone = true;
+
     #endregion
+
+    #region Unity Methods
 
     private void Awake()
     {
@@ -32,10 +43,18 @@ public class PotatoMagnetism : MonoBehaviour
             if (!cManager._tracker.isTagged && MagnestismStrength > 0 && MagnestismDuration > 0)
             {
                 target = other.transform;
-                StartCoroutine(Co_HomePotato());
+
+                if (bCanHone)
+                {
+                    StartCoroutine(Co_HomePotato());
+                }
             }
         }
     }
+
+    #endregion
+
+    #region Public Methods
 
     public void SetMagnetismStr(float newStr)
     {
@@ -47,8 +66,14 @@ public class PotatoMagnetism : MonoBehaviour
         MagnestismStrength = newDur;
     }
 
+    #endregion
+
+    #region Private Methods
+
     private IEnumerator Co_HomePotato()
     {
+        bCanHone = false;
+
         for (float t = 0; t < MagnestismDuration; t += Time.deltaTime)
         {
             Vector3 targetDir = (target.position - transform.position).normalized;
@@ -57,5 +82,9 @@ public class PotatoMagnetism : MonoBehaviour
 
             yield return null;
         }
+
+        bCanHone = true;
     }
+
+    #endregion
 }
