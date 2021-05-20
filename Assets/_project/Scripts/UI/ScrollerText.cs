@@ -139,8 +139,11 @@ public class ScrollerText : MonoBehaviour
         if (isOverMaxLength())
         {            
             GameObject texttoremove = textmeshlist.Dequeue();
-            rectTransforms.Remove(texttoremove.GetComponent<RectTransform>());
-            Destroy(texttoremove);
+            if (texttoremove)
+            {
+                rectTransforms.Remove(texttoremove.GetComponent<RectTransform>());
+                Destroy(texttoremove);
+            }
         }
     }
 

@@ -19,14 +19,15 @@ public class LocalMPMenuScreen : MonoBehaviour
     private GameSettingsContainer game;
 
     [SerializeField]
-    private List<GameObject> joinedPlayers = new List<GameObject>();
+    private List<PlayerInput> joinedPlayers = new List<PlayerInput>();
 
+    //The reference to the texts
     [SerializeField]
     private GameObject[] joinedIcon;
     [SerializeField]
     private GameObject[] promptIcon;
     [SerializeField]
-    Button startButton;
+    private Button startButton;
 
     #endregion
 
@@ -43,11 +44,20 @@ public class LocalMPMenuScreen : MonoBehaviour
         //The static is set in awake
         game = GameSettingsContainer.instance;
 
+        if (startButton)
+        {
+            startButton.interactable = false;
+        }
     }
 
     private void OnEnable()
     {
         inputManager.EnableJoining();
+    }
+
+    private void OnDisable()
+    {
+        inputManager.DisableJoining();
     }
 
     #endregion
@@ -58,20 +68,21 @@ public class LocalMPMenuScreen : MonoBehaviour
     {
         if (Debug.isDebugBuild)
         {
-            Debug.Log("Player has joined in menu");
+            Debug.Log("Player has joined in menu on device");
         }
 
         //Storing the player object for the next scene
-        DontDestroyOnLoad(playerInput.gameObject);
-        joinedPlayers.Add(playerInput.gameObject);
+        playerInput.transform.SetParent(game.transform);
 
         //Updating the game settings
-        game.LocalPlayerInputs[joinedPlayers.Count - 1] = playerInput.gameObject.GetComponent<PlayerInput>();
+        game.LocalPlayerInputs[joinedPlayers.Count] = playerInput;
         game.iPlayercount++;
 
         //Updating the UI
-        joinedIcon[joinedPlayers.Count - 1].SetActive(true);
-        promptIcon[joinedPlayers.Count - 1].SetActive(false);
+        joinedIcon[joinedPlayers.Count].SetActive(true);
+        promptIcon[joinedPlayers.Count].SetActive(false);
+
+        joinedPlayers.Add(playerInput);
 
         if (joinedPlayers.Count == 1)
         {
@@ -88,15 +99,21 @@ public class LocalMPMenuScreen : MonoBehaviour
     public void RemoveCharacters()
     {
         //Destroying all the joined players
-        for (int i = 1; i < joinedPlayers.Count; ++i)
+        for (int i = 0; i < joinedPlayers.Count; ++i)
         {
-            Destroy(joinedPlayers[i]);           
+            Destroy(joinedPlayers[i].gameObject);           
         }
 
         //Clearing the list
         joinedPlayers.Clear();
 
         game.ClearPlayers();
+
+        for (int i = 0; i < promptIcon.Length; ++i)
+        {
+            joinedIcon[i].SetActive(false);
+            promptIcon[i].SetActive(true);
+        }
     }
 
     #endregion

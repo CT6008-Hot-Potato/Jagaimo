@@ -48,15 +48,17 @@ public class LocalMPScreenPartioning : MonoBehaviour
 
                 for (int i = 0; i < settings.iPlayercount; ++i)
                 {
-                    PlayerInput inputToUse = settings.LocalPlayerInputs[i];
-                    Destroy(settings.LocalPlayerInputs[i].gameObject);
+                    int tempIndex = settings.LocalPlayerInputs[i].playerIndex;
+                    int tempSplitscreenIndex = settings.LocalPlayerInputs[i].splitScreenIndex;
+                    string tempControlScheme = settings.LocalPlayerInputs[i].currentControlScheme;
+                    Destroy(settings.LocalPlayerInputs[i]);
 
-                    manager.JoinPlayer(inputToUse.playerIndex, inputToUse.splitScreenIndex, inputToUse.currentControlScheme);
+                    manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme);
                 }
             }
             else if (settings.iPlayercount == 1)
             {
-                singleLocalPlayer = false;
+                singleLocalPlayer = true;
                 PlayerInput inputToUse = settings.LocalPlayerInputs[0];
                 Destroy(settings.LocalPlayerInputs[0].gameObject);
                 manager.JoinPlayer(inputToUse.playerIndex, inputToUse.splitScreenIndex, inputToUse.currentControlScheme);
