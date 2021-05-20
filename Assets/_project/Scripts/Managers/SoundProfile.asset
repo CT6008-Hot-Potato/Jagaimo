@@ -29,14 +29,14 @@ MonoBehaviour:
     pitchVariation: 0.5
   - name: 2
     file:
-    - {fileID: 8300000, guid: d783381f8bd76d8449b8ef41241463d0, type: 3}
+    - {fileID: 8300000, guid: 92ddcd56196ab8d418445afc3ec251c9, type: 3}
     audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
       type: 2}
     defaultVolume: 0.75
     pitchVariation: 0.5
   - name: 4
     file:
-    - {fileID: 0}
+    - {fileID: 8300000, guid: e40437247e57e1b48844e1998e4864a2, type: 3}
     audioMixer: {fileID: 7834759804706455165, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
       type: 2}
     defaultVolume: 1
@@ -44,19 +44,19 @@ MonoBehaviour:
   - name: 5
     file:
     - {fileID: 8300000, guid: 7727e2521b1614949a8bcfa2aecd98b0, type: 3}
-    - {fileID: 8300000, guid: 52d751f819a3fdd4cbfc53912d81c177, type: 3}
+    - {fileID: 8300000, guid: d87dcfee8c6d79f4591a8520be6b5b1b, type: 3}
     audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
       type: 2}
     defaultVolume: 1
     pitchVariation: 0.5
   - name: 6
     file:
-    - {fileID: 8300000, guid: bca0190dcf2d3ca499971dd6dbb0a897, type: 3}
-    - {fileID: 8300000, guid: 27ec3b76a4f3c4740a7711de4d8b5e55, type: 3}
+    - {fileID: 8300000, guid: 7d702513c6e64184a82fe6fe9115fc21, type: 3}
+    - {fileID: 8300000, guid: 89a31b6b8828d62448089944303116d0, type: 3}
     audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
       type: 2}
     defaultVolume: 1
-    pitchVariation: 0.2
+    pitchVariation: 0.5
   - name: 7
     file:
     - {fileID: 8300000, guid: ea8308f36b0010b4f80ae9bc1b99afb4, type: 3}
@@ -66,25 +66,25 @@ MonoBehaviour:
     pitchVariation: 0.7
   - name: 8
     file:
-    - {fileID: 8300000, guid: 3ec7d5fd0c3348d409a4d9021566845d, type: 3}
+    - {fileID: 8300000, guid: be4e7123cd6d2c7488d25af6847b9e1d, type: 3}
     audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
       type: 2}
-    defaultVolume: 0.5
+    defaultVolume: 0.7
     pitchVariation: 0.6
   - name: 9
     file:
-    - {fileID: 8300000, guid: ceff911c51efc244094e401a3e60f87a, type: 3}
-    - {fileID: 8300000, guid: d965ffe85c628524fafc495f4dae8f63, type: 3}
+    - {fileID: 0}
+    - {fileID: 8300000, guid: 7db7db0e4dcd96440bdea4ae11e4c3ea, type: 3}
     audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
       type: 2}
-    defaultVolume: 0.3
+    defaultVolume: 1
     pitchVariation: 0.8
   - name: 3
     file:
-    - {fileID: 8300000, guid: d783381f8bd76d8449b8ef41241463d0, type: 3}
+    - {fileID: 8300000, guid: 2de177fb24f0dc845ac0928127912e64, type: 3}
     audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
       type: 2}
-    defaultVolume: 0.5
+    defaultVolume: 0.3
     pitchVariation: 0.6
   - name: 11
     file:

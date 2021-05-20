@@ -45,6 +45,10 @@ public class SoundManager : MonoBehaviour
             ScriptableSounds.SoundIdentity i = SoundBoard.GetSoundFromPalette(Sound);
             AudioClip PlayMe = i.file[Random.Range(0, i.file.Length)];
 
+
+            if (PlayMe == null)
+                return;
+
             GameObject MyObject = new GameObject(PlayMe.name);
             MyObject.transform.parent = transform;
             MyObject.transform.position = Vector3.zero;
