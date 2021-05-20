@@ -31,9 +31,13 @@ public class CarryCollision : MonoBehaviour
     //Drop the carried object when it something is within it's collision
     private void OnTriggerStay(Collider collider)
     {
-        if (canCollide && collider.gameObject != playerInteraction.gameObject && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
+        if (Vector3.Distance(collider.ClosestPoint(collider.transform.position), transform.position) < 3)
         {
-            playerInteraction.Drop(false);
+            if (canCollide && collider.gameObject != playerInteraction.gameObject && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
+            {
+                playerInteraction.Drop(false);
+            }
+
         }
     }
 }

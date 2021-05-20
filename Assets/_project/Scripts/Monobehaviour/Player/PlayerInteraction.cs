@@ -130,7 +130,7 @@ public class PlayerInteraction : MonoBehaviour
                         {
                             sM.PlaySound(grabSound);
                         }
-
+                        
                         movingObject = hit.transform.gameObject;
                         //Here we are simply assigning the rbObject the rb component on moving object then setting it's gravity to false and kinematic to true, this is done so this object doesn't drag around.
                         rbObject = movingObject.GetComponent<Rigidbody>();
@@ -153,6 +153,7 @@ public class PlayerInteraction : MonoBehaviour
                         rbParent.useGravity = true;
                         //RbParent rigidbody collision is set to ContinuousDynamic as this is the best collision for this fast moving object, also below the carry collision class/component is added to moving parent.
                         rbParent.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+
                         movingParent.AddComponent<CarryCollision>();
                     }
                 }
