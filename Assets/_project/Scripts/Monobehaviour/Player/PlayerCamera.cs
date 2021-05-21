@@ -463,10 +463,11 @@ public class PlayerCamera : MonoBehaviour
     //Function for getting escape input value
     public void Escape(InputAction.CallbackContext ctx)
     {
-        if (pC.uiMenu == null)
+        if (pC == null)
         {
-            pC.uiMenu.UpdateUIMenuState(!pC.uiMenu.GetMenuStatus());
+            pC = GetComponent<PlayerController>();
         }
+        pC.uiMenu.UpdateUIMenuState(!pC.uiMenu.GetMenuStatus());
         escapeValue = ctx.ReadValue<float>();
     }
 
