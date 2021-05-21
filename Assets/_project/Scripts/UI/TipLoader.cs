@@ -28,6 +28,8 @@ public class TipLoader : MonoBehaviour
     MenuManager menuComponent;
     [SerializeField] int menuNumber;
 
+    [SerializeField] int LoadMode;
+
     float sliderProgress;
     InputAction myAction;
 
@@ -59,11 +61,18 @@ public class TipLoader : MonoBehaviour
     {
         if (menuComponent != null)
         {
+            if (LoadMode == 0)
+            { 
             myAction.Disable();
             menuComponent.SwitchOpenMenu(menuNumber);
             
             gameObject.SetActive(false);
+            }
 
+            else
+            {
+
+            }
 
         }
     }

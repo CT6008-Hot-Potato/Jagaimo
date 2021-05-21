@@ -38,6 +38,8 @@ public class WinScreenManager : MonoBehaviour
     [SerializeField]
     private bool bReturnToMenu = true;
 
+    [SerializeField] AudioClip WinMusic;
+
     #endregion
 
     #region Unity Methods
@@ -66,6 +68,16 @@ public class WinScreenManager : MonoBehaviour
     //Playing the win screen (and pass through the gamemode incase of different screens per gamemode)
     public void PlayWinScreen(GAMEMODE_INDEX gamemode, List<CharacterManager> everyPlayer, List<CharacterManager> winningChars)
     {
+        if (WinMusic != null)
+        {
+          if(TryGetComponent(out AudioSource changeMe))
+            {
+                changeMe.Stop(); ;
+                changeMe.clip = WinMusic;
+                changeMe.Play();
+            }
+        }
+
         if (worldBounds)
         {
             Destroy(worldBounds);
