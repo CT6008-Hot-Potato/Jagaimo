@@ -37,6 +37,8 @@ public class CharacterManager : MonoBehaviour
     private PlayerAnimation _playerAnimation;
     [SerializeField]
     private PlayerInteraction _playerInteraction;
+    [SerializeField]
+    private Rigidbody _rb;
 
     //Other components needed
     [SerializeField]
@@ -78,6 +80,7 @@ public class CharacterManager : MonoBehaviour
         _cam = _cam ?? GetComponent<PlayerCamera>();
         _playerAnimation = _playerAnimation ?? GetComponent<PlayerAnimation>();
         _playerInteraction = _playerInteraction ?? GetComponent<PlayerInteraction>();
+        _rb = _rb ?? GetComponent<Rigidbody>();
 
         soundManager = FindObjectOfType<SoundManager>();
         settings = GameSettingsContainer.instance;
@@ -227,6 +230,8 @@ public class CharacterManager : MonoBehaviour
 
         isPlayerLocked = true;
 
+        _rb.isKinematic = true;
+
         //Stop movement in the movement script, dont disable or deactive player input (they couldn't pause then)
         _movement.SetMovement(3);
 
@@ -247,7 +252,9 @@ public class CharacterManager : MonoBehaviour
         }
 
         isPlayerLocked = false;
-         
+
+        _rb.isKinematic = false;
+
         //Start player movement
         _movement.SetMovement(2);
 

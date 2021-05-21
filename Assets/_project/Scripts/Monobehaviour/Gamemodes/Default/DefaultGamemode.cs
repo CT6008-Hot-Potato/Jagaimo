@@ -288,7 +288,19 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         }
         else
         {
-            return null;
+            if (currentActivePlayers[0])
+            {
+                return currentActivePlayers[0];
+            }
+            else
+            {
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("No characters to get from", this);
+                }
+
+                return null;
+            }
         }
     }
 
