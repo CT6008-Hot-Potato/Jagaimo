@@ -21,6 +21,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private float TransitionSpeed, TransitionPauseAmount; // When Slow Transitions are enabled, these time values are used
     [SerializeField] private GameObject[] MenuObjects; // Stores the gameobjects of all menus attached to this object
 
+    [SerializeField] SoundManager Sm;
+
     public void Start() // At start of game, go to start menu  
     {
         SwitchOpenMenu(StartScene);
@@ -112,6 +114,10 @@ public class MenuManager : MonoBehaviour
     public void SwitchOpenMenu(int SelectedMenu) // Switches the current menu to another on the array    
 
     {
+        if (Sm != null)
+        {
+            Sm.PlaySound();
+        }
         
 
 

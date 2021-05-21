@@ -14,6 +14,15 @@ public class SoundManager : MonoBehaviour
     [SerializeField] AudioMixerGroup DefaultAudioMixer; // refererence to the audio mixer
   
     [SerializeField] ScriptableSounds SoundBoard; // reference to the sound profiler
+
+    [SerializeField] ScriptableSounds.Sounds DefaultSound;
+
+
+    public void PlaySound()
+    {
+        PlaySound(DefaultSound);
+    }
+
     public void PlaySound(ScriptableSounds.Sounds Sound, Vector3 AtHere)
     {
         ScriptableSounds.SoundIdentity i = SoundBoard.GetSoundFromPalette(Sound);
