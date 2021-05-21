@@ -226,9 +226,9 @@ MonoBehaviour:
   particlePlayer: {fileID: 11400000, guid: e4907c1dd2137b74ba1f270593241766, type: 2}
   fusePoint: {fileID: 1685369519}
   magnetism: {fileID: 1815430869983435516}
-  fMagnetismStr: 0.5
+  fMagnetismStr: 5.5
   fMagnetismDur: 0.5
-  isMagnetised: 1
+  isMagnetised: 0
 --- !u!136 &8677349334688892352
 CapsuleCollider:
   m_ObjectHideFlags: 0

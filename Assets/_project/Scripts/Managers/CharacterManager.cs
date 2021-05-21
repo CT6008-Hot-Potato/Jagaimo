@@ -38,7 +38,7 @@ public class CharacterManager : MonoBehaviour
     [SerializeField]
     private PlayerInteraction _playerInteraction;
 
-    //Other componenets needed
+    //Other components needed
     [SerializeField]
     private SoundManager soundManager;
     [SerializeField]
@@ -65,8 +65,7 @@ public class CharacterManager : MonoBehaviour
     private GameObject taggedDisplayObject;
     [SerializeField]
     private GameObject elimDisplayObject;
-
-    private IEnumerator Co_TaggedCoroutine;
+    private float taggedAnimduration = 2f;
 
     #endregion
 
@@ -82,11 +81,6 @@ public class CharacterManager : MonoBehaviour
 
         soundManager = FindObjectOfType<SoundManager>();
         settings = GameSettingsContainer.instance;
-
-        Co_TaggedCoroutine = Co_TaggedEffect(2);
-
-        //To be unlocked when the game is ready
-        LockPlayer();
     }
 
     private void Start()
@@ -179,16 +173,15 @@ public class CharacterManager : MonoBehaviour
     //Functions to change the player when they're tagged or untagged
     public void ThisPlayerTagged()
     {
+        
         //Animation for regaining potato
         if (_playerAnimation)
         {
             _playerAnimation.CheckToChangeState("FallingBackDeath", true);
         }
 
-        LockPlayer();
+        StartCoroutine(Co_TaggedEffect(taggedAnimduration));
 
-        StartCoroutine(Co_TaggedCoroutine);
-        //Wait 2s for animation to complete      
     }
 
     public void ThisPlayerUnTagged()
@@ -227,6 +220,11 @@ public class CharacterManager : MonoBehaviour
         //Guard clause to make sure the components are correct
         if (!_cam || !_movement) return;
 
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Player locked!", this);
+        }
+
         isPlayerLocked = true;
 
         //Stop movement in the movement script, dont disable or deactive player input (they couldn't pause then)
@@ -243,6 +241,11 @@ public class CharacterManager : MonoBehaviour
         //Guard clause to make sure the components are correct
         if (!_cam || !_movement) return;
 
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Player unlocked!", this);
+        }
+
         isPlayerLocked = false;
          
         //Start player movement
@@ -258,7 +261,7 @@ public class CharacterManager : MonoBehaviour
     /// 
     public void DisablePlayer()
     {
-        StopCoroutine(Co_TaggedCoroutine);
+        StopCoroutine(Co_TaggedEffect(taggedAnimduration));
 
         _playerAnimation.CheckToChangeState("Idle");
 
@@ -289,6 +292,7 @@ public class CharacterManager : MonoBehaviour
 
     private IEnumerator Co_TaggedEffect(float animDuration)
     {
+        LockPlayer();
 
         yield return new WaitForSeconds(animDuration);
 

@@ -79,7 +79,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
             {
                 //No players joined, so it was single player from the main menu
                 singleLocalPlayer = true;
-                singlePlayer = Instantiate(playerPrefab, new Vector3(0, 1, 0), playerPrefab.transform.rotation);
+                singlePlayer = Instantiate(playerPrefab, new Vector3(0, 25, 0), playerPrefab.transform.rotation);
                 singlePlayer.GetComponent<CharacterManager>().UnLockPlayer();
             }
         }
@@ -87,8 +87,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
         else if (singleLocalPlayer)
         {
             //playerManager.SetActive(false);
-            singlePlayer = Instantiate(playerPrefab, new Vector3(0, 1, 0), playerPrefab.transform.rotation);
-            singlePlayer.GetComponent<CharacterManager>().UnLockPlayer();
+            singlePlayer = Instantiate(playerPrefab, new Vector3(0, 25, 0), playerPrefab.transform.rotation);
         }
         else
         {
@@ -101,7 +100,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
     #region Public Methods
 
     public void OnPlayerJoined(PlayerInput playerInput)
-    {
+    {     
         PlayerCamera camera = playerInput.GetComponent<PlayerCamera>();
         if (camera)
         {
@@ -109,10 +108,6 @@ public class LocalMPScreenPartioning : MonoBehaviour
             camera.SetPlayerMask();
 
             newPlayerCameras.Add(camera);
-        }
-        else if (Debug.isDebugBuild)
-        {
-            Debug.Log("This player input doesn't have a player camera: " + playerInput.gameObject, this);
         }
 
         if (newPlayerCameras.Count >= ExpectedPlayerCount && !singleLocalPlayer)

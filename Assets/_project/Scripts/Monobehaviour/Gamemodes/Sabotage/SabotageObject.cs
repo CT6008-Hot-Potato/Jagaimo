@@ -35,7 +35,7 @@ public class SabotageObject : MonoBehaviour, IInteractable
     [Header("Generator Fixing Variables")]
     //The untagged player needs to be within the fixing area for a specific amount of time before they start to fix it
     [SerializeField]
-    private float playerStopDuration = 2f;
+    private float playerStopDuration = 0.5f;
     List<CharacterManager> potentialFixers = new List<CharacterManager>();
 
     //The timer before this object is finished after starting to fix it
@@ -44,6 +44,8 @@ public class SabotageObject : MonoBehaviour, IInteractable
     private float duration = 10f;
     [SerializeField]
     private bool isBeingUsed = false;
+    [SerializeField]
+    private GameObject fixingIconVFX;
 
     [Header("Generator Breaking Variables")]
     //The length the generator crashes for when hit by the potato
@@ -80,6 +82,11 @@ public class SabotageObject : MonoBehaviour, IInteractable
             //The timer is over
             if (!sabotageTimer.isActive)
             {
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("Generator finished", this);
+                }
+
                 //So tell the manager the generator is finished
                 sabotageManager.GeneratorFinished(this);
             }
@@ -119,9 +126,15 @@ public class SabotageObject : MonoBehaviour, IInteractable
             if (charManager)
             {
                 //And they are untagged
+                //They cant be a potential fixer and they have to stop using the generator
                 if (potentialFixers.Contains(charManager))
                 {
                     potentialFixers.Remove(charManager);
+                }
+
+                if (charsInteracting.Contains(charManager))
+                {
+                    StopUsage(charManager);               
                 }
             }
         }
@@ -155,6 +168,11 @@ public class SabotageObject : MonoBehaviour, IInteractable
             //Start fixing sound
             soundManager.PlaySound(ScriptableSounds.Sounds.PowerUp, transform.position);
         }
+
+        if (fixingIconVFX)
+        {
+            fixingIconVFX.SetActive(true);
+        }
     }
 
     public void StopUsage(CharacterManager charInteracting)
@@ -170,6 +188,11 @@ public class SabotageObject : MonoBehaviour, IInteractable
         if (charsInteracting.Count == 0)
         {
             isBeingUsed = false;
+
+            if (fixingIconVFX)
+            {
+                fixingIconVFX.SetActive(false);
+            }
         }
     }
 
@@ -233,7 +256,7 @@ public class SabotageObject : MonoBehaviour, IInteractable
     {
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
-            //The the player is moved or gets moved, restart the timer
+            //The player is moved or gets moved, restart the timer
             if (cManager.GetComponent<Rigidbody>().velocity.magnitude > 0.5)
             {
                 t = 0;
