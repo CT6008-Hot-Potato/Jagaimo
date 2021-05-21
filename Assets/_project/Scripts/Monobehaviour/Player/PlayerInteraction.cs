@@ -100,6 +100,7 @@ public class PlayerInteraction : MonoBehaviour
     //Update method checking for clicks to throw,drop or grab rigidbody objects to move and also move closer or further/
     void Update()
     {
+        Debug.Log(grabbing);
         if (!grabbing)
         {
             //First person to do raycast
@@ -107,7 +108,6 @@ public class PlayerInteraction : MonoBehaviour
             //If the player has interacted
             if (leftClick > 0.1 && clickLifted)
             {
-                grabbing = true;
                 clickLifted = false;
 
                 if (pC.grounded)
@@ -131,6 +131,7 @@ public class PlayerInteraction : MonoBehaviour
                             sM.PlaySound(grabSound);
                         }
                         
+                        grabbing = true;
                         movingObject = hit.transform.gameObject;
                         //Here we are simply assigning the rbObject the rb component on moving object then setting it's gravity to false and kinematic to true, this is done so this object doesn't drag around.
                         rbObject = movingObject.GetComponent<Rigidbody>();
@@ -328,7 +329,6 @@ public class PlayerInteraction : MonoBehaviour
                 if (throwObject)
                 {
                     rB.AddForce(firstPersonCamera.transform.forward * pC.speed, ForceMode.Impulse);
-                    //rB.velocity = GetComponent<Rigidbody>().velocity;
                 }
             }
             //Unassign moving object
