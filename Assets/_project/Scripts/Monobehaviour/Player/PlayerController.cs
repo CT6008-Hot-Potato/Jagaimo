@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         //If player movement state isn't interacting
-        if (playerMovement != pM.INTERACTING && playerMovement != pM.INTERACTING && pC.cameraState != PlayerCamera.cS.FREECAMUNCONSTRAINED)
+        if (playerMovement != pM.INTERACTING && playerMovement != pM.STANDING && pC.cameraState != PlayerCamera.cS.FREECAMUNCONSTRAINED)
         {
             //Calculate how fast player should be moving
             Vector3 targetVelocity = movementValue;

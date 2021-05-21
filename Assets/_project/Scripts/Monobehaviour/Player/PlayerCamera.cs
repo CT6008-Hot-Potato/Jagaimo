@@ -279,29 +279,30 @@ public class PlayerCamera : MonoBehaviour
                 //Free camera unconstrained
                 case cS.FREECAMUNCONSTRAINED:
                     //If freecam button lifted up and freecam is not locked go back to third person
-                    if (cameraRotateValue <= 0.1f && !freecamLock)
+                    if (thirdPersonCamera.gameObject.TryGetComponent(out Rigidbody rigidbody))
                     {
-                        //If there is a rigidbody attached to the camera destroy it and destroy sphere collider
-                        if (thirdPersonCamera.gameObject.GetComponent<Rigidbody>() != null)
+                        if (cameraRotateValue <= 0.1f && !freecamLock)
                         {
-                            Destroy(thirdPersonCamera.gameObject.GetComponent<Rigidbody>());
-                            Destroy(thirdPersonCamera.gameObject.GetComponent<SphereCollider>());
-                            Destroy(thirdPersonCamera.gameObject.GetComponent<CameraCollision>());
+                            //If there is a rigidbody attached to the camera destroy it and destroy sphere collider
+
+                            Destroy(rigidbody.GetComponent<SphereCollider>());
+                            Destroy(rigidbody.GetComponent<CameraCollision>());
+                            Destroy(rigidbody);
+                            thirdPersonCamera.transform.rotation = Quaternion.Euler(freecamRotation);
+                            cameraState = cS.THIRDPERSON;
+                        }   
+                        //Else if beyond 200 metres from centre of map add rigidbody & collider
+                        else if (Vector3.Distance(thirdPersonCamera.transform.position,Vector3.zero) > 200)
+                        {
+                            rigidbody.useGravity = true;
+                            rigidbody.mass = 10000;
                         }
-                        thirdPersonCamera.transform.rotation = Quaternion.Euler(freecamRotation);
-                        Destroy(thirdPersonCamera.gameObject.GetComponent<SphereCollider>());
-                        cameraState = cS.THIRDPERSON;
-                    }   
-                    //Else if beyond 200 metres from centre of map add rigidbody & collider
-                    else if (Vector3.Distance(thirdPersonCamera.transform.position,Vector3.zero) > 200)
-                    {
-                        thirdPersonCamera.gameObject.GetComponent<Rigidbody>().useGravity = true;
-                        thirdPersonCamera.gameObject.GetComponent<Rigidbody>().mass = 10000;
-                    }
-                    //Remove it and sphere collider when within 150 metres of the centre of map
-                    if (Vector3.Distance(thirdPersonCamera.transform.position, Vector3.zero) < 150)
-                    {
-                        thirdPersonCamera.gameObject.GetComponent<Rigidbody>().useGravity = false;
+                        //Remove it and sphere collider when within 150 metres of the centre of map
+                        if (Vector3.Distance(thirdPersonCamera.transform.position, Vector3.zero) < 150)
+                        {
+
+                            rigidbody.useGravity = false;
+                        }
                     }
                     //Moving third person camera position around freely
                     thirdPersonCamera.transform.position = new Vector3(thirdPersonCamera.transform.position.x, thirdPersonCamera.transform.position.y + freeCamValueY, thirdPersonCamera.transform.position.z);
@@ -462,7 +463,10 @@ public class PlayerCamera : MonoBehaviour
     //Function for getting escape input value
     public void Escape(InputAction.CallbackContext ctx)
     {
-        pC.uiMenu.UpdateUIMenuState(!pC.uiMenu.GetMenuStatus());
+        if (pC.uiMenu == null)
+        {
+            pC.uiMenu.UpdateUIMenuState(!pC.uiMenu.GetMenuStatus());
+        }
         escapeValue = ctx.ReadValue<float>();
     }
 
