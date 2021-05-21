@@ -24,8 +24,8 @@ public class LocalMPScreenPartioning : MonoBehaviour
     private bool singleLocalPlayer;
     public bool isActive { get; private set; }
 
+    //The settings of the game
     private GameSettingsContainer settings;
-
     [SerializeField]
     private PlayerInputManager manager;
 
@@ -102,6 +102,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
     {
         playerCameras = FindObjectsOfType<PlayerCamera>();
         playerIndex = (playerCameras.Length - 1);
+
         if (playerIndex != playerIndexPrior && !singleLocalPlayer)
         {
             playerIndexPrior = playerIndex;
