@@ -55,6 +55,7 @@ public class PlayerInteraction : MonoBehaviour
     private float zoomOut = 0;
     private List <MeshRenderer> outlined = new List<MeshRenderer>();
     private bool clickLifted = false;
+    private float collisionOffsetSize;
     #endregion Variables
 
     private void Awake()
@@ -155,7 +156,7 @@ public class PlayerInteraction : MonoBehaviour
                         //RbParent rigidbody collision is set to ContinuousDynamic as this is the best collision for this fast moving object, also below the carry collision class/component is added to moving parent.
                         rbParent.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
-                        movingParent.AddComponent<CarryCollision>();
+                        movingParent.AddComponent<CarryCollision>().distanceOffset = collisionOffsetSize;
                     }
                 }
 
@@ -284,16 +285,31 @@ public class PlayerInteraction : MonoBehaviour
             if (cD.GetType() == typeof(BoxCollider))
             {
                 cD.GetComponent<BoxCollider>().size = new Vector3(cD.GetComponent<BoxCollider>().size.x * movingObject.transform.localScale.x, cD.GetComponent<BoxCollider>().size.y * movingObject.transform.localScale.y,cD.GetComponent<BoxCollider>().size.z * movingObject.transform.localScale.z);
+                if (cD.GetComponent<BoxCollider>().size.x > cD.GetComponent<BoxCollider>().size.z)
+                {
+                    collisionOffsetSize = cD.GetComponent<BoxCollider>().size.x;
+                }
+                else if (cD.GetComponent<BoxCollider>().size.z > cD.GetComponent<BoxCollider>().size.y)
+                {
+                    collisionOffsetSize = cD.GetComponent<BoxCollider>().size.z;
+                }
+                else
+                {
+                    collisionOffsetSize = cD.GetComponent<BoxCollider>().size.y;
+                }
+
             }
             //Set collision parameters if sphere collider
             else if (cD.GetType() == typeof(SphereCollider))
             {
                 cD.GetComponent<SphereCollider>().radius = cD.GetComponent<SphereCollider>().radius * movingObject.transform.localScale.x;
+                collisionOffsetSize = cD.GetComponent<SphereCollider>().radius;
             }
             else if (cD.GetType() == typeof(CapsuleCollider))
             {
                 cD.GetComponent<CapsuleCollider>().height = cD.GetComponent<CapsuleCollider>().height * movingObject.transform.localScale.y;
                 cD.GetComponent<CapsuleCollider>().radius = cD.GetComponent<CapsuleCollider>().radius * movingObject.transform.localScale.x;
+                collisionOffsetSize = cD.GetComponent<CapsuleCollider>().height;
             }
             //Debug if other type of collider
             else

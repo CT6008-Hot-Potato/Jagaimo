@@ -13,6 +13,7 @@ public class CarryCollision : MonoBehaviour
     //Variables
     PlayerInteraction playerInteraction;
     private bool canCollide = false;
+    public float distanceOffset;
     //Start function gettiing moveobject
 
     //Corouting for waiting before collider can be dropped called and playerinteraction component found
@@ -26,20 +27,25 @@ public class CarryCollision : MonoBehaviour
     IEnumerator WaitFirst()
     {
         yield return new WaitForSeconds(1f);
+        Debug.Log(distanceOffset);
         canCollide = true;
     }
     //Drop the carried object when it something is within it's collision
     private void OnTriggerStay(Collider collider)
     {
-        if (transform.GetChild(0).name == "Potato")
+        if (canCollide)
         {
-
-        }
-        else if (Vector3.Distance(collider.ClosestPoint(collider.transform.position), transform.position) < 3)
-        {
-            if (canCollide && collider.gameObject != playerInteraction.gameObject && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
+            if (transform.GetChild(0).name == "Potato")
             {
-                playerInteraction.Drop(false);
+
+            }
+            else if (Vector3.Distance(collider.ClosestPoint(collider.transform.position), transform.position) < distanceOffset)
+            {
+                if (collider.gameObject != playerInteraction.gameObject && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
+                {
+                    playerInteraction.Drop(false);
+                }
+
             }
 
         }
