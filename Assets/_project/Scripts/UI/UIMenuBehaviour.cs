@@ -35,6 +35,9 @@ public class UIMenuBehaviour : MonoBehaviour
 
     public void Start()
     {
+        if (resolutionsDropdown == null)
+            return;
+
         resolutions = Screen.resolutions;
         resolutionsDropdown.ClearOptions();
         List<string> options = new List<string>();
