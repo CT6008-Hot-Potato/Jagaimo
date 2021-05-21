@@ -23,6 +23,7 @@ public class SpawningSpot
 //Each "arena" of spots
 public class Arena
 {
+    public string name;
     public SpawningSpot[] spots;
 }
 
@@ -147,7 +148,7 @@ public class ArenaManager : MonoBehaviour
 
     #endregion
 
-    #region Power Ups Specific
+    #region Power Ups Specific (Deprecated now due to outline shader)
 
     //Self explanatory
     public bool canPowerUpSpawn()

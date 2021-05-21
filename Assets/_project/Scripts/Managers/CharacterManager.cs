@@ -27,7 +27,7 @@ public class CharacterManager : MonoBehaviour
     public bool isPlayerLocked { private get; set; } = false;
 
 
-    [Header("Componenets Needed")]
+    [Header("Components Needed")]
     //Components already on this object
     [SerializeField]
     private PlayerController _movement;
@@ -66,6 +66,8 @@ public class CharacterManager : MonoBehaviour
     [SerializeField]
     private GameObject elimDisplayObject;
 
+    private IEnumerator Co_TaggedCoroutine;
+
     #endregion
 
     #region Unity Methods
@@ -80,6 +82,8 @@ public class CharacterManager : MonoBehaviour
 
         soundManager = FindObjectOfType<SoundManager>();
         settings = GameSettingsContainer.instance;
+
+        Co_TaggedCoroutine = Co_TaggedEffect(2);
 
         //To be unlocked when the game is ready
         LockPlayer();
@@ -137,6 +141,7 @@ public class CharacterManager : MonoBehaviour
             //soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
         }
 
+        //Making sure the elimination icon is showing
         if (taggedDisplayObject)
         {
             taggedDisplayObject.SetActive(false);
@@ -182,7 +187,7 @@ public class CharacterManager : MonoBehaviour
 
         LockPlayer();
 
-        StartCoroutine(Co_TaggedEffect(2));
+        StartCoroutine(Co_TaggedCoroutine);
         //Wait 2s for animation to complete      
     }
 
@@ -194,7 +199,7 @@ public class CharacterManager : MonoBehaviour
             //Maybe an untagged sound, maybe it would become too chaotic
         }
 
-        //Lerp into thrid person camera mode Note: this should be quicker than the lerp when you're tagged
+        //Lerp into third person camera mode Note: this should be quicker than the lerp when you're tagged
         if (_cam)
         {
             _cam.SetCameraView(false);
@@ -253,6 +258,8 @@ public class CharacterManager : MonoBehaviour
     /// 
     public void DisablePlayer()
     {
+        StopCoroutine(Co_TaggedCoroutine);
+
         _playerAnimation.CheckToChangeState("Idle");
 
         _cam.enabled = false;

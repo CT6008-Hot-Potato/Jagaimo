@@ -11,11 +11,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Football_Team
+{
+    Blue_Team = 0,
+    Orange_Team = 1
+}
+
 [RequireComponent(typeof(RoundManager))]
 //This will mostly be in the other scripts anyway
 public class FootballGamemode : MonoBehaviour, IGamemode
 {
-    #region Interfact Contract Expressions
+    #region Interface Contract Expressions
 
     //Fulfilling the interfaces contracted functions
     GAMEMODE_INDEX IGamemode.Return_Mode() => Return_Mode();
@@ -141,9 +147,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             }
 
             //playing vfx in the orange goal's position
-            if (particlePlayer && goalVFXPositions[0])
+            if (particlePlayer && goalVFXPositions[(int)Football_Team.Blue_Team])
             {
-                particlePlayer.CreateParticle(ScriptableParticles.Particle.GoalExplosion, goalVFXPositions[1].position);
+                particlePlayer.CreateParticle(VFX, goalVFXPositions[(int)Football_Team.Blue_Team].position);
             }
         }
         else
@@ -156,9 +162,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             }
 
             //Playing vfx in the blue goal's position
-            if (particlePlayer && goalVFXPositions[1])
+            if (particlePlayer && goalVFXPositions[(int)Football_Team.Orange_Team])
             {
-                particlePlayer.CreateParticle(ScriptableParticles.Particle.GoalExplosion, goalVFXPositions[0].position);
+                particlePlayer.CreateParticle(VFX, goalVFXPositions[(int)Football_Team.Orange_Team].position);
             }
         }
 
@@ -213,6 +219,8 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         }
     }
 
+    //For when goals are scored (the initial locking is handled when setting active players)
+
     //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
     public void LockAllPlayers()
     {
@@ -263,14 +271,14 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             currentActivePlayers.Add(charArray[i]);
             charArray[i].UnLockPlayer();
 
-            //Even numbers on orange team, odd on blue team
+            //Even numbers on blue team, odd on orange team (0 goes to blue)
             if (i % 2 == 0)
             {
-                orangeTeam.Add(charArray[i]);
+                blueTeam.Add(charArray[i]);
             }
             else
             {
-                blueTeam.Add(charArray[i]);
+                orangeTeam.Add(charArray[i]);
             }
         }
 
@@ -306,8 +314,6 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         {          
             Debug.Log("There's no potato RB", this);
         }
-
-        LockAllPlayers();
     }
 
     private void RoundEnding()
@@ -318,8 +324,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
-        //Players are ready to go
-        UnlockAllPlayers();
+
     }
 
     //When the countdown ends
@@ -401,9 +406,13 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             //Doing the loops based on the team amounts not the spot amounts
             for (int i = 0; i < orangeTeam.Count; ++i)
             {
-                Transform spotTransform = arenaManager.GettingSpot(0, spawnSpots[i]);
+                Transform spotTransform = arenaManager.GettingSpot((int)Football_Team.Orange_Team, spawnSpots[i]);
 
                 orangeTeam[i].transform.position = spotTransform.position;
+
+                //This is the "solution" to not being able to turn the player based on the prefab object
+                PlayerCamera camera = orangeTeam[i].GetComponent<PlayerCamera>();
+                camera.ChangeYaw(180 / Time.deltaTime);
             }
         }
 
@@ -411,13 +420,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         {
             for (int i = 0; i < blueTeam.Count; ++i)
             {
-                Transform spotTransform = arenaManager.GettingSpot(1, spawnSpots[i]);
+                Transform spotTransform = arenaManager.GettingSpot((int)Football_Team.Blue_Team, spawnSpots[i]);
 
                 blueTeam[i].transform.position = spotTransform.position;
-
-                //This is the "solution" to not being able to turn the player based on the prefab object
-                PlayerCamera camera = blueTeam[i].GetComponent<PlayerCamera>();
-                camera.ChangeYaw(180 / Time.deltaTime);
             }
         }
 
@@ -429,15 +434,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     {
         yield return new WaitForSeconds(duration);
 
-        //Locking both players for the pause timer to unlock
-        for (int i = 0; i < currentActivePlayers.Count; ++i)
-        {
-            if (currentActivePlayers[i])
-            {
-                currentActivePlayers[i].LockPlayer();
-            }
-        }
-
+        LockAllPlayers();
         //Putting them back in starting points
         PutPlayersInSpawnPoints();
 

@@ -30,7 +30,7 @@ public class Potato : MonoBehaviour
     [SerializeField]
     private PotatoMagnetism magnetism;
     [SerializeField]
-    private float fMagnetismStr = 0.5f;
+    private float fMagnetismStr = 2.5f;
     [SerializeField]
     private float fMagnetismDur = 0.5f;
 

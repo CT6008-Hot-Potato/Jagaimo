@@ -19,24 +19,14 @@ public class FootballObjectContainer : MonoBehaviour
     private RoundManager roundManager;
     private FootballGamemode gamemode;
 
-    [Header("Variables needed from Gamemode")]
-    [SerializeField]
+    [Header("Variables needed for Gamemode")]
+
     public CountdownTimer countdownTimer;
-
-    [SerializeField]
     public ScrollerText scrollerText;
-    [SerializeField]
     public ScoreboardText scoreboard;
-
-    [SerializeField]
     public Rigidbody potatoRB;
-    [SerializeField]
     public BasicTimerBehaviour goalPauseTimer;
-
-    [SerializeField]
     public ScriptableParticles particleSpawner;
-
-    [SerializeField]
     public Transform[] vfxPoints;
 
     #endregion

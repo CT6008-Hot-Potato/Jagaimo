@@ -15,7 +15,7 @@ using UnityEngine;
 //This will mostly be in the other scripts anyway
 public class DefaultGamemode : MonoBehaviour, IGamemode
 {
-    #region Interfact Contract Expressions
+    #region Interface Contract Expressions
 
     //Fulfilling the interfaces contracted functions
     GAMEMODE_INDEX IGamemode.Return_Mode() => Return_Mode();

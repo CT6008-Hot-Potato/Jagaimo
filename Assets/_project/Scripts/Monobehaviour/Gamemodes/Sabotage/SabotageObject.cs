@@ -90,7 +90,7 @@ public class SabotageObject : MonoBehaviour, IInteractable
     private void OnTriggerEnter(Collider other)
     {
         //If it's a player and this generator isnt currently locked
-        if (other.tag.Equals("Player") && !isLocked)
+        if (other.CompareTag("Player") && !isLocked)
         {
             CharacterManager charManager = other.GetComponent<CharacterManager>();
 
@@ -111,7 +111,7 @@ public class SabotageObject : MonoBehaviour, IInteractable
     private void OnTriggerExit(Collider other)
     {
         //if it's a player
-        if (other.tag.Equals("Player"))
+        if (other.CompareTag("Player"))
         {
             //And they were in the list, remove them
             CharacterManager charManager = other.GetComponent<CharacterManager>();

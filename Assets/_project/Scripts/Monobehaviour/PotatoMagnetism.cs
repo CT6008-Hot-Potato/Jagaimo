@@ -30,15 +30,9 @@ public class PotatoMagnetism : MonoBehaviour
         _rb = _rb ?? transform.parent.GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("Player") && other.TryGetComponent(out CharacterManager cManager))
+        if (other.CompareTag("Player") && other.TryGetComponent(out CharacterManager cManager))
         {
             if (!cManager._tracker.isTagged && MagnestismStrength > 0 && MagnestismDuration > 0)
             {

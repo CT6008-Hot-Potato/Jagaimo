@@ -59,6 +59,11 @@ public class PlayerPowerUpHandler : MonoBehaviour
     public void PowerUpTriggered(int powerUpID)
     {
         //Handle what happens depending on the powerup ID (it's like this due to not many powerups)
+        //Power Up 0 -
+        //Power Up 1 -
+        //Power Up 2 - 
+        //Power Up 3 - 
+        //Power Up 4 - 
 
         switch (powerUpID)
         {
