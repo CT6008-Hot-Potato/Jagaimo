@@ -63,6 +63,8 @@ public class CharacterManager : MonoBehaviour
     private Transform headTransform;
     [SerializeField]
     private GameObject taggedDisplayObject;
+    [SerializeField]
+    private GameObject elimDisplayObject;
 
     #endregion
 
@@ -78,6 +80,9 @@ public class CharacterManager : MonoBehaviour
 
         soundManager = FindObjectOfType<SoundManager>();
         settings = GameSettingsContainer.instance;
+
+        //To be unlocked when the game is ready
+        LockPlayer();
     }
 
     private void Start()
@@ -130,6 +135,15 @@ public class CharacterManager : MonoBehaviour
         if (soundManager)
         {
             //soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
+        }
+
+        if (taggedDisplayObject)
+        {
+            taggedDisplayObject.SetActive(false);
+        }
+        if (elimDisplayObject)
+        {
+            elimDisplayObject.SetActive(true);
         }
 
         //Play vfx

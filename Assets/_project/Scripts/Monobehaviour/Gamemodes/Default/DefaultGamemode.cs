@@ -81,6 +81,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
+            charArray[i].UnLockPlayer();
         }
 
         if (Debug.isDebugBuild)

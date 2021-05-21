@@ -75,6 +75,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         winScreenManager = winScreenManager ?? WinScreenManager.instance;
 
         settings = GameSettingsContainer.instance;
+        potatoPrefab = roundManager.potatoPrefab;
     }
 
     #endregion
@@ -88,7 +89,8 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
-        }        
+            charArray[i].UnLockPlayer();
+        }
 
         if (Debug.isDebugBuild)
         {
