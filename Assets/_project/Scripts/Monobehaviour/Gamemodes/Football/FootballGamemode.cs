@@ -261,6 +261,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
+            charArray[i].UnLockPlayer();
 
             //Even numbers on orange team, odd on blue team
             if (i % 2 == 0)
@@ -341,13 +342,13 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             if (blueTeamWon)
             {
                 winScreenManager.PlayWinScreen(Return_Mode(),currentActivePlayers, blueTeam);
-                enabled = false;
             }
             else
             {
                 winScreenManager.PlayWinScreen(Return_Mode(), currentActivePlayers, orangeTeam);
-                enabled = false;
             }
+
+            enabled = false;
             return;
         }
 
