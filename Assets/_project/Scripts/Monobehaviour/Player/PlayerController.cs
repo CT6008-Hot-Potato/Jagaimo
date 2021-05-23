@@ -58,6 +58,8 @@ public class PlayerController : MonoBehaviour
     private PlayerAnimation pA;
     [SerializeField]
     private ScriptableParticles particles;
+    [SerializeField]
+    private PhysicMaterial wall;
     #endregion
     //Enums
     #region Enums
@@ -112,6 +114,7 @@ public class PlayerController : MonoBehaviour
                 GetComponent<PlayerInteraction>().Drop(true);
             }
             grounded = true;
+            collider.material = null;
         }
         else
         {
@@ -170,7 +173,8 @@ public class PlayerController : MonoBehaviour
                 {
                     if (touchingWall)
                     {
-                        rb.AddForce((-rotationPosition.TransformDirection(movementValue) * Time.deltaTime) * 1000, ForceMode.Impulse);
+                        rb.AddForce((-rotationPosition.TransformDirection(movementValue) * Time.deltaTime) * 100, ForceMode.Impulse);
+                        collider.material = wall;
                     }
                     if (!sliding)
                     {

@@ -13,7 +13,6 @@ public class CarryCollision : MonoBehaviour
     //Variables
     PlayerInteraction playerInteraction;
     private bool canCollide = false;
-    public float distanceOffset;
     //Start function gettiing moveobject
 
     //Corouting for waiting before collider can be dropped called and playerinteraction component found
@@ -27,7 +26,6 @@ public class CarryCollision : MonoBehaviour
     IEnumerator WaitFirst()
     {
         yield return new WaitForSeconds(1f);
-        Debug.Log(distanceOffset);
         canCollide = true;
     }
     //Drop the carried object when it something is within it's collision
@@ -35,13 +33,17 @@ public class CarryCollision : MonoBehaviour
     {
         if (canCollide)
         {
-            if (transform.GetChild(0).name == "Potato")
+            if (Vector3.Distance(collider.ClosestPoint(collider.transform.position), transform.position) < 3)
             {
+                if (transform.childCount > 0)
+                {
 
-            }
-            else if (Vector3.Distance(collider.ClosestPoint(collider.transform.position), transform.position) < distanceOffset)
-            {
-                if (collider.gameObject != playerInteraction.gameObject && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
+                    if (transform.GetChild(0).name != "Potato" && collider.gameObject != playerInteraction.gameObject && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
+                    {
+                        playerInteraction.Drop(false);
+                    }
+                }
+                else if (collider.gameObject != playerInteraction.gameObject && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
                 {
                     playerInteraction.Drop(false);
                 }
