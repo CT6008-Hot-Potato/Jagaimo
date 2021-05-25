@@ -5121,8 +5121,8 @@ RectTransform:
   m_Father: {fileID: 1105056220}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5327,7 +5327,7 @@ MonoBehaviour:
     value: 0
   - name: Potatoes Return On Throw
     TextToChange: {fileID: 863320652}
-    ID: 0
+    ID: 6
     mType: 0
     default_value: 0
     value: 0
@@ -5341,8 +5341,8 @@ MonoBehaviour:
     TextToChange: {fileID: 73745983}
     ID: 8
     mType: 2
-    default_value: 1
-    value: 1
+    default_value: 0
+    value: 0
   - name: Confetti
     TextToChange: {fileID: 838270278}
     ID: 9
@@ -8164,6 +8164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputManager: {fileID: 566953102}
+  soundManager: {fileID: 1703482110}
   joinedIconGamepad:
   - {fileID: 1152002551}
   - {fileID: 748638586}
@@ -8290,7 +8291,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -216.20699}
+  m_AnchoredPosition: {x: 250, y: -215.91531}
   m_SizeDelta: {x: 200, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &573929559
@@ -10496,7 +10497,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -310.0398}
+  m_AnchoredPosition: {x: 250, y: -309.63144}
   m_SizeDelta: {x: 450, y: 98.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &707037114 stripped
@@ -10546,7 +10547,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -122.37418}
+  m_AnchoredPosition: {x: 250, y: -122.199196}
   m_SizeDelta: {x: 450, y: 98.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &713214298
@@ -15631,10 +15632,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1339010720}
   m_HandleRect: {fileID: 378066593}
   m_Direction: 0
-  m_MinValue: 1
+  m_MinValue: -5
   m_MaxValue: 5
   m_WholeNumbers: 1
-  m_Value: 1
+  m_Value: -0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -22382,7 +22383,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -28287,6 +28288,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1703151715}
   m_CullTransparentMesh: 0
+--- !u!114 &1703482110 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2441096364755701250, guid: 99421aa0c1640b9468eda9017e1700a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1753799791}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c41229419066e594a80575382f3dd8c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1704879946
 GameObject:
   m_ObjectHideFlags: 0
@@ -32379,7 +32392,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -28.541393}
+  m_AnchoredPosition: {x: 250, y: -28.483067}
   m_SizeDelta: {x: 250, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1980750582

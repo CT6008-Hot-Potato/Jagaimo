@@ -18,6 +18,9 @@ public class LocalMPMenuScreen : MonoBehaviour
     private PlayerInputManager inputManager;
     private GameSettingsContainer game;
 
+    [SerializeField]
+    private SoundManager soundManager;
+
     //The reference to the texts
     [SerializeField]
     private GameObject[] joinedIconGamepad;
@@ -34,6 +37,7 @@ public class LocalMPMenuScreen : MonoBehaviour
 
     private void Awake()
     {
+        soundManager = soundManager ?? FindObjectOfType<SoundManager>();
         inputManager = inputManager ?? GetComponent<PlayerInputManager>();
     }
 
@@ -69,6 +73,11 @@ public class LocalMPMenuScreen : MonoBehaviour
         //{
         //    Debug.Log("Player has joined in menu on device");
         //}
+
+        if (soundManager)
+        {
+            soundManager.PlaySound(ScriptableSounds.Sounds.PlayerJoin);
+        }
 
         //Storing the player object for the next scene
         playerInput.transform.SetParent(game.transform);

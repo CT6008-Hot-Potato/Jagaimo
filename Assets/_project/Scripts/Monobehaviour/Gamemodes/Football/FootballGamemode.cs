@@ -28,6 +28,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
     //These 3 functions will be the same on every gamemode I think
     void IGamemode.SetActivePlayers(CharacterManager[] charArray) => SettingActivePlayers(charArray);
+    CharacterManager[] IGamemode.GetActivePlayers() => GetActivePlayers();
     void IGamemode.AddActivePlayer(CharacterManager charToAdd) => AddActivePlayer(charToAdd);
     void IGamemode.RemoveActivePlayer(CharacterManager charToRemove) => RemoveActivePlayer(charToRemove);
 
@@ -152,7 +153,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             //playing vfx in the orange goal's position
             if (particlePlayer && goalVFXPositions[(int)Football_Team.Blue_Team])
             {
-                particlePlayer.CreateParticle(VFX, goalVFXPositions[(int)Football_Team.Blue_Team].position);
+                particlePlayer.CreateParticle(VFX, goalVFXPositions[1].position, Color.red);
             }
         }
         else
@@ -167,7 +168,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             //Playing vfx in the blue goal's position
             if (particlePlayer && goalVFXPositions[(int)Football_Team.Orange_Team])
             {
-                particlePlayer.CreateParticle(VFX, goalVFXPositions[(int)Football_Team.Orange_Team].position);
+                particlePlayer.CreateParticle(VFX, goalVFXPositions[0].position, Color.blue);
             }
         }
 
@@ -259,6 +260,11 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         {
             Debug.Log("Active players set, Amount of Active players: " + currentActivePlayers.Count, this);
         }
+    }
+
+    private CharacterManager[] GetActivePlayers()
+    {
+        return currentActivePlayers.ToArray();
     }
 
     //Someone joins the game
