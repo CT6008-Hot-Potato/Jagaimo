@@ -18,6 +18,7 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
 
     //Fulfilling the interfaces contracted functions
     GAMEMODE_INDEX IGamemode.Return_Mode() => Return_Mode();
+    CharacterManager[] IGamemode.GetActivePlayers() => GetActivePlayers();
 
     //These 3 functions will be the same on every gamemode I think
     void IGamemode.SetActivePlayers(CharacterManager[] charArray) => SettingActivePlayers(charArray);
@@ -90,6 +91,10 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
         {
             Debug.Log("Active players set, Amount of Active players: " + currentActivePlayers.Count, this);
         }
+    }
+    private CharacterManager[] GetActivePlayers()
+    {
+        return currentActivePlayers.ToArray();
     }
 
     //Someone joins the game

@@ -22,6 +22,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     //These 3 functions will be the same on every gamemode I think
     void IGamemode.SetActivePlayers(CharacterManager[] charArray) => SettingActivePlayers(charArray);
+    CharacterManager[] IGamemode.GetActivePlayers() => GetActivePlayers();
     void IGamemode.AddActivePlayer(CharacterManager charToAdd) => AddActivePlayer(charToAdd);
     void IGamemode.RemoveActivePlayer(CharacterManager charToRemove) => RemoveActivePlayer(charToRemove);
 
@@ -100,6 +101,10 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         {
             Debug.Log("Active players set, Amount of Active players: " + currentActivePlayers.Count, this);
         }
+    }
+    private CharacterManager[] GetActivePlayers()
+    {
+        return currentActivePlayers.ToArray();
     }
 
     //Someone joins the game

@@ -100,6 +100,14 @@ public class CharacterManager : MonoBehaviour
 
         if (settings)
         {
+            if (settings.HasGamMutator(8))
+            {
+                int multiplier = (int)settings.FindGeneralMutatorValue(8);
+
+                float valueToAdd = multiplier * 0.1f;
+                _movement.speedMultiplier += valueToAdd;
+            }
+
             //The mutator for using confetti is true, so swap out the elim vfx for the confetti one
             if (settings.HasGenMutator(14))
             {
