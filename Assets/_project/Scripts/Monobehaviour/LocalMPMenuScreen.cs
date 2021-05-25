@@ -18,9 +18,6 @@ public class LocalMPMenuScreen : MonoBehaviour
     private PlayerInputManager inputManager;
     private GameSettingsContainer game;
 
-    [SerializeField]
-    private List<PlayerInput> joinedPlayers = new List<PlayerInput>();
-
     //The reference to the texts
     [SerializeField]
     private GameObject[] joinedIcon;
@@ -66,54 +63,41 @@ public class LocalMPMenuScreen : MonoBehaviour
 
     public void OnPlayerJoined(PlayerInput playerInput)
     {
-        if (Debug.isDebugBuild)
-        {
-            Debug.Log("Player has joined in menu on device");
-        }
+        //if (Debug.isDebugBuild)
+        //{
+        //    Debug.Log("Player has joined in menu on device");
+        //}
 
         //Storing the player object for the next scene
         playerInput.transform.SetParent(game.transform);
 
-        //Updating the game settings
-        game.LocalPlayerInputs[joinedPlayers.Count] = playerInput;
+        //Updating the UI
+        joinedIcon[game.iPlayercount].SetActive(true);
+        promptIcon[game.iPlayercount].SetActive(false);
+
+        game.LocalPlayerInputs[game.iPlayercount] = playerInput;
         game.iPlayercount++;
 
-        //Updating the UI
-        joinedIcon[joinedPlayers.Count].SetActive(true);
-        promptIcon[joinedPlayers.Count].SetActive(false);
-
-        joinedPlayers.Add(playerInput);
-
-        if (joinedPlayers.Count == 1)
+        if (game.iPlayercount == 1)
         {
             CheckIfCanStart();
         }
     }
 
-    public void StoringPlayerCount()
-    {
-        game.iPlayercount = inputManager.playerCount;
-    }
-
     //When the back button is presseed, have to remove the currently stored players
     public void RemoveCharacters()
     {
-        //Destroying all the joined players
-        for (int i = 0; i < joinedPlayers.Count; ++i)
-        {
-            Destroy(joinedPlayers[i].gameObject);           
-        }
-
-        //Clearing the list
-        joinedPlayers.Clear();
-
-        game.ClearPlayers();
-
+        //Going through and resetting the icons
         for (int i = 0; i < promptIcon.Length; ++i)
         {
-            joinedIcon[i].SetActive(false);
-            promptIcon[i].SetActive(true);
+            if (joinedIcon[i] && promptIcon[i])
+            {
+                joinedIcon[i].SetActive(false);
+                promptIcon[i].SetActive(true);
+            }
         }
+
+        game.ClearPlayers();
     }
 
     #endregion

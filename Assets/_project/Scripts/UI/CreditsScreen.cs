@@ -15,10 +15,9 @@ public class CreditsScreen : MonoBehaviour
 
     [SerializeField]
     private ScrollRect scrollingText;
-
-    bool isLocked = false;
     [SerializeField]
     private float fCreditsTime = 3f;
+
     #endregion
 
     private void Awake()
