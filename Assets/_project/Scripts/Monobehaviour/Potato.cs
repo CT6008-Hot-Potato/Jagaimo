@@ -14,6 +14,8 @@ public class Potato : MonoBehaviour
 {
     #region Variables Needed
 
+    [SerializeField]
+    private RoundManager roundManager;
     private GameSettingsContainer gameSettings;
 
     [Header("Variables Needed")]
@@ -38,6 +40,9 @@ public class Potato : MonoBehaviour
     [SerializeField]
     private bool isMagnetised = false;
 
+    //The hit chance for the infected gamemode mutator
+    float hitChance = 1.0f;
+
     #endregion
 
     #region Unity Methods
@@ -49,6 +54,8 @@ public class Potato : MonoBehaviour
 
     private void Start()
     {
+        roundManager = roundManager ?? RoundManager.roundManager;
+
         //If there are game settings to take from
         if (gameSettings)
         {
@@ -71,6 +78,14 @@ public class Potato : MonoBehaviour
                     magnetism.SetMagnetismDur(fMagnetismDur);
                 }
             }
+
+            if (roundManager._currentGamemode.Return_Mode() == GAMEMODE_INDEX.INFECTED)
+            {
+                if (gameSettings.HasGamMutator(3))
+                {
+                    hitChance = (float)gameSettings.FindGamemodeMutatorValue(3);
+                }
+            }
         }
 
         //If there is a player set and a position to put it
@@ -87,10 +102,24 @@ public class Potato : MonoBehaviour
         //Guard clause for using the interactable interface
         if (!other.TryGetComponent(out IInteractable interactable)) return;
 
-        //Run it's interact function if the script is enabled
-        if (((MonoBehaviour)interactable).enabled)
+        if (hitChance < 1.0f)
         {
-            interactable.Interact();
+            if (Random.Range(0, 1.0f) < hitChance)
+            {
+                //Run it's interact function if the script is enabled
+                if (((MonoBehaviour)interactable).enabled)
+                {
+                    interactable.Interact();
+                }
+            }
+        }
+        else
+        {
+            //Run it's interact function if the script is enabled
+            if (((MonoBehaviour)interactable).enabled)
+            {
+                interactable.Interact();
+            }
         }
     }
 

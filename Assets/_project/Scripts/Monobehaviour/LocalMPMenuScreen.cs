@@ -74,10 +74,10 @@ public class LocalMPMenuScreen : MonoBehaviour
         //    Debug.Log("Player has joined in menu on device");
         //}
 
-        if (soundManager)
-        {
-            soundManager.PlaySound(ScriptableSounds.Sounds.PlayerJoin);
-        }
+        //if (soundManager)
+        //{
+        //    soundManager.PlaySound(ScriptableSounds.Sounds.PlayerJoin);
+        //}
 
         //Storing the player object for the next scene
         playerInput.transform.SetParent(game.transform);

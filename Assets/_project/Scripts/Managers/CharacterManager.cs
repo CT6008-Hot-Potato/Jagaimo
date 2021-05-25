@@ -26,7 +26,6 @@ public class CharacterManager : MonoBehaviour
     //A public variable for scripts to check if this player is locked
     public bool isPlayerLocked { private get; set; } = false;
 
-
     [Header("Components Needed")]
     //Components already on this object
     [SerializeField]
@@ -71,10 +70,11 @@ public class CharacterManager : MonoBehaviour
     private GameObject elimDisplayObject;
     private float taggedAnimduration = 2f;
 
-    //Infected mutator
-    bool bApplyInfectedSpeed = false;
-
-    float survivorSpeedAddition;
+    //Infected mutator variables
+    private bool bApplyInfectedSpeed = false;
+    private bool bRemoveSurvivorSpeed = false;
+    private float survivorSpeedAddition = 0.0f;
+    private float infectedSpeedAddition = 0.0f;
 
     #endregion
 
@@ -122,14 +122,24 @@ public class CharacterManager : MonoBehaviour
                 //It's the infected gamemode
                 if (rManager._currentGamemode.Return_Mode() == GAMEMODE_INDEX.INFECTED)
                 {
+                    //The infected speed's mutator
                     if (settings.HasGamMutator(0))
                     {
+                        int inf_multiplier = (int)settings.FindGamemodeMutatorValue(0);
+                        infectedSpeedAddition = valueToAdd * inf_multiplier;
 
+                        bApplyInfectedSpeed = true;
                     }
 
+                    //The survivor's speed's mutator
                     if (settings.HasGamMutator(1))
                     {
+                        int surv_multiplier = (int)settings.FindGamemodeMutatorValue(1);
+                        survivorSpeedAddition = valueToAdd * surv_multiplier;
 
+                        _movement.speedMultiplier += survivorSpeedAddition;
+
+                        bRemoveSurvivorSpeed = true;
                     }
                 }
             }
@@ -203,7 +213,6 @@ public class CharacterManager : MonoBehaviour
         }
 
         //Turn all non-important scripts off (ones that allow the player to interact especially)
-
         return this;
     }
 
@@ -215,6 +224,17 @@ public class CharacterManager : MonoBehaviour
         if (_playerAnimation)
         {
             _playerAnimation.CheckToChangeState("FallingBackDeath", true);
+        }
+
+        //This is only applied during the infected gamemode
+        if (bRemoveSurvivorSpeed)
+        {
+            _movement.speedMultiplier -= survivorSpeedAddition;
+        }
+
+        if (bApplyInfectedSpeed)
+        {
+            _movement.speedMultiplier += infectedSpeedAddition;
         }
 
         StartCoroutine(Co_TaggedEffect(taggedAnimduration));
