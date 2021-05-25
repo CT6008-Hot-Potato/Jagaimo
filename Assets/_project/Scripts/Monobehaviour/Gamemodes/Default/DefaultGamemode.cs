@@ -84,21 +84,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
-
-            //If there is a spot (may not be due to inspector not being filled out)
-            if (arenaManager.isPossibleToSpawnIn(0))
-            {
-                SpawningSpot spot = arenaManager.ReturnRandomSpotForArena(0);
-                currentActivePlayers[i].gameObject.transform.position = spot.spotTransform.position;
-
-                //This is the "solution" to not being able to turn the player based on the prefab object
-                PlayerCamera camera = currentActivePlayers[i].GetComponent<PlayerCamera>();
-                camera.ChangeYaw(spot.spotTransform.rotation.eulerAngles.y / Time.deltaTime);
-                camera.flipSpin = !camera.flipSpin;
-
-                spot.isUsed = true;
-            }
-
+            PutSpecificCharacterInPosition(i);
             charArray[i].LockPlayer();
         }
 
@@ -317,6 +303,17 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
                 return null;
             }
         }
+    }
+
+    private void PutSpecificCharacterInPosition(int index)
+    {
+        Transform spot = arenaManager.GettingSpot(0, index);
+        currentActivePlayers[index].gameObject.transform.position = spot.position;
+
+        //This is the "solution" to not being able to turn the player based on the prefab object
+        PlayerCamera camera = currentActivePlayers[index].GetComponent<PlayerCamera>();
+        camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
+        camera.flipSpin = !camera.flipSpin;
     }
 
     private void PutCharactersInStartPositions()

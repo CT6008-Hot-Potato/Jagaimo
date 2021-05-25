@@ -92,6 +92,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
+            PutSpecificCharacterInPosition(i);
             charArray[i].LockPlayer();
         }
 
@@ -297,6 +298,17 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         }
 
         enabled = false;
+    }
+
+    private void PutSpecificCharacterInPosition(int index)
+    {
+        Transform spot = arenaManager.GettingSpot(0, index);
+        currentActivePlayers[index].gameObject.transform.position = spot.position;
+
+        //This is the "solution" to not being able to turn the player based on the prefab object
+        PlayerCamera camera = currentActivePlayers[index].GetComponent<PlayerCamera>();
+        camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
+        camera.flipSpin = !camera.flipSpin;
     }
 
     private void PutCharactersInStartPositions()

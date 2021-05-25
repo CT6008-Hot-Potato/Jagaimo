@@ -434,6 +434,8 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
     private IEnumerator Co_GoalWait(float duration)
     {
+
+
         yield return new WaitForSeconds(duration);
 
         LockAllPlayers();
