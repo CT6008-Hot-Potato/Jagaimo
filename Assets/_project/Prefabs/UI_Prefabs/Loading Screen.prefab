@@ -25,13 +25,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2038482494163628757}
-  m_LocalRotation: {x: 0.045437254, y: 0.041635573, z: 0.041635573, w: 0.9972304}
+  m_LocalRotation: {x: 0.022280289, y: 0.021328734, z: 0.021328734, w: 0.99929667}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3730775146298517479}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 5, y: 5, z: 5}
+  m_LocalEulerAnglesHint: {x: 2.5, y: 2.5, z: 2.5}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -620,6 +620,7 @@ MonoBehaviour:
   - Tip - If the game is too hard, try pressing escape and rebind the controls to
     something more comfortable
   textObject: {fileID: 3730775146376020750}
+  creationRef: {fileID: 0}
   loadingScreen: {fileID: 3730775145787625571}
   loadingSpeed: 0.5
   LoadPrompt: Press any button to continue
