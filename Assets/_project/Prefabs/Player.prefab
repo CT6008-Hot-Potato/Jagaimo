@@ -851,6 +851,7 @@ MonoBehaviour:
   crouchSound: 8
   jumpSound: 9
   particles: {fileID: 11400000, guid: e4907c1dd2137b74ba1f270593241766, type: 2}
+  wall: {fileID: 13400000, guid: 1c1ccb7a9f9031e428b1f2e11971ba1b, type: 2}
 --- !u!114 &4394244838949972468
 MonoBehaviour:
   m_ObjectHideFlags: 0
