@@ -38,7 +38,11 @@ public class WinScreenManager : MonoBehaviour
     [SerializeField]
     private bool bReturnToMenu = true;
 
-    [SerializeField] AudioClip WinMusic;
+    [SerializeField]
+    AudioClip WinMusic;
+
+    [SerializeField]
+    private GameSettingsContainer settings;
 
     #endregion
 
@@ -55,11 +59,10 @@ public class WinScreenManager : MonoBehaviour
             instance = this;
         }
 
+        settings = settings ?? GameSettingsContainer.instance;
         menuWaitBehaviour = menuWaitBehaviour ?? GetComponent<BasicTimerBehaviour>();
         worldBounds = worldBounds ?? FindObjectOfType<WorldBounds>();
     }
-
-
 
     #endregion
 
@@ -78,9 +81,16 @@ public class WinScreenManager : MonoBehaviour
             }
         }
 
+        //Destroying the world bounds so it doesnt interfere with the win screen
         if (worldBounds)
         {
             Destroy(worldBounds);
+        }
+
+        //Destroying the settings so it doesnt interfere with the next game
+        if (settings)
+        {
+            Destroy(settings.gameObject);
         }
 
         allPlayers = everyPlayer;
@@ -117,6 +127,7 @@ public class WinScreenManager : MonoBehaviour
     //Going back to the main menu
     public void ReturnToMenu()
     {
+        Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene("MainMenu");
     }
 

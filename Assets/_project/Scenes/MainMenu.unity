@@ -5056,7 +5056,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &341725071
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8328,11 +8328,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputManager: {fileID: 566953102}
-  joinedIcon:
-  - {fileID: 1469537875}
-  - {fileID: 341725070}
-  - {fileID: 734289685}
-  - {fileID: 1372209011}
+  joinedIconGamepad:
+  - {fileID: 1152002551}
+  - {fileID: 748638586}
+  - {fileID: 846511172}
+  - {fileID: 471440746}
+  joinedIconKeyboard:
+  - {fileID: 1756113343}
+  - {fileID: 369956836}
+  - {fileID: 2120613208}
+  - {fileID: 1263301358}
   promptIcon:
   - {fileID: 2121237147}
   - {fileID: 561026274}
@@ -11329,7 +11334,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &734289686
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23007,7 +23012,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1372209012
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24704,7 +24709,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1469537876
 RectTransform:
   m_ObjectHideFlags: 0

@@ -137,8 +137,7 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     //This runs when the round is about to start/ during the initial timer
     private void RoundStarting()
     {
-        //Putting people in the correct positions
-        PutCharactersInStartPositions();
+
     }
 
     //A podium scene which ragdoll the players in order of elimination but doesnt go back to menu/lobby unless hit max round
