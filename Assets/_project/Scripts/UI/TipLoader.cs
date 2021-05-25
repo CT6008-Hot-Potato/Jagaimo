@@ -19,6 +19,8 @@ public class TipLoader : MonoBehaviour
     [SerializeField] string[] tips;
     [SerializeField] TextMeshProUGUI textObject;
 
+    [SerializeField] GameCreationSettings creationRef;
+
     [SerializeField] Slider loadingScreen;
     [SerializeField] float loadingSpeed;
     [SerializeField] string LoadPrompt;
@@ -69,9 +71,9 @@ public class TipLoader : MonoBehaviour
             gameObject.SetActive(false);
             }
 
-            else
+            else if (LoadMode == 1)
             {
-
+                creationRef.StartButton();
             }
 
         }
