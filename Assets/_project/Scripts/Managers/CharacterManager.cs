@@ -100,11 +100,12 @@ public class CharacterManager : MonoBehaviour
 
         if (settings)
         {
-            if (settings.HasGamMutator(8))
+            if (settings.HasGenMutator(8))
             {
+
                 int multiplier = (int)settings.FindGeneralMutatorValue(8);
 
-                float valueToAdd = multiplier * 0.1f;
+                float valueToAdd = multiplier * 0.05f;
                 _movement.speedMultiplier += valueToAdd;
             }
 
