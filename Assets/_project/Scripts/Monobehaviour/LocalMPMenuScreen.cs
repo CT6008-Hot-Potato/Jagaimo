@@ -20,7 +20,9 @@ public class LocalMPMenuScreen : MonoBehaviour
 
     //The reference to the texts
     [SerializeField]
-    private GameObject[] joinedIcon;
+    private GameObject[] joinedIconGamepad;
+    [SerializeField]
+    private GameObject[] joinedIconKeyboard;
     [SerializeField]
     private GameObject[] promptIcon;
     [SerializeField]
@@ -72,7 +74,16 @@ public class LocalMPMenuScreen : MonoBehaviour
         playerInput.transform.SetParent(game.transform);
 
         //Updating the UI
-        joinedIcon[game.iPlayercount].SetActive(true);
+        if (playerInput.devices[0].name != "Keyboard" && playerInput.devices[0].name != "Mouse")
+        {
+            //Gamepad icon shown
+            joinedIconGamepad[game.iPlayercount].SetActive(true);
+        }
+        else
+        {
+            joinedIconKeyboard[game.iPlayercount].SetActive(true);
+        }
+
         promptIcon[game.iPlayercount].SetActive(false);
 
         game.LocalPlayerInputs[game.iPlayercount] = playerInput;
@@ -90,9 +101,11 @@ public class LocalMPMenuScreen : MonoBehaviour
         //Going through and resetting the icons
         for (int i = 0; i < promptIcon.Length; ++i)
         {
-            if (joinedIcon[i] && promptIcon[i])
+            if (joinedIconKeyboard[i] && joinedIconGamepad[i] && promptIcon[i])
             {
-                joinedIcon[i].SetActive(false);
+                joinedIconKeyboard[i].SetActive(false);
+                joinedIconGamepad[i].SetActive(false);
+
                 promptIcon[i].SetActive(true);
             }
         }
