@@ -88,6 +88,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
         {
             //playerManager.SetActive(false);
             singlePlayer = Instantiate(playerPrefab, new Vector3(0, 25, 0), playerPrefab.transform.rotation);
+            singlePlayer.GetComponent<CharacterManager>().UnLockPlayer();
         }
         else
         {

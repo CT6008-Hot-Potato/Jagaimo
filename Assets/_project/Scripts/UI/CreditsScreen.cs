@@ -18,7 +18,7 @@ public class CreditsScreen : MonoBehaviour
 
     bool isLocked = false;
     [SerializeField]
-    private float fCreditsTime = 10f;
+    private float fCreditsTime = 3f;
     #endregion
 
     private void Awake()
@@ -31,6 +31,8 @@ public class CreditsScreen : MonoBehaviour
 
     private void OnEnable()
     {
+        Debug.Log("Scrolling credits");
+
         if (!scrollingText)
         {
             scrollingText = GetComponentInChildren<ScrollRect>();
@@ -51,7 +53,7 @@ public class CreditsScreen : MonoBehaviour
 
     private IEnumerator Co_ScrollingText(float textTimer)
     {
-        for (float t = 1; t < 0; t += Time.deltaTime / textTimer)
+        for (float t = 1; t > 0; t -= Time.deltaTime / textTimer)
         {
             scrollingText.verticalNormalizedPosition = t;
             yield return null;
