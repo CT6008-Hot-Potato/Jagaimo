@@ -18,8 +18,7 @@ public class PlayerController : MonoBehaviour
     private float velocityClamp = 10f;
     [SerializeField]
     private float jumpVelocity = 50;
-    [SerializeField]
-    private float speedMultiplier = 0.5f;
+    public float speedMultiplier = 0.5f;
     [SerializeField]
     private float walkSpeed = 5f;
     [SerializeField]

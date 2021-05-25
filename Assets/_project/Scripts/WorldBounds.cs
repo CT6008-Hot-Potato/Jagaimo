@@ -32,10 +32,12 @@ public class WorldBounds : MonoBehaviour
         if (other.tag != "PositionStay")
         {
             other.transform.position = position;
-
-            if (Debug.isDebugBuild)
+            if (other.TryGetComponent<Rigidbody>(out Rigidbody rb))
             {
-                Debug.Log("Something left the map: " + other.name, this);
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("Something left the map: " + other.name, this);
+                }
             }
         }
     }
