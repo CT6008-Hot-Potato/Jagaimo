@@ -82,7 +82,16 @@ public class UIMenuBehaviour : MonoBehaviour
 
     public void UpdateUIMenuState(bool newState) // open or closes the pause menu  
     {        
-     
+        if(newState)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+
         UpdateCoreUIObjectsState(newState);
     }
             
