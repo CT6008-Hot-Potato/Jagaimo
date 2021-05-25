@@ -51,7 +51,17 @@ public class FootballObjectContainer : MonoBehaviour
         {
             Destroy(this);
         }
-
-        roundManager = RoundManager.roundManager;
     }
+
+    private void Start()
+    {
+        roundManager = RoundManager.roundManager;
+        gamemode = roundManager.GetComponent<FootballGamemode>();
+    }
+
+    public void UnlockPlayersAfterGoal()
+    {
+        gamemode.UnlockAllPlayers();
+    }
+
 }
