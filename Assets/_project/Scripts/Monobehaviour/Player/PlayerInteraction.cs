@@ -8,6 +8,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField]
     private GameObject firstPersonCamera;
     private RaycastHit hit;
+    private RaycastHit select;
+
     private Ray ray;
     [SerializeField]
     private Transform closestPosition;
@@ -30,6 +33,10 @@ public class PlayerInteraction : MonoBehaviour
     private float throwStrength = 10;
     [SerializeField]
     private float grabDistance = 5;
+    [SerializeField]
+    private Material selectedOutline;
+    [SerializeField]
+    private Material defaultOutline;
     private Rigidbody rbObject;
     private Rigidbody rbParent;
     private LocalMPScreenPartioning cM;
@@ -40,16 +47,37 @@ public class PlayerInteraction : MonoBehaviour
     private ScriptableSounds.Sounds grabSound, throwSound;
     private PlayerAnimation pA;
     private SoundManager sM;
+    private PlayerController pC;
     public PlayerInput PlayerInput => playerInput;
     private float leftClick = 0;
     private float rightClick = 0;
     private float zoomIn = 0;
     private float zoomOut = 0;
+    private List <MeshRenderer> outlined = new List<MeshRenderer>();
+    private bool clickLifted = false;
     #endregion Variables
+
+    private void Awake()
+    {
+        //Intergrating the throw speed mutator (Code Here by Charles Carter)
+        GameSettingsContainer settings = GameSettingsContainer.instance;
+
+        if (settings)
+        {
+            //The potato throw strength mutater is changed so the value is not 1
+            if (settings.HasGamMutator(4))
+            {
+                //Adding on 50% of the strength * the multiplier from the mutator
+                throwStrength += throwStrength * 0.2f * (int)settings.FindGeneralMutatorValue(4);
+            }
+        }
+        //End of mutator intergration code
+    }
 
     //Start method setting up and assigning values
     void Start()
     {
+        pC = FindObjectOfType<PlayerController>();
         pA = GetComponent<PlayerAnimation>();
         sM = FindObjectOfType<SoundManager>();
         cM = GameObject.FindObjectOfType<LocalMPScreenPartioning>();
@@ -60,7 +88,7 @@ public class PlayerInteraction : MonoBehaviour
         }
         rbObject = movingObject.GetComponent<Rigidbody>();
         //Set the component Rigidbody's useGravity to true in the modelItem.
-        rbObject.useGravity = true;
+        rbObject.useGravity = true;       
     }
 
     //Function to return a ray from camera
@@ -72,88 +100,131 @@ public class PlayerInteraction : MonoBehaviour
     //Update method checking for clicks to throw,drop or grab rigidbody objects to move and also move closer or further/
     void Update()
     {
-
-        //If the player has interacted
-        if (leftClick > 0.1 && grabbing == false)
+        if (!grabbing)
         {
-            grabbing = true;
-            //Try get cameras and then quickly enable the main camera regardless of if third or first person to do raycast
+            //First person to do raycast
             ray = new Ray(firstPersonCamera.transform.position, firstPersonCamera.transform.forward);
-
-
-            //Do a raycast and check if the object needs to be dropped or picked up
-            if (Physics.Raycast(ray, out hit, grabDistance))
+            //If the player has interacted
+            if (leftClick > 0.1 && clickLifted)
             {
-                //If moving object already held drop it
-                if (movingObject != null)
+                grabbing = true;
+                clickLifted = false;
+
+                if (pC.grounded)
                 {
-                    Drop(false);
+                    grabDistance = 5;
                 }
-                //Else if hit object has a rigidbody and isn't tagged a player grab it
-                else if (hit.rigidbody != null && hit.transform.tag != "Player")
+                else
                 {
-                    //Play grabbing sound if sound manager present
-                    if (sM)
+                    grabDistance = 1;
+                }
+
+                //Do a raycast and check if the object needs to be dropped or picked up
+                if (Physics.Raycast(ray, out hit, grabDistance))
+                {
+                    //Else if hit object has a rigidbody and isn't tagged a player grab it
+                    if (hit.rigidbody != null && hit.transform.tag != "Player")
                     {
-                        sM.PlaySound(grabSound);
+                        //Play grabbing sound if sound manager present
+                        if (sM)
+                        {
+                            sM.PlaySound(grabSound);
+                        }
+
+                        movingObject = hit.transform.gameObject;
+                        //Here we are simply assigning the rbObject the rb component on moving object then setting it's gravity to false and kinematic to true, this is done so this object doesn't drag around.
+                        rbObject = movingObject.GetComponent<Rigidbody>();
+                        rbObject.useGravity = false;
+                        rbObject.isKinematic = true;
+                        //Here movingObject position, rotation and parent are assigned to that of moving parent, this is done to keep the moving object positioned where moving parent is and parented to it too.
+                        movingObject.transform.position = movingParent.transform.position;
+                        movingObject.transform.rotation = movingParent.transform.rotation;
+                        movingObject.transform.parent = movingParent.transform;
+                        //The collider component on movingObject is assigned the collider type of that of the movingParent and it's collision is then adjusted to the correct type accordingly. 
+                        SetComponent(movingObject.GetComponent<Collider>(), movingParent);
+                        //Set the smaller trigger component to true
+                        movingParent.GetComponent<Collider>().isTrigger = true;
+                        AdjustCollision(movingObject);
+                        movingObject.GetComponent<Collider>().enabled = false;
+                        //Assign the parent rigidbody to the moving parent rigidbody and setting aspects of it true and false
+                        rbParent = movingParent.AddComponent<Rigidbody>();
+                        rbParent.freezeRotation = true;
+                        rbParent.isKinematic = false;
+                        rbParent.useGravity = true;
+                        //RbParent rigidbody collision is set to ContinuousDynamic as this is the best collision for this fast moving object, also below the carry collision class/component is added to moving parent.
+                        rbParent.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                        movingParent.AddComponent<CarryCollision>();
+                    }
+                }
+
+            }
+            else if (Physics.Raycast(ray,out select,25))
+            {
+                if (select.transform.TryGetComponent(out Rigidbody rigidbody))
+                {
+                    int selectedObjectChildren = select.transform.childCount;
+                    for (int i = 0; i < selectedObjectChildren;i++)
+                    {
+                        if (select.transform.GetChild(i).TryGetComponent(out MeshRenderer renderer))
+                        {
+                            if (renderer.material.name.ToString() == "Outline (Instance)" || renderer.material.name.ToString() == "Selected Outline (Instance)")
+                            {
+                                renderer.material = selectedOutline;
+                                outlined.Add(renderer);
+                                break;
+                            }
+                        }
                     }
 
-                    movingObject = hit.transform.gameObject;
-                    //Here we are simply assigning the rbObject the rb component on moving object then setting it's gravity to false and kinematic to true, this is done so this object doesn't drag around.
-                    rbObject = movingObject.GetComponent<Rigidbody>();
-                    rbObject.useGravity = false;
-                    rbObject.isKinematic = true;
-                    //Here movingObject position, rotation and parent are assigned to that of moving parent, this is done to keep the moving object positioned where moving parent is and parented to it too.
-                    movingObject.transform.position = movingParent.transform.position;
-                    movingObject.transform.rotation = movingParent.transform.rotation;
-                    movingObject.transform.parent = movingParent.transform;
-                    //The collider component on movingObject is assigned the collider type of that of the movingParent and it's collision is then adjusted to the correct type accordingly. 
-                    SetComponent(movingObject.GetComponent<Collider>(), movingParent);
-                    //Set the smaller trigger component to true
-                    movingParent.GetComponent<Collider>().isTrigger = true;
-                    AdjustCollision(movingObject);
-                    movingObject.GetComponent<Collider>().enabled = false;
-                    //Assign the parent rigidbody to the moving parent rigidbody and setting aspects of it true and false
-                    rbParent = movingParent.AddComponent<Rigidbody>();
-                    rbParent.freezeRotation = true;
-                    rbParent.isKinematic = false;
-                    rbParent.useGravity = true;
-                    //RbParent rigidbody collision is set to ContinuousDynamic as this is the best collision for this fast moving object, also below the carry collision class/component is added to moving parent.
-                    rbParent.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-                    movingParent.AddComponent<CarryCollision>();
+                    
+                }
+                else if (outlined != null)
+                {
+                    foreach(MeshRenderer meshRenderer in outlined)
+                    {
+                        meshRenderer.material = defaultOutline;
+                    }
+                    outlined.Clear();
                 }
             }
-
+            else if (outlined != null)
+            {
+                foreach (MeshRenderer meshRenderer in outlined)
+                {
+                    meshRenderer.material = defaultOutline;
+                }
+                outlined.Clear();
+            }
         }
-        //Throw the object when right click or right trigger pressed
-        else if (rightClick > 0.1)
+        else
         {
-            ray = new Ray(firstPersonCamera.transform.position, firstPersonCamera.transform.forward);
 
-            if (movingObject != null)
+            //Throw the object when right click or right trigger pressed
+            if (rightClick > 0.1 && clickLifted)
             {
                 Drop(true);
             }
-        }
-        //Set grabbing back to false if already grabbing
-        else if (grabbing && leftClick == 0)
-        {
-            grabbing = false;
-        }
-        //Otherwise if holding the moving object it can be moved closer or further from player
-        else if (movingObject != null)
-        {
-            movingParent.transform.position = UnityEngine.Vector3.MoveTowards(movingParent.transform.position, position.position, 1000 * Time.deltaTime);
-            //Zoom in
-            if (zoomIn > 0.1f)
+            //Drop the grabbed object when left trigger or click pressed
+            else if (leftClick > 0.1f && clickLifted)
             {
-                position.position = UnityEngine.Vector3.MoveTowards(position.position, closestPosition.position, 5 * Time.deltaTime);
+                Drop(false);
             }
-            //Zoom out
-            else if (zoomOut > 0.1f)
+            //Otherwise if holding the moving object it can be moved closer or further from player
+            else 
             {
-                position.position = UnityEngine.Vector3.MoveTowards(position.position, furthestPosition.position, 5 * Time.deltaTime);
+                movingParent.transform.position = UnityEngine.Vector3.MoveTowards(movingParent.transform.position, position.position, 1000 * Time.deltaTime);
+                //Zoom in
+                if (zoomIn > 0.1f)
+                {
+                    position.position = UnityEngine.Vector3.MoveTowards(position.position, closestPosition.position, 5 * Time.deltaTime);
+                }
+                //Zoom out
+                else if (zoomOut > 0.1f)
+                {
+                    position.position = UnityEngine.Vector3.MoveTowards(position.position, furthestPosition.position, 5 * Time.deltaTime);
+                }
             }
+
         }
     }
 
@@ -255,7 +326,7 @@ public class PlayerInteraction : MonoBehaviour
                 //When object is being thrown first will check got rigidbody and then throw it
                 if (throwObject)
                 {
-                    rB.AddForce(firstPersonCamera.transform.forward * throwStrength, ForceMode.Impulse);
+                    rB.AddForce(firstPersonCamera.transform.forward * pC.speed, ForceMode.Impulse);
                     //rB.velocity = GetComponent<Rigidbody>().velocity;
                 }
             }
@@ -272,6 +343,8 @@ public class PlayerInteraction : MonoBehaviour
         }
         //Set position back to the closesty position for when it picks something up again
         position.position = closestPosition.position;
+        grabbing = false;
+        clickLifted = false;
     }
 
 
@@ -294,14 +367,29 @@ public class PlayerInteraction : MonoBehaviour
     public void LeftClick(InputAction.CallbackContext ctx)
     {
         leftClick = ctx.ReadValue<float>();
-        pA.CheckToChangeState("Grab", true);
+        if (grabbing && leftClick == 0)
+        {
+            clickLifted = true;
+        }
+        else if (!grabbing && leftClick > 0.1f)
+        {
+            clickLifted = true;
+        }
+
+        if (!pA)
+        {
+            pA.CheckToChangeState("Grab", true);
+        }
     }
 
     //Method for using unity's new input system to detect right click
     public void RightClick(InputAction.CallbackContext ctx)
     {
         rightClick = ctx.ReadValue<float>();
-        pA.CheckToChangeState("Throw", true);
+        if (!pA)
+        {
+            pA.CheckToChangeState("Throw", true);
+        }
     }
 
     //Method for using unity's new input system to detect zooming in

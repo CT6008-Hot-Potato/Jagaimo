@@ -24,10 +24,10 @@ public class LocalMPScreenPartioning : MonoBehaviour
     private bool singleLocalPlayer;
     public bool isActive { get; private set; }
 
-    GameSettingsContainer settings;
+    private GameSettingsContainer settings;
 
     [SerializeField]
-    PlayerInputManager manager;
+    private PlayerInputManager manager;
 
     #endregion
 
@@ -35,6 +35,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
 
     private void Awake()
     {
+        //Code by Charles Carter
         settings = GameSettingsContainer.instance;
         manager = manager ?? GetComponent<PlayerInputManager>();
 
@@ -71,7 +72,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
         //Was played from the scene, anyone can join
         else if (singleLocalPlayer)
         {
-            playerManager.SetActive(false);
+            //playerManager.SetActive(false);
             Instantiate(playerPrefab, new Vector3(0, 1, 0), playerPrefab.transform.rotation);
         }
         else
@@ -79,11 +80,14 @@ public class LocalMPScreenPartioning : MonoBehaviour
             manager.EnableJoining();
         }
 
+        //Code by Charles Carter ends
+
         playerCameras = FindObjectsOfType<PlayerCamera>();
         playerIndex = (playerCameras.Length - 1) / 2;
         for (int i = 0; i > playerIndex; i++)
         {
             playerCameras[i].playerIndex = i;
+            playerCameras[i].SetPlayerMask();
         }
         playerIndexPrior = playerIndex;
     }
@@ -101,11 +105,12 @@ public class LocalMPScreenPartioning : MonoBehaviour
             playerIndexPrior = playerIndex;
             PlayerCamera[] cameras = FindObjectsOfType<PlayerCamera>();
             for (int i = 0; i < cameras.Length; i++)
-            {
-                cameras[i].playerIndex = i;
-                cameras[i].SetPlayerMask();
-                //Debug.Log(playerIndex + "PLAYER INDEX");
-                //Debug.Log(i + "Current player");
+            { 
+                if (cameras[i].gameObject == playerInput.gameObject)
+                {
+                    cameras[i].playerIndex = playerIndex;
+                }
+                    cameras[i].SetPlayerMask();
                 switch (playerIndex)
                 {
                     case 0:
@@ -183,6 +188,5 @@ public class LocalMPScreenPartioning : MonoBehaviour
             }
         }
     }
-
     #endregion
 }

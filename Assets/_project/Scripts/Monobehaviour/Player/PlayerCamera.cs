@@ -28,7 +28,7 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     private Transform zoomOutPosition;
     //Player index
-    public float playerIndex = 0;
+    public int playerIndex = 0;
     //Zoom in position of third person camera
     [SerializeField]
     private Transform zoomInPosition;
@@ -61,7 +61,9 @@ public class PlayerCamera : MonoBehaviour
     private float cameraRotateValue = 0;
     private float escapeValue = 0;
     private Vector2 cameraValue = Vector2.zero;
-    //Character type related arrays
+    //Character related 
+    [SerializeField]
+    private Mesh[] characterMesh;
     [SerializeField]
     private GameObject character;
     [SerializeField]
@@ -70,16 +72,19 @@ public class PlayerCamera : MonoBehaviour
     private Material[] materials;
     [SerializeField]
     private LayerMask[] mask;
-    //First and third person cameras
-    [SerializeField]
-    private GameObject playerFirstPerson;
     [SerializeField]
     private GameObject playerThirdPerson;
+    private SkinnedMeshRenderer characterSkinnedMesh;
+    private SkinnedMeshRenderer characterArmsSkinnedMesh;
+    //First and third person cameras
     private Vector3 cameraMovementValue = Vector3.zero;
     private Vector3 freecamRotation;
     private float freeCamValueY;
     public bool flipSpin;
     public bool freecamLock = false;
+    public bool cameraRotationLock = false;
+    [SerializeField]
+    private GameObject crosshair;   
     #endregion Variables
 
     #region Enums
@@ -111,20 +116,22 @@ public class PlayerCamera : MonoBehaviour
         if (firstPerson)
         {
             cameraState = cS.FIRSTPERSON;
+            crosshair.SetActive(true);
         }
         else
         {
             cameraState = cS.THIRDPERSON;
+            crosshair.SetActive(false);
         }
-        SetPlayerMask();
     }
 
     // Assigning audio listeners, setting correct camera state and making sure queriesHitBackfaces is true for raycasting later
     void Start()
     {
+        characterArmsSkinnedMesh = characterArms.GetComponent<SkinnedMeshRenderer>();
+        characterSkinnedMesh = character.GetComponent<SkinnedMeshRenderer>();
         cM = GetComponent<LocalMPScreenPartioning>();
         Physics.queriesHitBackfaces = true;
-        SetPlayerMask();
         firstPersonCamPosition = firstPersonCamera.transform.localPosition;
         collider = GetComponent<CapsuleCollider>();
         pC = GetComponent<PlayerController>();
@@ -142,125 +149,25 @@ public class PlayerCamera : MonoBehaviour
             firstPersonCamera.enabled = true;
         }
 
-        if (!playerFirstPerson || !playerThirdPerson)
-        {
-            if (Debug.isDebugBuild)
-            {
-                Debug.Log("Character model null");
-            }
-        }
         SetPlayerMask();
     }
 
     //Function for setting the correct player mask up
     public void SetPlayerMask()
     { 
-        character.SetActive(true);
-        characterArms.SetActive(true);
-        character.layer = 9 + (int)playerIndex;
-        characterArms.layer = 13 + (int)playerIndex;
-        characterArms.GetComponentInChildren<SkinnedMeshRenderer>().material = character.GetComponentInChildren<SkinnedMeshRenderer>().material = materials[(int)playerIndex];
-        for (int i = 0;i < 4;i++)
+        character.layer = 9 + playerIndex;
+        characterArms.layer = 13 + playerIndex;
+        if (!characterSkinnedMesh || !characterArmsSkinnedMesh)
         {
-            //If on correct player infex use this character and arms and set it's culling mask
-            if (i == playerIndex)
-            {
-
-                if (firstPersonCamera.enabled)
-                {
-                    firstPersonCamera.cullingMask = mask[i + 4];
-                }
-                else
-                {
-                    thirdPersonCamera.cullingMask = mask[i];
-                }
-            }
+            characterArmsSkinnedMesh = characterArms.GetComponent<SkinnedMeshRenderer>();
+            characterSkinnedMesh = character.GetComponent<SkinnedMeshRenderer>();
         }
+        characterSkinnedMesh.sharedMesh = characterMesh[playerIndex];
+        characterArmsSkinnedMesh.material = characterSkinnedMesh.material = materials[playerIndex];
+        firstPersonCamera.cullingMask = mask[playerIndex + 4];
+        thirdPersonCamera.cullingMask = mask[playerIndex];
     }
 
-    //This function sets up the correct camera aspect ratio according to the number of players within the game locally, this is checked via character manager
-    public void SetupCameraAspectRatio()
-    {
-        //Switch value based upon character managers player index
-        switch (cM.playerIndex)
-        {
-            //Player 1
-            case 0:
-                if (playerIndex == 0)
-                {
-                    firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
-                    thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
-                }
-                else
-                {
-                    Debug.Log("Value too high");
-                }
-                break;
-            //Players 2
-            case 1:
-                switch (playerIndex)
-                {
-                    case 0:
-                        firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                        thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                        break;
-                    case 1:
-                        firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
-                        thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
-                        break;
-                    default:
-                        Debug.Log("Value too high");
-                        break;
-                }
-                break;
-            //Players 3
-            case 2:
-                switch (playerIndex)
-                {
-                    case 0:
-                        firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                        thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                        break;
-                    case 1:
-                        firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                        thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                        break;
-                    case 2:
-                        firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                        thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                        break;
-                    default:
-                        Debug.Log("Value too high");
-                        break;
-                }
-                break;
-            case 3:
-                //Players 4
-                switch (playerIndex)
-                {
-                    case 0:
-                        firstPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
-                        thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
-                        break;
-                    case 1:
-                        firstPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-                        thirdPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-                        break;
-                    case 2:
-                        firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                        thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                        break;
-                    case 3:
-                        firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                        thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                        break;
-                    default:
-                        Debug.Log("Value too high");
-                        break;
-                }
-                break;
-        }
-    }
 
     //Update function calles camera type function constantly
     void Update()
@@ -270,15 +177,15 @@ public class PlayerCamera : MonoBehaviour
     }
 
     //Function to set yaw valye
-    public void ChangeYaw()
+    public void ChangeYaw(float timeMultiplier)
     {
         if (flipSpin)
         {
-            yaw = yaw - Time.deltaTime * 700;
+            yaw = yaw - Time.deltaTime * timeMultiplier;
         }
         else
         {
-            yaw = yaw + Time.deltaTime * 700;
+            yaw = yaw + Time.deltaTime * timeMultiplier;
         }
     }
 
@@ -286,7 +193,7 @@ public class PlayerCamera : MonoBehaviour
     void CameraType()
     {        
 
-        if (pC.GetMovement() != 0)
+        if (pC.GetMovement() != 0 && cameraRotationLock == false)
         {
             switch (cameraState)
             {
@@ -295,9 +202,9 @@ public class PlayerCamera : MonoBehaviour
                     //Check if wrong camera enabled and if so setup correct camera
                     if (thirdPersonCamera.enabled)
                     {
+                        crosshair.SetActive(true);
                         thirdPersonCamera.enabled = false;
                         firstPersonCamera.enabled = true;
-                        SetPlayerMask();
                     }
                     else
                     {
@@ -500,6 +407,7 @@ public class PlayerCamera : MonoBehaviour
                 zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, cameraZoomSpeed);
                 if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < cameraTransferDistance)
                 {
+
                     cameraState = cS.FIRSTPERSON;
                     transform.localRotation = Quaternion.Euler(0, thirdPersonCamera.transform.rotation.y, thirdPersonCamera.transform.rotation.z);
                 }
@@ -523,9 +431,9 @@ public class PlayerCamera : MonoBehaviour
     //Function to enable third person mode camera
     void EnableThirdPerson()
     {
+        crosshair.SetActive(false);
         thirdPersonCamera.enabled = true;
         firstPersonCamera.enabled = false;
-        SetPlayerMask();
     }
 
     //Function for getting camera input value as vector 3

@@ -13,7 +13,7 @@ using UnityEngine;
 
 [System.Serializable]
 //Each potential spot
-class SpawningSpot
+public class SpawningSpot
 {
     public Transform spotTransform;
     public bool isUsed;
@@ -21,7 +21,7 @@ class SpawningSpot
 
 [System.Serializable]
 //Each "arena" of spots
-class Arena
+public class Arena
 {
     public SpawningSpot[] spots;
 }
@@ -38,10 +38,15 @@ public class ArenaManager : MonoBehaviour
     //0 will likely be the main circle of spawning spots etc
     [SerializeField]
     private Arena[] arenaSpots;
+    //Spots specifically for the spawning of power ups
+    [SerializeField]
+    private Arena powerUpSpots;
 
     #endregion
 
     #region Public Methods
+
+    #region Utility
 
     //General Methods for utility
     public Transform GettingSpot(int arenaIndex, int SpotIndex)
@@ -53,6 +58,45 @@ public class ArenaManager : MonoBehaviour
     {
         return arenaSpots[arenaIndex].spots[SpotIndex].spotTransform.position;
     }
+
+    //An empty spot from a given arena
+    public Vector3 ReturnRandomEmptySpotFromArena(int ArenaIndex)
+    {
+        int randSpot = Random.Range(0, arenaSpots[ArenaIndex].spots.Length);
+
+        while (arenaSpots[ArenaIndex].spots[randSpot].isUsed)
+        {
+            randSpot = Random.Range(0, arenaSpots[ArenaIndex].spots.Length);
+        }
+
+        return arenaSpots[ArenaIndex].spots[randSpot].spotTransform.position;
+    }
+
+    //If I need the transform and rotation
+    public SpawningSpot ReturnRandomSpotForArena(int ArenaIndex)
+    {
+        int randSpot = Random.Range(0, arenaSpots[ArenaIndex].spots.Length);
+
+        while (arenaSpots[ArenaIndex].spots[randSpot].isUsed)
+        {
+            randSpot = Random.Range(0, arenaSpots[ArenaIndex].spots.Length);
+        }
+
+        return arenaSpots[ArenaIndex].spots[randSpot];
+    }
+
+    //Clearing known usage from a given arena
+    public void ClearUsageFromArena(int ArenaIndex)
+    {
+        for (int i = 0; i < arenaSpots[ArenaIndex].spots.Length; ++i)
+        {
+            arenaSpots[ArenaIndex].spots[i].isUsed = false;
+        }
+    }
+
+    #endregion
+
+    #region Gamemode Specific
 
     //This is for consistent spawn points for the football gamemode, the other team will use the same points from arena 1
     public List<int> ReturnFootballSpawnIndexers(int iPlayerCount)
@@ -101,6 +145,56 @@ public class ArenaManager : MonoBehaviour
         return points;
     }
 
+    #endregion
+
+    #region Power Ups Specific
+
+    //Self explanatory
+    public bool canPowerUpSpawn()
+    {
+        foreach (SpawningSpot sSpot in powerUpSpots.spots)
+        {
+            if (!sSpot.isUsed)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //Just a random position for the power up (inefficent with only 1 spot left)
+    public Vector3 ReturnFreePowerUpSpot()
+    {
+        //The temp list for the free spots
+        List<SpawningSpot> freeSpots = new List<SpawningSpot>(); 
+
+        //Going through the spots
+        foreach (SpawningSpot spot in powerUpSpots.spots)
+        {
+            //If they are free
+            if (!spot.isUsed)
+            {
+                //Add them to the list
+                freeSpots.Add(spot);
+            }
+        }
+
+        //Getting one of the free spots and returning it's position
+        int rand = Random.Range(0, powerUpSpots.spots.Length);
+        return powerUpSpots.spots[rand].spotTransform.position;
+    }
+
+    //A power up in a spot was picked up
+    public void PowerUpPickedUp(int SpotID)
+    {
+        powerUpSpots.spots[SpotID].isUsed = false;
+    }
+
+    #endregion
+
+    #region All Arena Checks
+
     /// <summary>
     /// Random Positions and checks
     /// </summary>
@@ -108,6 +202,17 @@ public class ArenaManager : MonoBehaviour
     //Is there a place to spawn in, in a given arena
     public bool isPossibleToSpawnIn(int arenaIndex)
     {
+        //Making sure there's actually an arena that this can look through
+        if (arenaSpots == null || arenaIndex < 0 || arenaSpots.Length < arenaIndex || arenaSpots.Length > 0)
+        {
+            return false;
+        }
+        //Making sure there's spots in this arena to look through
+        else if (arenaSpots[arenaIndex] == null || arenaSpots[arenaIndex].spots == null || arenaSpots[arenaIndex].spots.Length == 0)
+        {
+            return false;
+        }
+
         foreach (SpawningSpot sSpot in arenaSpots[arenaIndex].spots)
         {
             if (!sSpot.isUsed)
@@ -130,29 +235,9 @@ public class ArenaManager : MonoBehaviour
         }
 
         return allSpots.spots[rand].spotTransform.position;
-    } 
-
-    //An empty spot from a given arena
-    public Vector3 ReturnRandomEmptySpotFromArena(int ArenaIndex)
-    {
-        int randSpot = Random.Range(0, arenaSpots[ArenaIndex].spots.Length);
-
-        while (arenaSpots[ArenaIndex].spots[randSpot].isUsed)
-        {
-            randSpot = Random.Range(0, arenaSpots[ArenaIndex].spots.Length);
-        }
-
-        return arenaSpots[ArenaIndex].spots[randSpot].spotTransform.position;
     }
 
-    //Clearing known usage from a given arena
-    public void ClearUsageFromArena(int ArenaIndex)
-    {
-        for (int i = 0; i < arenaSpots[ArenaIndex].spots.Length; ++i)
-        {
-            arenaSpots[ArenaIndex].spots[i].isUsed = false;
-        }
-    }
+    #endregion
 
     #endregion
 }

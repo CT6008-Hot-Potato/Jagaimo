@@ -7,6 +7,8 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(TaggedTracker))]
@@ -14,6 +16,7 @@ public class CharacterManager : MonoBehaviour
 {
     #region Variables Needed
 
+    [Header("Public Variables")]
     //The tracker attached to the object
     public TaggedTracker _tracker;
 
@@ -23,6 +26,8 @@ public class CharacterManager : MonoBehaviour
     //A public variable for scripts to check if this player is locked
     public bool isPlayerLocked { private get; set; } = false;
 
+
+    [Header("Componenets Needed")]
     //Components already on this object
     [SerializeField]
     private PlayerController _movement;
@@ -30,12 +35,32 @@ public class CharacterManager : MonoBehaviour
     private PlayerCamera _cam;
     [SerializeField]
     private PlayerAnimation _playerAnimation;
+    [SerializeField]
+    private PlayerInteraction _playerInteraction;
 
     //Other componenets needed
     [SerializeField]
     private SoundManager soundManager;
     [SerializeField]
-    private ParticleSystem elimVFX;
+    private GameSettingsContainer settings;
+
+    // 0 - First Person
+    // 1 - Third Person
+    [SerializeField]
+    private Camera[] playerCameras;
+
+    [Header("Customization Variables")]
+    //[SerializeField]
+    //private bool bUsingConfettiVFX = false;
+    [SerializeField]
+    private ScriptableParticles particlePlayer;
+    [SerializeField]
+    private ScriptableParticles.Particle elimVFX = ScriptableParticles.Particle.BloodBurst;
+    [SerializeField]
+    private ScriptableParticles.Particle confettiElimVFX = ScriptableParticles.Particle.ConfettiBurst;
+    //Where the particles are played from when the player is eliminated
+    [SerializeField]
+    private Transform headTransform;
     [SerializeField]
     private GameObject taggedDisplayObject;
 
@@ -49,8 +74,10 @@ public class CharacterManager : MonoBehaviour
         _movement = _movement ?? GetComponent<PlayerController>();
         _cam = _cam ?? GetComponent<PlayerCamera>();
         _playerAnimation = _playerAnimation ?? GetComponent<PlayerAnimation>();
+        _playerInteraction = _playerInteraction ?? GetComponent<PlayerInteraction>();
 
         soundManager = FindObjectOfType<SoundManager>();
+        settings = GameSettingsContainer.instance;
     }
 
     private void Start()
@@ -64,6 +91,17 @@ public class CharacterManager : MonoBehaviour
         {
             isPlayer = false;
         }
+
+        if (settings)
+        {
+            //The mutator for using confetti is true, so swap out the elim vfx for the confetti one
+            if (settings.HasGenMutator(14))
+            {
+                //bUsingConfettiVFX = true;
+                //Not sure if this works tbh (test this)
+                elimVFX = confettiElimVFX;
+            }
+        }
     }
 
     #endregion
@@ -71,15 +109,15 @@ public class CharacterManager : MonoBehaviour
     #region Public Methods
 
     //Some Gamemodes will have elimination, some wont
-    public CharacterManager CheckIfEliminated()
+    public CharacterManager CheckIfEliminated(int playersLeft)
     {
         //If they arent tagged then do nothing
         if (!_tracker.isTagged) return null;
 
-        //The player should do whatever the gamemode wants them to (base gamemode will want them to explode)
-        if (Debug.isDebugBuild)
+        //The win screen is about to happen, dont change the camera or play the VFX etc
+        if (playersLeft <= 2)
         {
-            Debug.Log("Eliminated player shown", this);
+            return this;
         }
 
         //Send the player into "spectator" mode (No model, no colliders)
@@ -88,15 +126,30 @@ public class CharacterManager : MonoBehaviour
             _cam.cameraState = PlayerCamera.cS.FREECAMUNCONSTRAINED;
         }
 
-        //Play VFX + Sound
+        //Play Sound
         if (soundManager)
         {
-            soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
+            //soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
         }
 
-        if (elimVFX)
+        //Play vfx
+        if (particlePlayer)
         {
-            elimVFX.Play();
+            //Play it on the head spot
+            if (headTransform)
+            {
+                Instantiate(particlePlayer.CreateParticle(elimVFX, Vector3.zero), headTransform);
+            }
+            else
+            {
+                //Play it from the feet?
+                Instantiate(particlePlayer.CreateParticle(elimVFX, Vector3.zero), transform);
+
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("No head transform given", this);
+                }
+            }
         }
 
         //Turn all non-important scripts off (ones that allow the player to interact especially)
@@ -107,29 +160,16 @@ public class CharacterManager : MonoBehaviour
     //Functions to change the player when they're tagged or untagged
     public void ThisPlayerTagged()
     {
-        //Play VFX + Sound
-        //Lerp into first person camera mode
-        if (_cam)
-        {
-            _cam.SetCameraView(true);
-        }
-
-        if (taggedDisplayObject)
-        {
-            taggedDisplayObject.SetActive(true);
-        }
-
-        if (soundManager)
-        {
-            //Play the tagged sound
-            //sm.PlaySound();
-        }
-
         //Animation for regaining potato
         if (_playerAnimation)
         {
             _playerAnimation.CheckToChangeState("FallingBackDeath", true);
         }
+
+        LockPlayer();
+
+        StartCoroutine(Co_TaggedEffect(2));
+        //Wait 2s for animation to complete      
     }
 
     public void ThisPlayerUnTagged()
@@ -151,7 +191,11 @@ public class CharacterManager : MonoBehaviour
             taggedDisplayObject.SetActive(false);
         }
 
-        //Animations switch back to being without potato (?)
+        //Animations switch back to being idle
+        if (_playerAnimation)
+        {
+            _playerAnimation.CheckToChangeState("Idle", false); ;
+        }
     }
 
     /// <summary>
@@ -167,10 +211,10 @@ public class CharacterManager : MonoBehaviour
         isPlayerLocked = true;
 
         //Stop movement in the movement script, dont disable or deactive player input (they couldn't pause then)
-        //_movement.StopMovement();
+        _movement.SetMovement(3);
 
         //Stop camera player camera movement
-        //_cam.StopCamera();
+        _cam.cameraRotationLock = true;
 
         //Note: option to have them switch to a different camera for cinematics
     }
@@ -181,12 +225,71 @@ public class CharacterManager : MonoBehaviour
         if (!_cam || !_movement) return;
 
         isPlayerLocked = false;
-
+         
         //Start player movement
-        //_movement.StartMovement();
+        _movement.SetMovement(2);
 
         //Restart camera movement
-        //_cam.StartCamera();
+        _cam.cameraRotationLock = false;
+    }
+
+    /// <summary>
+    /// BE CAREFUL WHEN USING THESE
+    /// </summary>
+    /// 
+    public void DisablePlayer()
+    {
+        _playerAnimation.CheckToChangeState("Idle");
+
+        _cam.enabled = false;
+        _movement.enabled = false;
+        _tracker.enabled = false;
+        _playerInteraction.enabled = false;
+
+        taggedDisplayObject.SetActive(false);
+    }
+
+    public void EnablePlayer()
+    {
+        _cam.enabled = true;
+        _movement.enabled = true;
+        _tracker.enabled = true;
+        _playerInteraction.enabled = true;
+    }
+
+    public Camera[] ReturnCameras()
+    {
+        return playerCameras;
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private IEnumerator Co_TaggedEffect(float animDuration)
+    {
+
+        yield return new WaitForSeconds(animDuration);
+
+        UnLockPlayer();
+
+        //Play VFX + Sound
+        //Lerp into first person camera mode
+        if (_cam)
+        {
+            _cam.SetCameraView(true);
+        }
+
+        if (taggedDisplayObject)
+        {
+            taggedDisplayObject.SetActive(true);
+        }
+
+        if (soundManager)
+        {
+            //Play the tagged sound
+            //sm.PlaySound();
+        }
     }
 
     #endregion

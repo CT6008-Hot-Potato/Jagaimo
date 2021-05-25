@@ -45,13 +45,14 @@ public class SabotageEscapeManager : MonoBehaviour
 
     private void Awake()
     {
-        roundManager = roundManager ?? RoundManager.roundManager;
         soundManager = soundManager ?? FindObjectOfType<SoundManager>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        roundManager = roundManager ?? RoundManager.roundManager;
+
         if (roundManager._currentGamemode.Return_Mode() == GAMEMODE_INDEX.SABOTAGE)
         {
             //Explicitly declaring which objects should be on/off at the start
