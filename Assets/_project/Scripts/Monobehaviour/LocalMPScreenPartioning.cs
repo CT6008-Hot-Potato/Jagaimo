@@ -5,6 +5,7 @@
 // Brief: This script determines the camera's view of the screen in relation to each player
 //////////////////////////////////////////////////////////// 
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -29,13 +30,16 @@ public class LocalMPScreenPartioning : MonoBehaviour
     [SerializeField]
     private PlayerInputManager manager;
 
+    private GameObject singlePlayer;
+    private List<PlayerCamera> newPlayerCameras = new List<PlayerCamera>();
+    private int ExpectedPlayerCount = 1;
+
     #endregion
 
     #region Unity Methods
 
     private void Awake()
     {
-        //Code by Charles Carter
         settings = GameSettingsContainer.instance;
         manager = manager ?? GetComponent<PlayerInputManager>();
 
@@ -44,6 +48,8 @@ public class LocalMPScreenPartioning : MonoBehaviour
         {
             if (settings.iPlayercount > 1)
             {
+                ExpectedPlayerCount = settings.iPlayercount;
+
                 singleLocalPlayer = false;
 
                 for (int i = 0; i < settings.iPlayercount; ++i)
@@ -51,7 +57,8 @@ public class LocalMPScreenPartioning : MonoBehaviour
                     int tempIndex = settings.LocalPlayerInputs[i].playerIndex;
                     int tempSplitscreenIndex = settings.LocalPlayerInputs[i].splitScreenIndex;
                     string tempControlScheme = settings.LocalPlayerInputs[i].currentControlScheme;
-                    Destroy(settings.LocalPlayerInputs[i]);
+
+                    Destroy(settings.LocalPlayerInputs[i].gameObject);
 
                     manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme);
                 }
@@ -59,39 +66,33 @@ public class LocalMPScreenPartioning : MonoBehaviour
             else if (settings.iPlayercount == 1)
             {
                 singleLocalPlayer = true;
-                PlayerInput inputToUse = settings.LocalPlayerInputs[0];
+
+                int tempIndex = settings.LocalPlayerInputs[0].playerIndex;
+                int tempSplitscreenIndex = settings.LocalPlayerInputs[0].splitScreenIndex;
+                string tempControlScheme = settings.LocalPlayerInputs[0].currentControlScheme;
+
                 Destroy(settings.LocalPlayerInputs[0].gameObject);
-                manager.JoinPlayer(inputToUse.playerIndex, inputToUse.splitScreenIndex, inputToUse.currentControlScheme);
+
+                manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme);
             }
             else
             {
                 //No players joined, so it was single player from the main menu
                 singleLocalPlayer = true;
-                playerManager.SetActive(false);
-                Instantiate(playerPrefab, new Vector3(0, 1, 0), playerPrefab.transform.rotation);
+                singlePlayer = Instantiate(playerPrefab, new Vector3(0, 25, 0), playerPrefab.transform.rotation);
+                singlePlayer.GetComponent<CharacterManager>().UnLockPlayer();
             }
         }
         //Was played from the scene, anyone can join
         else if (singleLocalPlayer)
         {
             //playerManager.SetActive(false);
-            Instantiate(playerPrefab, new Vector3(0, 1, 0), playerPrefab.transform.rotation);
+            singlePlayer = Instantiate(playerPrefab, new Vector3(0, 25, 0), playerPrefab.transform.rotation);
         }
         else
         {
             manager.EnableJoining();
         }
-
-        //Code by Charles Carter ends
-
-        playerCameras = FindObjectsOfType<PlayerCamera>();
-        playerIndex = (playerCameras.Length - 1) / 2;
-        for (int i = 0; i > playerIndex; i++)
-        {
-            playerCameras[i].playerIndex = i;
-            playerCameras[i].SetPlayerMask();
-        }
-        playerIndexPrior = playerIndex;
     }
 
     #endregion
@@ -99,97 +100,66 @@ public class LocalMPScreenPartioning : MonoBehaviour
     #region Public Methods
 
     public void OnPlayerJoined(PlayerInput playerInput)
-    {
-        playerCameras = FindObjectsOfType<PlayerCamera>();
-        playerIndex = (playerCameras.Length - 1);
-
-        if (playerIndex != playerIndexPrior && !singleLocalPlayer)
+    {     
+        PlayerCamera camera = playerInput.GetComponent<PlayerCamera>();
+        if (camera)
         {
-            playerIndexPrior = playerIndex;
-            PlayerCamera[] cameras = FindObjectsOfType<PlayerCamera>();
-            for (int i = 0; i < cameras.Length; i++)
-            { 
-                if (cameras[i].gameObject == playerInput.gameObject)
-                {
-                    cameras[i].playerIndex = playerIndex;
-                }
-                    cameras[i].SetPlayerMask();
-                switch (playerIndex)
-                {
-                    case 0:
-                        if (i == 0)
-                        {
-                            cameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
-                            cameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
-                        }
-                        else
-                        {
-                            Debug.Log("Value too high");
-                        }
-                        break;
-                    case 1:
-                        switch (i)
-                        {
-                            case 0:
-                                cameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                                cameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                                break;
-                            case 1:
-                                cameras[1].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
-                                cameras[1].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
-                                break;
-                            default:
-                                Debug.Log("Value too high");
-                                break;
-                        }
-                        break;
-                    case 2:
-                        switch (i)
-                        {
-                            case 0:
-                                cameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                                cameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
-                                break;
-                            case 1:
-                                cameras[1].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                                cameras[1].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                                break;
-                            case 2:
-                                cameras[2].firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                                cameras[2].thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                                break;
-                            default:
-                                Debug.Log("Value too high");
-                                break;
-                        }
-                        break;
-                    case 3:
-                        switch (i)
-                        {
-                            case 0:
-                                cameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
-                                cameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
-                                break;
-                            case 1:
-                                cameras[1].firstPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-                                cameras[1].thirdPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
-                                break;
-                            case 2:
-                                cameras[2].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                                cameras[2].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
-                                break;
-                            case 3:
-                                cameras[3].firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                                cameras[3].thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
-                                break;
-                            default:
-                                Debug.Log("Value too high");
-                                break;
-                        }
-                        break;
-                }
-            }
+            camera.playerIndex = playerInput.playerIndex;
+            camera.SetPlayerMask();
+
+            newPlayerCameras.Add(camera);
+        }
+
+        if (newPlayerCameras.Count >= ExpectedPlayerCount && !singleLocalPlayer)
+        {
+            SetScreenResolutions();
         }
     }
+    #endregion
+
+    #region Private Methods
+
+    private void SetScreenResolutions()
+    {
+        switch (newPlayerCameras.Count)
+        {
+            case 1:
+                newPlayerCameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
+                newPlayerCameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
+                break;
+            case 2:
+                newPlayerCameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
+                newPlayerCameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
+
+                newPlayerCameras[1].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
+                newPlayerCameras[1].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
+                break;
+            case 3:
+                newPlayerCameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
+                newPlayerCameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
+                newPlayerCameras[1].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+                newPlayerCameras[1].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+                newPlayerCameras[2].firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
+                newPlayerCameras[2].thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
+                break;
+            case 4:
+                newPlayerCameras[0].firstPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
+                newPlayerCameras[0].thirdPersonCamera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
+                newPlayerCameras[1].firstPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+                newPlayerCameras[1].thirdPersonCamera.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
+                newPlayerCameras[2].firstPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+                newPlayerCameras[2].thirdPersonCamera.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+                newPlayerCameras[3].firstPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
+                newPlayerCameras[3].thirdPersonCamera.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
+                break;
+            default:
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("There are no cameras", this);
+                }
+                break;
+        }
+    }
+
     #endregion
 }

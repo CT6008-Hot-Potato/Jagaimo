@@ -12,16 +12,18 @@ using UnityEngine;
 
 public class PowerUpTrigger : MonoBehaviour
 {
-    //Noting down where this power up spawned
-    [SerializeField]
-    private int SpawningSpotID;
+    #region Variables Needed
 
     //Need a way of identifying what this powerup does
     [SerializeField]
     private int PowerUp_ID;
 
     [SerializeField]
-    private ArenaManager spawningManager;
+    private PowerUpSpawningManager spawningManager;
+
+    #endregion
+
+    #region Unity Methods
 
     //If something enters the trigger collider
     private void OnTriggerEnter(Collider other)
@@ -40,16 +42,27 @@ public class PowerUpTrigger : MonoBehaviour
             if (spawningManager)
             {
                 //Tell it that this spot has cleared up
-                spawningManager.PowerUpPickedUp(SpawningSpotID);
+                spawningManager.PowerUpPickedUp(this);
             }
 
             gameObject.SetActive(false);
         }
     }
 
+    #endregion
+
+    #region Public Methods
+
     //Passing a reference to the arena manager to the power up
-    public void SetArenaManager(ArenaManager aManager)
+    public void SetSpawningManager(PowerUpSpawningManager aManager)
     {
         spawningManager = aManager;
     }
+
+    public void SetPowerUpID(int newID)
+    {
+        PowerUp_ID = newID;
+    }
+
+    #endregion
 }

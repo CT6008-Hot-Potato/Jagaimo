@@ -24,6 +24,9 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     void IGamemode.AddActivePlayer(CharacterManager charToAdd) => AddActivePlayer(charToAdd);
     void IGamemode.RemoveActivePlayer(CharacterManager charToRemove) => RemoveActivePlayer(charToRemove);
 
+    void IGamemode.LockActivePlayers() => LockAllPlayers();
+    void IGamemode.UnLockActivePlayers() => UnlockAllPlayers();
+
     void IGamemode.RoundStarted() => RoundStarting();
     void IGamemode.RoundEnded() => RoundEnding();
     void IGamemode.CountdownStarted() => CountdownStarting();
@@ -79,7 +82,7 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
-            charArray[i].UnLockPlayer();
+            charArray[i].LockPlayer();
         }
 
         if (Debug.isDebugBuild)
@@ -100,6 +103,36 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
         currentActivePlayers.Remove(characterLeft);
     }
 
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void LockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].LockPlayer();
+            }
+        }
+    }
+
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void UnlockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].UnLockPlayer();
+            }
+        }
+    }
+
     //This runs when the round is about to start/ during the initial timer
     private void RoundStarting()
     {
@@ -116,6 +149,8 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
+        UnlockAllPlayers();
+
         //Tagging a random character
         roundManager.OnPlayerTagged(getRandomCharacter());
     }

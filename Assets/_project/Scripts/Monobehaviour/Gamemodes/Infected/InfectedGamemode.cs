@@ -25,6 +25,9 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     void IGamemode.AddActivePlayer(CharacterManager charToAdd) => AddActivePlayer(charToAdd);
     void IGamemode.RemoveActivePlayer(CharacterManager charToRemove) => RemoveActivePlayer(charToRemove);
 
+    void IGamemode.LockActivePlayers() => LockAllPlayers();
+    void IGamemode.UnLockActivePlayers() => UnlockAllPlayers();
+
     //This gamemode is infected: when people are tagged, they join the tagged team, until the timer runs out or everyone is tagged
     void IGamemode.RoundStarted() => RoundStarting();
     void IGamemode.RoundEnded() => RoundEnding();
@@ -89,7 +92,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
-            charArray[i].UnLockPlayer();
+            charArray[i].LockPlayer();
         }
 
         if (Debug.isDebugBuild)
@@ -110,9 +113,40 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         currentActivePlayers.Remove(characterLeft);
     }
 
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void LockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].LockPlayer();
+            }
+        }
+    }
+
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void UnlockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].UnLockPlayer();
+            }
+        }
+    }
+
     //This runs when the round is about to start/ during the initial timer
     private void RoundStarting()
     {
+
         //Make sure everything is in order... small cooldown before countdown to get everything
 
         activeSurvivors = currentActivePlayers;
@@ -129,8 +163,9 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
-        //Choosing a random person(s) to be infected
+        UnlockAllPlayers();
 
+        //Choosing a random person(s) to be infected
         //If there are settings
         if (settings)
         {

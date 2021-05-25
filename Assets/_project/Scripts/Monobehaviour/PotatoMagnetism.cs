@@ -16,10 +16,10 @@ public class PotatoMagnetism : MonoBehaviour
     private float MagnestismStrength;
     private float MagnestismDuration;
 
-    Transform target;
-    Rigidbody _rb;
+    private CharacterManager target;
+    private Rigidbody _rb;
 
-    bool bCanHone = true;
+    private bool bCanHone = true;
 
     #endregion
 
@@ -30,19 +30,13 @@ public class PotatoMagnetism : MonoBehaviour
         _rb = _rb ?? transform.parent.GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("Player") && other.TryGetComponent(out CharacterManager cManager))
+        if (other.CompareTag("Player") && other.TryGetComponent(out CharacterManager cManager))
         {
             if (!cManager._tracker.isTagged && MagnestismStrength > 0 && MagnestismDuration > 0)
             {
-                target = other.transform;
+                target = cManager;
 
                 if (bCanHone)
                 {
@@ -63,7 +57,7 @@ public class PotatoMagnetism : MonoBehaviour
 
     public void SetMagnetismDur(float newDur)
     {
-        MagnestismStrength = newDur;
+        MagnestismDuration = newDur;
     }
 
     #endregion
@@ -74,9 +68,21 @@ public class PotatoMagnetism : MonoBehaviour
     {
         bCanHone = false;
 
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Potato homing onto player: " + _rb.velocity, this);
+        }
+
         for (float t = 0; t < MagnestismDuration; t += Time.deltaTime)
         {
-            Vector3 targetDir = (target.position - transform.position).normalized;
+            //They were tagged by the potato
+            if (target._tracker.isTagged)
+            {
+                StopCoroutine(Co_HomePotato());
+                break;
+            }
+
+            Vector3 targetDir = (target.transform.position - transform.position).normalized;
 
             _rb.AddForce(targetDir * MagnestismStrength);
 

@@ -30,9 +30,9 @@ public class Potato : MonoBehaviour
     [SerializeField]
     private PotatoMagnetism magnetism;
     [SerializeField]
-    private float fMagnetismStr = 0.5f;
+    private float fMagnetismStr;
     [SerializeField]
-    private float fMagnetismDur = 0.5f;
+    private float fMagnetismDur;
 
     //A way to force it from the inspector
     [SerializeField]
@@ -62,6 +62,8 @@ public class Potato : MonoBehaviour
             //Magnetised mutator
             if (gameSettings.HasGenMutator(0) || isMagnetised)
             {
+                isMagnetised = true;
+
                 if (magnetism)
                 {
                     magnetism.enabled = true;

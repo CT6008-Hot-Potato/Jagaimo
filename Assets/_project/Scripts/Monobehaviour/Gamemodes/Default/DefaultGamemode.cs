@@ -15,7 +15,7 @@ using UnityEngine;
 //This will mostly be in the other scripts anyway
 public class DefaultGamemode : MonoBehaviour, IGamemode
 {
-    #region Interfact Contract Expressions
+    #region Interface Contract Expressions
 
     //Fulfilling the interfaces contracted functions
     GAMEMODE_INDEX IGamemode.Return_Mode() => Return_Mode();
@@ -24,6 +24,9 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     void IGamemode.SetActivePlayers(CharacterManager[] charArray)        => SettingActivePlayers(charArray);
     void IGamemode.AddActivePlayer(CharacterManager charToAdd)          => AddActivePlayer(charToAdd);
     void IGamemode.RemoveActivePlayer(CharacterManager charToRemove)    => RemoveActivePlayer(charToRemove);
+
+    void IGamemode.LockActivePlayers() => LockAllPlayers();
+    void IGamemode.UnLockActivePlayers() => UnlockAllPlayers();
 
     void IGamemode.RoundStarted()      => RoundStarting();
     void IGamemode.RoundEnded()        => RoundEnding();
@@ -81,19 +84,12 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
-            charArray[i].UnLockPlayer();
+            charArray[i].LockPlayer();
         }
 
         if (Debug.isDebugBuild)
         {
             Debug.Log("Active players set, Amount of Active players: " + currentActivePlayers.Count, this);
-        }
-
-        //Using this instead of the function here because of the scroller text
-        CharacterManager manager = getRandomCharacter();
-        if (manager)
-        {
-            roundManager.OnPlayerTagged(manager);
         }
     }
 
@@ -110,10 +106,40 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         //Debug.Log(currentActivePlayers.Count);
     }
 
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void LockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].LockPlayer();
+            }
+        }
+    }
+
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void UnlockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].UnLockPlayer();
+            }
+        }
+    }
+
     //This runs when the round is about to start/ during the initial timer
     private void RoundStarting()
     {
-
+        PutCharactersInStartPositions();
     }
 
     //A podium scene which ragdoll the players in order of elimination but doesnt go back to menu/lobby unless hit max round
@@ -125,20 +151,22 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
-        if (iCountdownIndex > 0)
+        UnlockAllPlayers();
+
+        //Tags previously tagged character if there was one, if not choose a random character 
+        if (previousTagged)
         {
-            //Tags previously tagged character if there was one, if not choose a random character 
-            if (previousTagged)
-            {
-                roundManager.OnPlayerTagged(previousTagged);
-            }
-            else
-            {
-                roundManager.OnPlayerTagged(getRandomCharacter());
-            }
+            roundManager.OnPlayerTagged(previousTagged);
+        }
+        else
+        {
+            roundManager.OnPlayerTagged(getRandomCharacter());
         }
 
-        PutCharactersInStartPositions();
+        if (iCountdownIndex > 0)
+        {
+            PutCharactersInStartPositions();
+        }
     }
 
     //When the countdown ends
@@ -260,7 +288,19 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         }
         else
         {
-            return null;
+            if (currentActivePlayers[0])
+            {
+                return currentActivePlayers[0];
+            }
+            else
+            {
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("No characters to get from", this);
+                }
+
+                return null;
+            }
         }
     }
 

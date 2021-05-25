@@ -27,7 +27,7 @@ public class CharacterManager : MonoBehaviour
     public bool isPlayerLocked { private get; set; } = false;
 
 
-    [Header("Componenets Needed")]
+    [Header("Components Needed")]
     //Components already on this object
     [SerializeField]
     private PlayerController _movement;
@@ -37,8 +37,10 @@ public class CharacterManager : MonoBehaviour
     private PlayerAnimation _playerAnimation;
     [SerializeField]
     private PlayerInteraction _playerInteraction;
+    [SerializeField]
+    private Rigidbody _rb;
 
-    //Other componenets needed
+    //Other components needed
     [SerializeField]
     private SoundManager soundManager;
     [SerializeField]
@@ -65,6 +67,7 @@ public class CharacterManager : MonoBehaviour
     private GameObject taggedDisplayObject;
     [SerializeField]
     private GameObject elimDisplayObject;
+    private float taggedAnimduration = 2f;
 
     #endregion
 
@@ -77,12 +80,10 @@ public class CharacterManager : MonoBehaviour
         _cam = _cam ?? GetComponent<PlayerCamera>();
         _playerAnimation = _playerAnimation ?? GetComponent<PlayerAnimation>();
         _playerInteraction = _playerInteraction ?? GetComponent<PlayerInteraction>();
+        _rb = _rb ?? GetComponent<Rigidbody>();
 
         soundManager = FindObjectOfType<SoundManager>();
         settings = GameSettingsContainer.instance;
-
-        //To be unlocked when the game is ready
-        LockPlayer();
     }
 
     private void Start()
@@ -137,6 +138,7 @@ public class CharacterManager : MonoBehaviour
             //soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
         }
 
+        //Making sure the elimination icon is showing
         if (taggedDisplayObject)
         {
             taggedDisplayObject.SetActive(false);
@@ -174,16 +176,15 @@ public class CharacterManager : MonoBehaviour
     //Functions to change the player when they're tagged or untagged
     public void ThisPlayerTagged()
     {
+        
         //Animation for regaining potato
         if (_playerAnimation)
         {
             _playerAnimation.CheckToChangeState("FallingBackDeath", true);
         }
 
-        LockPlayer();
+        StartCoroutine(Co_TaggedEffect(taggedAnimduration));
 
-        StartCoroutine(Co_TaggedEffect(2));
-        //Wait 2s for animation to complete      
     }
 
     public void ThisPlayerUnTagged()
@@ -194,7 +195,7 @@ public class CharacterManager : MonoBehaviour
             //Maybe an untagged sound, maybe it would become too chaotic
         }
 
-        //Lerp into thrid person camera mode Note: this should be quicker than the lerp when you're tagged
+        //Lerp into third person camera mode Note: this should be quicker than the lerp when you're tagged
         if (_cam)
         {
             _cam.SetCameraView(false);
@@ -222,7 +223,14 @@ public class CharacterManager : MonoBehaviour
         //Guard clause to make sure the components are correct
         if (!_cam || !_movement) return;
 
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Player locked!", this);
+        }
+
         isPlayerLocked = true;
+
+        _rb.isKinematic = true;
 
         //Stop movement in the movement script, dont disable or deactive player input (they couldn't pause then)
         _movement.SetMovement(3);
@@ -238,8 +246,15 @@ public class CharacterManager : MonoBehaviour
         //Guard clause to make sure the components are correct
         if (!_cam || !_movement) return;
 
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Player unlocked!", this);
+        }
+
         isPlayerLocked = false;
-         
+
+        _rb.isKinematic = false;
+
         //Start player movement
         _movement.SetMovement(2);
 
@@ -253,6 +268,8 @@ public class CharacterManager : MonoBehaviour
     /// 
     public void DisablePlayer()
     {
+        StopCoroutine(Co_TaggedEffect(taggedAnimduration));
+
         _playerAnimation.CheckToChangeState("Idle");
 
         _cam.enabled = false;
@@ -282,6 +299,7 @@ public class CharacterManager : MonoBehaviour
 
     private IEnumerator Co_TaggedEffect(float animDuration)
     {
+        LockPlayer();
 
         yield return new WaitForSeconds(animDuration);
 

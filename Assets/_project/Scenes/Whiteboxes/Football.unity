@@ -5562,7 +5562,7 @@ GameObject:
   m_Component:
   - component: {fileID: 537370378}
   m_Layer: 0
-  m_Name: Right
+  m_Name: B_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5592,7 +5592,7 @@ GameObject:
   m_Component:
   - component: {fileID: 568505827}
   m_Layer: 0
-  m_Name: Middle
+  m_Name: B_Middle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5703,7 +5703,7 @@ GameObject:
   m_Component:
   - component: {fileID: 658717775}
   m_Layer: 0
-  m_Name: Middle
+  m_Name: B_Middle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6125,8 +6125,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 263327767283779295, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
+      propertyPath: powerUpSpots.name
+      value: Deprecated Arena
+      objectReference: {fileID: 0}
+    - target: {fileID: 263327767283779295, guid: 965db333886fc1b49b56ad328ad99bef,
+        type: 3}
       propertyPath: arenaSpots.Array.size
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 263327767283779295, guid: 965db333886fc1b49b56ad328ad99bef,
+        type: 3}
+      propertyPath: arenaSpots.Array.data[0].name
+      value: Blue Team
+      objectReference: {fileID: 0}
+    - target: {fileID: 263327767283779295, guid: 965db333886fc1b49b56ad328ad99bef,
+        type: 3}
+      propertyPath: arenaSpots.Array.data[1].name
+      value: Orange Team
       objectReference: {fileID: 0}
     - target: {fileID: 263327767283779295, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
@@ -6425,7 +6440,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1592763138}
   m_Layer: 0
-  m_Name: Right
+  m_Name: B_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6455,7 +6470,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1615503741}
   m_Layer: 0
-  m_Name: Left
+  m_Name: B_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7122,7 +7137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1990121931}
   m_Layer: 0
-  m_Name: Left
+  m_Name: B_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
