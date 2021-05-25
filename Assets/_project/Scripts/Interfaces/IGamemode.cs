@@ -14,6 +14,8 @@ public interface IGamemode
 
     //Controlling active players
     void SetActivePlayers(CharacterManager[] charactersInGame);
+    CharacterManager[] GetActivePlayers();
+
     void RemoveActivePlayer(CharacterManager charToRemove);
     void AddActivePlayer(CharacterManager charToAdd);
 
