@@ -42,6 +42,8 @@ public class CharacterManager : MonoBehaviour
 
     //Other components needed
     [SerializeField]
+    private RoundManager rManager;
+    [SerializeField]
     private SoundManager soundManager;
     [SerializeField]
     private GameSettingsContainer settings;
@@ -69,6 +71,11 @@ public class CharacterManager : MonoBehaviour
     private GameObject elimDisplayObject;
     private float taggedAnimduration = 2f;
 
+    //Infected mutator
+    bool bApplyInfectedSpeed = false;
+
+    float survivorSpeedAddition;
+
     #endregion
 
     #region Unity Methods
@@ -88,6 +95,8 @@ public class CharacterManager : MonoBehaviour
 
     private void Start()
     {
+        rManager = rManager ?? RoundManager.roundManager;
+
         //This can be done better
         if (_movement)
         {
@@ -100,13 +109,29 @@ public class CharacterManager : MonoBehaviour
 
         if (settings)
         {
+            float valueToAdd = 0.05f;
+
             if (settings.HasGenMutator(8))
             {
 
                 int multiplier = (int)settings.FindGeneralMutatorValue(8);
 
-                float valueToAdd = multiplier * 0.05f;
+                valueToAdd *= multiplier;
                 _movement.speedMultiplier += valueToAdd;
+
+                //It's the infected gamemode
+                if (rManager._currentGamemode.Return_Mode() == GAMEMODE_INDEX.INFECTED)
+                {
+                    if (settings.HasGamMutator(0))
+                    {
+
+                    }
+
+                    if (settings.HasGamMutator(1))
+                    {
+
+                    }
+                }
             }
 
             //The mutator for using confetti is true, so swap out the elim vfx for the confetti one
