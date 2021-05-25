@@ -102,3 +102,10 @@ MonoBehaviour:
       type: 2}
     defaultVolume: 1
     pitchVariation: 0.4
+  - name: 12
+    file:
+    - {fileID: 8300000, guid: e02cde9f7c5da2a49924479c11436fa1, type: 3}
+    audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
+      type: 2}
+    defaultVolume: 0.5
+    pitchVariation: 1
