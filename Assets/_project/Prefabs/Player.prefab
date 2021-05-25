@@ -214,7 +214,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 311
+    m_Bits: 262455
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -478,7 +478,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 311
+    m_Bits: 262455
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -930,21 +930,21 @@ MonoBehaviour:
   - {fileID: 2100000, guid: b448684e35b75e746bef352ea99771d7, type: 2}
   mask:
   - serializedVersion: 2
-    m_Bits: 7713
+    m_Bits: 269857
   - serializedVersion: 2
-    m_Bits: 7713
+    m_Bits: 269857
   - serializedVersion: 2
-    m_Bits: 7713
+    m_Bits: 269857
   - serializedVersion: 2
-    m_Bits: 7713
+    m_Bits: 269857
   - serializedVersion: 2
-    m_Bits: 15393
+    m_Bits: 277537
   - serializedVersion: 2
-    m_Bits: 23073
+    m_Bits: 285217
   - serializedVersion: 2
-    m_Bits: 38433
+    m_Bits: 300577
   - serializedVersion: 2
-    m_Bits: 69153
+    m_Bits: 331297
   playerThirdPerson: {fileID: 5948077367676534744}
   flipSpin: 0
   freecamLock: 0
@@ -2684,7 +2684,7 @@ PrefabInstance:
     - target: {fileID: 6863599626905906579, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6913188888627312912, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}
