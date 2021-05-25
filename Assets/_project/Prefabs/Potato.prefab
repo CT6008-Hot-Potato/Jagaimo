@@ -48,7 +48,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6977251292133631467
 Transform:
   m_ObjectHideFlags: 0
@@ -221,6 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d559075e747278d45875e735f4567016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roundManager: {fileID: 0}
   _coll: {fileID: 8677349334688892352}
   bouncyMaterial: {fileID: 13400000, guid: 1c1ccb7a9f9031e428b1f2e11971ba1b, type: 2}
   particlePlayer: {fileID: 11400000, guid: e4907c1dd2137b74ba1f270593241766, type: 2}

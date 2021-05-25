@@ -19,7 +19,6 @@ public class Potato : MonoBehaviour
     private GameSettingsContainer gameSettings;
 
     [Header("Variables Needed")]
-
     [SerializeField]
     private Collider _coll;
     [SerializeField]
@@ -41,7 +40,7 @@ public class Potato : MonoBehaviour
     private bool isMagnetised = false;
 
     //The hit chance for the infected gamemode mutator
-    float hitChance = 1.0f;
+    private float hitChance = 1.0f;
 
     #endregion
 
@@ -69,6 +68,7 @@ public class Potato : MonoBehaviour
             //Magnetised mutator
             if (gameSettings.HasGenMutator(0) || isMagnetised)
             {
+                magnetism.gameObject.SetActive(true);
                 isMagnetised = true;
 
                 if (magnetism)
@@ -102,24 +102,25 @@ public class Potato : MonoBehaviour
         //Guard clause for using the interactable interface
         if (!other.TryGetComponent(out IInteractable interactable)) return;
 
-        if (hitChance < 1.0f)
+        if (hitChance < 1.0f && other.CompareTag("Player"))
         {
             if (Random.Range(0, 1.0f) < hitChance)
             {
-                //Run it's interact function if the script is enabled
-                if (((MonoBehaviour)interactable).enabled)
-                {
-                    interactable.Interact();
-                }
+                HitRegister(interactable);
             }
         }
         else
         {
-            //Run it's interact function if the script is enabled
-            if (((MonoBehaviour)interactable).enabled)
-            {
-                interactable.Interact();
-            }
+            HitRegister(interactable);
+        }
+    }
+
+    private void HitRegister(IInteractable interactable)
+    {
+        //Run it's interact function if the script is enabled
+        if (((MonoBehaviour)interactable).enabled)
+        {
+            interactable.Interact();
         }
     }
 
