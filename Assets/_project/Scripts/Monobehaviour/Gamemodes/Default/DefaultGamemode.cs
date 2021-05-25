@@ -84,6 +84,21 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
+
+            //If there is a spot (may not be due to inspector not being filled out)
+            if (arenaManager.isPossibleToSpawnIn(0))
+            {
+                SpawningSpot spot = arenaManager.ReturnRandomSpotForArena(0);
+                currentActivePlayers[i].gameObject.transform.position = spot.spotTransform.position;
+
+                //This is the "solution" to not being able to turn the player based on the prefab object
+                PlayerCamera camera = currentActivePlayers[i].GetComponent<PlayerCamera>();
+                camera.ChangeYaw(spot.spotTransform.rotation.eulerAngles.y / Time.deltaTime);
+                camera.flipSpin = !camera.flipSpin;
+
+                spot.isUsed = true;
+            }
+
             charArray[i].LockPlayer();
         }
 
@@ -139,7 +154,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     //This runs when the round is about to start/ during the initial timer
     private void RoundStarting()
     {
-        PutCharactersInStartPositions();
+
     }
 
     //A podium scene which ragdoll the players in order of elimination but doesnt go back to menu/lobby unless hit max round
