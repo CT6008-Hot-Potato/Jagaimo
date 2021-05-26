@@ -373,11 +373,13 @@ public class PlayerCamera : MonoBehaviour
 
                     if (useControllerSensitivity)
                     {
+                        Debug.Log("1");
                         yaw += controllerCameraSensitivityMultiplier * cameraValue.x;
                         pitch -= controllerCameraSensitivityMultiplier * cameraValue.y;
                     }
                     else
                     {
+                        Debug.Log("2");
                         yaw += cameraSensitivity * cameraValue.x;
                         pitch -= cameraSensitivity * cameraValue.y;
                     }
