@@ -138,7 +138,7 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 localpoint.x = screen_pos.x - (Screen.width * 0.5f);
                 localpoint.y = screen_pos.y - (Screen.height * 0.5f);
                 return localpoint;
-                //            return Vector2.zero;
+       
             }
         }
 
