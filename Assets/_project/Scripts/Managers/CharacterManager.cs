@@ -219,7 +219,6 @@ public class CharacterManager : MonoBehaviour
     //Functions to change the player when they're tagged or untagged
     public void ThisPlayerTagged()
     {
-        
         //Animation for regaining potato
         if (_playerAnimation)
         {
@@ -238,7 +237,6 @@ public class CharacterManager : MonoBehaviour
         }
 
         StartCoroutine(Co_TaggedEffect(taggedAnimduration));
-
     }
 
     public void ThisPlayerUnTagged()

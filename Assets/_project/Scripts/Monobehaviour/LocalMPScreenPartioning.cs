@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////
 // File: LocalMPScreenPartioning.cs
-// Author: Charlie Bullock (Edited by Charles Carter)
+// Author: Charlie Bullock and Charles Carter
 // Date Created: 17/02/21
 // Brief: This script determines the camera's view of the screen in relation to each player
 //////////////////////////////////////////////////////////// 
@@ -14,7 +14,6 @@ public class LocalMPScreenPartioning : MonoBehaviour
     #region Variables Needed
 
     public int playerIndex;
-    private int playerIndexPrior;
     [SerializeField]
     private PlayerCamera[] playerCameras;
     [SerializeField]
@@ -34,7 +33,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
     private List<PlayerCamera> newPlayerCameras = new List<PlayerCamera>();
     private int ExpectedPlayerCount = 1;
 
-    InputDevice latestDeviceJoined;
+    private InputDevice latestDeviceJoined;
 
     #endregion
 
@@ -106,27 +105,35 @@ public class LocalMPScreenPartioning : MonoBehaviour
 
     public void OnPlayerJoined(PlayerInput playerInput)
     {     
+        //Getting the camera from the player that joined
         PlayerCamera camera = playerInput.GetComponent<PlayerCamera>();
+
+        //Making sure it has a camera
         if (camera)
         {
+            //Using the relevant functions
             camera.playerIndex = playerInput.playerIndex;
             camera.SetPlayerMask();
 
             //Checking player device
-            if (latestDeviceJoined.name != "Keyboard" && latestDeviceJoined.name != "Mouse")
+            if (latestDeviceJoined != null)
             {
-                //Gamepad used
-                camera.useControllerSensitivity = true;
-            }
-            else
-            {
-                //Keyboard used
-                camera.useControllerSensitivity = false;
+                if (latestDeviceJoined.name != "Keyboard" && latestDeviceJoined.name != "Mouse")
+                {
+                    //Gamepad used
+                    camera.useControllerSensitivity = true;
+                }
+                else
+                {
+                    //Keyboard used
+                    camera.useControllerSensitivity = false;
+                }
             }
 
             newPlayerCameras.Add(camera);
         }
 
+        //This is the last player to join
         if (newPlayerCameras.Count >= ExpectedPlayerCount && !singleLocalPlayer)
         {
             SetScreenResolutions();
@@ -136,6 +143,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
 
     #region Private Methods
 
+    //Setting the resolutions of the cameras based on the amount of players
     private void SetScreenResolutions()
     {
         switch (newPlayerCameras.Count)

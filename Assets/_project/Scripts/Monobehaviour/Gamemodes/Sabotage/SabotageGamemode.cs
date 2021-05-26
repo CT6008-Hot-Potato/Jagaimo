@@ -61,6 +61,10 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     private int iCurrentGeneratorsComplete = 0;
     private int iGeneratorsNeeded = 3;
 
+    [SerializeField]
+    private WinScreenManager wScreenManager;
+    private bool TaggedPlayerWon = false;
+
     #endregion
 
     #region Unity Methods
@@ -162,16 +166,15 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
 
     //When the countdown ends
     private void CountdownEnding()
-    {       
-        //This countdown ending determines that someone must have won
-        if (ThisWinCondition())
+    {
+        //Someone apart from the tagged player didnt escape
+        if (playersWhoWon.Count < currentActivePlayers.Count - 1)
         {
-            //Moving to podium screen with a lobby countdown
-            if (Debug.isDebugBuild)
-            {
-               
-            }
+            TaggedPlayerWon = true;
+            playersWhoWon.Add(currentTagged);
         }
+
+        wScreenManager.PlayWinScreen(GAMEMODE_INDEX.SABOTAGE, currentActivePlayers, playersWhoWon);
     }
 
     //Should stop the person from interacting with the generators, and kick them out of any generator they're currently fixing
@@ -186,33 +189,20 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
             //They are now the previously tagged
             previousTagged = currentTagged;
 
-            //If the previously tagged player isnt the one eliminated from another countdown
-            if (currentActivePlayers.Contains(previousTagged))
-            {
-                //Turn their tracker back on
-                previousTagged._tracker.enabled = true;
-                previousTagged._tracker.PlayerUnTagged();
-            }
+            //Turn their tracker back on
+            previousTagged._tracker.enabled = true;
+            previousTagged._tracker.PlayerUnTagged();
         }
 
         //The current tagged is now the person tagged
         currentTagged = charTagged;
         currentTagged.ThisPlayerTagged();
-
-        //If that player is interacting with a generator
-        //if (charTagged.isInteracting())
-        //{
-        //  Stop it from interacting with it
-        //    charTagged.StopInteractions();
-        //}
-        // and stop it from interacting with the generators while tagged
-        //charTagged.SetInteractionAbility(false);
     }
 
     //When everyone has escaped or the time ran out with people still in the arena
     private bool ThisWinCondition()
     {
-        return false;
+        return true;
     }
 
     public GAMEMODE_INDEX Return_Mode()
@@ -251,6 +241,11 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
         playersWhoWon.Add(charWhoEscaped);
     }
 
+    public bool TaggedWin()
+    {
+        return TaggedPlayerWon;
+    }
+
     #endregion
 
     #region Private Methods
@@ -262,8 +257,11 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
 
         //This is the "solution" to not being able to turn the player based on the prefab object
         PlayerCamera camera = currentActivePlayers[index].GetComponent<PlayerCamera>();
-        camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
-        camera.flipSpin = !camera.flipSpin;
+        if (camera && spot)
+        {
+            camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
+            camera.flipSpin = !camera.flipSpin;
+        }
     }
 
     private CharacterManager getRandomCharacter()

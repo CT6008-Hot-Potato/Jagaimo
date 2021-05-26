@@ -52,14 +52,11 @@ public class SabotageWinScreen : WinScreen
 
     protected override void PositionPlayers(List<CharacterManager> objectsToPosition)
     {
-        //Placing the tagged player
-        gamemode.currentTagged.transform.position = taggedPosition.position;
-        gamemode.currentTagged.transform.rotation = taggedPosition.rotation;
-
+        //If there are things to place
         if (objectsToPosition.Count > 0)
         {
             //These are the survivors
-            for (int i = 0; i < objectsToPosition.Count; ++i)
+            for (int i = 0; i < objectsToPosition.Count - 1; ++i)
             {
                 if (winningSpots[i])
                 {
@@ -69,6 +66,17 @@ public class SabotageWinScreen : WinScreen
                 else if (Debug.isDebugBuild)
                 {
                     Debug.Log("No spot here, index: " + i, this);
+                }
+            }
+
+            //If the tagged player is part of the winners
+            if (gamemode.TaggedWin())
+            {
+                //The tagged player is in the last slot
+                if (winningSpots[objectsToPosition.Count - 1])
+                {
+                    objectsToPosition[objectsToPosition.Count - 1].transform.position = winningSpots[objectsToPosition.Count - 1].transform.position;
+                    objectsToPosition[objectsToPosition.Count - 1].transform.rotation = winningSpots[objectsToPosition.Count - 1].transform.rotation;
                 }
             }
         }

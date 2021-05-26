@@ -147,7 +147,7 @@ public class PlayerAi : MonoBehaviour
     //This function causes a short times delay for the gap between ranged attacking and waiting to ranged attack
     IEnumerator RangedAttackWait(GameObject target)
     {
-        gameObject.transform.LookAt
+        //gameObject.transform.LookAt
         yield return new WaitForSeconds(0.25f);
 
         potato.GetComponent<Rigidbody>().AddForce((gameObject.transform.forward * 1500) * Time.deltaTime, ForceMode.Impulse);
@@ -162,20 +162,20 @@ public class PlayerAi : MonoBehaviour
     //This method will set the order of the navigation waypoint array starting value to it's correct one if it is in forward or reverse order
     private void NavigationOrder()
     {
-        switch (typeOfOrder)
-        {
-            case waypointOrdering.Forward:
-                if (nodes >= waypointPositions.Length)
-                {
-                    nodes = 0;
-                }
-                break;
-            case waypointOrdering.Reverse:
-                if (nodes < 0)
-                {
-                    nodes = waypointPositions.Length - 1;
-                }
-                break;
-        }
+        //switch (typeOfOrder)
+        //{
+        //    case waypointOrdering.Forward:
+        //        if (nodes >= waypointPositions.Length)
+        //        {
+        //            nodes = 0;
+        //        }
+        //        break;
+        //    case waypointOrdering.Reverse:
+        //        if (nodes < 0)
+        //        {
+        //            nodes = waypointPositions.Length - 1;
+        //        }
+        //        break;
+        //}
     }
 }
