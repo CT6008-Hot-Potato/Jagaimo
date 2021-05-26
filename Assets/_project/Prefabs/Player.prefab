@@ -950,7 +950,7 @@ MonoBehaviour:
   freecamLock: 0
   cameraRotationLock: 0
   cameraSensitivity: 1
-  controllerCameraSensitivityMultiplier: 3
+  controllerCameraSensitivityMultiplier: 100
   crosshair: {fileID: 2995849507044035715}
   mouseInversion: 3
   cameraState: 1
