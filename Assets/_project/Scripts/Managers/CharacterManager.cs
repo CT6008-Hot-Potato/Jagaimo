@@ -26,7 +26,6 @@ public class CharacterManager : MonoBehaviour
     //A public variable for scripts to check if this player is locked
     public bool isPlayerLocked { private get; set; } = false;
 
-
     [Header("Components Needed")]
     //Components already on this object
     [SerializeField]
@@ -41,6 +40,8 @@ public class CharacterManager : MonoBehaviour
     private Rigidbody _rb;
 
     //Other components needed
+    [SerializeField]
+    private RoundManager rManager;
     [SerializeField]
     private SoundManager soundManager;
     [SerializeField]
@@ -69,6 +70,12 @@ public class CharacterManager : MonoBehaviour
     private GameObject elimDisplayObject;
     private float taggedAnimduration = 2f;
 
+    //Infected mutator variables
+    private bool bApplyInfectedSpeed = false;
+    private bool bRemoveSurvivorSpeed = false;
+    private float survivorSpeedAddition = 0.0f;
+    private float infectedSpeedAddition = 0.0f;
+
     #endregion
 
     #region Unity Methods
@@ -88,6 +95,8 @@ public class CharacterManager : MonoBehaviour
 
     private void Start()
     {
+        rManager = rManager ?? RoundManager.roundManager;
+
         //This can be done better
         if (_movement)
         {
@@ -100,13 +109,39 @@ public class CharacterManager : MonoBehaviour
 
         if (settings)
         {
+            float valueToAdd = 0.05f;
+
             if (settings.HasGenMutator(8))
             {
 
                 int multiplier = (int)settings.FindGeneralMutatorValue(8);
 
-                float valueToAdd = multiplier * 0.05f;
+                valueToAdd *= multiplier;
                 _movement.speedMultiplier += valueToAdd;
+
+                //It's the infected gamemode
+                if (rManager._currentGamemode.Return_Mode() == GAMEMODE_INDEX.INFECTED)
+                {
+                    //The infected speed's mutator
+                    if (settings.HasGamMutator(0))
+                    {
+                        int inf_multiplier = (int)settings.FindGamemodeMutatorValue(0);
+                        infectedSpeedAddition = valueToAdd * inf_multiplier;
+
+                        bApplyInfectedSpeed = true;
+                    }
+
+                    //The survivor's speed's mutator
+                    if (settings.HasGamMutator(1))
+                    {
+                        int surv_multiplier = (int)settings.FindGamemodeMutatorValue(1);
+                        survivorSpeedAddition = valueToAdd * surv_multiplier;
+
+                        _movement.speedMultiplier += survivorSpeedAddition;
+
+                        bRemoveSurvivorSpeed = true;
+                    }
+                }
             }
 
             //The mutator for using confetti is true, so swap out the elim vfx for the confetti one
@@ -178,7 +213,6 @@ public class CharacterManager : MonoBehaviour
         }
 
         //Turn all non-important scripts off (ones that allow the player to interact especially)
-
         return this;
     }
 
@@ -190,6 +224,17 @@ public class CharacterManager : MonoBehaviour
         if (_playerAnimation)
         {
             _playerAnimation.CheckToChangeState("FallingBackDeath", true);
+        }
+
+        //This is only applied during the infected gamemode
+        if (bRemoveSurvivorSpeed)
+        {
+            _movement.speedMultiplier -= survivorSpeedAddition;
+        }
+
+        if (bApplyInfectedSpeed)
+        {
+            _movement.speedMultiplier += infectedSpeedAddition;
         }
 
         StartCoroutine(Co_TaggedEffect(taggedAnimduration));

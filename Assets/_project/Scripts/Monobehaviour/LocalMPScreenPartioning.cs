@@ -108,6 +108,18 @@ public class LocalMPScreenPartioning : MonoBehaviour
             camera.playerIndex = playerInput.playerIndex;
             camera.SetPlayerMask();
 
+            //Checking player device
+            if (playerInput.devices[0].name != "Keyboard" && playerInput.devices[0].name != "Mouse")
+            {
+                //Gamepad used
+                camera.useControllerSensitivity = true;
+            }
+            else
+            {
+                //Keyboard used
+                camera.useControllerSensitivity = false;
+            }
+
             newPlayerCameras.Add(camera);
         }
 

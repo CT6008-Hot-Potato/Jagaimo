@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class MenuMutatorEditPanel : MonoBehaviour
 {
-    #region Public Varialbes
+    #region Public Variables
 
     public MutatorPackager currentMutators;
 
@@ -20,6 +20,8 @@ public class MenuMutatorEditPanel : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> GamemodePanels;
+    [SerializeField]
+    private GameObject gamemodeTitle;
 
     #endregion
 
@@ -31,6 +33,11 @@ public class MenuMutatorEditPanel : MonoBehaviour
         //Turn on the right mutator edit gameobjects
         if (currentMutators && GamemodePanels[(int)currentMutators.Gamemode])
         {
+            if (currentMutators.Gamemode != GAMEMODE_INDEX.CLASSIC && gamemodeTitle)
+            {
+                gamemodeTitle.SetActive(true);
+            }
+
             GamemodePanels[(int)currentMutators.Gamemode].SetActive(true);
         }
     }
@@ -41,6 +48,11 @@ public class MenuMutatorEditPanel : MonoBehaviour
         //Turn off the right mutator edit gameobjects ready for next time
         if (currentMutators && GamemodePanels[(int)currentMutators.Gamemode])
         {
+            if (gamemodeTitle)
+            {
+                gamemodeTitle.SetActive(false);
+            }
+
             GamemodePanels[(int)currentMutators.Gamemode].SetActive(false);
         }
     }

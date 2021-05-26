@@ -812,6 +812,7 @@ MonoBehaviour:
   _playerAnimation: {fileID: 6282555755904903039}
   _playerInteraction: {fileID: 4394244838949972468}
   _rb: {fileID: 4394244838949972467}
+  rManager: {fileID: 0}
   soundManager: {fileID: 0}
   settings: {fileID: 0}
   playerCameras:
@@ -2684,7 +2685,7 @@ PrefabInstance:
     - target: {fileID: 6863599626905906579, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6913188888627312912, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}
