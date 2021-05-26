@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mirror;
+using Mirror.FizzySteam;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class JagaimoNetworkManagerLobby : Mirror.NetworkManager
 {
@@ -16,9 +18,11 @@ public class JagaimoNetworkManagerLobby : Mirror.NetworkManager
     
     [Scene] 
     [SerializeField] private string menuScene = String.Empty;
-
     [Header("Room")] 
     [SerializeField] private JagaimoRoomPlayerLobby roomPlayerPrefab = null;
+
+    [Header("UI Lobby")] 
+    [SerializeField] private Button steamLobbyButton;
 
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
@@ -186,4 +190,10 @@ public override void OnStartClient()
     //         ServerChangeScene(mapHandler.NextMap);
     //     }
     // }
+
+    public void SteamLobbyInit()
+    {
+        transport = gameObject.GetComponent<FizzySteamworks>();
+        Debug.Log("SteamSDK loaded for Mirror!");
+    }
 }
