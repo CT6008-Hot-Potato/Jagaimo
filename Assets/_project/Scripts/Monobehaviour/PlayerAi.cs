@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class PlayerAi : MonoBehaviour
 {
     private NavMeshAgent agent;
-    
+    private enum gamemode { };
 
     void Start()
     {
