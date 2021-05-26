@@ -22,6 +22,7 @@ public class UIMenuBehaviour : MonoBehaviour
     Resolution[] resolutions;
     public TMP_Dropdown resolutionsDropdown;
 
+    public Slider[] sliders;
 
     [SerializeField]
     private TextMeshProUGUI currentResolution; 
@@ -30,6 +31,9 @@ public class UIMenuBehaviour : MonoBehaviour
     {
         sM = FindObjectOfType<SoundManager>();
         StartCoroutine(CountdownCoroutine());
+
+
+        
     }
 
 
@@ -52,6 +56,21 @@ public class UIMenuBehaviour : MonoBehaviour
         resolutionsDropdown.AddOptions(options);
 
         StartCoroutine(LateResolutionChanger());
+
+
+        if (CameraManager != null)
+        {
+            CameraManager.cameraSensitivity = GetPrefFloat("Mouse");
+            sliders[0].value = CameraManager.cameraSensitivity;
+            CameraManager.controllerCameraSensitivityMultiplier = GetPrefFloat("Controller");
+            sliders[1].value = CameraManager.controllerCameraSensitivityMultiplier;
+
+
+            CameraManager.otherCamSpeed = GetPrefFloat("Spectator");
+            sliders[2].value = CameraManager.otherCamSpeed;
+
+        }
+
     }
 
     private IEnumerator LateResolutionChanger()
@@ -109,22 +128,45 @@ public class UIMenuBehaviour : MonoBehaviour
         uiMenuCanvasObject.SetActive(newState);
     }
 
+    public void SetPrefFloat(string key, float value)
+    {
+
+        string keywithindex = key + CameraManager.playerIndex;
+        PlayerPrefs.SetFloat(keywithindex, value);
+    }
+    public float GetPrefFloat(string key)
+    {
+
+        string keywithindex = key + CameraManager.playerIndex;
+        return PlayerPrefs.GetFloat(keywithindex);
+
+    }
 
     public void UpdateMouseSens(float i)
     {
         if (CameraManager == null) return;
+
+        SetPrefFloat("Mouse", i);
+
         CameraManager.cameraSensitivity = i;
     }
 
     public void UpdateControllerSens(float i)
     {
         if (CameraManager == null) return;
+
+        SetPrefFloat("Controller", i);
+
         CameraManager.controllerCameraSensitivityMultiplier = i;
     }
 
     public void UpdateSpectatorSpeed(float i)
     {
         if (CameraManager == null) return;
+
+
+        SetPrefFloat("Spectator", i);
+
         CameraManager.otherCamSpeed = i;
     }
 

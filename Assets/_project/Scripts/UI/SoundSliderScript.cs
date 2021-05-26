@@ -16,6 +16,9 @@ public class SoundSliderScript : MonoBehaviour
     [SerializeField] AudioMixer MyMixer;  //  reference to the games Mixer object
     [SerializeField] AudioMixerGroup[] MyMixers; // ref to the groups inside the Mixer
 
+
+    [SerializeField] UIMenuBehaviour MenuRef;
+
     [SerializeField] float Max, Min, DefaultVal; // Stores the sliders minimum, max, and default values
     void OnEnable() // If the soundslider object is enabled and the sliders aren't there already, create them  
     {
@@ -23,11 +26,18 @@ public class SoundSliderScript : MonoBehaviour
         {
             for (int i = 1; i <= MyMixers.Length; i++)
             {
+                if (MenuRef != null)
+                {
+                    MyMixer.SetFloat("MyExposedParam" + i, MenuRef.GetPrefFloat("MyExposedParam" + i + MenuRef.CameraManager.playerIndex));
+                }
+
+
                 GameObject newSlider = Instantiate(SliderPrefab, gameObject.transform);
                 newSlider.TryGetComponent(out Slider slider);
                 slider.maxValue = Max;
                 slider.minValue = Min;
-                slider.value = Mathf.Lerp(Min, Max, DefaultVal);
+                MyMixers[i-1].audioMixer.GetFloat("MyExposedParam" + i, out DefaultVal);
+                slider.value = DefaultVal;
                 slider.GetComponentInChildren<TextMeshProUGUI>().text = MyMixers[i - 1].name;
 
                 int j = i;
@@ -35,6 +45,7 @@ public class SoundSliderScript : MonoBehaviour
 
 
                 slider.onValueChanged.AddListener(value => ChangeMixVolume(slider.value, j));
+
 
 
             }
@@ -46,6 +57,10 @@ public class SoundSliderScript : MonoBehaviour
     {
         if (MyMixer.SetFloat("MyExposedParam" + audioMixerIndex, newValue))
         {
+            if (MenuRef != null)
+            {
+                MenuRef.SetPrefFloat("MyExposedParam" + audioMixerIndex + MenuRef.CameraManager.playerIndex , newValue);
+            }
 
         }
         else
