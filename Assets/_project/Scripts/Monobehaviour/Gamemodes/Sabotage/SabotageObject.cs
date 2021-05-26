@@ -46,6 +46,8 @@ public class SabotageObject : MonoBehaviour, IInteractable
     private bool isBeingUsed = false;
     [SerializeField]
     private GameObject fixingIconVFX;
+    [SerializeField]
+    private GameObject finishedIconVFX;
 
     [Header("Generator Breaking Variables")]
     //The length the generator crashes for when hit by the potato
@@ -68,6 +70,16 @@ public class SabotageObject : MonoBehaviour, IInteractable
     // Start is called before the first frame update
     private void Start()
     {
+        if (fixingIconVFX)
+        {
+            fixingIconVFX.SetActive(false);
+        }
+
+        if (finishedIconVFX)
+        {
+            finishedIconVFX.SetActive(false);
+        }
+
         //These timers are available during the whole scene
         sabotageTimer = new Timer(duration);
     }
@@ -89,6 +101,16 @@ public class SabotageObject : MonoBehaviour, IInteractable
 
                 //So tell the manager the generator is finished
                 sabotageManager.GeneratorFinished(this);
+
+                if (finishedIconVFX)
+                {
+                    finishedIconVFX.SetActive(true);
+                }
+
+                if (fixingIconVFX)
+                {
+                    fixingIconVFX.SetActive(false);
+                }
             }
         }
     }
@@ -101,15 +123,17 @@ public class SabotageObject : MonoBehaviour, IInteractable
         {
             CharacterManager charManager = other.GetComponent<CharacterManager>();
 
-            if (charManager)
+            //It has a manager and the player is untagged
+            if (charManager && !charManager._tracker.isTagged && charManager._tracker.enabled)
             {
-                //And they are untagged
-                if (!charManager._tracker.isTagged)
+                if (Debug.isDebugBuild)
                 {
-                    potentialFixers.Add(charManager);
-
-                    StartCoroutine(Co_PlayerInArea(playerStopDuration, charManager));
+                    Debug.Log("New potential fixer");
                 }
+
+                potentialFixers.Add(charManager);
+
+                StartCoroutine(Co_PlayerInArea(playerStopDuration, charManager));
             }
         }
     }
@@ -153,11 +177,6 @@ public class SabotageObject : MonoBehaviour, IInteractable
     {
         //Guard clause incase someone wants to interact with it during break
         if (isLocked) return;
-
-        if (Debug.isDebugBuild)
-        {
-            Debug.Log("Player working on generator");
-        }
 
         isBeingUsed = true;
         charsInteracting.Add(charInteracting);
@@ -262,6 +281,13 @@ public class SabotageObject : MonoBehaviour, IInteractable
                 t = 0;
             }
 
+            //The player was tagged whilst in the area
+            if (cManager._tracker.isTagged)
+            {
+                potentialFixers.Remove(cManager);
+            }
+
+            //Moved out of range or tagged
             if (!potentialFixers.Contains(cManager))
             {
                 StopCoroutine(Co_PlayerInArea(duration, cManager));

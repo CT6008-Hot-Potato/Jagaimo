@@ -16,7 +16,7 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     #region Variables Needed
 
     //The main bool for the tracker
-    public bool isTagged { get; private set; }
+    public bool isTagged;
 
     [SerializeField]
     private RoundManager roundManager;

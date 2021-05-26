@@ -317,8 +317,11 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
 
         //This is the "solution" to not being able to turn the player based on the prefab object
         PlayerCamera camera = currentActivePlayers[index].GetComponent<PlayerCamera>();
-        camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
-        camera.flipSpin = !camera.flipSpin;
+        if (camera)
+        {
+            camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
+            camera.flipSpin = !camera.flipSpin;
+        }
     }
 
     private void PutCharactersInStartPositions()
