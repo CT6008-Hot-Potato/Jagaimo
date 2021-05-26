@@ -34,6 +34,8 @@ public class LocalMPScreenPartioning : MonoBehaviour
     private List<PlayerCamera> newPlayerCameras = new List<PlayerCamera>();
     private int ExpectedPlayerCount = 1;
 
+    InputDevice latestDeviceJoined;
+
     #endregion
 
     #region Unity Methods
@@ -57,6 +59,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
                     int tempIndex = settings.LocalPlayerInputs[i].playerIndex;
                     int tempSplitscreenIndex = settings.LocalPlayerInputs[i].splitScreenIndex;
                     string tempControlScheme = settings.LocalPlayerInputs[i].currentControlScheme;
+                    latestDeviceJoined = settings.LocalPlayerInputs[i].devices[0];
 
                     Destroy(settings.LocalPlayerInputs[i].gameObject);
 
@@ -70,6 +73,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
                 int tempIndex = settings.LocalPlayerInputs[0].playerIndex;
                 int tempSplitscreenIndex = settings.LocalPlayerInputs[0].splitScreenIndex;
                 string tempControlScheme = settings.LocalPlayerInputs[0].currentControlScheme;
+                latestDeviceJoined = settings.LocalPlayerInputs[0].devices[0];
 
                 Destroy(settings.LocalPlayerInputs[0].gameObject);
 
@@ -109,7 +113,7 @@ public class LocalMPScreenPartioning : MonoBehaviour
             camera.SetPlayerMask();
 
             //Checking player device
-            if (playerInput.devices[0].name != "Keyboard" && playerInput.devices[0].name != "Mouse")
+            if (latestDeviceJoined.name != "Keyboard" && latestDeviceJoined.name != "Mouse")
             {
                 //Gamepad used
                 camera.useControllerSensitivity = true;
