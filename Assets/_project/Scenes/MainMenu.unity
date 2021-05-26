@@ -14895,6 +14895,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 896284710}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &900153824 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 105387215497954147, guid: dd2ae94340d701246b69430455ecc534,
+    type: 3}
+  m_PrefabInstance: {fileID: 992098750}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &907564072
 GameObject:
   m_ObjectHideFlags: 0
@@ -16353,12 +16365,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Placeholder
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 900153824}
     - target: {fileID: 3468257564145862117, guid: dd2ae94340d701246b69430455ecc534,
         type: 3}
       propertyPath: m_TextViewport
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1200524388}
     - target: {fileID: 3468257564145862117, guid: dd2ae94340d701246b69430455ecc534,
         type: 3}
       propertyPath: m_TargetGraphic
@@ -16368,7 +16380,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TextComponent
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1682425273}
     - target: {fileID: 3468257564145862117, guid: dd2ae94340d701246b69430455ecc534,
         type: 3}
       propertyPath: m_GlobalPointSize
@@ -19056,6 +19068,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!224 &1200524388 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8091662010910506683, guid: dd2ae94340d701246b69430455ecc534,
+    type: 3}
+  m_PrefabInstance: {fileID: 992098750}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1209238306
 GameObject:
   m_ObjectHideFlags: 0
@@ -27820,6 +27838,18 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 0
+--- !u!114 &1682425273 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5109591722946494481, guid: dd2ae94340d701246b69430455ecc534,
+    type: 3}
+  m_PrefabInstance: {fileID: 992098750}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1697280253
 GameObject:
   m_ObjectHideFlags: 0
