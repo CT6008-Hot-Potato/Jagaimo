@@ -917,6 +917,7 @@ MonoBehaviour:
   otherCamSpeed: 10
   rotationPosition: {fileID: 4394244838949972449}
   playerInput: {fileID: 4394244838949972472}
+  useControllerSensitivity: 0
   characterMesh:
   - {fileID: 1949518398929497088, guid: e811d979910a6b0489de60c53c13eae6, type: 3}
   - {fileID: 8546645980587067942, guid: 8534f6dcfd389ee4cba2fb28dc6bb457, type: 3}
@@ -2280,17 +2281,17 @@ PrefabInstance:
     - target: {fileID: 2983017396590811840, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}
       propertyPath: m_Value
-      value: 100
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2983017396590811840, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}
       propertyPath: m_MaxValue
-      value: 150
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2983017396590811840, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}
       propertyPath: m_MinValue
-      value: 50
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2983017396590811840, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}
