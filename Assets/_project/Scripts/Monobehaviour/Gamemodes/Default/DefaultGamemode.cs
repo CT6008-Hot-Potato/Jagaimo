@@ -166,7 +166,16 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         }
         else
         {
-            roundManager.OnPlayerTagged(getRandomCharacter());
+            CharacterManager nextTagged = getRandomCharacter();
+
+            if (nextTagged != null)
+            {
+                roundManager.OnPlayerTagged(nextTagged);
+            }
+            else if (currentActivePlayers.Count <= 1)
+            {
+                winScreenManager.PlayWinScreen(Return_Mode(), orderOfEliminations, orderOfEliminations);
+            }
         }
 
         if (iCountdownIndex > 0)

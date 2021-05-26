@@ -889,7 +889,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bce7e5e4b3483ee46b8c4800bfd73e36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTagged: 0
   roundManager: {fileID: 0}
   playerManager: {fileID: 4394244838949972466}
 --- !u!114 &4394244838949972475
@@ -2722,7 +2721,7 @@ PrefabInstance:
     - target: {fileID: 6863599626905906579, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6913188888627312912, guid: 2acc603870376c84d855aaa426892b4f,
         type: 3}
