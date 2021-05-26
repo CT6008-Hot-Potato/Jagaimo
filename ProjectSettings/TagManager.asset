@@ -8,6 +8,9 @@ TagManager:
   - GeneratorsParent
   - PositionStay
   - Node
+  - Potato
+  - ExitNode
+  - SabotageNode
   layers:
   - Default
   - TransparentFX
