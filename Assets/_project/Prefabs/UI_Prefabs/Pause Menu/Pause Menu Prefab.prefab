@@ -359,6 +359,7 @@ MonoBehaviour:
   uiMenuCanvasObject: {fileID: 6863599626905906579}
   CameraManager: {fileID: 0}
   resolutionsDropdown: {fileID: 0}
+  sliders: []
   currentResolution: {fileID: 0}
 --- !u!114 &348403572179170998
 MonoBehaviour:
@@ -381,7 +382,7 @@ MonoBehaviour:
   - {fileID: 5193217657761319598}
   - {fileID: 1357144820908839260}
   - {fileID: 8974863068053440361}
-  Sm: {fileID: 0}
+  Sm: {fileID: 8155869737669465520}
 --- !u!114 &8155869737669465520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1129,6 +1130,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1931508209912831897, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
+        type: 3}
+      propertyPath: MenuRef
+      value: 
+      objectReference: {fileID: 6863599625228453314}
     - target: {fileID: 3393068009951090313, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
         type: 3}
       propertyPath: m_fontAsset
