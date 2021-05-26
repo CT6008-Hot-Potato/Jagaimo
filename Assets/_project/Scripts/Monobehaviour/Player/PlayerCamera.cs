@@ -56,6 +56,7 @@ public class PlayerCamera : MonoBehaviour
     private float cameraRotateValue = 0;
     private float escapeValue = 0;
     private Vector2 cameraValue = Vector2.zero;
+    public bool useControllerSensitivity = false;
     //Character related 
     [SerializeField]
     private Mesh[] characterMesh;
@@ -327,26 +328,59 @@ public class PlayerCamera : MonoBehaviour
             {
                 //InvertX
                 case mI.INVERTX:
-                    yaw += cameraSensitivity * cameraValue.x;
-                    pitch += cameraSensitivity * cameraValue.y;
+                    if (useControllerSensitivity)
+                    {
+                        yaw += controllerCameraSensitivityMultiplier * cameraValue.x;
+                        pitch += controllerCameraSensitivityMultiplier * cameraValue.y;
+                    }
+                    else
+                    {
+                        yaw += cameraSensitivity * cameraValue.x;
+                        pitch += cameraSensitivity * cameraValue.y;
+                    }
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //InvertY
                 case mI.INVERTY:
-                    yaw -= cameraSensitivity * cameraValue.x;
-                    pitch -= cameraSensitivity * cameraValue.y;
+                    if (useControllerSensitivity)
+                    {
+                        yaw -= controllerCameraSensitivityMultiplier * cameraValue.x;
+                        pitch -= controllerCameraSensitivityMultiplier * cameraValue.y;
+                    }
+                    else
+                    {
+                        yaw -= cameraSensitivity * cameraValue.x;
+                        pitch -= cameraSensitivity * cameraValue.y;
+                    }
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //Both
                 case mI.INVERTBOTH:
-                    yaw -= cameraSensitivity * cameraValue.x;
-                    pitch += cameraSensitivity * cameraValue.y;
+                    if (useControllerSensitivity)
+                    {
+                        yaw -= controllerCameraSensitivityMultiplier * cameraValue.x;
+                        pitch += controllerCameraSensitivityMultiplier * cameraValue.y;
+                    }
+                    else
+                    {
+                        yaw -= cameraSensitivity * cameraValue.x;
+                        pitch += cameraSensitivity * cameraValue.y;
+                    }
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //None
                 case mI.INVERTNONE:
-                    yaw += cameraSensitivity * cameraValue.x;
-                    pitch -= cameraSensitivity * cameraValue.y;
+
+                    if (useControllerSensitivity)
+                    {
+                        yaw += controllerCameraSensitivityMultiplier * cameraValue.x;
+                        pitch -= controllerCameraSensitivityMultiplier * cameraValue.y;
+                    }
+                    else
+                    {
+                        yaw += cameraSensitivity * cameraValue.x;
+                        pitch -= cameraSensitivity * cameraValue.y;
+                    }
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
             }
@@ -438,14 +472,7 @@ public class PlayerCamera : MonoBehaviour
     //Function for getting camera input value as vector 3
     public void Camera(InputAction.CallbackContext ctx)
     {
-        if (ctx.action.ToString() == "Gameplay/Camera[/XInputControllerWindows/rightStick]")
-        {
-            cameraValue = new Vector3(ctx.ReadValue<Vector2>().x * controllerCameraSensitivityMultiplier, ctx.ReadValue<Vector2>().y * controllerCameraSensitivityMultiplier, 0);
-        }
-        else
-        {
-            cameraValue = new Vector3(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y, 0);
-        }
+        cameraValue = new Vector3(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y, 0);
     }
 
     //Function for getting camera zoom input value
