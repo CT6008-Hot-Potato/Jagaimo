@@ -891,7 +891,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isTagged: 0
   roundManager: {fileID: 0}
-  playerManager: {fileID: 0}
+  playerManager: {fileID: 4394244838949972466}
 --- !u!114 &4394244838949972475
 MonoBehaviour:
   m_ObjectHideFlags: 0

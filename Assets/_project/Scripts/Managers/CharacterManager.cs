@@ -282,8 +282,6 @@ public class CharacterManager : MonoBehaviour
 
         isPlayerLocked = true;
 
-        _rb.isKinematic = true;
-
         //Stop movement in the movement script, dont disable or deactive player input (they couldn't pause then)
         _movement.SetMovement(3);
 
@@ -304,8 +302,6 @@ public class CharacterManager : MonoBehaviour
         }
 
         isPlayerLocked = false;
-
-        _rb.isKinematic = false;
 
         //Start player movement
         _movement.SetMovement(2);
