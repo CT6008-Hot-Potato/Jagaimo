@@ -73,7 +73,7 @@ WindZone:
   m_Enabled: 1
   m_Mode: 0
   m_Radius: 20
-  m_WindMain: 1
+  m_WindMain: 0.1
   m_WindTurbulence: 1
   m_WindPulseMagnitude: 0.5
   m_WindPulseFrequency: 0.01
@@ -141,8 +141,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
         type: 3}
+      propertyPath: simulationSpeed
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
       propertyPath: NoiseModule.frequency
-      value: 0.03
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
         type: 3}
@@ -171,6 +176,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
         type: 3}
+      propertyPath: NoiseModule.strength.scalar
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: TrailModule.lifetime.scalar
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
       propertyPath: ExternalForcesModule.enabled
       value: 1
       objectReference: {fileID: 0}
@@ -181,8 +196,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
         type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: NoiseModule.scrollSpeed.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: NoiseModule.strength.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: NoiseModule.strengthY.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: NoiseModule.strengthZ.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209565921881106821, guid: ec5839ee83179754ca73f416751365da,
+        type: 3}
       propertyPath: ExternalForcesModule.multiplierCurve.scalar
-      value: 100
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 4209565921881106823, guid: ec5839ee83179754ca73f416751365da,
         type: 3}

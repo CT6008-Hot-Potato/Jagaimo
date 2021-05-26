@@ -75,6 +75,7 @@ public class SabotageEscapeManager : MonoBehaviour
         {
             //None of the sabotage objects need to be on (they should already be off but just in case)
             SaboatageObjectParent.SetActive(false);
+            BParent.SetActive(false);
             enabled = false;
         }
     }

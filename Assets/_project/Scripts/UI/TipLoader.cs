@@ -19,6 +19,8 @@ public class TipLoader : MonoBehaviour
     [SerializeField] string[] tips;
     [SerializeField] TextMeshProUGUI textObject;
 
+    [SerializeField] GameCreationSettings creationRef;
+
     [SerializeField] Slider loadingScreen;
     [SerializeField] float loadingSpeed;
     [SerializeField] string LoadPrompt;
@@ -28,8 +30,12 @@ public class TipLoader : MonoBehaviour
     MenuManager menuComponent;
     [SerializeField] int menuNumber;
 
+    [SerializeField] int LoadMode;
+
     float sliderProgress;
     InputAction myAction;
+
+    AudioSource myAudio;
 
     void Start()
     {
@@ -47,7 +53,7 @@ public class TipLoader : MonoBehaviour
 
         menuComponent = menuObject.GetComponent<MenuManager>();
 
-
+        TryGetComponent(out myAudio);
 
 
 
@@ -57,11 +63,18 @@ public class TipLoader : MonoBehaviour
     {
         if (menuComponent != null)
         {
+            if (LoadMode == 0)
+            { 
             myAction.Disable();
             menuComponent.SwitchOpenMenu(menuNumber);
             
             gameObject.SetActive(false);
+            }
 
+            else if (LoadMode == 1)
+            {
+                creationRef.StartButton();
+            }
 
         }
     }
@@ -80,6 +93,11 @@ public class TipLoader : MonoBehaviour
         if (sliderProgress >= 1)
         {
 
+            if (myAudio != null)
+            {
+                myAudio.Play();
+
+            }
             LoadObject.text = LoadPrompt;
 
             myAction = new InputAction(binding: "/*/<button>");

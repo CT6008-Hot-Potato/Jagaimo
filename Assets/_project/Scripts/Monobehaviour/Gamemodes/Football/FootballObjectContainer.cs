@@ -11,25 +11,35 @@ using UnityEngine;
 
 public class FootballObjectContainer : MonoBehaviour
 {
+    #region Variables for the gamemode script
+
     //There should only be 1 on scenes
     public static FootballObjectContainer footballObjectContainer;
 
     private RoundManager roundManager;
     private FootballGamemode gamemode;
 
-    [Header("Variables needed from Gamemode")]
-    [SerializeField]
+    [Header("Variables needed for Gamemode")]
+
     public CountdownTimer countdownTimer;
-
-    [SerializeField]
     public ScrollerText scrollerText;
-    [SerializeField]
     public ScoreboardText scoreboard;
-
-    [SerializeField]
     public Rigidbody potatoRB;
-    [SerializeField]
     public BasicTimerBehaviour goalPauseTimer;
+    public ScriptableParticles particleSpawner;
+    public Transform[] vfxPoints;
+
+    #endregion
+
+    #region Variables for this script
+
+    //Potential variables for capture the potato mutator
+    [SerializeField]
+    Transform[] flagpoles;
+    [SerializeField]
+    Transform[] goalObjects;
+
+    #endregion
 
     private void Awake()
     {
@@ -41,7 +51,17 @@ public class FootballObjectContainer : MonoBehaviour
         {
             Destroy(this);
         }
-
-        roundManager = RoundManager.roundManager;
     }
+
+    private void Start()
+    {
+        roundManager = RoundManager.roundManager;
+        gamemode = roundManager.GetComponent<FootballGamemode>();
+    }
+
+    public void UnlockPlayersAfterGoal()
+    {
+        gamemode.UnlockAllPlayers();
+    }
+
 }

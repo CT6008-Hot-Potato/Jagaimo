@@ -35,6 +35,15 @@ public class WinScreenManager : MonoBehaviour
     //The win screen itself (which is on the prefab object)
     private WinScreen winScreen;
 
+    [SerializeField]
+    private bool bReturnToMenu = true;
+
+    [SerializeField]
+    AudioClip WinMusic;
+
+    [SerializeField]
+    private GameSettingsContainer settings;
+
     #endregion
 
     #region Unity Methods
@@ -50,11 +59,10 @@ public class WinScreenManager : MonoBehaviour
             instance = this;
         }
 
+        settings = settings ?? GameSettingsContainer.instance;
         menuWaitBehaviour = menuWaitBehaviour ?? GetComponent<BasicTimerBehaviour>();
         worldBounds = worldBounds ?? FindObjectOfType<WorldBounds>();
     }
-
-
 
     #endregion
 
@@ -63,9 +71,26 @@ public class WinScreenManager : MonoBehaviour
     //Playing the win screen (and pass through the gamemode incase of different screens per gamemode)
     public void PlayWinScreen(GAMEMODE_INDEX gamemode, List<CharacterManager> everyPlayer, List<CharacterManager> winningChars)
     {
+        if (WinMusic != null)
+        {
+          if(TryGetComponent(out AudioSource changeMe))
+            {
+                changeMe.Stop(); ;
+                changeMe.clip = WinMusic;
+                changeMe.Play();
+            }
+        }
+
+        //Destroying the world bounds so it doesnt interfere with the win screen
         if (worldBounds)
         {
             Destroy(worldBounds);
+        }
+
+        //Destroying the settings so it doesnt interfere with the next game
+        if (settings)
+        {
+            Destroy(settings.gameObject);
         }
 
         allPlayers = everyPlayer;
@@ -74,11 +99,13 @@ public class WinScreenManager : MonoBehaviour
         //Going through all the manager 
         foreach (CharacterManager manager in everyPlayer)
         {
-            //Turning off the revelant components;
-            manager.DisablePlayer();
+            if (manager)
+            {
+                //Turning off the revelant components;
+                manager.DisablePlayer();
+            }
         }
 
-        //There could be a tidier way to do this but for now this will work
         //This will determine what's shown on the screen (so podiums vs football spots vs infected/sabotage scene)
         //Spinning Podiums for classic gamemode
         //Use football arena for football
@@ -90,13 +117,17 @@ public class WinScreenManager : MonoBehaviour
         winScreen.StartWinSequence(allPlayers, winningChars);
 
         //Setting a timer for going back to the menu
-        menuWaitBehaviour.SetDuration(winScreen.screenDuration);
-        menuWaitBehaviour.CallOnTimerStart();
+        if (bReturnToMenu)
+        {
+            menuWaitBehaviour.SetDuration(winScreen.screenDuration);
+            menuWaitBehaviour.CallOnTimerStart();
+        }
     }
 
     //Going back to the main menu
     public void ReturnToMenu()
     {
+        Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene("MainMenu");
     }
 

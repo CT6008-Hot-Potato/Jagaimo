@@ -5238,7 +5238,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3801253960655751786}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1250, y: 10, z: 1250}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1456836161942060742}
@@ -5262,14 +5262,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rManager: {fileID: 0}
   winningSpots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  viewCam: {fileID: 0}
+  - {fileID: 3801253961082237724}
+  - {fileID: 3801253959830016178}
+  - {fileID: 3801253959875791652}
+  viewCam: {fileID: 3801253960632869628}
   VFXtoPlay: []
   screenDuration: 10
   gamemode: {fileID: 0}
-  taggedPosition: {fileID: 0}
+  taggedPosition: {fileID: 3801253961058104461}
 --- !u!1 &3801253961058104460
 GameObject:
   m_ObjectHideFlags: 0

@@ -56,8 +56,8 @@ public class ClassicWinScreen : WinScreen
             {
                 if (winningSpots[i] != null && objectsToPosition[i] != null)
                 {
-                    Debug.Log(objectsToPosition[i].transform.position + " is going to: " + winningSpots[i].transform.position, this);
-
+                    //Debug.Log(objectsToPosition[i].transform.position + " is going to: " + winningSpots[i].transform.position, this);
+                    objectsToPosition[i].GetComponent<Rigidbody>().velocity = Vector3.zero;
                     objectsToPosition[i].transform.position = winningSpots[i].position;
                     objectsToPosition[i].transform.rotation = winningSpots[i].rotation;
                 }

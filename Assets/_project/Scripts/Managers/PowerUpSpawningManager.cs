@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////////////// 
 
 //The namespaces used
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,9 +28,11 @@ public class PowerUpSpawningManager : MonoBehaviour
     [SerializeField]
     private BasicTimerBehaviour waitTimer;
 
-    //This will contain the transforms for the potential power spots, and utility for getting them
     [SerializeField]
-    private ArenaManager spawningManager;
+    PowerUpTrigger[] powerUpObjects;
+
+    [SerializeField]
+    List<PowerUpTrigger> availableTriggers = new List<PowerUpTrigger>();
 
     [Header("Internal tracking variables")]
 
@@ -59,6 +62,12 @@ public class PowerUpSpawningManager : MonoBehaviour
     {
         settings = GameSettingsContainer.instance;
         waitTimer = waitTimer ?? gameObject.AddComponent<BasicTimerBehaviour>();
+
+        //Every power up could potentially "spawn"
+        for (int i = 0; i < powerUpObjects.Length; ++i)
+        {
+            availableTriggers.Add(powerUpObjects[i]);
+        }
     }
 
     // Start is called before the first frame update
@@ -81,6 +90,7 @@ public class PowerUpSpawningManager : MonoBehaviour
             //It doesnt have a value
             else
             {
+                spawnNextPowerUp = false;
                 //So this script is redundant (which stops the timer from starting when the countdown starts)
                 enabled = false;
             }
@@ -111,27 +121,24 @@ public class PowerUpSpawningManager : MonoBehaviour
     //The basic timer behaviour has run out, so it's time to see if another spawn is possible
     public void WaitTimerRunOut()
     {
-        if (spawningManager)
+        //If there's a spot
+        if (canSpawnPowerUp())
         {
-            //If there's a spot
-            if (spawningManager.canPowerUpSpawn())
+            //Finding the a spot and trying to spawn a random power up there
+            if (SpawnPowerUp(RandomFreePowerUp()))
             {
-                //Finding the a spot and trying to spawn a random power up there
-                if (SpawnPowerUp(spawningManager.ReturnFreePowerUpSpot()))
-                {
-                    scroller.AddPowerUpSpawnText();
+                scroller.AddPowerUpSpawnText();
 
-                    //The timer resets within this function
-                    waitTimer.CallOnTimerStart();
-                }
+                //The timer resets within this function
+                waitTimer.CallOnTimerStart();
             }
-            else
-            {
-                //Start waiting for a spot to clear up
-                waitingForPowerUpSpot = true;
+        }
+        else
+        {
+            //Start waiting for a spot to clear up
+            waitingForPowerUpSpot = true;
 
-                StartCoroutine(Co_waitForPowerUpSpot());
-            }
+            StartCoroutine(Co_waitForPowerUpSpot());
         }
     }
 
@@ -150,14 +157,25 @@ public class PowerUpSpawningManager : MonoBehaviour
         waitTimer.CallOnTimerStart();
     }
 
+    public void PowerUpPickedUp(PowerUpTrigger triggerActivated)
+    {
+        waitingForPowerUpSpot = false;
+
+        availableTriggers.Remove(triggerActivated);
+    }
+
     //The spawning function, which might need some overrides/overloads at some point
-    private bool SpawnPowerUp(Vector3 positionToSpawn)
+    private bool SpawnPowerUp(PowerUpTrigger PowerUpToSetActive)
     {
         if (spawnNextPowerUp && powerUpPrefabs.Length > 0)
         {
-            int iRandPowerUp = Random.Range(0, powerUpPrefabs.Length);
+            int iRandPowerUp = UnityEngine.Random.Range(0, powerUpPrefabs.Length);
 
-            Instantiate(powerUpPrefabs[iRandPowerUp], positionToSpawn, Quaternion.identity, transform);
+            //There is a free spot check before it gets to this part
+            PowerUpToSetActive.SetPowerUpID(iRandPowerUp);
+            PowerUpToSetActive.gameObject.SetActive(true);
+
+            availableTriggers.Remove(PowerUpToSetActive);
 
             if (Debug.isDebugBuild)
             {
@@ -181,6 +199,36 @@ public class PowerUpSpawningManager : MonoBehaviour
         //Start the timer again to wait for a power up
         StartPowerUpTimer();
     }
+
+    //Make sure there is a free one before running this
+    private PowerUpTrigger RandomFreePowerUp()
+    {
+        int iRandPowerUp = UnityEngine.Random.Range(0, availableTriggers.Count);
+
+       if (availableTriggers.Count == 0)
+        {
+            //Should never reach here
+            Debug.LogError("No free spot and forgot to check", this);
+            enabled = false;
+        }
+
+        return availableTriggers[iRandPowerUp];
+    }
+
+    //Looping through to see if any of the power ups are off
+    private bool canSpawnPowerUp()
+    {
+        for (int i = 0; i < powerUpObjects.Length; ++i)
+        {
+            if (!powerUpObjects[i].gameObject.activeSelf)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     #endregion
 }

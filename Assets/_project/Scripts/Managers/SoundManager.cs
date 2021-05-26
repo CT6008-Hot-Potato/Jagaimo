@@ -14,6 +14,15 @@ public class SoundManager : MonoBehaviour
     [SerializeField] AudioMixerGroup DefaultAudioMixer; // refererence to the audio mixer
   
     [SerializeField] ScriptableSounds SoundBoard; // reference to the sound profiler
+
+    [SerializeField] ScriptableSounds.Sounds DefaultSound;
+
+
+    public void PlaySound()
+    {
+        PlaySound(DefaultSound);
+    }
+
     public void PlaySound(ScriptableSounds.Sounds Sound, Vector3 AtHere)
     {
         ScriptableSounds.SoundIdentity i = SoundBoard.GetSoundFromPalette(Sound);
@@ -26,10 +35,15 @@ public class SoundManager : MonoBehaviour
 
         MyAudio.volume = i.defaultVolume;
         MyAudio.pitch = MyAudio.pitch + Random.Range(-i.pitchVariation, i.pitchVariation);
+
         MyAudio.clip = PlayMe;
         MyAudio.outputAudioMixerGroup = i.audioMixer;
 
-        MyAudio.Play();
+        if (MyAudio != null)
+        {
+            MyAudio.Play();
+        }
+
         Destroy(MyObject, PlayMe.length);
     } // Plays a sound at a specific location, using a volume in the profiler
 
@@ -39,6 +53,10 @@ public class SoundManager : MonoBehaviour
         {
             ScriptableSounds.SoundIdentity i = SoundBoard.GetSoundFromPalette(Sound);
             AudioClip PlayMe = i.file[Random.Range(0, i.file.Length)];
+
+
+            if (PlayMe == null)
+                return;
 
             GameObject MyObject = new GameObject(PlayMe.name);
             MyObject.transform.parent = transform;
@@ -50,7 +68,10 @@ public class SoundManager : MonoBehaviour
             MyAudio.clip = PlayMe;
             MyAudio.outputAudioMixerGroup = i.audioMixer;
 
-            MyAudio.Play();
+            if (MyAudio != null)
+            {
+                MyAudio.Play();
+            }
             Destroy(MyObject, PlayMe.length);
 
         }

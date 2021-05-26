@@ -31,9 +31,41 @@ public class CarryCollision : MonoBehaviour
     //Drop the carried object when it something is within it's collision
     private void OnTriggerStay(Collider collider)
     {
-        if (canCollide && collider.gameObject != playerInteraction.gameObject && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
+        //If can now collide
+        if (canCollide)
         {
-            playerInteraction.Drop(false);
+            //If distance less than 3 metres 
+            if (Vector3.Distance(collider.ClosestPoint(collider.transform.position), transform.position) < 3)
+            {
+
+                if (collider.gameObject != playerInteraction.gameObject && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.name != "PotatoMagnetism" && collider.gameObject.GetComponent<Bounce>() == null)
+                {
+                    playerInteraction.Drop(false);
+                }
+
+            }
+
         }
+
+        //if (canCollide)
+        //{
+        //    if (Vector3.Distance(collider.ClosestPoint(collider.transform.position), transform.position) < 3)
+        //    {
+        //        if (transform.childCount > 0)
+        //        {
+        //
+        //            if (transform.GetChild(0).name != "Potato" && collider.gameObject != playerInteraction.gameObject && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
+        //            {
+        //                playerInteraction.Drop(false);
+        //            }
+        //        }
+        //        else if (collider.gameObject != playerInteraction.gameObject && collider.gameObject != gameObject && collider.gameObject.GetComponent<Rotate>() == null && collider.gameObject.GetComponent<Bounce>() == null)
+        //        {
+        //            playerInteraction.Drop(false);
+        //        }
+        //
+        //    }
+        //
+        //}
     }
 }

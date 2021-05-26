@@ -39,6 +39,9 @@ public class RoundManager : MonoBehaviour
     //The current gamemode
     public IGamemode _currentGamemode;
 
+    //Necessary for infected and other utility based functionality
+    public GameObject potatoPrefab;
+
     //Bits and pieces that will be in some of the game scenes
     [SerializeField]
     private BasicTimerBehaviour startCountdown;

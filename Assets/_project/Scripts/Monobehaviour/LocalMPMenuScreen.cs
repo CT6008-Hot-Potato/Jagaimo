@@ -19,14 +19,17 @@ public class LocalMPMenuScreen : MonoBehaviour
     private GameSettingsContainer game;
 
     [SerializeField]
-    private List<GameObject> joinedPlayers = new List<GameObject>();
+    private SoundManager soundManager;
 
+    //The reference to the texts
     [SerializeField]
-    private GameObject[] joinedIcon;
+    private GameObject[] joinedIconGamepad;
+    [SerializeField]
+    private GameObject[] joinedIconKeyboard;
     [SerializeField]
     private GameObject[] promptIcon;
     [SerializeField]
-    Button startButton;
+    private Button startButton;
 
     #endregion
 
@@ -34,6 +37,7 @@ public class LocalMPMenuScreen : MonoBehaviour
 
     private void Awake()
     {
+        soundManager = soundManager ?? FindObjectOfType<SoundManager>();
         inputManager = inputManager ?? GetComponent<PlayerInputManager>();
     }
 
@@ -43,11 +47,20 @@ public class LocalMPMenuScreen : MonoBehaviour
         //The static is set in awake
         game = GameSettingsContainer.instance;
 
+        if (startButton)
+        {
+            startButton.interactable = false;
+        }
     }
 
     private void OnEnable()
     {
         inputManager.EnableJoining();
+    }
+
+    private void OnDisable()
+    {
+        inputManager.DisableJoining();
     }
 
     #endregion
@@ -56,45 +69,55 @@ public class LocalMPMenuScreen : MonoBehaviour
 
     public void OnPlayerJoined(PlayerInput playerInput)
     {
-        if (Debug.isDebugBuild)
-        {
-            Debug.Log("Player has joined in menu");
-        }
+        //if (Debug.isDebugBuild)
+        //{
+        //    Debug.Log("Player has joined in menu on device");
+        //}
+
+        //if (soundManager)
+        //{
+        //    soundManager.PlaySound(ScriptableSounds.Sounds.PlayerJoin);
+        //}
 
         //Storing the player object for the next scene
-        DontDestroyOnLoad(playerInput.gameObject);
-        joinedPlayers.Add(playerInput.gameObject);
-
-        //Updating the game settings
-        game.LocalPlayerInputs[joinedPlayers.Count - 1] = playerInput.gameObject.GetComponent<PlayerInput>();
-        game.iPlayercount++;
+        playerInput.transform.SetParent(game.transform);
 
         //Updating the UI
-        joinedIcon[joinedPlayers.Count - 1].SetActive(true);
-        promptIcon[joinedPlayers.Count - 1].SetActive(false);
+        if (playerInput.devices[0].name != "Keyboard" && playerInput.devices[0].name != "Mouse")
+        {
+            //Gamepad icon shown
+            joinedIconGamepad[game.iPlayercount].SetActive(true);
+        }
+        else
+        {
+            joinedIconKeyboard[game.iPlayercount].SetActive(true);
+        }
 
-        if (joinedPlayers.Count == 1)
+        promptIcon[game.iPlayercount].SetActive(false);
+
+        game.LocalPlayerInputs[game.iPlayercount] = playerInput;
+        game.iPlayercount++;
+
+        if (game.iPlayercount == 1)
         {
             CheckIfCanStart();
         }
     }
 
-    public void StoringPlayerCount()
-    {
-        game.iPlayercount = inputManager.playerCount;
-    }
-
     //When the back button is presseed, have to remove the currently stored players
     public void RemoveCharacters()
     {
-        //Destroying all the joined players
-        for (int i = 1; i < joinedPlayers.Count; ++i)
+        //Going through and resetting the icons
+        for (int i = 0; i < promptIcon.Length; ++i)
         {
-            Destroy(joinedPlayers[i]);           
-        }
+            if (joinedIconKeyboard[i] && joinedIconGamepad[i] && promptIcon[i])
+            {
+                joinedIconKeyboard[i].SetActive(false);
+                joinedIconGamepad[i].SetActive(false);
 
-        //Clearing the list
-        joinedPlayers.Clear();
+                promptIcon[i].SetActive(true);
+            }
+        }
 
         game.ClearPlayers();
     }

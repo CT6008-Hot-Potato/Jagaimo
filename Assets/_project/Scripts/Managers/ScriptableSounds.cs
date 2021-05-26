@@ -16,13 +16,19 @@ public class ScriptableSounds : ScriptableObject
         None,
         ButtonPress,
         Explosion,
+
         PowerUp,
         MenuMusic,
         Grabbing,
+
         Throwing,
         Sliding,
         Crouching,
-        Jumping
+
+        Jumping,
+        Jagaimo,
+        Confetti,
+        PlayerJoin
     };
 
     [Serializable]    public class SoundIdentity 

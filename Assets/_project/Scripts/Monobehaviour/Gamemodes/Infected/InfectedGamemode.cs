@@ -22,8 +22,12 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     //These 3 functions will be the same on every gamemode I think
     void IGamemode.SetActivePlayers(CharacterManager[] charArray) => SettingActivePlayers(charArray);
+    CharacterManager[] IGamemode.GetActivePlayers() => GetActivePlayers();
     void IGamemode.AddActivePlayer(CharacterManager charToAdd) => AddActivePlayer(charToAdd);
     void IGamemode.RemoveActivePlayer(CharacterManager charToRemove) => RemoveActivePlayer(charToRemove);
+
+    void IGamemode.LockActivePlayers() => LockAllPlayers();
+    void IGamemode.UnLockActivePlayers() => UnlockAllPlayers();
 
     //This gamemode is infected: when people are tagged, they join the tagged team, until the timer runs out or everyone is tagged
     void IGamemode.RoundStarted() => RoundStarting();
@@ -60,6 +64,9 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //Knowing whether the infected won or not
     private bool infectedWon = false;
 
+    [SerializeField]
+    private GameObject potatoPrefab;
+
     #endregion
 
     #region Unity Methods
@@ -72,6 +79,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         winScreenManager = winScreenManager ?? WinScreenManager.instance;
 
         settings = GameSettingsContainer.instance;
+        potatoPrefab = roundManager.potatoPrefab;
     }
 
     #endregion
@@ -85,12 +93,18 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
-        }        
+            PutSpecificCharacterInPosition(i);
+            charArray[i].LockPlayer();
+        }
 
         if (Debug.isDebugBuild)
         {
             Debug.Log("Active players set, Amount of Active players: " + currentActivePlayers.Count, this);
         }
+    }
+    private CharacterManager[] GetActivePlayers()
+    {
+        return currentActivePlayers.ToArray();
     }
 
     //Someone joins the game
@@ -105,9 +119,40 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         currentActivePlayers.Remove(characterLeft);
     }
 
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void LockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].LockPlayer();
+            }
+        }
+    }
+
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void UnlockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].UnLockPlayer();
+            }
+        }
+    }
+
     //This runs when the round is about to start/ during the initial timer
     private void RoundStarting()
     {
+
         //Make sure everything is in order... small cooldown before countdown to get everything
 
         activeSurvivors = currentActivePlayers;
@@ -124,8 +169,9 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
-        //Choosing a random person(s) to be infected
+        UnlockAllPlayers();
 
+        //Choosing a random person(s) to be infected
         //If there are settings
         if (settings)
         {
@@ -196,6 +242,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
         //TODO: Make 2 types of tagged "Forceably" (which multiplies the potatoes in the game) and "Softly" (which retains the potato it was tagged by)
         //TODO NOTE: This might be on the tagged tracker? and this gamemode will switch the one used
+        Instantiate(potatoPrefab);
 
         //Since someone is tagged, the infected could have won
         if (ThisWinCondition())
@@ -256,6 +303,17 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         }
 
         enabled = false;
+    }
+
+    private void PutSpecificCharacterInPosition(int index)
+    {
+        Transform spot = arenaManager.GettingSpot(0, index);
+        currentActivePlayers[index].gameObject.transform.position = spot.position;
+
+        //This is the "solution" to not being able to turn the player based on the prefab object
+        PlayerCamera camera = currentActivePlayers[index].GetComponent<PlayerCamera>();
+        camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
+        camera.flipSpin = !camera.flipSpin;
     }
 
     private void PutCharactersInStartPositions()

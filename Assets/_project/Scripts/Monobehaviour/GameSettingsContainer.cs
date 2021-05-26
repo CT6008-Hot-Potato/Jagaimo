@@ -31,7 +31,19 @@ public class GameSettingsContainer : MonoBehaviour
     //Resetting these variables
     public void ClearPlayers()
     {
+        //Resetting the player count
         iPlayercount = 0;
+
+        //going through the objects and destroying them
+        foreach (PlayerInput input in LocalPlayerInputs)
+        {
+            if (input)
+            {
+                Destroy(input.gameObject);
+            }
+        }
+
+        //Resetting the array
         LocalPlayerInputs = new PlayerInput[4];
     }
 
