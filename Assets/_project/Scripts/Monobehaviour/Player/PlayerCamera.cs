@@ -190,8 +190,6 @@ public class PlayerCamera : MonoBehaviour {
     //Camera type function which is responsible for managing the rotation and type of camera which the player utilises
     void CameraType() {
 
-        Debug.Log(cameraState);
-
         //If movement is not interaction and the camera rotational lock is also false
         if (pC.GetMovement() != 0 && cameraRotationLock == false) {
             //Switch statement for the various camera states for the hybrid player systems cameras

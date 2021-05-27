@@ -38807,18 +38807,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerAi
       objectReference: {fileID: 0}
-    - target: {fileID: 5718152101176211296, guid: 781adf823c83fa546aef4dbefe581fe2,
-        type: 3}
-      propertyPath: m_ObstacleAvoidanceType
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7861402103743962898, guid: 781adf823c83fa546aef4dbefe581fe2,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: eedd516a845d30e4091eb417f7ccfe43, type: 2}
-    m_RemovedComponents:
-    - {fileID: 4394244838949972467, guid: 781adf823c83fa546aef4dbefe581fe2, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 781adf823c83fa546aef4dbefe581fe2, type: 3}
 --- !u!1001 &1540578872
 PrefabInstance:

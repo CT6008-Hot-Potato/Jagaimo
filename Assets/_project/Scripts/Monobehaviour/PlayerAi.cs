@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PlayerAi : MonoBehaviour {
+public class PlayerAi : MonoBehaviour, IInteractable {
 
     //Variables
     #region Variables
@@ -21,10 +21,8 @@ public class PlayerAi : MonoBehaviour {
     public state aiState;
     private GameObject[] waypointNodes;
     private int node = 0;
-    public bool tagged;
     private bool blueTeam;
     private GameObject potato;
-    private GameObject currentlyTaggedPlayer;
     private SoundManager soundManager;
     private PlayerAnimation playerAnimation;
     [SerializeField]
@@ -56,21 +54,21 @@ public class PlayerAi : MonoBehaviour {
         }
     }
 
-    public void SetupFootball(Transform goalPosition,bool isBlueTeam)
-    {
-        waypointNodes[0] = goalPosition.gameObject;
-        blueTeam = isBlueTeam;
-    }
-
     // Update is called once per frame
     void Update() {
         switch (aiState) {
             case state.WANDERING:
-                playerAnimation.CheckToChangeState("Walking");
+                playerAnimation.CheckToChangeState("JogForward");
                 if (Vector3.Distance(transform.position, waypointNodes[node].transform.position) < 2)
                 {
                     NavigationOrder();
                     agent.SetDestination(waypointNodes[node].transform.position);
+                }
+
+                if (Vector3.Distance(transform.position, waypointNodes[node].transform.position) < 15)
+                {
+                    agent.speed = agent.speed * 2;
+                    aiState = state.FLEEING;
                 }
                 break;
             case state.FLEEING:
@@ -83,6 +81,7 @@ public class PlayerAi : MonoBehaviour {
                 }
                 else
                 {
+                    agent.speed = agent.speed * 0.5f;
                     aiState = state.WANDERING;
                 }
                 break;
@@ -90,27 +89,6 @@ public class PlayerAi : MonoBehaviour {
                 agent.SetDestination(transform.position);
                 particles.CreateParticle(ScriptableParticles.Particle.BloodBurst, transform.position);
                 break;
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision) {
-
-        if (collision.gameObject == potato) {
-            particles.CreateParticle(ScriptableParticles.Particle.GoalExplosion, transform.position);
-            waypointNodes = GameObject.FindGameObjectsWithTag("Player");
-             tagged = true;
-             currentlyTaggedPlayer = gameObject;
-             aiState = state.DEAD;
-             potato.GetComponent<Rigidbody>().isKinematic = true;
-        }
-
-       
-    }
-
-    private void OnTriggerEnter(Collider other) {
-
-        if (other.gameObject == potato) {
-            aiState = state.FLEEING;
         }
     }
 
@@ -139,5 +117,12 @@ public class PlayerAi : MonoBehaviour {
                 node = (int)Random.Range(0, waypointNodes.Length - 1);
                 break;
         }
+    }
+
+    public void Interact() {
+        particles.CreateParticle(ScriptableParticles.Particle.GoalExplosion, transform.position);
+        waypointNodes = GameObject.FindGameObjectsWithTag("Player");
+        soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
+        aiState = state.DEAD;        
     }
 }

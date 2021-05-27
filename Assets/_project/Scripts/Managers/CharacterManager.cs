@@ -235,7 +235,13 @@ public class CharacterManager : MonoBehaviour
 
     //Functions to change the player when they're tagged or untagged
     public void ThisPlayerTagged()
-    {
+    {   
+        if (!isPlayer)
+        {
+            PlayerAi AI = GetComponent<PlayerAi>();
+            AI.Interact();
+        }
+
         //Animation for regaining potato
         if (_playerAnimation)
         {
