@@ -61,6 +61,12 @@ public class CharacterManager : MonoBehaviour
     private ScriptableParticles.Particle elimVFX = ScriptableParticles.Particle.BloodBurst;
     [SerializeField]
     private ScriptableParticles.Particle confettiElimVFX = ScriptableParticles.Particle.ConfettiBurst;
+
+    [SerializeField]
+    private ScriptableSounds.Sounds Bloodboom, Confettiboom;
+
+
+
     //Where the particles are played from when the player is eliminated
     [SerializeField]
     private Transform headTransform;
@@ -150,6 +156,8 @@ public class CharacterManager : MonoBehaviour
                 //bUsingConfettiVFX = true;
                 //Not sure if this works tbh (test this)
                 elimVFX = confettiElimVFX;
+
+                Bloodboom = Confettiboom;
             }
         }
     }
@@ -179,7 +187,7 @@ public class CharacterManager : MonoBehaviour
         //Play Sound
         if (soundManager)
         {
-            //soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
+            soundManager.PlaySound(Bloodboom);
         }
 
         //Making sure the elimination icon is showing
