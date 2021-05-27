@@ -12,6 +12,7 @@ using UnityEngine;
 //A trigger placed below the test world
 public class WorldBounds : MonoBehaviour
 {
+    //The specified position moving by Charlie Bullock
     [SerializeField]
     private Vector3 position;
 

@@ -112,7 +112,6 @@ public class PlayerController : MonoBehaviour
         if (dir.y >= 0.9f) {
             //If collision of this gameobject is the carry position whan touching the ground drop it
             if (collision.gameObject.name == "CarryPosition") {
-                Debug.Log("Hmmmmmm");
                 GetComponent<PlayerInteraction>().Drop(true);
             }
 

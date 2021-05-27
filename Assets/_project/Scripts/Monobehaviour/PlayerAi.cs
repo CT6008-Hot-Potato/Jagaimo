@@ -10,38 +10,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PlayerAi : MonoBehaviour {
+public class PlayerAi : MonoBehaviour, IInteractable {
 
     //Variables
     #region Variables
     private NavMeshAgent agent;
-    private RoundManager roundManager;
-    public enum gamemode {CLASSIC,INFECTED,FOOTBALL,SABOTAGE};
-    public enum state {WANDERING, SEEKING, CHASING,FIXING,ESCAPING,SCORING,DEFENDING};
+    public enum state {WANDERING, FLEEING, DEAD};
     private enum waypointOrdering { FORWARD, REVERSE, RANDOM }
     private waypointOrdering typeOfOrder;
-    public gamemode mode;
     public state aiState;
     private GameObject[] waypointNodes;
     private int node = 0;
-    public bool tagged;
     private bool blueTeam;
     private GameObject potato;
-    private GameObject currentlyTaggedPlayer;
     private SoundManager soundManager;
     private PlayerAnimation playerAnimation;
-    private FootballObjectContainer footballObject;
+    [SerializeField]
+    private ScriptableParticles particles;
+    private CharacterManager characterManager;
     #endregion Variables
 
     //Assign various variables in the start function for this player ai
     void Start() {
         agent = GetComponent<NavMeshAgent>();
         typeOfOrder = (waypointOrdering)Random.Range(0, 2);
-        roundManager = RoundManager.roundManager;
         potato = GameObject.FindGameObjectWithTag("Potato");
         soundManager = FindObjectOfType<SoundManager>();
         playerAnimation = GetComponent<PlayerAnimation>();
-        mode = gamemode.CLASSIC;
+        characterManager = GetComponent<CharacterManager>();
+        characterManager.isPlayer = true;
         aiState = state.WANDERING; 
         GetWaypoints();
         NavigationOrder();
@@ -50,135 +47,48 @@ public class PlayerAi : MonoBehaviour {
 
     //Function for getting waypoints
     private void GetWaypoints() {
-        switch (mode)
-        {
-            case gamemode.CLASSIC:
-                waypointNodes = GameObject.FindGameObjectsWithTag("Node");
-                break;
-            case gamemode.INFECTED:
-                waypointNodes = GameObject.FindGameObjectsWithTag("Node");
-                break;
-            case gamemode.FOOTBALL:
-                footballObject = FootballObjectContainer.footballObjectContainer;
-                break;
-            case gamemode.SABOTAGE:
-                waypointNodes = GameObject.FindGameObjectsWithTag("SabotageNode");
-                break;
-        }
+        waypointNodes = GameObject.FindGameObjectsWithTag("Node");
         if (waypointNodes[0] == null)
         {
             Debug.Log("Nodes empty");
         }
     }
 
-    public void SetupFootball(Transform goalPosition,bool isBlueTeam)
-    {
-        waypointNodes[0] = goalPosition.gameObject;
-        blueTeam = isBlueTeam;
-    }
-
     // Update is called once per frame
     void Update() {
+        switch (aiState) {
+            case state.WANDERING:
+                playerAnimation.CheckToChangeState("JogForward");
+                if (Vector3.Distance(transform.position, waypointNodes[node].transform.position) < 2)
+                {
+                    NavigationOrder();
+                    agent.SetDestination(waypointNodes[node].transform.position);
+                }
 
-        switch (mode) {
-            case gamemode.CLASSIC:
-                switch (aiState) {
-                    case state.WANDERING:
-                        if (Vector3.Distance(transform.position,waypointNodes[node].transform.position) < 2)
-                        {
-                            NavigationOrder();
-                            agent.SetDestination(waypointNodes[node].transform.position);
-                        }
-                        break;
-                    case state.SEEKING:
-                        break;
-                    case state.CHASING:
-                        break;
-                    case state.ESCAPING:
-                        break;
+                if (Vector3.Distance(transform.position, waypointNodes[node].transform.position) < 15)
+                {
+                    agent.speed = agent.speed * 2;
+                    aiState = state.FLEEING;
                 }
                 break;
-            case gamemode.INFECTED:
-                switch (aiState) {
-                    case state.WANDERING:
-                        break;
-                    case state.SEEKING:
-                        break;
-                    case state.CHASING:
-                        break;
-                    case state.FIXING:
-                        break;
-                    case state.ESCAPING:
-                        break;
+            case state.FLEEING:
+                playerAnimation.CheckToChangeState("Running");
+                if (Vector3.Distance(transform.position, waypointNodes[node].transform.position) < 33)
+                {
+                    Vector3 directionToPlayer = transform.position - potato.transform.position;
+                    Vector3 newPosition = transform.position + directionToPlayer;
+                    agent.SetDestination(newPosition);
+                }
+                else
+                {
+                    agent.speed = agent.speed * 0.5f;
+                    aiState = state.WANDERING;
                 }
                 break;
-            case gamemode.FOOTBALL:
-                if (aiState == state.SCORING) {
-
-                }
-                else if (aiState == state.SCORING) {
-
-                }
+            case state.DEAD:
+                agent.SetDestination(transform.position);
+                particles.CreateParticle(ScriptableParticles.Particle.BloodBurst, transform.position);
                 break;
-            case gamemode.SABOTAGE:
-                switch (aiState) {
-                    case state.SEEKING:
-                        break;
-                    case state.CHASING:
-                        break;
-                    case state.FIXING:
-                        break;
-                    case state.ESCAPING:
-                        break;
-                }
-                break;
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision) {
-        if (!tagged && collision.transform.tag == "Potato") {
-            tagged = true;
-            currentlyTaggedPlayer = gameObject;
-        }
-    }
-
-    private void OnTriggerEnter(Collider other) {
-        if (tagged) {
-            switch (mode) {
-                case gamemode.CLASSIC:
-                    break;
-                case gamemode.INFECTED:
-                    break;
-                case gamemode.FOOTBALL:
-                    break;
-                case gamemode.SABOTAGE:
-                    break;
-            }
-        }
-        else {
-            switch (mode) {
-                case gamemode.CLASSIC:
-                    break;
-                case gamemode.INFECTED:
-                    break;
-                case gamemode.FOOTBALL:
-                    break;
-                case gamemode.SABOTAGE:
-                    break;
-            }
-        }
-    }
-
-    //This function causes a short times delay for the gap between ranged attacking and waiting to ranged attack
-    IEnumerator RangedAttackWait(GameObject target) {
-        //gameObject.transform.LookAt
-        yield return new WaitForSeconds(0.25f);
-
-        potato.GetComponent<Rigidbody>().AddForce((gameObject.transform.forward * 1500) * Time.deltaTime, ForceMode.Impulse);
-        SoundManager soundManager = GameObject.FindObjectOfType<SoundManager>();
-
-        if (soundManager != null) {
-            soundManager.PlaySound(ScriptableSounds.Sounds.Throwing);
         }
     }
 
@@ -192,6 +102,7 @@ public class PlayerAi : MonoBehaviour {
                 if (node >= waypointNodes.Length)
                 {
                     node = 0;
+                    typeOfOrder = waypointOrdering.REVERSE;
                 }
                 break;
             case waypointOrdering.REVERSE:
@@ -199,11 +110,19 @@ public class PlayerAi : MonoBehaviour {
                 if (node < 0)
                 {
                     node = waypointNodes.Length - 1;
+                    typeOfOrder = waypointOrdering.RANDOM;
                 }
                 break;
             case waypointOrdering.RANDOM:
                 node = (int)Random.Range(0, waypointNodes.Length - 1);
                 break;
         }
+    }
+
+    public void Interact() {
+        particles.CreateParticle(ScriptableParticles.Particle.GoalExplosion, transform.position);
+        waypointNodes = GameObject.FindGameObjectsWithTag("Player");
+        soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
+        aiState = state.DEAD;        
     }
 }
