@@ -116,7 +116,7 @@ public class MenuManager : MonoBehaviour
     {
         if (PopUpObject.instance != null)
         {
-             PopUpObject.instance.toolObject.SetActive(false);
+//             PopUpObject.instance.toolObject.SetActive(false);
         }
 
 
