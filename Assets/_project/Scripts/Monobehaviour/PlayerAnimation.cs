@@ -1,9 +1,15 @@
-﻿using System.Collections;
+﻿/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///PlayerAnimation.cs
+///Developed by Charlie Bullock
+///This class is rotates an object constantly at a set speed.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//This class is using:
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimation : MonoBehaviour
-{
+public class PlayerAnimation : MonoBehaviour {
     //CarryingWalking
     //CarryingRunning
     //CrouchedWalking
@@ -24,6 +30,7 @@ public class PlayerAnimation : MonoBehaviour
     //Throw
     //Grab
 
+    //Variables
     [SerializeField]
     private Animation animation;
     [SerializeField]
@@ -31,35 +38,37 @@ public class PlayerAnimation : MonoBehaviour
     private bool animationLock = false;
     private Timer timer;
 
-    private void Start()
-    {
+    //Start animation at idle by default
+    private void Start() {
         animation.Play("Idle");
         animation.Play("Idle");
     }
 
-    public bool CheckToChangeState(string animationState)
-    {
-        if (animation.name == animationState)
-        {
+    //Function to check to change the animation state for a player
+    public bool CheckToChangeState(string animationState) {
+        //If animation already playing return false
+        if (animation.name == animationState) {
             return false;
         }
-        else if (!animationLock)
-        {
+        //Else if animation is not locked crossfade play the animation for the arms and body respectively
+        else if (!animationLock) {
             animation.CrossFade(animationState);
             animationArms.CrossFade(animationState);
             return true;
         }
+
+        //Return false if neither
         return false;
     }
 
-    public bool CheckToChangeState(string animationState, bool lockAnimation)
-    {
-        if (animation.name == animationState)
-        {
+    //Overload of above function which allows for the locking of an animation going to be played
+    public bool CheckToChangeState(string animationState, bool lockAnimation) {
+        //If animation already playing return false
+        if (animation.name == animationState) {
             return false;
         }
-        else
-        {
+        //Else play that animation and lock it if true
+        else {
             animationLock = lockAnimation;
             animation.CrossFade(animationState);
             animationArms.CrossFade(animationState);
@@ -69,12 +78,10 @@ public class PlayerAnimation : MonoBehaviour
     }
 
     //This coroutine is called to wait for specific animations to play
-    private IEnumerator Co_AnimationTime(float time)
-    {
+    private IEnumerator Co_AnimationTime(float time) {
         timer = new Timer(time);
         //Push up while timer active
-        while (timer.isActive)
-        {
+        while (timer.isActive) {
             timer.Tick(Time.deltaTime);
             yield return null;
         }

@@ -61,6 +61,12 @@ public class CharacterManager : MonoBehaviour
     private ScriptableParticles.Particle elimVFX = ScriptableParticles.Particle.BloodBurst;
     [SerializeField]
     private ScriptableParticles.Particle confettiElimVFX = ScriptableParticles.Particle.ConfettiBurst;
+
+    [SerializeField]
+    private ScriptableSounds.Sounds Bloodboom, Confettiboom;
+
+
+
     //Where the particles are played from when the player is eliminated
     [SerializeField]
     private Transform headTransform;
@@ -150,6 +156,8 @@ public class CharacterManager : MonoBehaviour
                 //bUsingConfettiVFX = true;
                 //Not sure if this works tbh (test this)
                 elimVFX = confettiElimVFX;
+
+                Bloodboom = Confettiboom;
             }
         }
     }
@@ -179,7 +187,7 @@ public class CharacterManager : MonoBehaviour
         //Play Sound
         if (soundManager)
         {
-            //soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
+            soundManager.PlaySound(Bloodboom);
         }
 
         //Making sure the elimination icon is showing
@@ -219,7 +227,6 @@ public class CharacterManager : MonoBehaviour
     //Functions to change the player when they're tagged or untagged
     public void ThisPlayerTagged()
     {
-        
         //Animation for regaining potato
         if (_playerAnimation)
         {
@@ -238,7 +245,6 @@ public class CharacterManager : MonoBehaviour
         }
 
         StartCoroutine(Co_TaggedEffect(taggedAnimduration));
-
     }
 
     public void ThisPlayerUnTagged()
@@ -284,8 +290,6 @@ public class CharacterManager : MonoBehaviour
 
         isPlayerLocked = true;
 
-        _rb.isKinematic = true;
-
         //Stop movement in the movement script, dont disable or deactive player input (they couldn't pause then)
         _movement.SetMovement(3);
 
@@ -306,8 +310,6 @@ public class CharacterManager : MonoBehaviour
         }
 
         isPlayerLocked = false;
-
-        _rb.isKinematic = false;
 
         //Start player movement
         _movement.SetMovement(2);

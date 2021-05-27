@@ -28,7 +28,22 @@ public class ScriptableSounds : ScriptableObject
         Jumping,
         Jagaimo,
         Confetti,
-        PlayerJoin
+        PlayerJoin,
+
+        SabotageEscape,
+        GeneratorBreak,
+        GeneratorFix,
+        FootballGoal,
+        Infected,
+
+        Landing,
+
+        Scroll,
+        Tick,
+        Bounce
+
+
+
     };
 
     [Serializable]    public class SoundIdentity 

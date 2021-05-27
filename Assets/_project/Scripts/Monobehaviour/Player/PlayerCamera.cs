@@ -3,13 +3,14 @@
 ///Developed by Charlie Bullock
 ///This class is responsible for first/third person camera of the player.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//This class is using:
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerCamera : MonoBehaviour
-{
+public class PlayerCamera : MonoBehaviour {
     //Variables
     #region Variables
     [SerializeField]
@@ -110,23 +111,22 @@ public class PlayerCamera : MonoBehaviour
     #endregion Enums
     
     //This method sets the camera view
-    public void SetCameraView(bool firstPerson)
-    {
-        if (firstPerson)
-        {
+    public void SetCameraView(bool firstPerson) {
+        //Set to first person
+        if (firstPerson) {
             cameraState = cS.FIRSTPERSON;
             crosshair.SetActive(true);
         }
-        else
-        {
+        //Set to third person
+        else {
             cameraState = cS.THIRDPERSON;
             crosshair.SetActive(false);
         }
     }
 
     // Assigning audio listeners, setting correct camera state and making sure queriesHitBackfaces is true for raycasting later
-    void Start()
-    {
+    void Start() {
+        //Get skinned mesh renderers, local screen partitioning, collider and player controller components
         characterArmsSkinnedMesh = characterArms.GetComponent<SkinnedMeshRenderer>();
         characterSkinnedMesh = character.GetComponent<SkinnedMeshRenderer>();
         cM = GetComponent<LocalMPScreenPartioning>();
@@ -136,14 +136,12 @@ public class PlayerCamera : MonoBehaviour
         pC = GetComponent<PlayerController>();
 
         //Set to first person
-        if (cameraState != cS.FIRSTPERSON)
-        {
+        if (cameraState != cS.FIRSTPERSON) {
             thirdPersonCamera.enabled = true;
             firstPersonCamera.enabled = false;
         }
         //Set to third person
-        else
-        {
+        else {
             thirdPersonCamera.enabled = false;
             firstPersonCamera.enabled = true;
         }
@@ -152,15 +150,18 @@ public class PlayerCamera : MonoBehaviour
     }
 
     //Function for setting the correct player mask up
-    public void SetPlayerMask()
-    { 
+    public void SetPlayerMask() { 
+        //Set correct character 
         character.layer = 9 + playerIndex;
         characterArms.layer = 13 + playerIndex;
-        if (!characterSkinnedMesh || !characterArmsSkinnedMesh)
-        {
+
+        //Set skinned mesh renderer correctly
+        if (!characterSkinnedMesh || !characterArmsSkinnedMesh) {
             characterArmsSkinnedMesh = characterArms.GetComponent<SkinnedMeshRenderer>();
             characterSkinnedMesh = character.GetComponent<SkinnedMeshRenderer>();
         }
+
+        //Set correct shared mesh and culling masks dependent on the player index plus nessecary value offsets
         characterSkinnedMesh.sharedMesh = characterMesh[playerIndex];
         characterArmsSkinnedMesh.material = characterSkinnedMesh.material = materials[playerIndex];
         firstPersonCamera.cullingMask = mask[playerIndex + 4];
@@ -169,47 +170,43 @@ public class PlayerCamera : MonoBehaviour
 
 
     //Update function calles camera type function constantly
-    void Update()
-    {
+    void Update() {
         //Function for aspects of the player movement to if the camera is in third or first person mode
         CameraType();
     }
 
     //Function to set yaw valye
-    public void ChangeYaw(float timeMultiplier)
-    {
-        if (flipSpin)
-        {
+    public void ChangeYaw(float timeMultiplier) {
+        //If true flip spin in this direction
+        if (flipSpin) {
             yaw = yaw - Time.deltaTime * timeMultiplier;
         }
-        else
-        {
+        //Else flip spin rotate in the alternate direction
+        else {
             yaw = yaw + Time.deltaTime * timeMultiplier;
         }
     }
 
     //Camera type function which is responsible for managing the rotation and type of camera which the player utilises
-    void CameraType()
-    {        
+    void CameraType() {        
 
-        if (pC.GetMovement() != 0 && cameraRotationLock == false)
-        {
-            switch (cameraState)
-            {
+        //If movement is not interaction and the camera rotational lock is also false
+        if (pC.GetMovement() != 0 && cameraRotationLock == false) {
+            //Switch statement for the various camera states for the hybrid player systems cameras
+            switch (cameraState) {
                 //First person camera
                 case cS.FIRSTPERSON:
                     //Check if wrong camera enabled and if so setup correct camera
-                    if (thirdPersonCamera.enabled)
-                    {
+                    if (thirdPersonCamera.enabled) {
                         crosshair.SetActive(true);
                         thirdPersonCamera.enabled = false;
                         firstPersonCamera.enabled = true;
                     }
-                    else
-                    {
+                    else {
+                        //Set the rotation position for the y axis based on first person camera y rotational value
                         rotationPosition.rotation = UnityEngine.Quaternion.Euler(0, firstPersonCamera.transform.localRotation.eulerAngles.y, 0);
-                        if (zoomValue < 0f)
-                        {
+
+                        if (zoomValue < 0f) {
                             //Make sure that player not crouching      
                             collider.center = new Vector3(0, 0, 0);
                             collider.height = 2f;
@@ -218,14 +215,13 @@ public class PlayerCamera : MonoBehaviour
                             ray = firstPersonCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
                             ray.direction *= -1;
                             Physics.Raycast(ray, out hit, 3);
+
                             //If an obstacle is found then zoom in
-                            if (hit.transform == null)
-                            {
+                            if (hit.transform == null) {
                                 zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomOutPosition.position, 90 * Time.deltaTime);
                                 cameraState = cS.THIRDPERSON;
                             }
-                            else
-                            {
+                            else {
                                 zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, hit.point, 90 * Time.deltaTime);
                             }
                         }
@@ -235,17 +231,14 @@ public class PlayerCamera : MonoBehaviour
                 //Third person camera
                 case cS.THIRDPERSON:
                     //Check if wrong camera enabled and if so setup correct camera
-                    if (firstPersonCamera.enabled)
-                    {
+                    if (firstPersonCamera.enabled) {
                         EnableThirdPerson();
                     }
-                    else
-                    {
+                    else {
                         rotationPosition.rotation = UnityEngine.Quaternion.Euler(0, firstPersonCamera.transform.localRotation.eulerAngles.y, 0);
                         DoOnEitherThirdPersonMode();
                         //Begins freecam movement
-                        if (cameraRotateValue > 0.1f)
-                        {
+                        if (cameraRotateValue > 0.1f) {
                             cameraState = cS.FREECAMCONSTRAINED;
                         }
                     }
@@ -253,26 +246,31 @@ public class PlayerCamera : MonoBehaviour
                 //Free camera constrainged
                 case cS.FREECAMCONSTRAINED:
                     //Check if wrong camera enabled and if so setup correct camera
-                    if (firstPersonCamera.enabled)
-                    {
+                    if (firstPersonCamera.enabled) {
                         EnableThirdPerson();
                     }
-                    else
-                    {
+                    else {
                         //Drop a picked up object if currently being held when in this state
                         if (GetComponent<PlayerInteraction>() && GetComponent<PlayerInteraction>().enabled)
                             GetComponent<PlayerInteraction>().Drop(false);
                         DoOnEitherThirdPersonMode();
-                        if (cameraRotateValue <= 0.1f)
-                        {
+
+                        if (cameraRotateValue <= 0.1f) {
                             cameraState = cS.THIRDPERSON;
                         }
-                        else if (cameraMovementValue != Vector3.zero)
-                        {
+                        //Else the if the camera movement value is not zero then add the correct components for the freecam unconstrained mode
+                        else if (cameraMovementValue != Vector3.zero) {
                             thirdPersonCamera.gameObject.AddComponent<SphereCollider>().radius = 0.25f;
                             freecamRotation = thirdPersonCamera.transform.rotation.eulerAngles;
                             cameraState = cS.FREECAMUNCONSTRAINED;
-                            thirdPersonCamera.gameObject.AddComponent<Rigidbody>().useGravity = false;
+                            if (thirdPersonCamera.gameObject.GetComponent<Rigidbody>() == null)
+                            {
+                                thirdPersonCamera.gameObject.AddComponent<Rigidbody>().useGravity = false;
+                            }
+                            else
+                            {
+                                thirdPersonCamera.gameObject.GetComponent<Rigidbody>().useGravity = true;
+                            }
                             thirdPersonCamera.gameObject.AddComponent<CameraCollision>();
                         }
                     }
@@ -280,12 +278,10 @@ public class PlayerCamera : MonoBehaviour
                 //Free camera unconstrained
                 case cS.FREECAMUNCONSTRAINED:
                     //If freecam button lifted up and freecam is not locked go back to third person
-                    if (thirdPersonCamera.gameObject.TryGetComponent(out Rigidbody rigidbody))
-                    {
-                        if (cameraRotateValue <= 0.1f && !freecamLock)
-                        {
-                            //If there is a rigidbody attached to the camera destroy it and destroy sphere collider
+                    if (thirdPersonCamera.gameObject.TryGetComponent(out Rigidbody rigidbody)) {
 
+                        if (cameraRotateValue <= 0.1f && !freecamLock) {
+                            //Destroy the rigidbody, sphere collision and camera collision class
                             Destroy(rigidbody.GetComponent<SphereCollider>());
                             Destroy(rigidbody.GetComponent<CameraCollision>());
                             Destroy(rigidbody);
@@ -293,14 +289,12 @@ public class PlayerCamera : MonoBehaviour
                             cameraState = cS.THIRDPERSON;
                         }   
                         //Else if beyond 200 metres from centre of map add rigidbody & collider
-                        else if (Vector3.Distance(thirdPersonCamera.transform.position,Vector3.zero) > 200)
-                        {
+                        else if (Vector3.Distance(thirdPersonCamera.transform.position,Vector3.zero) > 200) {
                             rigidbody.useGravity = true;
                             rigidbody.mass = 10000;
                         }
                         //Remove it and sphere collider when within 150 metres of the centre of map
-                        if (Vector3.Distance(thirdPersonCamera.transform.position, Vector3.zero) < 150)
-                        {
+                        if (Vector3.Distance(thirdPersonCamera.transform.position, Vector3.zero) < 150) {
 
                             rigidbody.useGravity = false;
                         }
@@ -312,86 +306,83 @@ public class PlayerCamera : MonoBehaviour
             }
 
             //Goes to first person mode and unlocks cursor when unlock pressed
-            if (escapeValue > 0.1f)
-            {
+            if (escapeValue > 0.1f) {
                 pC.SetMovement(0);
-                UnityEngine.Cursor.lockState = CursorLockMode.None;                
-                
+                UnityEngine.Cursor.lockState = CursorLockMode.None;                               
             }
-            else if (UnityEngine.Cursor.lockState == CursorLockMode.None)
-            {
+            else if (UnityEngine.Cursor.lockState == CursorLockMode.None) {
                 UnityEngine.Cursor.lockState = CursorLockMode.Locked;
             }
 
             //X & Y axis camera can be either inverted or not
-            switch (mouseInversion)
-            {
+            switch (mouseInversion) {
                 //InvertX
                 case mI.INVERTX:
-                    if (useControllerSensitivity)
-                    {
+                    //If using controller apply controller sensitivity otherwise mouse camera sensitivity
+                    if (useControllerSensitivity) {
                         yaw += controllerCameraSensitivityMultiplier * cameraValue.x;
                         pitch += controllerCameraSensitivityMultiplier * cameraValue.y;
                     }
-                    else
-                    {
+                    else {
                         yaw += cameraSensitivity * cameraValue.x;
                         pitch += cameraSensitivity * cameraValue.y;
                     }
+
+                    //Clamp the camera pitch into it's respective limits
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //InvertY
                 case mI.INVERTY:
-                    if (useControllerSensitivity)
-                    {
+                    //If using controller apply controller sensitivity otherwise mouse camera sensitivity
+                    if (useControllerSensitivity) {
                         yaw -= controllerCameraSensitivityMultiplier * cameraValue.x;
                         pitch -= controllerCameraSensitivityMultiplier * cameraValue.y;
                     }
-                    else
-                    {
+                    else {
                         yaw -= cameraSensitivity * cameraValue.x;
                         pitch -= cameraSensitivity * cameraValue.y;
                     }
+
+                    //Clamp the camera pitch into it's respective limits
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //Both
                 case mI.INVERTBOTH:
-                    if (useControllerSensitivity)
-                    {
+                    //If using controller apply controller sensitivity otherwise mouse camera sensitivity
+                    if (useControllerSensitivity) {
                         yaw -= controllerCameraSensitivityMultiplier * cameraValue.x;
                         pitch += controllerCameraSensitivityMultiplier * cameraValue.y;
                     }
-                    else
-                    {
+                    else {
                         yaw -= cameraSensitivity * cameraValue.x;
                         pitch += cameraSensitivity * cameraValue.y;
                     }
+
+                    //Clamp the camera pitch into it's respective limits
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //None
                 case mI.INVERTNONE:
-
-                    if (useControllerSensitivity)
-                    {
+                    //If using controller apply controller sensitivity otherwise mouse camera sensitivity
+                    if (useControllerSensitivity) {
                         yaw += controllerCameraSensitivityMultiplier * cameraValue.x;
                         pitch -= controllerCameraSensitivityMultiplier * cameraValue.y;
                     }
-                    else
-                    {
+                    else {
                         yaw += cameraSensitivity * cameraValue.x;
                         pitch -= cameraSensitivity * cameraValue.y;
                     }
+
+                    //Clamp the camera pitch into it's respective limits
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
             }
 
             //If camera is not freecamunconstrained then move first person camera else move third person camera
-            if (cameraState != cS.FREECAMUNCONSTRAINED)
-            {
+            if (cameraState != cS.FREECAMUNCONSTRAINED) {
                 firstPersonCamera.transform.eulerAngles = new UnityEngine.Vector3(pitch, yaw, 0.0f);
             }
-            else
-            {
+            else {
                 thirdPersonCamera.transform.eulerAngles = new UnityEngine.Vector3(pitch, yaw, 0.0f);
             }
         }
@@ -399,21 +390,17 @@ public class PlayerCamera : MonoBehaviour
     }
 
     //Function called from player controller to move camera y value via jumping and crouching input action values
-    public void MoveFreeCamY(bool upward,float value)
-    {
+    public void MoveFreeCamY(bool upward,float value) {
         //Move up
-        if (upward)
-        {
+        if (upward) {
             freeCamValueY = value;
         }
         //Move down
-        else if (value != 0)
-        {
+        else if (value != 0) {
             freeCamValueY = -value;
         }
         //Set to 0
-        else
-        {
+        else {
             freeCamValueY = 0;
         }
         //Apply delta time and multiplay value
@@ -421,77 +408,70 @@ public class PlayerCamera : MonoBehaviour
     }
 
     //This function managed zooming and mesh clipping avoidance for the third person camera if it is 
-    void DoOnEitherThirdPersonMode()
-    {
+    void DoOnEitherThirdPersonMode() {
         //If an obstacle is found then zoom in
-        if (Physics.Linecast(firstPersonCamera.transform.position, zoomPosition.transform.position, out hit) && hit.collider.gameObject != gameObject && !hit.collider.isTrigger)
-        {
+        if (Physics.Linecast(firstPersonCamera.transform.position, zoomPosition.transform.position, out hit) && hit.collider.gameObject != gameObject && !hit.collider.isTrigger) {
+            //Move towards the zoom in position
             zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, cameraPushSpeed * Time.deltaTime);
-            if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < cameraTransferDistance)
-            {
+            
+            //If within transfer distance then go to third person mode
+            if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < cameraTransferDistance) {
                 cameraState = cS.FIRSTPERSON;
             }
         }
-        else
-        {
-            //Zoom in
-            if (zoomValue > 0f)
-            {
-                zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, cameraZoomSpeed);
-                if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < cameraTransferDistance)
-                {
+        else {
 
+            //Zoom in
+            if (zoomValue > 0f) {
+                //Zoom in towards the zoom in position
+                zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomInPosition.position, cameraZoomSpeed);
+
+                if (UnityEngine.Vector3.Distance(zoomPosition.position, zoomInPosition.position) < cameraTransferDistance) {
                     cameraState = cS.FIRSTPERSON;
                     transform.localRotation = Quaternion.Euler(0, thirdPersonCamera.transform.rotation.y, thirdPersonCamera.transform.rotation.z);
                 }
             }
             //Zoom out
-            else if (zoomValue < 0f)
-            {
-
+            else if (zoomValue < 0f) {
+                //Zoom out towards the zoom out position
                 zoomPosition.position = UnityEngine.Vector3.MoveTowards(zoomPosition.position, zoomOutPosition.position, cameraZoomSpeed);
             }
+
             //Added this so that it smooth lerps to a new zoom posiiton rather than imitadly set cam pos. this also fixes a cam issue when interacting 
             thirdPersonCamera.transform.position = Vector3.Lerp(thirdPersonCamera.transform.position, zoomPosition.position, otherCamSpeed * Time.deltaTime);
 
-            if (Vector3.Angle(thirdPersonCamera.transform.localEulerAngles, new Vector3(15, 0, 0)) > 0.1f)
-            {
+            //Correct the angle
+            if (Vector3.Angle(thirdPersonCamera.transform.localEulerAngles, new Vector3(15, 0, 0)) > 0.1f) {
                 thirdPersonCamera.transform.localRotation = Quaternion.Lerp(thirdPersonCamera.transform.localRotation, Quaternion.Euler(15, 0, 0), otherCamSpeed * Time.deltaTime);
             }
         }
     }
 
     //Function to enable third person mode camera
-    void EnableThirdPerson()
-    {
+    void EnableThirdPerson() {
         crosshair.SetActive(false);
         thirdPersonCamera.enabled = true;
         firstPersonCamera.enabled = false;
     }
 
     //Function for getting camera input value as vector 3
-    public void Camera(InputAction.CallbackContext ctx)
-    {
+    public void Camera(InputAction.CallbackContext ctx) {
         cameraValue = new Vector3(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y, 0);
     }
 
     //Function for getting camera zoom input value
-    public void CameraZoom(InputAction.CallbackContext ctx)
-    {
+    public void CameraZoom(InputAction.CallbackContext ctx) {
         zoomValue = ctx.ReadValue<float>();
     }
 
     //Function for gettting camera rotation input value
-    public void CameraRotate(InputAction.CallbackContext ctx)
-    {
+    public void CameraRotate(InputAction.CallbackContext ctx) {
         cameraRotateValue = ctx.ReadValue<float>();
     }
 
     //Function for getting escape input value
-    public void Escape(InputAction.CallbackContext ctx)
-    {
-        if (pC == null)
-        {
+    public void Escape(InputAction.CallbackContext ctx) {
+        if (pC == null) {
             pC = GetComponent<PlayerController>();
         }
         pC.uiMenu.UpdateUIMenuState(!pC.uiMenu.GetMenuStatus());
@@ -499,8 +479,7 @@ public class PlayerCamera : MonoBehaviour
     }
 
     //Function for freecamera movement input value
-    public void FreeCameraMovement(InputAction.CallbackContext ctx)
-    {
+    public void FreeCameraMovement(InputAction.CallbackContext ctx) {
         cameraMovementValue = new Vector3(ctx.ReadValue<Vector2>().x, 0, ctx.ReadValue<Vector2>().y);
     }
 }

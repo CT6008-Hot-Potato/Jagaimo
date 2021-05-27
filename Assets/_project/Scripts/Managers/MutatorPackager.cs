@@ -14,16 +14,22 @@ using UnityEngine;
 [System.Serializable]
 public class PackagedMutator
 {
+    //Constructur to pass across the values
     public PackagedMutator(string n, int id, object v)
     {
         name = n;
         ID = id;
+
+        //Whatever the type was gets boxed into the object
         value = v;
     }
 
+    //The variables for identifying the mutator
     public string name;
     public int ID;
 
+    //The base object class which is only not performant when unboxing/boxing due to creating another instance of the type
+    //The mutators are only ints, bools or floats so creating an instance of that is not expensive at all
     [SerializeField]
     public object value;
 }

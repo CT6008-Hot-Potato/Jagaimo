@@ -69,21 +69,14 @@ public class LocalMPMenuScreen : MonoBehaviour
 
     public void OnPlayerJoined(PlayerInput playerInput)
     {
-        //if (Debug.isDebugBuild)
-        //{
-        //    Debug.Log("Player has joined in menu on device");
-        //}
-
-        //if (soundManager)
-        //{
-        //    soundManager.PlaySound(ScriptableSounds.Sounds.PlayerJoin);
-        //}
-
-        //Storing the player object for the next scene
-        playerInput.transform.SetParent(game.transform);
+        if (playerInput.devices[0].name.Equals("Keyboard"))
+        {
+            Destroy(playerInput.gameObject);
+            return;
+        }
 
         //Updating the UI
-        if (playerInput.devices[0].name != "Keyboard" && playerInput.devices[0].name != "Mouse")
+        if (playerInput.devices[0].name != "Mouse")
         {
             //Gamepad icon shown
             joinedIconGamepad[game.iPlayercount].SetActive(true);
@@ -92,6 +85,14 @@ public class LocalMPMenuScreen : MonoBehaviour
         {
             joinedIconKeyboard[game.iPlayercount].SetActive(true);
         }
+
+        //if (soundManager)
+        //{
+        //    soundManager.PlaySound(ScriptableSounds.Sounds.PlayerJoin);
+        //}
+
+        //Storing the player object for the next scene
+        playerInput.transform.SetParent(game.transform);
 
         promptIcon[game.iPlayercount].SetActive(false);
 

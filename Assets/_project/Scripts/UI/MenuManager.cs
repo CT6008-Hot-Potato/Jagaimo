@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
-
+using UnityEngine.InputSystem;
 
 public class MenuManager : MonoBehaviour
 {
@@ -114,7 +114,13 @@ public class MenuManager : MonoBehaviour
     public void SwitchOpenMenu(int SelectedMenu) // Switches the current menu to another on the array    
 
     {
-        if (Sm != null)
+        if (PopUpObject.instance != null)
+        {
+//             PopUpObject.instance.toolObject.SetActive(false);
+        }
+
+
+            if (Sm != null)
         {
             Sm.PlaySound();
         }
@@ -246,6 +252,12 @@ public class MenuManager : MonoBehaviour
     IEnumerator Fader(float BlendFactor, float Displacement, FadeObject j) // Fades a menu in or out using linear interpolation   
     {
         BlendFactor += j.FadeSpeed * Time.deltaTime;
+
+        //if( Mouse.current.leftButton.wasPressedThisFrame)
+        //{
+        //    BlendFactor = 1;
+        //}
+
 
         for (int i = 0; i < j.textProAssets.Count; i++)
             j.textProAssets[i].color = Color.Lerp(j.textProColors[i], Color.clear, Mathf.Abs(Displacement - BlendFactor));

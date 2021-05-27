@@ -22,6 +22,8 @@ public class UIMenuBehaviour : MonoBehaviour
     Resolution[] resolutions;
     public TMP_Dropdown resolutionsDropdown;
 
+
+
     public Slider[] sliders;
 
     [SerializeField]
@@ -90,7 +92,14 @@ public class UIMenuBehaviour : MonoBehaviour
 
     IEnumerator CountdownCoroutine() // The menu starts enabled for the initial countdown, and then closes
     {
-        yield return new WaitForSeconds(3);
+
+        sM.PlaySound(ScriptableSounds.Sounds.Tick);
+        yield return new WaitForSeconds(1);
+        sM.PlaySound(ScriptableSounds.Sounds.Tick);
+        yield return new WaitForSeconds(1);
+        sM.PlaySound(ScriptableSounds.Sounds.Tick);
+        yield return new WaitForSeconds(1);
+        sM.PlaySound(ScriptableSounds.Sounds.Tick);
         UpdateUIMenuState(false);
     }
 

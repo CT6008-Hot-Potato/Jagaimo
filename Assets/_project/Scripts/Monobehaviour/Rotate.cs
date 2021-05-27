@@ -4,19 +4,19 @@
 ///This class is rotates an object constantly at a set speed.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//This class is using:
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rotate : MonoBehaviour
-{
+public class Rotate : MonoBehaviour {
+
     //Variables
     [SerializeField]
     private float rotateSpeed;
     private bool playerEntered;
     private List<GameObject> players = new List<GameObject>();
-    private enum directions
-    {
+    private enum directions {
         FORWARDS,
         BACKWARDS,
         LEFT,
@@ -26,22 +26,21 @@ public class Rotate : MonoBehaviour
     }
     [SerializeField]
     private directions dir;
+    
     //When player enters parent them
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Player")
-        {
+    private void OnTriggerEnter(Collider other) {
+        //If player then parent to rotation object
+        if (other.tag == "Player") {
             other.transform.parent = transform;
-
-                players.Add(other.gameObject);
+            players.Add(other.gameObject);
             playerEntered = true;
         }
     }
+
     //When player exits unparent them
-    private void OnTriggerExit(Collider collider)
-    {
-        if (collider.transform.parent == transform && collider.tag == "Player")
-        {
+    private void OnTriggerExit(Collider collider) {
+        //If parented and player then exit and unparent from this object
+        if (collider.transform.parent == transform && collider.tag == "Player") {
             playerEntered = false;
             transform.GetChild(0).transform.eulerAngles = new Vector3(0, 0, 0);
             collider.transform.parent = null;
@@ -49,18 +48,14 @@ public class Rotate : MonoBehaviour
         }
     }
     //Rotate around in update
-    void Update()
-    {
-        if (players != null )
-        {
-            for (int i = 0; i < players.Count;i++)
-            {
+    void Update() {
+        if (players != null ) {
+            for (int i = 0; i < players.Count;i++) {
                 players[i].transform.rotation = Quaternion.Euler(0,0, 0);
             }
         }
         //Rotate object around
-        switch (dir)
-        {
+        switch (dir) {
             //Forward
             case directions.FORWARDS:
                 transform.RotateAround(transform.position, transform.forward, rotateSpeed * Time.deltaTime);
@@ -89,14 +84,5 @@ public class Rotate : MonoBehaviour
                 Debug.Log("Incorrect direction value recieved.");
                 break;
         }
-
-        //Stabalise player rotation
-        //if (playerEntered)
-        //{
-        //    if (transform.GetChild(0).tag == "Player")
-        //    {
-        //        transform.GetChild(0).transform.eulerAngles = new Vector3(0, 0, 0);
-        //    }
-        //}
     }
 }

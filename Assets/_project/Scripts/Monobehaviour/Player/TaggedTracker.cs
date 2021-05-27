@@ -73,15 +73,10 @@ public class TaggedTracker : MonoBehaviour, IInteractable
     //This player isnt tagged anymore
     public void PlayerUnTagged()
     {
-        Debug.Log(name + " Untagged");
-
         isTagged = false;
         playerManager.ThisPlayerUnTagged();
 
-        if (Debug.isDebugBuild)
-        {
-            Debug.Log("This was untagged", this);
-        }
+        enabled = true;
     }
 
     //This player was just tagged
