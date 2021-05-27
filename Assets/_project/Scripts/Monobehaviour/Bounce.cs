@@ -4,6 +4,7 @@
 ///This class simply gives the player a bounce force each time they touch it's trigger.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//This class is using:
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

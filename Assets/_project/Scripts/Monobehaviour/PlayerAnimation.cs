@@ -1,9 +1,15 @@
-﻿using System.Collections;
+﻿/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///PlayerAnimation.cs
+///Developed by Charlie Bullock
+///This class is rotates an object constantly at a set speed.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//This class is using:
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimation : MonoBehaviour
-{
+public class PlayerAnimation : MonoBehaviour {
     //CarryingWalking
     //CarryingRunning
     //CrouchedWalking
@@ -24,6 +30,7 @@ public class PlayerAnimation : MonoBehaviour
     //Throw
     //Grab
 
+    //Variables
     [SerializeField]
     private Animation animation;
     [SerializeField]
@@ -31,6 +38,7 @@ public class PlayerAnimation : MonoBehaviour
     private bool animationLock = false;
     private Timer timer;
 
+    //Start at idle by default
     private void Start()
     {
         animation.Play("Idle");
