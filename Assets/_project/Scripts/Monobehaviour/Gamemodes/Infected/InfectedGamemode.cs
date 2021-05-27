@@ -66,6 +66,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     [SerializeField]
     private GameObject potatoPrefab;
+    bool bAlreadyWon = false;
 
     #endregion
 
@@ -119,10 +120,9 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         currentActivePlayers.Add(newCharacter);
     }
 
-    //Someone dies or leaves the game
     private void RemoveActivePlayer(CharacterManager characterLeft)
     {
-        currentActivePlayers.Remove(characterLeft);
+        //currentActivePlayers.Remove(characterLeft);
     }
 
     //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
@@ -219,7 +219,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     //When the countdown ends
     private void CountdownEnding()
-    {      
+    {
         //At the end of the countdown, doing a last check if survivors won
         if (ThisWinCondition())
         {
@@ -251,10 +251,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         //Since someone is tagged, the infected could have won
         if (ThisWinCondition())
         {
-            infectedWon = true;
-            //The infected has tagged the last player
-
-            WinScreen();
+            roundManager.CallOnRoundEnd();
         }
     }
 

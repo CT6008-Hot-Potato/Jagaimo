@@ -332,13 +332,32 @@ public class CharacterManager : MonoBehaviour
         //Shouldn't untag in the win screen or generally when eliminated
         StopCoroutine(Co_TaggedEffect(taggedAnimduration));
 
-        _playerAnimation.CheckToChangeState("Idle");
+        if (_playerAnimation)
+        {
+            _playerAnimation.CheckToChangeState("Idle");
+        }
+
+        if (_input)
+        {
+            Destroy(_input);
+        }
 
         Destroy(_cam);
-        Destroy(_movement);
-        Destroy(_playerInteraction);
+        
+        if (_movement)
+        {
+            Destroy(_movement);
+        }
 
-        taggedDisplayObject.Stop();
+        if (_playerInteraction)
+        {
+            Destroy(_playerInteraction);
+        }
+
+        if (taggedDisplayObject)
+        {
+            taggedDisplayObject.Stop();
+        }
     }
 
     public Camera[] ReturnCameras()

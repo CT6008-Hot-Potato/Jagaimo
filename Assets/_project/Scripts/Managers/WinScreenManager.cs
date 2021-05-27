@@ -107,6 +107,7 @@ public class WinScreenManager : MonoBehaviour
         {
             if (manager)
             {
+                manager.LockPlayer();
                 //Turning off the revelant components;
                 manager.DisablePlayer();
             }
@@ -121,10 +122,6 @@ public class WinScreenManager : MonoBehaviour
         if (winScreen)
         {
             winScreen.StartWinSequence(allPlayers, winningChars);
-        }
-        else
-        {
-
         }
 
         //Setting a timer for going back to the menu
