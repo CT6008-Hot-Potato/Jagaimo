@@ -10,19 +10,19 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
-public class PlayerInteraction : MonoBehaviour
-{
+public class PlayerInteraction : MonoBehaviour {
     //Variables
     #region Variables
     private GameObject movingObject;
     [SerializeField]
     private GameObject movingParent;
     [SerializeField]
+    //Used for raycasting     
     private GameObject firstPersonCamera;
     private RaycastHit hit;
     private RaycastHit select;
-
     private Ray ray;
+    //Movement carry positions
     [SerializeField]
     private Transform closestPosition;
     [SerializeField]
@@ -57,16 +57,14 @@ public class PlayerInteraction : MonoBehaviour
     private bool clickLifted = false;
     #endregion Variables
 
-    private void Awake()
-    {
+    //Awake function assigns the settings 
+    private void Awake() {
         //Intergrating the throw speed mutator (Code Here by Charles Carter)
         GameSettingsContainer settings = GameSettingsContainer.instance;
 
-        if (settings)
-        {
+        if (settings) {
             //The potato throw strength mutater is changed so the value is not 1
-            if (settings.HasGamMutator(4))
-            {
+            if (settings.HasGamMutator(4)) {
                 //Adding on 50% of the strength * the multiplier from the mutator
                 throwStrength += throwStrength * 0.2f * (int)settings.FindGeneralMutatorValue(4);
             }
@@ -75,15 +73,14 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     //Start method setting up and assigning values
-    void Start()
-    {
+    void Start() {
+        //Find and get the different components
         pC = FindObjectOfType<PlayerController>();
         pA = GetComponent<PlayerAnimation>();
         sM = FindObjectOfType<SoundManager>();
         cM = GameObject.FindObjectOfType<LocalMPScreenPartioning>();
         position.position = movingParent.transform.position;
-        if (!movingObject || !movingObject.GetComponent<Rigidbody>())
-        {
+        if (!movingObject || !movingObject.GetComponent<Rigidbody>()) {
             return;
         }
         rbObject = movingObject.GetComponent<Rigidbody>();
@@ -92,41 +89,37 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     //Function to return a ray from camera
-    public Ray getRay()
-    {
+    public Ray getRay() {
         return ray;
     }
 
     //Update method checking for clicks to throw,drop or grab rigidbody objects to move and also move closer or further/
-    void Update()
-    {
-        if (!grabbing)
-        {
+    void Update() {
+
+        //If not currently grabbing a gameobject then can check if needs to grab gameobject and highlight unselected gameobjects
+        if (!grabbing) {
             //First person to do raycast
             ray = new Ray(firstPersonCamera.transform.position, firstPersonCamera.transform.forward);
+            
             //If the player has interacted
-            if (leftClick > 0.1 && clickLifted)
-            {
+            if (leftClick > 0.1 && clickLifted) {
                 clickLifted = false;
 
-                if (pC.grounded)
-                {
+                //Grab distance changed depending on if the player is grounded or not
+                if (pC.grounded) {
                     grabDistance = 5;
                 }
-                else
-                {
+                else {
                     grabDistance = 1;
                 }
 
                 //Do a raycast and check if the object needs to be dropped or picked up
-                if (Physics.Raycast(ray, out hit, grabDistance))
-                {
+                if (Physics.Raycast(ray, out hit, grabDistance)) {
+
                     //Else if hit object has a rigidbody and isn't tagged a player grab it
-                    if (hit.rigidbody != null && hit.transform.tag != "Player")
-                    {
+                    if (hit.rigidbody != null && hit.transform.tag != "Player") {
                         //Play grabbing sound if sound manager present
-                        if (sM)
-                        {
+                        if (sM) {
                             sM.PlaySound(grabSound);
                         }
                         
@@ -156,39 +149,40 @@ public class PlayerInteraction : MonoBehaviour
                         movingParent.AddComponent<CarryCollision>();
                     }
                 }
-
             }
-            else if (Physics.Raycast(ray,out select,25))
-            {
-                if (select.transform.TryGetComponent(out Rigidbody rigidbody))
-                {
+            //Else if hiting object and that object has a rigidbody add the selected outline to indicate that a player has viewed the gameobject
+            else if (Physics.Raycast(ray,out select,25)) {
+
+                //Try get the rigidbody
+                if (select.transform.TryGetComponent(out Rigidbody rigidbody)) {
+                    //This integer keeps a value based on the amount of selected children gameobjects which have been highlighted 
                     int selectedObjectChildren = select.transform.childCount;
-                    for (int i = 0; i < selectedObjectChildren;i++)
-                    {
-                        if (select.transform.GetChild(i).TryGetComponent(out MeshRenderer renderer))
-                        {
-                            if (renderer.material.name.ToString() == "Outline (Instance)" || renderer.material.name.ToString() == "Selected Outline (Instance)")
-                            {
+
+                    //Loop through these selected children and add the selected outline to them
+                    for (int i = 0; i < selectedObjectChildren;i++) {
+
+                        //Try get the mesh renderer at each iteration and if can then add the selected outline to them 
+                        if (select.transform.GetChild(i).TryGetComponent(out MeshRenderer renderer)) {
+                            if (renderer.material.name.ToString() == "Outline (Instance)" || renderer.material.name.ToString() == "Selected Outline (Instance)") {
+                                //Add the selected outline and also add them to the list of outline gameobjects
                                 renderer.material = selectedOutline;
                                 outlined.Add(renderer);
                                 break;
                             }
                         }
-                    }
-
-                    
+                    }                   
                 }
-                else if (outlined != null)
-                {
-                    foreach(MeshRenderer meshRenderer in outlined)
-                    {
+                //Else if outlined is not null
+                else if (outlined != null) {
+                    //Go through each prior outline rigidbody object and remove the outlined material and replace it with the default outlined material so players see it is no longer selected
+                    foreach(MeshRenderer meshRenderer in outlined) {
                         meshRenderer.material = defaultOutline;
                     }
                     outlined.Clear();
                 }
             }
-            else if (outlined != null)
-            {
+            //Else if not outlined and not currently being looked at either also remove the selected outline
+            else if (outlined != null) {
                 foreach (MeshRenderer meshRenderer in outlined)
                 {
                     meshRenderer.material = defaultOutline;
@@ -196,51 +190,42 @@ public class PlayerInteraction : MonoBehaviour
                 outlined.Clear();
             }
         }
-        else
-        {
+        else {
 
             //Throw the object when right click or right trigger pressed
-            if (rightClick > 0.1 && clickLifted)
-            {
+            if (rightClick > 0.1 && clickLifted) {
                 Drop(true);
             }
             //Drop the grabbed object when left trigger or click pressed
-            else if (leftClick > 0.1f && clickLifted)
-            {
+            else if (leftClick > 0.1f && clickLifted) {
                 Drop(false);
             }
             //Otherwise if holding the moving object it can be moved closer or further from player
-            else 
-            {
+            else {
                 movingParent.transform.position = UnityEngine.Vector3.MoveTowards(movingParent.transform.position, position.position, 1000 * Time.deltaTime);
+                
                 //Zoom in
-                if (zoomIn > 0.1f)
-                {
+                if (zoomIn > 0.1f) {
                     position.position = UnityEngine.Vector3.MoveTowards(position.position, closestPosition.position, 5 * Time.deltaTime);
                 }
                 //Zoom out
-                else if (zoomOut > 0.1f)
-                {
+                else if (zoomOut > 0.1f) {
                     position.position = UnityEngine.Vector3.MoveTowards(position.position, furthestPosition.position, 5 * Time.deltaTime);
                 }
             }
-
         }
     }
 
     //Called to uncrouch the player
-    public bool UnCrouch()
-    {
+    public bool UnCrouch() {
         //Raycast from first person camera
         ray = new Ray(new Vector3(firstPersonCamera.transform.position.x, firstPersonCamera.transform.position.y - 0.25f, firstPersonCamera.transform.position.z), firstPersonCamera.transform.up);
         //Do a raycast and check if facing wall
         Physics.Raycast(ray, out hit, 0.75f);
-        if (hit.collider != null)
-        {
+        if (hit.collider != null) {
             return false;
         }
-        else
-        {
+        else {
             firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0.75f, 0);
             //zoomInPosition.localPosition = Vector3.zero;
             return true;
@@ -248,15 +233,13 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     //Check if able to perform a wall kick by checking how close to a collider
-    public bool WallKick()
-    {
+    public bool WallKick() {
         //Raycast from first person camera
         ray = new Ray(new Vector3(firstPersonCamera.transform.position.x, firstPersonCamera.transform.position.y - 0.5f, firstPersonCamera.transform.position.z), firstPersonCamera.transform.forward);
         //Do a raycast and check if facing wall
         Physics.Raycast(ray, out hit, 0.5f);
 
-        if (hit.rigidbody == null && hit.collider != null)
-        {
+        if (hit.rigidbody == null && hit.collider != null) {
             return true;
         }
         else
@@ -267,35 +250,30 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     //Called to crouch the player
-    public void Crouch()
-    {
+    public void Crouch() {
         firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0, 0);
         //zoomInPosition.localPosition = Vector3.zero;
     }
 
     //This function will set the paramaters of the collision for a carried object based upon what type of colliders it is
-    private void AdjustCollision(GameObject movingObject)
-    {
-        if (movingParent.TryGetComponent(out Collider cD))
-        {
+    private void AdjustCollision(GameObject movingObject) {
+
+        if (movingParent.TryGetComponent(out Collider cD)) {
+
             //Set collision parameters if box collider
-            if (cD.GetType() == typeof(BoxCollider))
-            {
+            if (cD.GetType() == typeof(BoxCollider)) {
                 cD.GetComponent<BoxCollider>().size = new Vector3(cD.GetComponent<BoxCollider>().size.x * movingObject.transform.localScale.x, cD.GetComponent<BoxCollider>().size.y * movingObject.transform.localScale.y,cD.GetComponent<BoxCollider>().size.z * movingObject.transform.localScale.z);
             }
             //Set collision parameters if sphere collider
-            else if (cD.GetType() == typeof(SphereCollider))
-            {
+            else if (cD.GetType() == typeof(SphereCollider)) {
                 cD.GetComponent<SphereCollider>().radius = cD.GetComponent<SphereCollider>().radius * movingObject.transform.localScale.x;
             }
-            else if (cD.GetType() == typeof(CapsuleCollider))
-            {
+            else if (cD.GetType() == typeof(CapsuleCollider)) {
                 cD.GetComponent<CapsuleCollider>().height = cD.GetComponent<CapsuleCollider>().height * movingObject.transform.localScale.y;
                 cD.GetComponent<CapsuleCollider>().radius = cD.GetComponent<CapsuleCollider>().radius * movingObject.transform.localScale.x;
             }
             //Debug if other type of collider
-            else
-            {
+            else {
                 Debug.Log("Other collider type");
             }
         }
@@ -303,10 +281,8 @@ public class PlayerInteraction : MonoBehaviour
 
 
     //Function which when called will drop the current object which is being carried 
-    public void Drop(bool throwObject)
-    {
-        if (sM)
-        {
+    public void Drop(bool throwObject) {
+        if (sM) {
             sM.PlaySound(throwSound);
         }
 
@@ -333,10 +309,8 @@ public class PlayerInteraction : MonoBehaviour
             movingObject = null;
         }
         //Loop through the parent destroying it's components
-        foreach (var comp in movingParent.GetComponents<Component>())
-        {
-            if (!(comp is Transform) && comp.GetType() != typeof(PlayerInteraction))
-            {
+        foreach (var comp in movingParent.GetComponents<Component>()) {
+            if (!(comp is Transform) && comp.GetType() != typeof(PlayerInteraction)) {
                 Destroy(comp);
             }
         }
@@ -349,57 +323,49 @@ public class PlayerInteraction : MonoBehaviour
 
 
     //Function assigned component given as paramater to the gameobject given as parameter along with ensuring it
-    public Component SetComponent(Component originalComponent, GameObject gameobjectToSet)
-    {
+    public Component SetComponent(Component originalComponent, GameObject gameobjectToSet) {
         System.Type type = originalComponent.GetType();
         Component copy = gameobjectToSet.AddComponent(type);
         // Copied fields can be restricted with BindingFlags
         System.Reflection.FieldInfo[] fields = type.GetFields();
-        foreach (System.Reflection.FieldInfo field in fields)
-        {
+
+        foreach (System.Reflection.FieldInfo field in fields) {
             field.SetValue(copy, field.GetValue(originalComponent));
         }
         return copy;
     }
 
     //Method for using unity's new input system to detect left click
-    public void LeftClick(InputAction.CallbackContext ctx)
-    {
+    public void LeftClick(InputAction.CallbackContext ctx) {
         leftClick = ctx.ReadValue<float>();
-        if (grabbing && leftClick == 0)
-        {
+        if (grabbing && leftClick == 0) {
             clickLifted = true;
         }
-        else if (!grabbing && leftClick > 0.1f)
-        {
+        else if (!grabbing && leftClick > 0.1f) {
             clickLifted = true;
         }
 
-        if (!pA)
-        {
+        //Play the grab animation
+        if (!pA) {
             pA.CheckToChangeState("Grab", true);
         }
     }
 
     //Method for using unity's new input system to detect right click
-    public void RightClick(InputAction.CallbackContext ctx)
-    {
+    public void RightClick(InputAction.CallbackContext ctx) {
         rightClick = ctx.ReadValue<float>();
-        if (!pA)
-        {
+        if (!pA) {
             pA.CheckToChangeState("Throw", true);
         }
     }
 
     //Method for using unity's new input system to detect zooming in
-    public void ZoomIn(InputAction.CallbackContext ctx)
-    {
+    public void ZoomIn(InputAction.CallbackContext ctx) {
         zoomIn = ctx.ReadValue<float>();
     }
 
     //Method for using unity's new input system to detect zooming out
-    public void ZoomOut(InputAction.CallbackContext ctx)
-    {
+    public void ZoomOut(InputAction.CallbackContext ctx) {
         zoomOut = ctx.ReadValue<float>();
     }
 }

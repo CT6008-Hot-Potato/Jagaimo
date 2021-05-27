@@ -9,8 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bounce : MonoBehaviour
-{
+public class Bounce : MonoBehaviour {
     //Variables
     [SerializeField]
     private float force;
@@ -18,8 +17,8 @@ public class Bounce : MonoBehaviour
     private ScriptableSounds.Sounds bounceSound;
     private SoundManager sM;
 
-    private enum directions
-    {
+    //Directions for bounce pad to be one of
+    private enum directions {
         FORWARDS,
         BACKWARDS,
         LEFT,
@@ -30,19 +29,16 @@ public class Bounce : MonoBehaviour
     [SerializeField]
     private directions dir;
 
-    private void Awake()
-    {
+    private void Awake() {
         sM = FindObjectOfType<SoundManager>();
     }
 
     //On trigger stay will apply force to player in the direction selected
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.TryGetComponent(out Rigidbody rB) && other.tag == "Player")
-        {
+    private void OnTriggerStay(Collider other) {
+
+        if (other.TryGetComponent(out Rigidbody rB) && other.tag == "Player") {
             sM.PlaySound(bounceSound);
-            switch (dir)
-            {
+            switch (dir) {
                 //Forward
                 case directions.FORWARDS:
                     rB.AddForce(transform.forward * force, ForceMode.Impulse);
