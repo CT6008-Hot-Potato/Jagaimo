@@ -240,7 +240,14 @@ public class PlayerInteraction : MonoBehaviour {
         Physics.Raycast(ray, out hit, 0.5f);
 
         if (hit.rigidbody == null && hit.collider != null) {
-            return true;
+            if (!hit.collider.isTrigger)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
