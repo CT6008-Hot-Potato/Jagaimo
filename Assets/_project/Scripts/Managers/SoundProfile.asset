@@ -77,7 +77,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 7db7db0e4dcd96440bdea4ae11e4c3ea, type: 3}
     audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
       type: 2}
-    defaultVolume: 2.5
+    defaultVolume: 1
     pitchVariation: 0.8
   - name: 3
     file:
@@ -157,3 +157,17 @@ MonoBehaviour:
       type: 2}
     defaultVolume: 0.7
     pitchVariation: 0.5
+  - name: 20
+    file:
+    - {fileID: 8300000, guid: 7727e2521b1614949a8bcfa2aecd98b0, type: 3}
+    audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
+      type: 2}
+    defaultVolume: 0
+    pitchVariation: 0.7
+  - name: 21
+    file:
+    - {fileID: 8300000, guid: 7727e2521b1614949a8bcfa2aecd98b0, type: 3}
+    audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
+      type: 2}
+    defaultVolume: 0.4
+    pitchVariation: 1.5

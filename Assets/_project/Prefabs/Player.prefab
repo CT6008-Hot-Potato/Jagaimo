@@ -821,6 +821,8 @@ MonoBehaviour:
   particlePlayer: {fileID: 11400000, guid: e4907c1dd2137b74ba1f270593241766, type: 2}
   elimVFX: 4
   confettiElimVFX: 5
+  Bloodboom: 2
+  Confettiboom: 11
   headTransform: {fileID: 1710810818358327641}
   taggedDisplayObject: {fileID: 6787473235263417610}
   elimDisplayObject: {fileID: 4244485484296331425}
