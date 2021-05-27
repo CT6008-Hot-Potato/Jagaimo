@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4329690992259864973
 Transform:
@@ -23,7 +23,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989617146222854967}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 64.89394, y: 25.773, z: 0.349}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children:
@@ -32,7 +32,7 @@ Transform:
   - {fileID: 6030671634574220051}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &5880749530155244385
 GameObject:
   m_ObjectHideFlags: 0
@@ -44,12 +44,13 @@ GameObject:
   - component: {fileID: 6030671634574220051}
   - component: {fileID: 5331780099800348955}
   - component: {fileID: 7984200171673852249}
+  - component: {fileID: 5842287577251295622}
   m_Layer: 0
   m_Name: Camera_Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &6030671634574220051
 Transform:
@@ -114,6 +115,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5842287577251295622
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5880749530155244385}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 33.134842, y: 72.75541, z: 52.33521}
+  m_Center: {x: 0.0667305, y: -14.13865, z: 23.734919}
 --- !u!1 &7362121851614443164
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,12 +139,13 @@ GameObject:
   - component: {fileID: 5883850654763596475}
   - component: {fileID: 1130065169926604056}
   - component: {fileID: 2699671836434453294}
+  - component: {fileID: 2681470755756736533}
   m_Layer: 0
   m_Name: Base_Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &5883850654763596475
 Transform:
@@ -195,6 +210,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2681470755756736533
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7362121851614443164}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 71.482445, y: 118.06543, z: 5.998484}
+  m_Center: {x: -11.392478, y: -0.000061035156, z: 0.0004887581}
 --- !u!1 &7638576688675475983
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,12 +234,13 @@ GameObject:
   - component: {fileID: 5825372372859725905}
   - component: {fileID: 5864363707822043798}
   - component: {fileID: 7374656061718091084}
+  - component: {fileID: 9150194758923637741}
   m_Layer: 0
   m_Name: Camera_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &5825372372859725905
 Transform:
@@ -276,3 +305,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &9150194758923637741
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7638576688675475983}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 47.315845, y: 57.095394, z: 89.05441}
+  m_Center: {x: -0.000033378597, y: 0.0000019073485, z: -42.013687}

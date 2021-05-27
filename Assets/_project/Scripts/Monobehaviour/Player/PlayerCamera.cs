@@ -263,7 +263,14 @@ public class PlayerCamera : MonoBehaviour {
                             thirdPersonCamera.gameObject.AddComponent<SphereCollider>().radius = 0.25f;
                             freecamRotation = thirdPersonCamera.transform.rotation.eulerAngles;
                             cameraState = cS.FREECAMUNCONSTRAINED;
-                            thirdPersonCamera.gameObject.AddComponent<Rigidbody>().useGravity = false;
+                            if (thirdPersonCamera.gameObject.GetComponent<Rigidbody>() == null)
+                            {
+                                thirdPersonCamera.gameObject.AddComponent<Rigidbody>().useGravity = false;
+                            }
+                            else
+                            {
+                                thirdPersonCamera.gameObject.GetComponent<Rigidbody>().useGravity = true;
+                            }
                             thirdPersonCamera.gameObject.AddComponent<CameraCollision>();
                         }
                     }
