@@ -63,8 +63,7 @@ public class PlayerController : MonoBehaviour
     //Enums
     #region Enums
     //Enum for player movement type
-    private enum pM
-    {
+    private enum pM {
         INTERACTING,
         CROUCHING,
         WALKING,
@@ -111,7 +110,6 @@ public class PlayerController : MonoBehaviour
 
         //Check the normalised y is greater or equal to 0.9 (0.9 generally sprinting while 1.0 standing stil)
         if (dir.y >= 0.9f) {
-
             //If collision of this gameobject is the carry position whan touching the ground drop it
             if (collision.gameObject.name == "CarryPosition") {
                 Debug.Log("Hmmmmmm");
@@ -128,10 +126,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit(Collision collision)
-    {
-        if (!grounded)
-        {
+    //Function to set touching wall when players
+    private void OnCollisionExit(Collision collision) {
+        if (!grounded) {
             touchingWall = false;
         }
     }
