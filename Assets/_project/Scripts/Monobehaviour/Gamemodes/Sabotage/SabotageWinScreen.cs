@@ -29,7 +29,16 @@ public class SabotageWinScreen : WinScreen
     // Start is called before the first frame update
     void Start()
     {
-        gamemode = rManager.GetComponent<SabotageGamemode>();
+        rManager = RoundManager.roundManager;
+
+        if (rManager)
+        {
+            gamemode = rManager.GetComponent<SabotageGamemode>();
+        }
+        else
+        {
+            enabled = false;
+        }
 
         if (!gamemode && Debug.isDebugBuild)
         {

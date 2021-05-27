@@ -91,6 +91,7 @@ public class SabotageEscapeManager : MonoBehaviour
 
     public void OpenEscapes()
     {
+        BParent.SetActive(false);
         ECParent.SetActive(true);
 
         //Play escape "siren" (?)

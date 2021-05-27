@@ -87,7 +87,7 @@ public class SabotageObject : MonoBehaviour, IInteractable
     // Update is called once per frame
     private void Update()
     {
-        if (isBeingUsed)
+        if (isBeingUsed && !isLocked)
         {
             sabotageTimer.Tick(Time.deltaTime);
 
@@ -111,6 +111,8 @@ public class SabotageObject : MonoBehaviour, IInteractable
                 {
                     fixingIconVFX.SetActive(false);
                 }
+
+                isLocked = true;
             }
         }
     }
@@ -208,7 +210,7 @@ public class SabotageObject : MonoBehaviour, IInteractable
         {
             isBeingUsed = false;
 
-            if (fixingIconVFX)
+            if (fixingIconVFX && !isLocked)
             {
                 fixingIconVFX.SetActive(false);
             }

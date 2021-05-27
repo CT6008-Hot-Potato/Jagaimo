@@ -237,6 +237,12 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
     {
+        if (!winScreenManager)
+        {
+            winScreenManager = WinScreenManager.instance;
+        }
+        winScreenManager.SpawnWinScreen(Return_Mode());
+
         //Still need to add the active players for testing
         for (int i = 0; i < charArray.Length; ++i)
         {

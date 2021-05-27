@@ -72,6 +72,7 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     //Getting the needed components
     private void OnEnable()
     {
+        wScreenManager = wScreenManager ?? WinScreenManager.instance;
         roundManager = roundManager ?? RoundManager.roundManager;
         arenaManager = arenaManager ?? GetComponent<ArenaManager>();
     }
@@ -83,6 +84,12 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
     {
+        if (!wScreenManager)
+        {
+            wScreenManager = WinScreenManager.instance;
+        }
+        wScreenManager.SpawnWinScreen(Return_Mode());
+
         //Going through the give array and adding it to the list
         for (int i = 0; i < charArray.Length; ++i)
         {
@@ -174,7 +181,10 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
             playersWhoWon.Add(currentTagged);
         }
 
-        wScreenManager.PlayWinScreen(GAMEMODE_INDEX.SABOTAGE, currentActivePlayers, playersWhoWon);
+        if (wScreenManager)
+        {
+            wScreenManager.PlayWinScreen(GAMEMODE_INDEX.SABOTAGE, currentActivePlayers, playersWhoWon);
+        }
     }
 
     //Should stop the person from interacting with the generators, and kick them out of any generator they're currently fixing

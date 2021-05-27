@@ -68,6 +68,12 @@ public class WinScreenManager : MonoBehaviour
 
     #region Public Methods
 
+    public void SpawnWinScreen(GAMEMODE_INDEX gamemode)
+    {
+        GameObject go = Instantiate(winScreenPrefabs[(int)gamemode], transform);
+        winScreen = go.GetComponent<WinScreen>();
+    }
+
     //Playing the win screen (and pass through the gamemode incase of different screens per gamemode)
     public void PlayWinScreen(GAMEMODE_INDEX gamemode, List<CharacterManager> everyPlayer, List<CharacterManager> winningChars)
     {
@@ -111,10 +117,15 @@ public class WinScreenManager : MonoBehaviour
         //Use football arena for football
         //Using a generator scene for sabotage
         //Using a small barn scene for infected
-        GameObject go = Instantiate(winScreenPrefabs[(int)gamemode], transform);
-        winScreen = go.GetComponent<WinScreen>();
 
-        winScreen.StartWinSequence(allPlayers, winningChars);
+        if (winScreen)
+        {
+            winScreen.StartWinSequence(allPlayers, winningChars);
+        }
+        else
+        {
+
+        }
 
         //Setting a timer for going back to the menu
         if (bReturnToMenu)

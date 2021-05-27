@@ -89,6 +89,12 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
     {
+        if (!winScreenManager)
+        {
+            winScreenManager = WinScreenManager.instance;
+        }
+        winScreenManager.SpawnWinScreen(Return_Mode());
+
         //Going through the give array and adding it to the list
         for (int i = 0; i < charArray.Length; ++i)
         {
@@ -226,11 +232,10 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
             infectedWon = false;
         }
 
-        arenaManager.ClearUsageFromArena(0);
         roundManager.CallOnRoundEnd();
     }
 
-    //Doesnt really do anything in this gamemode
+    //Add them to the infected and take them away from the survivors
     private void PlayerTagged(CharacterManager charTagged)
     {
         //Removing them from the survivors and adding them to the infected
@@ -240,8 +245,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         //Telling the character that they've been tagged
         charTagged.ThisPlayerTagged();
 
-        //TODO: Make 2 types of tagged "Forceably" (which multiplies the potatoes in the game) and "Softly" (which retains the potato it was tagged by)
-        //TODO NOTE: This might be on the tagged tracker? and this gamemode will switch the one used
+        //Put another potato on the map
         Instantiate(potatoPrefab);
 
         //Since someone is tagged, the infected could have won
@@ -257,9 +261,6 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //When only 1 person is active in the game, return true
     private bool ThisWinCondition()
     {
-        //No one has loaded in/game hasnt started
-        if (currentActivePlayers.Count == 0) return false;
-
         //1 player is left so someone has won this round
         if (activeSurvivors.Count == 0)
         {
