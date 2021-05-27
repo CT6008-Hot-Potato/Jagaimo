@@ -34,7 +34,12 @@ public class ScriptableSounds : ScriptableObject
         GeneratorBreak,
         GeneratorFix,
         FootballGoal,
-        Infected
+        Infected,
+
+        Landing,
+
+        Scroll,
+        Tick
 
 
 
