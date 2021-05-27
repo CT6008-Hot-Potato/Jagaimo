@@ -74,49 +74,56 @@ public class PlayerController : MonoBehaviour
     private pM playerMovement;
     #endregion Enum
 
-    //Setting up and assigning on awake
-    private void Start()
-    {
+    //Setting up and assigning on start
+    private void Start() {
+        //Get components for player animation, interaction, camera and the sound manager
         pA = GetComponent<PlayerAnimation>();
         pI = GetComponent<PlayerInteraction>();
-        sM = FindObjectOfType<SoundManager>();
-        rebindingDisplay = FindObjectOfType<RebindingDisplay>();
-        speed = walkSpeed;
-        Physics.queriesHitBackfaces = true;
         pC = GetComponent<PlayerCamera>();
+        sM = FindObjectOfType<SoundManager>();
+        //Find the rebinding display from the user interface/menu
+        rebindingDisplay = FindObjectOfType<RebindingDisplay>();
+        //Set default speed to the walking speed
+        speed = walkSpeed;
+        //Enable hitbackfaces for the third person camera mesh clipping
+        Physics.queriesHitBackfaces = true;
+        //Set the movement to interacting by  default
         playerMovement = pM.INTERACTING;
+        //Get the rigidbody and capsule collider components
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
+        //Freeze the rigidbody rotation and gravity (this is done because it is essential for this hybrid camera system for the player)
         rb.freezeRotation = true;
         rb.useGravity = false;
-        if (!uiMenu)
-        {
+        
+        //If the uimenu is null debug the warning that it is missing
+        if (!uiMenu) {
             Debug.LogWarning("Missing ui menu reference!");
         }        
     }
 
-
     //Function where collision checking if collider just staying on ground in order to determine if grounded or not is done
-    private void OnCollisionStay(Collision collision)
-    {
+    private void OnCollisionStay(Collision collision) {
         //Get the direction the collision point from relative to position of player
         Vector3 dir = collision.contacts[0].point - transform.position;
         //Normalise it
         dir = -dir.normalized;
 
-
         //Check the normalised y is greater or equal to 0.9 (0.9 generally sprinting while 1.0 standing stil)
-        if (dir.y >= 0.9f)
-        {
-            if (collision.gameObject.name == "CarryPosition")
-            {
+        if (dir.y >= 0.9f) {
+
+            //If collision of this gameobject is the carry position whan touching the ground drop it
+            if (collision.gameObject.name == "CarryPosition") {
+                Debug.Log("Hmmmmmm");
                 GetComponent<PlayerInteraction>().Drop(true);
             }
+
+            //Set these correctly
             grounded = true;
             collider.material = null;
         }
-        else
-        {
+        //Else they are touching the wall
+        else {
             touchingWall = true;
         }
     }
@@ -186,6 +193,7 @@ public class PlayerController : MonoBehaviour
             else if (downForce != 15)
             {
                 particles.CreateParticle(ScriptableParticles.Particle.JumpDust,new Vector3 (transform.position.x, transform.position.y - 1, transform.position.z));
+                sM.PlaySound(ScriptableSounds.Sounds.Landing);
                 downForce = 15;
             }
             else if (!sliding)

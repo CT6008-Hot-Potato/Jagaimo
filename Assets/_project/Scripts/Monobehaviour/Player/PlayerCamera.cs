@@ -3,6 +3,8 @@
 ///Developed by Charlie Bullock
 ///This class is responsible for first/third person camera of the player.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//This class is using:
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

@@ -5,6 +5,7 @@
 // Brief: This script determines the camera's view of the screen in relation to each player
 //////////////////////////////////////////////////////////// 
 
+//This class is using:
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
