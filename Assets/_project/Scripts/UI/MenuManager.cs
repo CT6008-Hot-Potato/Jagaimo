@@ -253,10 +253,10 @@ public class MenuManager : MonoBehaviour
     {
         BlendFactor += j.FadeSpeed * Time.deltaTime;
 
-        if( Keyboard.current.anyKey.wasPressedThisFrame || Gamepad.current.aButton.wasPressedThisFrame || Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            BlendFactor = 1;
-        }
+        //if( Mouse.current.leftButton.wasPressedThisFrame)
+        //{
+        //    BlendFactor = 1;
+        //}
 
 
         for (int i = 0; i < j.textProAssets.Count; i++)
