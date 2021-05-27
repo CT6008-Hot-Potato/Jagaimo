@@ -10,6 +10,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(TaggedTracker))]
 public class CharacterManager : MonoBehaviour
@@ -21,7 +22,7 @@ public class CharacterManager : MonoBehaviour
     public TaggedTracker _tracker;
 
     //A potentially useful bool for AI production
-    public bool isPlayer { get; private set; }
+    public bool isPlayer;
 
     //A public variable for scripts to check if this player is locked
     public bool isPlayerLocked { private get; set; } = false;
@@ -38,6 +39,8 @@ public class CharacterManager : MonoBehaviour
     private PlayerInteraction _playerInteraction;
     [SerializeField]
     private Rigidbody _rb;
+    [SerializeField]
+    private PlayerInput _input;
 
     //Other components needed
     [SerializeField]
@@ -65,15 +68,13 @@ public class CharacterManager : MonoBehaviour
     [SerializeField]
     private ScriptableSounds.Sounds Bloodboom, Confettiboom;
 
-
-
     //Where the particles are played from when the player is eliminated
     [SerializeField]
     private Transform headTransform;
     [SerializeField]
-    private GameObject taggedDisplayObject;
+    private ParticleSystem taggedDisplayObject;
     [SerializeField]
-    private GameObject elimDisplayObject;
+    private ParticleSystem elimDisplayObject;
     private float taggedAnimduration = 2f;
 
     //Infected mutator variables
@@ -94,9 +95,14 @@ public class CharacterManager : MonoBehaviour
         _playerAnimation = _playerAnimation ?? GetComponent<PlayerAnimation>();
         _playerInteraction = _playerInteraction ?? GetComponent<PlayerInteraction>();
         _rb = _rb ?? GetComponent<Rigidbody>();
+        _input = _input ?? GetComponent<PlayerInput>();
 
         soundManager = FindObjectOfType<SoundManager>();
         settings = GameSettingsContainer.instance;
+
+        //A bit messy and could be changed
+        taggedDisplayObject = taggedDisplayObject ?? transform.GetChild(3).GetComponent<ParticleSystem>();
+        elimDisplayObject = elimDisplayObject ?? transform.GetChild(4).GetComponent<ParticleSystem>();
     }
 
     private void Start()
@@ -172,6 +178,9 @@ public class CharacterManager : MonoBehaviour
         //If they arent tagged then do nothing
         if (!_tracker.isTagged) return null;
 
+        //Shouldn't untag in the win screen or generally when eliminated
+        StopCoroutine(Co_TaggedEffect(taggedAnimduration));
+
         //The win screen is about to happen, dont change the camera or play the VFX etc
         if (playersLeft <= 2)
         {
@@ -191,16 +200,16 @@ public class CharacterManager : MonoBehaviour
         }
 
         //Making sure the elimination icon is showing
-        if (taggedDisplayObject)
+        if (taggedDisplayObject != null)
         {
-            taggedDisplayObject.SetActive(false);
+            taggedDisplayObject.Stop();
         }
-        if (elimDisplayObject)
+        if (elimDisplayObject != null)
         {
-            elimDisplayObject.SetActive(true);
+            elimDisplayObject.Play();
         }
 
-        //Play vfx
+        //Play VFX
         if (particlePlayer)
         {
             //Play it on the head spot
@@ -256,20 +265,15 @@ public class CharacterManager : MonoBehaviour
         }
 
         //Lerp into third person camera mode Note: this should be quicker than the lerp when you're tagged
-        if (_cam)
+        if (_cam  && taggedDisplayObject && _playerAnimation)
         {
             _cam.SetCameraView(false);
-        }
-
-        if (taggedDisplayObject)
-        {
-            taggedDisplayObject.SetActive(false);
-        }
-
-        //Animations switch back to being idle
-        if (_playerAnimation)
-        {
+            taggedDisplayObject.Stop();
             _playerAnimation.CheckToChangeState("Idle", false); ;
+        }
+        else if (Debug.isDebugBuild)
+        {
+            Debug.Log("Something isnt set here", this);
         }
     }
 
@@ -283,20 +287,20 @@ public class CharacterManager : MonoBehaviour
         //Guard clause to make sure the components are correct
         if (!_cam || !_movement) return;
 
-        if (Debug.isDebugBuild)
-        {
-            Debug.Log("Player locked!", this);
-        }
-
         isPlayerLocked = true;
 
         //Stop movement in the movement script, dont disable or deactive player input (they couldn't pause then)
         _movement.SetMovement(3);
+        _input.DeactivateInput();
 
         //Stop camera player camera movement
         _cam.cameraRotationLock = true;
 
         //Note: option to have them switch to a different camera for cinematics
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Player locked!", this);
+        }
     }
 
     public void UnLockPlayer()
@@ -304,44 +308,56 @@ public class CharacterManager : MonoBehaviour
         //Guard clause to make sure the components are correct
         if (!_cam || !_movement) return;
 
-        if (Debug.isDebugBuild)
-        {
-            Debug.Log("Player unlocked!", this);
-        }
-
         isPlayerLocked = false;
 
         //Start player movement
         _movement.SetMovement(2);
+        _input.ActivateInput();
 
         //Restart camera movement
         _cam.cameraRotationLock = false;
+
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Player unlocked!", this);
+        }
     }
 
     /// <summary>
-    /// BE CAREFUL WHEN USING THESE
+    /// BE CAREFUL WHEN USING THIS, ONLY FOR WIN SCREEN
     /// </summary>
     /// 
     public void DisablePlayer()
     {
+        //Shouldn't untag in the win screen or generally when eliminated
         StopCoroutine(Co_TaggedEffect(taggedAnimduration));
 
-        _playerAnimation.CheckToChangeState("Idle");
+        if (_playerAnimation)
+        {
+            _playerAnimation.CheckToChangeState("Idle");
+        }
 
-        _cam.enabled = false;
-        _movement.enabled = false;
-        _tracker.enabled = false;
-        _playerInteraction.enabled = false;
+        if (_input)
+        {
+            Destroy(_input);
+        }
 
-        taggedDisplayObject.SetActive(false);
-    }
+        Destroy(_cam);
+        
+        if (_movement)
+        {
+            Destroy(_movement);
+        }
 
-    public void EnablePlayer()
-    {
-        _cam.enabled = true;
-        _movement.enabled = true;
-        _tracker.enabled = true;
-        _playerInteraction.enabled = true;
+        if (_playerInteraction)
+        {
+            Destroy(_playerInteraction);
+        }
+
+        if (taggedDisplayObject)
+        {
+            taggedDisplayObject.Stop();
+        }
     }
 
     public Camera[] ReturnCameras()
@@ -361,17 +377,22 @@ public class CharacterManager : MonoBehaviour
 
         UnLockPlayer();
 
-        //Play VFX + Sound
-        //Lerp into first person camera mode
-        if (_cam)
+        if (_cam  && taggedDisplayObject)
         {
-            _cam.SetCameraView(true);
+            //Play VFX + Sound
+            //Lerp into first person camera mode#
+            if (_cam.enabled)
+            {
+                _cam.SetCameraView(true);
+            }
+
+            taggedDisplayObject.Play();
+        }
+        else if (Debug.isDebugBuild)
+        {
+            Debug.Log("Something isnt set here", this);
         }
 
-        if (taggedDisplayObject)
-        {
-            taggedDisplayObject.SetActive(true);
-        }
 
         if (soundManager)
         {

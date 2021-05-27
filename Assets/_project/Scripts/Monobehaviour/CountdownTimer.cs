@@ -90,6 +90,7 @@ public class CountdownTimer : MonoBehaviour
 
     public void RoundEnded()
     {
+        timerText.enabled = false;
         enabled = false;
     }
 

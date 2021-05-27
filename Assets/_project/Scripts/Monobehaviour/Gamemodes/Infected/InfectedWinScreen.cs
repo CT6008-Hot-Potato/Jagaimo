@@ -30,7 +30,12 @@ public class InfectedWinScreen : WinScreen
     // Start is called before the first frame update
     void Start()
     {
-        gamemode = rManager.GetComponent<InfectedGamemode>();
+        rManager = RoundManager.roundManager;
+
+        if (rManager)
+        {
+            gamemode = rManager.GetComponent<InfectedGamemode>();
+        }
 
         if (!gamemode && Debug.isDebugBuild)
         {

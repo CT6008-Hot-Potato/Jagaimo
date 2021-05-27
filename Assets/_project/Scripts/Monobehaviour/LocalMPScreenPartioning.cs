@@ -123,6 +123,7 @@ public class LocalMPScreenPartioning : MonoBehaviour {
         //This is the last player to join
         if (newPlayerCameras.Count >= ExpectedPlayerCount && !singleLocalPlayer) {
             SetScreenResolutions();
+            enabled = false;
         }
     }
     #endregion

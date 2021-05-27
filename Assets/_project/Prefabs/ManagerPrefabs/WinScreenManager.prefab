@@ -50,11 +50,13 @@ MonoBehaviour:
   - {fileID: 7421604002036637904, guid: f611e80952ad9fb4eb403c8909d83291, type: 3}
   - {fileID: 1424832451072540340, guid: a5c86c1d287be4746875425813e2eb8b, type: 3}
   - {fileID: 3755280250688804808, guid: 48555e6cd046c194bbc42954aefbf3dc, type: 3}
-  - {fileID: 251782627519830234}
+  - {fileID: 3801253960655751786, guid: b98c993b21c67e249bdebfbd3687b031, type: 3}
   worldBounds: {fileID: 0}
   charactersWhoWon: []
   allPlayers: []
   bReturnToMenu: 1
+  WinMusic: {fileID: 8300000, guid: e40437247e57e1b48844e1998e4864a2, type: 3}
+  settings: {fileID: 0}
 --- !u!114 &251782627519830235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,7 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb86d8636862eb4982fac791fdc9ea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 5
+  duration: 15
   TimerBehaviour:
     m_PersistentCalls:
       m_Calls:
