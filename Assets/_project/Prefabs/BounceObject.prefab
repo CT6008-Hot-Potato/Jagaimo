@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   force: 2
-  bounceSound: 0
+  bounceSound: 21
   dir: 4
 --- !u!1 &4551424488264975041
 GameObject:

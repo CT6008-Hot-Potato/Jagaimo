@@ -39,7 +39,8 @@ public class ScriptableSounds : ScriptableObject
         Landing,
 
         Scroll,
-        Tick
+        Tick,
+        Bounce
 
 
 
