@@ -118,7 +118,6 @@ public class WinScreenManager : MonoBehaviour
         //Use football arena for football
         //Using a generator scene for sabotage
         //Using a small barn scene for infected
-
         if (winScreen)
         {
             winScreen.StartWinSequence(allPlayers, winningChars);

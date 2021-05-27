@@ -22,7 +22,7 @@ public class CharacterManager : MonoBehaviour
     public TaggedTracker _tracker;
 
     //A potentially useful bool for AI production
-    public bool isPlayer { get; private set; }
+    public bool isPlayer;
 
     //A public variable for scripts to check if this player is locked
     public bool isPlayerLocked { private get; set; } = false;
@@ -200,16 +200,16 @@ public class CharacterManager : MonoBehaviour
         }
 
         //Making sure the elimination icon is showing
-        if (taggedDisplayObject)
+        if (taggedDisplayObject != null)
         {
             taggedDisplayObject.Stop();
         }
-        if (elimDisplayObject)
+        if (elimDisplayObject != null)
         {
             elimDisplayObject.Play();
         }
 
-        //Play vfx
+        //Play VFX
         if (particlePlayer)
         {
             //Play it on the head spot
