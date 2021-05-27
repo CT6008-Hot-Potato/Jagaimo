@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &614040746568539701
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4515983913843877429}
+  m_Layer: 0
+  m_Name: CarryPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4515983913843877429
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 614040746568539701}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0.75}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4394244838949972431}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4369198654463364396
 GameObject:
   m_ObjectHideFlags: 0
@@ -59,7 +89,6 @@ GameObject:
   - component: {fileID: 4394244838949972430}
   - component: {fileID: 4394244838949972465}
   - component: {fileID: 4394244838949972464}
-  - component: {fileID: 4394244838949972467}
   - component: {fileID: 4394244838949972466}
   - component: {fileID: 4394244838949972469}
   - component: {fileID: 6282555755904903039}
@@ -87,6 +116,7 @@ Transform:
   - {fileID: 4394244838949972449}
   - {fileID: 3417900572961048112}
   - {fileID: 5456200606930865051}
+  - {fileID: 4515983913843877429}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -153,22 +183,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &4394244838949972467
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4394244838949972448}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 1
 --- !u!114 &4394244838949972466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,7 +200,7 @@ MonoBehaviour:
   _cam: {fileID: 0}
   _playerAnimation: {fileID: 6282555755904903039}
   _playerInteraction: {fileID: 0}
-  _rb: {fileID: 4394244838949972467}
+  _rb: {fileID: 0}
   rManager: {fileID: 0}
   soundManager: {fileID: 0}
   settings: {fileID: 0}
@@ -266,6 +280,7 @@ MonoBehaviour:
   mode: 0
   aiState: 0
   tagged: 0
+  holdingPosition: {fileID: 614040746568539701}
 --- !u!135 &661485411699305206
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -527,7 +542,7 @@ PrefabInstance:
     - target: {fileID: -7722549452095179799, guid: e811d979910a6b0489de60c53c13eae6,
         type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7657966619581158213, guid: e811d979910a6b0489de60c53c13eae6,
         type: 3}
