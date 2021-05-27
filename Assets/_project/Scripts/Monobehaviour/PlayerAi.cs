@@ -41,6 +41,11 @@ public class PlayerAi : MonoBehaviour {
         potato = GameObject.FindGameObjectWithTag("Potato");
         soundManager = FindObjectOfType<SoundManager>();
         playerAnimation = GetComponent<PlayerAnimation>();
+        mode = gamemode.CLASSIC;
+        aiState = state.WANDERING; 
+        GetWaypoints();
+        NavigationOrder();
+        agent.SetDestination(waypointNodes[node].transform.position);
     }
 
     //Function for getting waypoints
@@ -81,8 +86,8 @@ public class PlayerAi : MonoBehaviour {
                     case state.WANDERING:
                         if (Vector3.Distance(transform.position,waypointNodes[node].transform.position) < 2)
                         {
-
-                            //agent.SetDestination(waypointNodes[node])
+                            NavigationOrder();
+                            agent.SetDestination(waypointNodes[node].transform.position);
                         }
                         break;
                     case state.SEEKING:
@@ -178,27 +183,27 @@ public class PlayerAi : MonoBehaviour {
     }
 
     //This method will set the order of the navigation waypoint array starting value to it's correct one if it is in forward or reverse order
-    //private void NavigationOrder()
-    //{
-    //    switch (typeOfOrder)
-    //    {
-    //        case waypointOrdering.FORWARD:
-    //            nodes++;
-    //            if (nodes >= waypointNodes.Length)
-    //            {
-    //                nodes = 0;
-    //            }
-    //            break;
-    //        case waypointOrdering.REVERSE:
-    //            nodes--;
-    //            if (nodes < 0)
-    //            {
-    //                nodes = waypointNodes.Length - 1;
-    //            }
-    //            break;
-    //        case waypointOrdering.RANDOM:
-    //            nodes = (int)Random.Range(0, waypointNodes.Length - 1);
-    //            break;
-    //    }
-    //}
+    private void NavigationOrder()
+    {
+        switch (typeOfOrder)
+        {
+            case waypointOrdering.FORWARD:
+                node++;
+                if (node >= waypointNodes.Length)
+                {
+                    node = 0;
+                }
+                break;
+            case waypointOrdering.REVERSE:
+                node--;
+                if (node < 0)
+                {
+                    node = waypointNodes.Length - 1;
+                }
+                break;
+            case waypointOrdering.RANDOM:
+                node = (int)Random.Range(0, waypointNodes.Length - 1);
+                break;
+        }
+    }
 }
