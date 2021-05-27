@@ -2,7 +2,7 @@
 // File: MutatorController
 // Author: Charles Carter
 // Date Created: 11/03/21
-// Brief: This script is to control the mutators not covered by other scripts
+// Brief: This script is to control the mutators not covered in other scripts
 //////////////////////////////////////////////////////////// 
 
 using UnityEngine;
@@ -11,16 +11,10 @@ public class MutatorController : MonoBehaviour
 {
     #region Variables
 
-    IGamemode current_gamemode;
-
+    [SerializeField]
+    private RoundManager rManager;
     [SerializeField]
     private GameSettingsContainer settings;
-
-    #endregion
-
-    #region Public Methods
-
-   
 
     #endregion
 
@@ -33,7 +27,12 @@ public class MutatorController : MonoBehaviour
 
     private void Start()
     {
-        
+        rManager = RoundManager.roundManager;
+
+        if (settings)
+        {
+
+        }
     }
 
     #endregion

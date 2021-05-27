@@ -255,6 +255,7 @@ GameObject:
   - component: {fileID: 6863599625228453317}
   - component: {fileID: 6863599625228453314}
   - component: {fileID: 348403572179170998}
+  - component: {fileID: 8155869737669465520}
   m_Layer: 8
   m_Name: Pause Menu Prefab
   m_TagString: Untagged
@@ -356,6 +357,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clickSound: 1
   uiMenuCanvasObject: {fileID: 6863599626905906579}
+  CameraManager: {fileID: 0}
+  resolutionsDropdown: {fileID: 0}
+  sliders: []
+  currentResolution: {fileID: 0}
 --- !u!114 &348403572179170998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,7 +373,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7000ac685cc4def49ac6e499f36c486a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backButtons: {fileID: 0}
   StartScene: 3
   SlowTransitions: 0
   TransitionSpeed: 0
@@ -378,6 +382,22 @@ MonoBehaviour:
   - {fileID: 5193217657761319598}
   - {fileID: 1357144820908839260}
   - {fileID: 8974863068053440361}
+  Sm: {fileID: 8155869737669465520}
+--- !u!114 &8155869737669465520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6863599625228453315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c41229419066e594a80575382f3dd8c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DefaultAudioMixer: {fileID: 24300002, guid: c7b5073bbf03aaf4bb251b4ebc79e964, type: 2}
+  SoundBoard: {fileID: 11400000, guid: bd370ab576888d742927d6489c0e6401, type: 2}
+  DefaultSound: 1
 --- !u!1 &6863599626524339378
 GameObject:
   m_ObjectHideFlags: 0
@@ -970,6 +990,41 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1220662668752930023, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1220662668752930023, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1220662668752930023, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6863599625228453314}
+    - target: {fileID: 1220662668752930023, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1220662668752930023, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: UpdateFullScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 1220662668752930023, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIMenuBehaviour, Scripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 1220662668752930023, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 1292991606246775835, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1075,6 +1130,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1931508209912831897, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
+        type: 3}
+      propertyPath: MenuRef
+      value: 
+      objectReference: {fileID: 6863599625228453314}
     - target: {fileID: 3393068009951090313, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
         type: 3}
       propertyPath: m_fontAsset
@@ -1110,6 +1170,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4494472825026126334, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6863599625228453314}
     - target: {fileID: 6865862188093294834, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -1199,6 +1264,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8254735966324322907, guid: 9683ddccb0e4a7643b3898c055fc0b3c,
+        type: 3}
+      propertyPath: m_text
+      value: '1024x768 '
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9683ddccb0e4a7643b3898c055fc0b3c, type: 3}

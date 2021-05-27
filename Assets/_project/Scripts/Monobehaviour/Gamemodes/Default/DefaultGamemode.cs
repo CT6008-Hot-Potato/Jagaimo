@@ -15,15 +15,19 @@ using UnityEngine;
 //This will mostly be in the other scripts anyway
 public class DefaultGamemode : MonoBehaviour, IGamemode
 {
-    #region Interfact Contract Expressions
+    #region Interface Contract Expressions
 
     //Fulfilling the interfaces contracted functions
     GAMEMODE_INDEX IGamemode.Return_Mode() => Return_Mode();
     
     //These 3 functions will be the same on every gamemode I think
     void IGamemode.SetActivePlayers(CharacterManager[] charArray)        => SettingActivePlayers(charArray);
+    CharacterManager[] IGamemode.GetActivePlayers() => GetActivePlayers();
     void IGamemode.AddActivePlayer(CharacterManager charToAdd)          => AddActivePlayer(charToAdd);
     void IGamemode.RemoveActivePlayer(CharacterManager charToRemove)    => RemoveActivePlayer(charToRemove);
+
+    void IGamemode.LockActivePlayers() => LockAllPlayers();
+    void IGamemode.UnLockActivePlayers() => UnlockAllPlayers();
 
     void IGamemode.RoundStarted()      => RoundStarting();
     void IGamemode.RoundEnded()        => RoundEnding();
@@ -81,19 +85,18 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
+            PutSpecificCharacterInPosition(i);
+            charArray[i].LockPlayer();
         }
 
         if (Debug.isDebugBuild)
         {
             Debug.Log("Active players set, Amount of Active players: " + currentActivePlayers.Count, this);
         }
-
-        //Using this instead of the function here because of the scroller text
-        CharacterManager manager = getRandomCharacter();
-        if (manager)
-        {
-            roundManager.OnPlayerTagged(manager);
-        }
+    }
+    private CharacterManager[] GetActivePlayers()
+    {
+        return currentActivePlayers.ToArray();
     }
 
     //Someone joins the game
@@ -107,6 +110,36 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     {       
         currentActivePlayers.Remove(characterLeft);
         //Debug.Log(currentActivePlayers.Count);
+    }
+
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void LockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].LockPlayer();
+            }
+        }
+    }
+
+    //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
+    public void UnlockAllPlayers()
+    {
+        //Go through the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i)
+        {
+            //If it's an actual player within the list
+            if (currentActivePlayers[i])
+            {
+                //Use it's unlock function
+                currentActivePlayers[i].UnLockPlayer();
+            }
+        }
     }
 
     //This runs when the round is about to start/ during the initial timer
@@ -124,20 +157,22 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     //This is what happens when this countdown starts
     private void CountdownStarting()
     {
-        if (iCountdownIndex > 0)
+        UnlockAllPlayers();
+
+        //Tags previously tagged character if there was one, if not choose a random character 
+        if (previousTagged)
         {
-            //Tags previously tagged character if there was one, if not choose a random character 
-            if (previousTagged)
-            {
-                roundManager.OnPlayerTagged(previousTagged);
-            }
-            else
-            {
-                roundManager.OnPlayerTagged(getRandomCharacter());
-            }
+            roundManager.OnPlayerTagged(previousTagged);
+        }
+        else
+        {
+            roundManager.OnPlayerTagged(getRandomCharacter());
         }
 
-        PutCharactersInStartPositions();
+        if (iCountdownIndex > 0)
+        {
+            PutCharactersInStartPositions();
+        }
     }
 
     //When the countdown ends
@@ -259,8 +294,31 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         }
         else
         {
-            return null;
+            if (currentActivePlayers[0])
+            {
+                return currentActivePlayers[0];
+            }
+            else
+            {
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("No characters to get from", this);
+                }
+
+                return null;
+            }
         }
+    }
+
+    private void PutSpecificCharacterInPosition(int index)
+    {
+        Transform spot = arenaManager.GettingSpot(0, index);
+        currentActivePlayers[index].gameObject.transform.position = spot.position;
+
+        //This is the "solution" to not being able to turn the player based on the prefab object
+        PlayerCamera camera = currentActivePlayers[index].GetComponent<PlayerCamera>();
+        camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
+        camera.flipSpin = !camera.flipSpin;
     }
 
     private void PutCharactersInStartPositions()

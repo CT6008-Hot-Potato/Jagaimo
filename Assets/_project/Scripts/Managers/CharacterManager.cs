@@ -26,8 +26,7 @@ public class CharacterManager : MonoBehaviour
     //A public variable for scripts to check if this player is locked
     public bool isPlayerLocked { private get; set; } = false;
 
-
-    [Header("Componenets Needed")]
+    [Header("Components Needed")]
     //Components already on this object
     [SerializeField]
     private PlayerController _movement;
@@ -37,8 +36,12 @@ public class CharacterManager : MonoBehaviour
     private PlayerAnimation _playerAnimation;
     [SerializeField]
     private PlayerInteraction _playerInteraction;
+    [SerializeField]
+    private Rigidbody _rb;
 
-    //Other componenets needed
+    //Other components needed
+    [SerializeField]
+    private RoundManager rManager;
     [SerializeField]
     private SoundManager soundManager;
     [SerializeField]
@@ -63,6 +66,15 @@ public class CharacterManager : MonoBehaviour
     private Transform headTransform;
     [SerializeField]
     private GameObject taggedDisplayObject;
+    [SerializeField]
+    private GameObject elimDisplayObject;
+    private float taggedAnimduration = 2f;
+
+    //Infected mutator variables
+    private bool bApplyInfectedSpeed = false;
+    private bool bRemoveSurvivorSpeed = false;
+    private float survivorSpeedAddition = 0.0f;
+    private float infectedSpeedAddition = 0.0f;
 
     #endregion
 
@@ -75,6 +87,7 @@ public class CharacterManager : MonoBehaviour
         _cam = _cam ?? GetComponent<PlayerCamera>();
         _playerAnimation = _playerAnimation ?? GetComponent<PlayerAnimation>();
         _playerInteraction = _playerInteraction ?? GetComponent<PlayerInteraction>();
+        _rb = _rb ?? GetComponent<Rigidbody>();
 
         soundManager = FindObjectOfType<SoundManager>();
         settings = GameSettingsContainer.instance;
@@ -82,6 +95,8 @@ public class CharacterManager : MonoBehaviour
 
     private void Start()
     {
+        rManager = rManager ?? RoundManager.roundManager;
+
         //This can be done better
         if (_movement)
         {
@@ -94,6 +109,41 @@ public class CharacterManager : MonoBehaviour
 
         if (settings)
         {
+            float valueToAdd = 0.05f;
+
+            if (settings.HasGenMutator(8))
+            {
+
+                int multiplier = (int)settings.FindGeneralMutatorValue(8);
+
+                valueToAdd *= multiplier;
+                _movement.speedMultiplier += valueToAdd;
+
+                //It's the infected gamemode
+                if (rManager._currentGamemode.Return_Mode() == GAMEMODE_INDEX.INFECTED)
+                {
+                    //The infected speed's mutator
+                    if (settings.HasGamMutator(0))
+                    {
+                        int inf_multiplier = (int)settings.FindGamemodeMutatorValue(0);
+                        infectedSpeedAddition = valueToAdd * inf_multiplier;
+
+                        bApplyInfectedSpeed = true;
+                    }
+
+                    //The survivor's speed's mutator
+                    if (settings.HasGamMutator(1))
+                    {
+                        int surv_multiplier = (int)settings.FindGamemodeMutatorValue(1);
+                        survivorSpeedAddition = valueToAdd * surv_multiplier;
+
+                        _movement.speedMultiplier += survivorSpeedAddition;
+
+                        bRemoveSurvivorSpeed = true;
+                    }
+                }
+            }
+
             //The mutator for using confetti is true, so swap out the elim vfx for the confetti one
             if (settings.HasGenMutator(14))
             {
@@ -132,6 +182,16 @@ public class CharacterManager : MonoBehaviour
             //soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
         }
 
+        //Making sure the elimination icon is showing
+        if (taggedDisplayObject)
+        {
+            taggedDisplayObject.SetActive(false);
+        }
+        if (elimDisplayObject)
+        {
+            elimDisplayObject.SetActive(true);
+        }
+
         //Play vfx
         if (particlePlayer)
         {
@@ -153,23 +213,32 @@ public class CharacterManager : MonoBehaviour
         }
 
         //Turn all non-important scripts off (ones that allow the player to interact especially)
-
         return this;
     }
 
     //Functions to change the player when they're tagged or untagged
     public void ThisPlayerTagged()
     {
+        
         //Animation for regaining potato
         if (_playerAnimation)
         {
             _playerAnimation.CheckToChangeState("FallingBackDeath", true);
         }
 
-        LockPlayer();
+        //This is only applied during the infected gamemode
+        if (bRemoveSurvivorSpeed)
+        {
+            _movement.speedMultiplier -= survivorSpeedAddition;
+        }
 
-        StartCoroutine(Co_TaggedEffect(2));
-        //Wait 2s for animation to complete      
+        if (bApplyInfectedSpeed)
+        {
+            _movement.speedMultiplier += infectedSpeedAddition;
+        }
+
+        StartCoroutine(Co_TaggedEffect(taggedAnimduration));
+
     }
 
     public void ThisPlayerUnTagged()
@@ -180,7 +249,7 @@ public class CharacterManager : MonoBehaviour
             //Maybe an untagged sound, maybe it would become too chaotic
         }
 
-        //Lerp into thrid person camera mode Note: this should be quicker than the lerp when you're tagged
+        //Lerp into third person camera mode Note: this should be quicker than the lerp when you're tagged
         if (_cam)
         {
             _cam.SetCameraView(false);
@@ -208,7 +277,14 @@ public class CharacterManager : MonoBehaviour
         //Guard clause to make sure the components are correct
         if (!_cam || !_movement) return;
 
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Player locked!", this);
+        }
+
         isPlayerLocked = true;
+
+        _rb.isKinematic = true;
 
         //Stop movement in the movement script, dont disable or deactive player input (they couldn't pause then)
         _movement.SetMovement(3);
@@ -224,8 +300,15 @@ public class CharacterManager : MonoBehaviour
         //Guard clause to make sure the components are correct
         if (!_cam || !_movement) return;
 
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Player unlocked!", this);
+        }
+
         isPlayerLocked = false;
-         
+
+        _rb.isKinematic = false;
+
         //Start player movement
         _movement.SetMovement(2);
 
@@ -239,6 +322,8 @@ public class CharacterManager : MonoBehaviour
     /// 
     public void DisablePlayer()
     {
+        StopCoroutine(Co_TaggedEffect(taggedAnimduration));
+
         _playerAnimation.CheckToChangeState("Idle");
 
         _cam.enabled = false;
@@ -268,6 +353,7 @@ public class CharacterManager : MonoBehaviour
 
     private IEnumerator Co_TaggedEffect(float animDuration)
     {
+        LockPlayer();
 
         yield return new WaitForSeconds(animDuration);
 

@@ -44,11 +44,6 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     private Transform rotationPosition;
     private CapsuleCollider collider;
-    [SerializeField]
-    private float cameraSensitivity;
-    //Amplify camera sensitivity specific to controllers
-    [SerializeField]
-    private float controllerCameraSensitivityMultiplier = 1.25f;
     //Pitch and yaw speed for camera
     private float pitch;
     private float yaw;
@@ -61,6 +56,7 @@ public class PlayerCamera : MonoBehaviour
     private float cameraRotateValue = 0;
     private float escapeValue = 0;
     private Vector2 cameraValue = Vector2.zero;
+    public bool useControllerSensitivity = false;
     //Character related 
     [SerializeField]
     private Mesh[] characterMesh;
@@ -83,6 +79,9 @@ public class PlayerCamera : MonoBehaviour
     public bool flipSpin;
     public bool freecamLock = false;
     public bool cameraRotationLock = false;
+    public float cameraSensitivity = 1;
+    //Amplify camera sensitivity specific to controllers
+    public float controllerCameraSensitivityMultiplier = 3;
     [SerializeField]
     private GameObject crosshair;   
     #endregion Variables
@@ -281,29 +280,30 @@ public class PlayerCamera : MonoBehaviour
                 //Free camera unconstrained
                 case cS.FREECAMUNCONSTRAINED:
                     //If freecam button lifted up and freecam is not locked go back to third person
-                    if (cameraRotateValue <= 0.1f && !freecamLock)
+                    if (thirdPersonCamera.gameObject.TryGetComponent(out Rigidbody rigidbody))
                     {
-                        //If there is a rigidbody attached to the camera destroy it and destroy sphere collider
-                        if (thirdPersonCamera.gameObject.GetComponent<Rigidbody>() != null)
+                        if (cameraRotateValue <= 0.1f && !freecamLock)
                         {
-                            Destroy(thirdPersonCamera.gameObject.GetComponent<Rigidbody>());
-                            Destroy(thirdPersonCamera.gameObject.GetComponent<SphereCollider>());
-                            Destroy(thirdPersonCamera.gameObject.GetComponent<CameraCollision>());
+                            //If there is a rigidbody attached to the camera destroy it and destroy sphere collider
+
+                            Destroy(rigidbody.GetComponent<SphereCollider>());
+                            Destroy(rigidbody.GetComponent<CameraCollision>());
+                            Destroy(rigidbody);
+                            thirdPersonCamera.transform.rotation = Quaternion.Euler(freecamRotation);
+                            cameraState = cS.THIRDPERSON;
+                        }   
+                        //Else if beyond 200 metres from centre of map add rigidbody & collider
+                        else if (Vector3.Distance(thirdPersonCamera.transform.position,Vector3.zero) > 200)
+                        {
+                            rigidbody.useGravity = true;
+                            rigidbody.mass = 10000;
                         }
-                        thirdPersonCamera.transform.rotation = Quaternion.Euler(freecamRotation);
-                        Destroy(thirdPersonCamera.gameObject.GetComponent<SphereCollider>());
-                        cameraState = cS.THIRDPERSON;
-                    }   
-                    //Else if beyond 200 metres from centre of map add rigidbody & collider
-                    else if (Vector3.Distance(thirdPersonCamera.transform.position,Vector3.zero) > 200)
-                    {
-                        thirdPersonCamera.gameObject.GetComponent<Rigidbody>().useGravity = true;
-                        thirdPersonCamera.gameObject.GetComponent<Rigidbody>().mass = 10000;
-                    }
-                    //Remove it and sphere collider when within 150 metres of the centre of map
-                    if (Vector3.Distance(thirdPersonCamera.transform.position, Vector3.zero) < 150)
-                    {
-                        thirdPersonCamera.gameObject.GetComponent<Rigidbody>().useGravity = false;
+                        //Remove it and sphere collider when within 150 metres of the centre of map
+                        if (Vector3.Distance(thirdPersonCamera.transform.position, Vector3.zero) < 150)
+                        {
+
+                            rigidbody.useGravity = false;
+                        }
                     }
                     //Moving third person camera position around freely
                     thirdPersonCamera.transform.position = new Vector3(thirdPersonCamera.transform.position.x, thirdPersonCamera.transform.position.y + freeCamValueY, thirdPersonCamera.transform.position.z);
@@ -328,26 +328,59 @@ public class PlayerCamera : MonoBehaviour
             {
                 //InvertX
                 case mI.INVERTX:
-                    yaw += cameraSensitivity * cameraValue.x;
-                    pitch += cameraSensitivity * cameraValue.y;
+                    if (useControllerSensitivity)
+                    {
+                        yaw += controllerCameraSensitivityMultiplier * cameraValue.x;
+                        pitch += controllerCameraSensitivityMultiplier * cameraValue.y;
+                    }
+                    else
+                    {
+                        yaw += cameraSensitivity * cameraValue.x;
+                        pitch += cameraSensitivity * cameraValue.y;
+                    }
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //InvertY
                 case mI.INVERTY:
-                    yaw -= cameraSensitivity * cameraValue.x;
-                    pitch -= cameraSensitivity * cameraValue.y;
+                    if (useControllerSensitivity)
+                    {
+                        yaw -= controllerCameraSensitivityMultiplier * cameraValue.x;
+                        pitch -= controllerCameraSensitivityMultiplier * cameraValue.y;
+                    }
+                    else
+                    {
+                        yaw -= cameraSensitivity * cameraValue.x;
+                        pitch -= cameraSensitivity * cameraValue.y;
+                    }
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //Both
                 case mI.INVERTBOTH:
-                    yaw -= cameraSensitivity * cameraValue.x;
-                    pitch += cameraSensitivity * cameraValue.y;
+                    if (useControllerSensitivity)
+                    {
+                        yaw -= controllerCameraSensitivityMultiplier * cameraValue.x;
+                        pitch += controllerCameraSensitivityMultiplier * cameraValue.y;
+                    }
+                    else
+                    {
+                        yaw -= cameraSensitivity * cameraValue.x;
+                        pitch += cameraSensitivity * cameraValue.y;
+                    }
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
                 //None
                 case mI.INVERTNONE:
-                    yaw += cameraSensitivity * cameraValue.x;
-                    pitch -= cameraSensitivity * cameraValue.y;
+
+                    if (useControllerSensitivity)
+                    {
+                        yaw += controllerCameraSensitivityMultiplier * cameraValue.x;
+                        pitch -= controllerCameraSensitivityMultiplier * cameraValue.y;
+                    }
+                    else
+                    {
+                        yaw += cameraSensitivity * cameraValue.x;
+                        pitch -= cameraSensitivity * cameraValue.y;
+                    }
                     pitch = Mathf.Clamp(pitch, -clampDegree, clampDegree);
                     break;
             }
@@ -439,14 +472,7 @@ public class PlayerCamera : MonoBehaviour
     //Function for getting camera input value as vector 3
     public void Camera(InputAction.CallbackContext ctx)
     {
-        if (ctx.action.ToString() == "Gameplay/Camera[/XInputControllerWindows/rightStick]")
-        {
-            cameraValue = new Vector3(ctx.ReadValue<Vector2>().x * controllerCameraSensitivityMultiplier, ctx.ReadValue<Vector2>().y * controllerCameraSensitivityMultiplier, 0);
-        }
-        else
-        {
-            cameraValue = new Vector3(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y, 0);
-        }
+        cameraValue = new Vector3(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y, 0);
     }
 
     //Function for getting camera zoom input value
@@ -464,6 +490,10 @@ public class PlayerCamera : MonoBehaviour
     //Function for getting escape input value
     public void Escape(InputAction.CallbackContext ctx)
     {
+        if (pC == null)
+        {
+            pC = GetComponent<PlayerController>();
+        }
         pC.uiMenu.UpdateUIMenuState(!pC.uiMenu.GetMenuStatus());
         escapeValue = ctx.ReadValue<float>();
     }

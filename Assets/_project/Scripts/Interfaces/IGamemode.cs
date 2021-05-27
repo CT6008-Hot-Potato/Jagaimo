@@ -14,8 +14,13 @@ public interface IGamemode
 
     //Controlling active players
     void SetActivePlayers(CharacterManager[] charactersInGame);
+    CharacterManager[] GetActivePlayers();
+
     void RemoveActivePlayer(CharacterManager charToRemove);
     void AddActivePlayer(CharacterManager charToAdd);
+
+    void LockActivePlayers();
+    void UnLockActivePlayers();
 
     //Controlling events in the game
     void RoundStarted();

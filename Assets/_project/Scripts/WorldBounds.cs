@@ -18,18 +18,27 @@ public class WorldBounds : MonoBehaviour
     //When something enters the bounds
     private void OnTriggerEnter(Collider other)
     {
-        //Put it back at the start
+        //Position isnt set to anything
         if (position == Vector3.zero)
         {
-            other.transform.position = new Vector3(0, 5, 0);
+            if (Debug.isDebugBuild)
+            {
+                Debug.Log("Set position value" + other.name, this);
+            }
+
+            return;
         }
-        else if (other.tag != "PositionStay")
+
+        if (other.tag != "PositionStay")
         {
             other.transform.position = position;
-        }
-        if (Debug.isDebugBuild)
-        {
-            Debug.Log("Something left the map: " + other.name, this);
+            if (other.TryGetComponent<Rigidbody>(out Rigidbody rb))
+            {
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("Something left the map: " + other.name, this);
+                }
+            }
         }
     }
 }

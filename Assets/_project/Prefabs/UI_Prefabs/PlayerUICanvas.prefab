@@ -2838,7 +2838,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roundManager: {fileID: 0}
-  duration: 30
+  duration: 60
   timerText: {fileID: 1977434641884713773}
 --- !u!1 &1977434641915687142
 GameObject:

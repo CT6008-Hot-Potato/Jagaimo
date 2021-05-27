@@ -18,8 +18,7 @@ public class PlayerController : MonoBehaviour
     private float velocityClamp = 10f;
     [SerializeField]
     private float jumpVelocity = 50;
-    [SerializeField]
-    private float speedMultiplier = 0.5f;
+    public float speedMultiplier = 0.5f;
     [SerializeField]
     private float walkSpeed = 5f;
     [SerializeField]
@@ -58,6 +57,8 @@ public class PlayerController : MonoBehaviour
     private PlayerAnimation pA;
     [SerializeField]
     private ScriptableParticles particles;
+    [SerializeField]
+    private PhysicMaterial wall;
     #endregion
     //Enums
     #region Enums
@@ -112,6 +113,7 @@ public class PlayerController : MonoBehaviour
                 GetComponent<PlayerInteraction>().Drop(true);
             }
             grounded = true;
+            collider.material = null;
         }
         else
         {
@@ -131,7 +133,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         //If player movement state isn't interacting
-        if (playerMovement != pM.INTERACTING && playerMovement != pM.INTERACTING && pC.cameraState != PlayerCamera.cS.FREECAMUNCONSTRAINED)
+        if (playerMovement != pM.INTERACTING && playerMovement != pM.STANDING && pC.cameraState != PlayerCamera.cS.FREECAMUNCONSTRAINED)
         {
             //Calculate how fast player should be moving
             Vector3 targetVelocity = movementValue;
@@ -170,7 +172,8 @@ public class PlayerController : MonoBehaviour
                 {
                     if (touchingWall)
                     {
-                        rb.AddForce((-rotationPosition.TransformDirection(movementValue) * Time.deltaTime) * 1000, ForceMode.Impulse);
+                        rb.AddForce((-rotationPosition.TransformDirection(movementValue) * Time.deltaTime) * 100, ForceMode.Impulse);
+                        collider.material = wall;
                     }
                     if (!sliding)
                     {
