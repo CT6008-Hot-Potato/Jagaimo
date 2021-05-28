@@ -123,6 +123,11 @@ public class PlayerInteraction : MonoBehaviour {
                             sM.PlaySound(grabSound);
                         }
                         
+                        //Scale down if potato
+                        if (hit.transform.tag == "Potato") {
+                            hit.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                        }
+                        
                         grabbing = true;
                         movingObject = hit.transform.gameObject;
                         //Here we are simply assigning the rbObject the rb component on moving object then setting it's gravity to false and kinematic to true, this is done so this object doesn't drag around.
@@ -291,6 +296,12 @@ public class PlayerInteraction : MonoBehaviour {
     public void Drop(bool throwObject) {
         if (sM) {
             sM.PlaySound(throwSound);
+        }
+
+        //Scale down if potato
+        if (movingObject.tag == "Potato")
+        {
+            hit.transform.localScale = Vector3.one;
         }
 
         movingParent.transform.position = position.position;

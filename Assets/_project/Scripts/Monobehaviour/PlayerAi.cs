@@ -27,14 +27,15 @@ public class PlayerAi : MonoBehaviour, IInteractable {
     private PlayerAnimation playerAnimation;
     [SerializeField]
     private ScriptableParticles particles;
-    private bool bloodEffect = false;
-    private float bloodCountdown = 5;
+    private bool bloodEffect = true;
+    private float bloodCountdown = 1.5f;
+    private GameObject playerToFollow;
     #endregion Variables
 
     //Assign various variables in the start function for this player ai
     void Start() {
         agent = GetComponent<NavMeshAgent>();
-        typeOfOrder = (waypointOrdering)Random.Range(0, 2);
+        typeOfOrder = waypointOrdering.RANDOM   ;
         potato = GameObject.FindGameObjectWithTag("Potato");
         soundManager = FindObjectOfType<SoundManager>();
         playerAnimation = GetComponent<PlayerAnimation>();
@@ -58,36 +59,78 @@ public class PlayerAi : MonoBehaviour, IInteractable {
         switch (aiState) {
             case state.WANDERING:
                 playerAnimation.CheckToChangeState("JogForward");
-                if (Vector3.Distance(transform.position, waypointNodes[node].transform.position) < 2)
-                {
-                    NavigationOrder();
-                    agent.SetDestination(waypointNodes[node].transform.position);
-                }
-
-                if (Vector3.Distance(transform.position, waypointNodes[node].transform.position) < 15)
+                if (Vector3.Distance(transform.position, potato.transform.position) < 11)
                 {
                     agent.speed = agent.speed * 2;
                     aiState = state.FLEEING;
                 }
+
+                if (playerToFollow != null)
+                {
+                    transform.LookAt(new Vector3 (playerToFollow.transform.position.x, transform.position.y, playerToFollow.transform.position.z));
+                    if (Vector3.Distance(transform.position, playerToFollow.transform.position) > 5)
+                    {
+                        agent.SetDestination(playerToFollow.transform.position);
+
+                    }
+                }
+                else if (Vector3.Distance(transform.position, waypointNodes[node].transform.position) < 3)
+                {
+                    Debug.Log("1");
+                    NavigationOrder();
+                    agent.SetDestination(waypointNodes[node].transform.position);
+                }
+
                 break;
             case state.FLEEING:
                 playerAnimation.CheckToChangeState("Running");
                 if (Vector3.Distance(transform.position, waypointNodes[node].transform.position) < 33)
                 {
+                    Debug.Log("3");
                     Vector3 directionToPlayer = transform.position - potato.transform.position;
                     Vector3 newPosition = transform.position + directionToPlayer;
                     agent.SetDestination(newPosition);
                 }
                 else
                 {
+                    Debug.Log("4");
                     agent.speed = agent.speed * 0.5f;
                     aiState = state.WANDERING;
                 }
                 break;
             case state.DEAD:
-                agent.SetDestination(transform.position);
-                particles.CreateParticle(ScriptableParticles.Particle.BloodBurst, transform.position);
+                if (bloodEffect)
+                {
+                    Debug.Log("5");
+                    bloodCountdown -= Time.deltaTime;
+                    if (bloodCountdown < 0)
+                    {
+                        bloodEffect = false;
+                    }
+                    agent.SetDestination(transform.position);
+                    particles.CreateParticle(ScriptableParticles.Particle.BloodBurst, new Vector3 (transform.position.x, transform.position.y - 1.8f, transform.position.z));
+                }
                 break;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player" && aiState == state.WANDERING && playerToFollow == null)
+        {
+            playerToFollow = other.gameObject;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject == playerToFollow)
+        {
+            playerToFollow = null;
+            if (aiState == state.WANDERING)
+            {
+                agent.SetDestination(waypointNodes[node].transform.position);
+            }
         }
     }
 
