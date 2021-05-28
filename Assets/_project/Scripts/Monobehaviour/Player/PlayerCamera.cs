@@ -84,7 +84,7 @@ public class PlayerCamera : MonoBehaviour {
     //Amplify camera sensitivity specific to controllers
     public float controllerCameraSensitivityMultiplier = 3;
     [SerializeField]
-    private GameObject crosshair;   
+    private SpriteRenderer crosshair;   
     #endregion Variables
 
     #region Enums
@@ -115,12 +115,14 @@ public class PlayerCamera : MonoBehaviour {
         //Set to first person
         if (firstPerson) {
             cameraState = cS.FIRSTPERSON;
-            crosshair.SetActive(true);
+
+
+            crosshair.color = Color.white;  //.SetActive(true);
         }
         //Set to third person
         else {
             cameraState = cS.THIRDPERSON;
-            crosshair.SetActive(false);
+            crosshair.color = Color.clear;//crosshair.SetActive(false);
         }
     }
 
@@ -198,7 +200,8 @@ public class PlayerCamera : MonoBehaviour {
                 case cS.FIRSTPERSON:
                     //Check if wrong camera enabled and if so setup correct camera
                     if (thirdPersonCamera.enabled) {
-                        crosshair.SetActive(true);
+
+                        crosshair.color = Color.white; //                        crosshair.SetActive(true);
                         thirdPersonCamera.enabled = false;
                         firstPersonCamera.enabled = true;
                     }
@@ -449,7 +452,7 @@ public class PlayerCamera : MonoBehaviour {
 
     //Function to enable third person mode camera
     void EnableThirdPerson() {
-        crosshair.SetActive(false);
+        crosshair.color = Color.clear;//        crosshair.SetActive(false);
         thirdPersonCamera.enabled = true;
         firstPersonCamera.enabled = false;
     }

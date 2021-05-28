@@ -83,6 +83,11 @@ public class CharacterManager : MonoBehaviour
     private float survivorSpeedAddition = 0.0f;
     private float infectedSpeedAddition = 0.0f;
 
+    //Player reticle variables
+    [SerializeField]
+    private GameObject reticle;
+
+
     #endregion
 
     #region Unity Methods
@@ -259,6 +264,13 @@ public class CharacterManager : MonoBehaviour
             _movement.speedMultiplier += infectedSpeedAddition;
         }
 
+
+        //change reticle
+        if(reticle.TryGetComponent(out ReticleSwitcher i))
+        {
+            i.ChangeReticle(1);
+        }
+
         StartCoroutine(Co_TaggedEffect(taggedAnimduration));
     }
 
@@ -281,6 +293,13 @@ public class CharacterManager : MonoBehaviour
         {
             Debug.Log("Something isnt set here", this);
         }
+
+        //change reticle
+        if (reticle.TryGetComponent(out ReticleSwitcher i))
+        {
+            i.ChangeReticle(0);
+        }
+
     }
 
     /// <summary>
