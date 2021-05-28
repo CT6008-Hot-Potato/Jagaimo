@@ -41,7 +41,9 @@ public class PlayerAnimation : MonoBehaviour {
     //Start animation at idle by default
     private void Start() {
         animation.Play("Idle");
-        animation.Play("Idle");
+        if (animationArms != null) {
+            animationArms.CrossFade("Idle");
+        }
     }
 
     //Function to check to change the animation state for a player
@@ -53,7 +55,9 @@ public class PlayerAnimation : MonoBehaviour {
         //Else if animation is not locked crossfade play the animation for the arms and body respectively
         else if (!animationLock) {
             animation.CrossFade(animationState);
-            animationArms.CrossFade(animationState);
+            if (animationArms != null) {
+                animationArms.CrossFade(animationState);
+            }
             return true;
         }
 
@@ -71,7 +75,9 @@ public class PlayerAnimation : MonoBehaviour {
         else {
             animationLock = lockAnimation;
             animation.CrossFade(animationState);
-            animationArms.CrossFade(animationState);
+            if (animationArms != null) {
+                animationArms.CrossFade(animationState);
+            }
             StartCoroutine(Co_AnimationTime(animation.GetClip(animationState).length));
             return true;
         }

@@ -83,6 +83,11 @@ public class CharacterManager : MonoBehaviour
     private float survivorSpeedAddition = 0.0f;
     private float infectedSpeedAddition = 0.0f;
 
+    //Player reticle variables
+    [SerializeField]
+    private GameObject reticle;
+
+
     #endregion
 
     #region Unity Methods
@@ -235,7 +240,13 @@ public class CharacterManager : MonoBehaviour
 
     //Functions to change the player when they're tagged or untagged
     public void ThisPlayerTagged()
-    {
+    {   
+        if (!isPlayer)
+        {
+            PlayerAi AI = GetComponent<PlayerAi>();
+            AI.Interact();
+        }
+
         //Animation for regaining potato
         if (_playerAnimation)
         {
@@ -251,6 +262,13 @@ public class CharacterManager : MonoBehaviour
         if (bApplyInfectedSpeed)
         {
             _movement.speedMultiplier += infectedSpeedAddition;
+        }
+
+
+        //change reticle
+        if(reticle.TryGetComponent(out ReticleSwitcher i))
+        {
+            i.ChangeReticle(1);
         }
 
         StartCoroutine(Co_TaggedEffect(taggedAnimduration));
@@ -275,6 +293,13 @@ public class CharacterManager : MonoBehaviour
         {
             Debug.Log("Something isnt set here", this);
         }
+
+        //change reticle
+        if (reticle.TryGetComponent(out ReticleSwitcher i))
+        {
+            i.ChangeReticle(0);
+        }
+
     }
 
     /// <summary>
