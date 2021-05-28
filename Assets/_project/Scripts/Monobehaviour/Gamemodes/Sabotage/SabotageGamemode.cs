@@ -84,12 +84,6 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
     {
-        if (!wScreenManager)
-        {
-            wScreenManager = WinScreenManager.instance;
-        }
-        wScreenManager.SpawnWinScreen(Return_Mode());
-
         //Going through the give array and adding it to the list
         for (int i = 0; i < charArray.Length; ++i)
         {

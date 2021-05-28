@@ -237,12 +237,6 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
     {
-        if (!winScreenManager)
-        {
-            winScreenManager = WinScreenManager.instance;
-        }
-        winScreenManager.SpawnWinScreen(Return_Mode());
-
         //Still need to add the active players for testing
         for (int i = 0; i < charArray.Length; ++i)
         {
@@ -422,6 +416,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             {
                 Transform spotTransform = arenaManager.GettingSpot((int)Football_Team.Orange_Team, spawnSpots[i]);
 
+                Rigidbody rb = orangeTeam[i].GetComponent<Rigidbody>();
+                rb.velocity = Vector3.zero;
+
                 orangeTeam[i].transform.position = spotTransform.position;
 
                 //This is the "solution" to not being able to turn the player based on the prefab object
@@ -435,6 +432,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             for (int i = 0; i < blueTeam.Count; ++i)
             {
                 Transform spotTransform = arenaManager.GettingSpot((int)Football_Team.Blue_Team, spawnSpots[i]);
+
+                Rigidbody rb = orangeTeam[i].GetComponent<Rigidbody>();
+                rb.velocity = Vector3.zero;
 
                 blueTeam[i].transform.position = spotTransform.position;
             }

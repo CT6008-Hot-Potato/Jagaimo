@@ -12,7 +12,11 @@ public class PlayerPowerUpHandler : MonoBehaviour
 {
     #region Variables Needed
 
-    GameSettingsContainer settings;
+    private RoundManager roundManager;
+    private GameSettingsContainer settings;
+
+    [SerializeField]
+    private WorldBounds waterBounds;
 
     //The main components affected
     [SerializeField]
@@ -50,6 +54,9 @@ public class PlayerPowerUpHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        roundManager = RoundManager.roundManager;
+        waterBounds = roundManager.worldBoundry;
+
         if (!PowerUp_UI && Debug.isDebugBuild)
         {
             Debug.Log("There's no powerUpUI set", this);

@@ -81,12 +81,6 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
     {
-        if (!winScreenManager)
-        {
-            winScreenManager = WinScreenManager.instance;
-        }
-        winScreenManager.SpawnWinScreen(Return_Mode());
-
         //Going through the give array and adding it to the list
         for (int i = 0; i < charArray.Length; ++i)
         {
@@ -115,6 +109,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     private void RemoveActivePlayer(CharacterManager characterLeft)
     {       
         currentActivePlayers.Remove(characterLeft);
+        //orderOfEliminations.Add(characterLeft);
         //Debug.Log(currentActivePlayers.Count);
     }
 

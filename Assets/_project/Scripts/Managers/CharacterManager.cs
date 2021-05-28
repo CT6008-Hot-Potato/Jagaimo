@@ -21,9 +21,6 @@ public class CharacterManager : MonoBehaviour
     //The tracker attached to the object
     public TaggedTracker _tracker;
 
-    //A potentially useful bool for AI production
-    public bool isPlayer;
-
     //A public variable for scripts to check if this player is locked
     public bool isPlayerLocked { private get; set; } = false;
 
@@ -87,7 +84,6 @@ public class CharacterManager : MonoBehaviour
     [SerializeField]
     private GameObject reticle;
 
-
     #endregion
 
     #region Unity Methods
@@ -113,16 +109,6 @@ public class CharacterManager : MonoBehaviour
     private void Start()
     {
         rManager = rManager ?? RoundManager.roundManager;
-
-        //This can be done better
-        if (_movement)
-        {
-            isPlayer = true;
-        }
-        else
-        {
-            isPlayer = false;
-        }
 
         if (settings)
         {
@@ -183,70 +169,34 @@ public class CharacterManager : MonoBehaviour
         //If they arent tagged then do nothing
         if (!_tracker.isTagged) return null;
 
-        //Shouldn't untag in the win screen or generally when eliminated
-        StopCoroutine(Co_TaggedEffect(taggedAnimduration));
-
         //The win screen is about to happen, dont change the camera or play the VFX etc
         if (playersLeft <= 2)
         {
+            //Shouldn't untag in the win screen or generally when eliminated
+            StopCoroutine(Co_TaggedEffect(taggedAnimduration));
+
             return this;
         }
 
-        //Send the player into "spectator" mode (No model, no colliders)
-        if (_cam)
-        {
-            _cam.cameraState = PlayerCamera.cS.FREECAMUNCONSTRAINED;
-        }
-
-        //Play Sound
-        if (soundManager)
-        {
-            soundManager.PlaySound(Bloodboom);
-        }
-
-        //Making sure the elimination icon is showing
-        if (taggedDisplayObject != null)
-        {
-            taggedDisplayObject.Stop();
-        }
-        if (elimDisplayObject != null)
-        {
-            elimDisplayObject.Play();
-        }
-
-        //Play VFX
-        if (particlePlayer)
-        {
-            //Play it on the head spot
-            if (headTransform)
-            {
-                Instantiate(particlePlayer.CreateParticle(elimVFX, Vector3.zero), headTransform);
-            }
-            else
-            {
-                //Play it from the feet?
-                Instantiate(particlePlayer.CreateParticle(elimVFX, Vector3.zero), transform);
-
-                if (Debug.isDebugBuild)
-                {
-                    Debug.Log("No head transform given", this);
-                }
-            }
-        }
+        EliminationEffect();
 
         //Turn all non-important scripts off (ones that allow the player to interact especially)
         return this;
     }
 
+    public void ForceElimination()
+    {
+        //Play all the sounds and effects etc
+        EliminationEffect();
+
+        //Telling the gamemode that this isnt an active player anymore
+        rManager._currentGamemode.RemoveActivePlayer(this);
+        enabled = false;
+    }
+
     //Functions to change the player when they're tagged or untagged
     public void ThisPlayerTagged()
     {   
-        if (!isPlayer)
-        {
-            PlayerAi AI = GetComponent<PlayerAi>();
-            AI.Interact();
-        }
-
         //Animation for regaining potato
         if (_playerAnimation)
         {
@@ -263,7 +213,6 @@ public class CharacterManager : MonoBehaviour
         {
             _movement.speedMultiplier += infectedSpeedAddition;
         }
-
 
         //change reticle
         if(reticle.TryGetComponent(out ReticleSwitcher i))
@@ -351,7 +300,6 @@ public class CharacterManager : MonoBehaviour
     /// <summary>
     /// BE CAREFUL WHEN USING THIS, ONLY FOR WIN SCREEN
     /// </summary>
-    /// 
     public void DisablePlayer()
     {
         //Shouldn't untag in the win screen or generally when eliminated
@@ -362,24 +310,12 @@ public class CharacterManager : MonoBehaviour
             _playerAnimation.CheckToChangeState("Idle");
         }
 
-        if (_input)
-        {
-            Destroy(_input);
-        }
+        _input.DeactivateInput();
+        _movement.enabled = false;
+        _playerInteraction.enabled = false;
+        _cam.enabled = false;
 
-        Destroy(_cam);
-        
-        if (_movement)
-        {
-            Destroy(_movement);
-        }
-
-        if (_playerInteraction)
-        {
-            Destroy(_playerInteraction);
-        }
-
-        if (taggedDisplayObject)
+        if (taggedDisplayObject && taggedDisplayObject.isPlaying)
         {
             taggedDisplayObject.Stop();
         }
@@ -423,6 +359,55 @@ public class CharacterManager : MonoBehaviour
         {
             //Play the tagged sound
             //sm.PlaySound();
+        }
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private void EliminationEffect()
+    {
+        //Send the player into "spectator" mode (No model, no colliders)
+        if (_cam)
+        {
+            _cam.cameraState = PlayerCamera.cS.FREECAMUNCONSTRAINED;
+        }
+
+        //Play Sound
+        if (soundManager)
+        {
+            soundManager.PlaySound(Bloodboom);
+        }
+
+        //Making sure the elimination icon is showing
+        if (taggedDisplayObject != null)
+        {
+            taggedDisplayObject.Stop();
+        }
+        if (elimDisplayObject != null)
+        {
+            elimDisplayObject.Play();
+        }
+
+        //Play VFX
+        if (particlePlayer)
+        {
+            //Play it on the head spot
+            if (headTransform)
+            {
+                Instantiate(particlePlayer.CreateParticle(elimVFX, Vector3.zero), headTransform);
+            }
+            else
+            {
+                //Play it from the feet?
+                Instantiate(particlePlayer.CreateParticle(elimVFX, Vector3.zero), transform);
+
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("No head transform given", this);
+                }
+            }
         }
     }
 
