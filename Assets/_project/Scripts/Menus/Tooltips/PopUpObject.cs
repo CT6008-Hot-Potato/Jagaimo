@@ -20,7 +20,7 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] GameObject Prefab;
 
     //Refference to the object after being created by this script
-    protected GameObject MyGameObject;
+    public GameObject MyGameObject;
 
     // Allows the tooltip to be resized as appropriate on creation (assigned in inspector)
     [SerializeField] Vector3 Scale = Vector3.one;
@@ -110,6 +110,12 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         public void LateUpdate() // Late update is called after all other important calculations, which is optimal for UI elements 
         {
 
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                MyTransform.gameObject.SetActive(false);
+            }
+
+
             if (MyTransform == null)
             {
 
@@ -122,6 +128,8 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 MyTransform.anchoredPosition = ScreenToRectPos(mouse.position.ReadValue()) + (Displacement);
 
             }
+
+
         }
 
         protected Vector2 ScreenToRectPos(Vector2 screen_pos) // Calculates the new position based on the mouse position 
