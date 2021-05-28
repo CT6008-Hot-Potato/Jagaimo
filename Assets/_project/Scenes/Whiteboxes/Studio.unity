@@ -37221,6 +37221,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 62.334423, y: 35.523304, z: -18.527817}
+  roundManager: {fileID: 0}
+  charactersInWater: []
+  killDuration: 0.25
 --- !u!208 &1495275977
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -53855,8 +53858,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerAi
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 6896924955363976752, guid: 781adf823c83fa546aef4dbefe581fe2, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 781adf823c83fa546aef4dbefe581fe2, type: 3}
 --- !u!1 &2146368827
 GameObject:
