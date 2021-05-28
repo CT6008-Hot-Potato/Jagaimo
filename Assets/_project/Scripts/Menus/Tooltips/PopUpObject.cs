@@ -110,16 +110,18 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         public void LateUpdate() // Late update is called after all other important calculations, which is optimal for UI elements 
         {
 
-            if (Mouse.current.leftButton.wasPressedThisFrame)
+            
+
+            if (MyTransform != null)
             {
-                MyTransform.gameObject.SetActive(false);
+                if (Mouse.current.leftButton.wasPressedThisFrame)
+                {
+                    MyTransform.gameObject.SetActive(false);
+                }
+
             }
 
 
-            if (MyTransform == null)
-            {
-
-            }
             if (toolObject.activeSelf) // If the element has a mouse over it, change the position of the overlay 
             {
 
