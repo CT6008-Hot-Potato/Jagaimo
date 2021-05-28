@@ -8,6 +8,7 @@
 
 //This script uses these namespaces
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -41,6 +42,7 @@ public class RoundManager : MonoBehaviour
 
     //Necessary for infected and other utility based functionality
     public GameObject potatoPrefab;
+    public WorldBounds worldBoundry;
 
     //Bits and pieces that will be in some of the game scenes
     [SerializeField]

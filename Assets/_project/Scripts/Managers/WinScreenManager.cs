@@ -68,12 +68,6 @@ public class WinScreenManager : MonoBehaviour
 
     #region Public Methods
 
-    public void SpawnWinScreen(GAMEMODE_INDEX gamemode)
-    {
-        GameObject go = Instantiate(winScreenPrefabs[(int)gamemode], transform);
-        winScreen = go.GetComponent<WinScreen>();
-    }
-
     //Playing the win screen (and pass through the gamemode incase of different screens per gamemode)
     public void PlayWinScreen(GAMEMODE_INDEX gamemode, List<CharacterManager> everyPlayer, List<CharacterManager> winningChars)
     {
@@ -107,11 +101,13 @@ public class WinScreenManager : MonoBehaviour
         {
             if (manager)
             {
-                manager.LockPlayer();
                 //Turning off the revelant components;
                 manager.DisablePlayer();
             }
         }
+
+        GameObject go = Instantiate(winScreenPrefabs[(int)gamemode], transform);
+        winScreen = go.GetComponent<WinScreen>();
 
         //This will determine what's shown on the screen (so podiums vs football spots vs infected/sabotage scene)
         //Spinning Podiums for classic gamemode

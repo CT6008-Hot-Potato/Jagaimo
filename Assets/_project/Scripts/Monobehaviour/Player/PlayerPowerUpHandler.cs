@@ -5,19 +5,26 @@
 // Brief: The script for the behaviour when the player triggers a power up
 //////////////////////////////////////////////////////////// 
 
+using System.Collections;
 using UnityEngine;
 
 public class PlayerPowerUpHandler : MonoBehaviour
 {
     #region Variables Needed
 
-    GameSettingsContainer settings;
+    private RoundManager roundManager;
+    private GameSettingsContainer settings;
+
+    [SerializeField]
+    private WorldBounds waterBounds;
 
     //The main components affected
     [SerializeField]
     private PlayerCamera _cam;
     [SerializeField]
     private PlayerController _movement;
+    [SerializeField]
+    private PlayerInteraction _interaction;
     [SerializeField]
     private PowerUpUi PowerUp_UI;
 
@@ -29,6 +36,7 @@ public class PlayerPowerUpHandler : MonoBehaviour
     {
         _cam = _cam ?? GetComponent<PlayerCamera>();
         _movement = _movement ?? GetComponent<PlayerController>();
+        _interaction = _interaction ?? GetComponent<PlayerInteraction>();
 
         settings = GameSettingsContainer.instance;
 
@@ -46,6 +54,9 @@ public class PlayerPowerUpHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        roundManager = RoundManager.roundManager;
+        waterBounds = roundManager.worldBoundry;
+
         if (!PowerUp_UI && Debug.isDebugBuild)
         {
             Debug.Log("There's no powerUpUI set", this);
@@ -63,10 +74,63 @@ public class PlayerPowerUpHandler : MonoBehaviour
         //Power Up 1 - Increasing player speed temporarily
         //Power Up 2 - Bullet Potato
         //Power Up 3 - Flood
-        //Power Up 4 - 
+        //Power Up 4 -   
 
         switch (powerUpID)
         {
+            case 0:
+                //_cam.ChangeRoll();
+                //StartCoroutine();
+                break;
+            case 1:
+                _movement.speed += 0.3f;
+                break;
+            case 2:
+                //_interaction.BulletPotato(true);
+                break;
+            case 3:
+
+                break;
+            case 4:
+
+                break;
+            default:
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log("Power Up Triggered", this);
+                }
+                break;
+        }
+
+        StartCoroutine(PowerUpTimer(powerUpID));
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private IEnumerator PowerUpTimer(int ID)
+    {
+        yield return new WaitForSeconds(5f);
+
+        switch (ID)
+        {
+            case 0:
+                //_cam.ChangeRoll
+                //StartCoroutine();
+                break;
+            case 1:
+                _movement.speed -= 0.3f;
+                break;
+            case 2:
+                //_interaction.BulletPotato(false);
+                break;
+            case 3:
+
+                break;
+            case 4:
+
+                break;
             default:
                 if (Debug.isDebugBuild)
                 {
@@ -75,10 +139,6 @@ public class PlayerPowerUpHandler : MonoBehaviour
                 break;
         }
     }
-
-    #endregion
-
-    #region Private Methods
 
     #endregion
 }

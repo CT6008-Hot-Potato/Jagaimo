@@ -66,7 +66,6 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     [SerializeField]
     private GameObject potatoPrefab;
-    bool bAlreadyWon = false;
 
     #endregion
 
@@ -90,12 +89,6 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
     {
-        if (!winScreenManager)
-        {
-            winScreenManager = WinScreenManager.instance;
-        }
-        winScreenManager.SpawnWinScreen(Return_Mode());
-
         //Going through the give array and adding it to the list
         for (int i = 0; i < charArray.Length; ++i)
         {
@@ -103,6 +96,8 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
             PutSpecificCharacterInPosition(i);
             charArray[i].LockPlayer();
         }
+
+        activeSurvivors = currentActivePlayers;
 
         if (Debug.isDebugBuild)
         {
@@ -122,7 +117,10 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     private void RemoveActivePlayer(CharacterManager characterLeft)
     {
-        //currentActivePlayers.Remove(characterLeft);
+        if (activeSurvivors.Contains(characterLeft))
+        {
+            PlayerTagged(characterLeft);
+        }
     }
 
     //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
@@ -158,12 +156,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //This runs when the round is about to start/ during the initial timer
     private void RoundStarting()
     {
-
-        //Make sure everything is in order... small cooldown before countdown to get everything
-
-        activeSurvivors = currentActivePlayers;
-
-        PutCharactersInStartPositions();
+        
     }
 
     private void RoundEnding()
@@ -231,8 +224,6 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
             //Survivors Won
             infectedWon = false;
         }
-
-        roundManager.CallOnRoundEnd();
     }
 
     //Add them to the infected and take them away from the survivors
