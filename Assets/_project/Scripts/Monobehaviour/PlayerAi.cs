@@ -27,7 +27,8 @@ public class PlayerAi : MonoBehaviour, IInteractable {
     private PlayerAnimation playerAnimation;
     [SerializeField]
     private ScriptableParticles particles;
-    private CharacterManager characterManager;
+    private bool bloodEffect = false;
+    private float bloodCountdown = 5;
     #endregion Variables
 
     //Assign various variables in the start function for this player ai
@@ -37,8 +38,6 @@ public class PlayerAi : MonoBehaviour, IInteractable {
         potato = GameObject.FindGameObjectWithTag("Potato");
         soundManager = FindObjectOfType<SoundManager>();
         playerAnimation = GetComponent<PlayerAnimation>();
-        characterManager = GetComponent<CharacterManager>();
-        characterManager.isPlayer = true;
         aiState = state.WANDERING; 
         GetWaypoints();
         NavigationOrder();
@@ -122,6 +121,7 @@ public class PlayerAi : MonoBehaviour, IInteractable {
     public void Interact() {
         particles.CreateParticle(ScriptableParticles.Particle.GoalExplosion, transform.position);
         waypointNodes = GameObject.FindGameObjectsWithTag("Player");
+        playerAnimation.CheckToChangeState("FallingBackDeath");
         soundManager.PlaySound(ScriptableSounds.Sounds.Explosion);
         aiState = state.DEAD;        
     }
