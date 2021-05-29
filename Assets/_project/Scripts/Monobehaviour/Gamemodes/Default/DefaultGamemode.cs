@@ -325,6 +325,15 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
                     Debug.Log("No characters to get from", this);
                 }
 
+                List<CharacterManager> characters = new List<CharacterManager>();
+
+                foreach (CharacterManager cManager in FindObjectsOfType<CharacterManager>())
+                {
+                    characters.Add(cManager);
+                }
+
+                winScreenManager.PlayWinScreen(Return_Mode(), characters, characters);
+
                 return null;
             }
         }

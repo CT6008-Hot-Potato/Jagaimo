@@ -897,6 +897,7 @@ MonoBehaviour:
   playerInput: {fileID: 4394244838949972472}
   grabSound: 5
   throwSound: 6
+  taggedTracker: {fileID: 4394244838949972469}
 --- !u!114 &4394244838949972469
 MonoBehaviour:
   m_ObjectHideFlags: 0

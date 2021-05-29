@@ -66,6 +66,9 @@ public class WorldBounds : MonoBehaviour
                 other.transform.position = position;
                 if (other.TryGetComponent<Rigidbody>(out Rigidbody rb))
                 {
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+
                     if (Debug.isDebugBuild)
                     {
                         Debug.Log("Something left the map: " + other.name, this);

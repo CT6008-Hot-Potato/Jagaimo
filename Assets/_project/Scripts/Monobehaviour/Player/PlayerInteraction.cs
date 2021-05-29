@@ -30,7 +30,7 @@ public class PlayerInteraction : MonoBehaviour {
     [SerializeField]
     private Transform position;
     [SerializeField]
-    private float throwStrength = 10;
+    private float throwStrength = 1;
     [SerializeField]
     private float grabDistance = 5;
     [SerializeField]
@@ -55,6 +55,13 @@ public class PlayerInteraction : MonoBehaviour {
     private float zoomOut = 0;
     private List <MeshRenderer> outlined = new List<MeshRenderer>();
     private bool clickLifted = false;
+
+    //For the potato returns mutator
+    [SerializeField]
+    private TaggedTracker taggedTracker;
+    private bool bPotatoReturns = false;
+    private GameObject potatoThrown;
+
     #endregion Variables
 
     //Awake function assigns the settings 
@@ -64,9 +71,16 @@ public class PlayerInteraction : MonoBehaviour {
 
         if (settings) {
             //The potato throw strength mutater is changed so the value is not 1
-            if (settings.HasGamMutator(4)) {
+            if (settings.HasGenMutator(4)) {
+                Debug.Log("Throw speed adjusted");
                 //Adding on 50% of the strength * the multiplier from the mutator
-                throwStrength += throwStrength * 0.2f * (int)settings.FindGeneralMutatorValue(4);
+                throwStrength += 0.2f * (int)settings.FindGeneralMutatorValue(4);
+            }
+
+            //If it has the potato returns mutator
+            if (settings.HasGenMutator(6)){
+                Debug.Log("Potato Returns");
+                bPotatoReturns = true;
             }
         }
         //End of mutator intergration code
@@ -79,6 +93,8 @@ public class PlayerInteraction : MonoBehaviour {
         pA = GetComponent<PlayerAnimation>();
         sM = FindObjectOfType<SoundManager>();
         cM = GameObject.FindObjectOfType<LocalMPScreenPartioning>();
+        taggedTracker = taggedTracker ?? GetComponent<TaggedTracker>();
+
         position.position = movingParent.transform.position;
         if (!movingObject || !movingObject.GetComponent<Rigidbody>()) {
             return;
@@ -122,12 +138,13 @@ public class PlayerInteraction : MonoBehaviour {
                         if (sM) {
                             sM.PlaySound(grabSound);
                         }
-                        
+
                         //Scale down if potato
-                        //if (hit.transform.tag == "Potato") {
-                        //    hit.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-                        //}
-                        
+                        if (hit.transform.CompareTag("Potato"))
+                        {
+                            hit.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                        }
+
                         grabbing = true;
                         movingObject = hit.transform.gameObject;
                         //Here we are simply assigning the rbObject the rb component on moving object then setting it's gravity to false and kinematic to true, this is done so this object doesn't drag around.
@@ -298,19 +315,26 @@ public class PlayerInteraction : MonoBehaviour {
             sM.PlaySound(throwSound);
         }
 
-        //Scale down if potato
-        //if (movingObject.tag == "Potato")
-        //{
-        //    hit.transform.localScale = Vector3.one;
-        //}
-
         movingParent.transform.position = position.position;
         //Null check on moving object
-        if (movingObject != null)
-        {
+        if (movingObject != null) {
+            //Scale down if potato
+            if (movingObject.CompareTag("Potato")) {
+                movingObject.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+
+                //It will return to the player in 5 seconds
+                if (bPotatoReturns) {
+                    if (potatoThrown) {
+                        StopCoroutine(Co_WaitToReturnPotato());
+                    }
+
+                    potatoThrown = movingObject;
+                    StartCoroutine(Co_WaitToReturnPotato());
+                }
+            }
+
             //Try to get rigidbody and collider
-            if (movingObject.TryGetComponent(out Rigidbody rB) && movingObject.TryGetComponent(out Collider cD))
-            {
+            if (movingObject.TryGetComponent(out Rigidbody rB) && movingObject.TryGetComponent(out Collider cD)) {
                 rB.useGravity = true;
                 rB.isKinematic = false;
                 //Try to get collider
@@ -320,7 +344,7 @@ public class PlayerInteraction : MonoBehaviour {
                 //When object is being thrown first will check got rigidbody and then throw it
                 if (throwObject)
                 {
-                    rB.AddForce(firstPersonCamera.transform.forward * pC.speed, ForceMode.Impulse);
+                    rB.AddForce(firstPersonCamera.transform.forward * pC.speed * throwStrength, ForceMode.Impulse);
                 }
             }
             //Unassign moving object
@@ -337,8 +361,6 @@ public class PlayerInteraction : MonoBehaviour {
         grabbing = false;
         clickLifted = false;
     }
-
-
 
     //Function assigned component given as paramater to the gameobject given as parameter along with ensuring it
     public Component SetComponent(Component originalComponent, GameObject gameobjectToSet) {
@@ -364,7 +386,7 @@ public class PlayerInteraction : MonoBehaviour {
         }
 
         //Play the grab animation
-        if (!pA) {
+        if (pA) {
             pA.CheckToChangeState("Grab", true);
         }
     }
@@ -372,7 +394,7 @@ public class PlayerInteraction : MonoBehaviour {
     //Method for using unity's new input system to detect right click
     public void RightClick(InputAction.CallbackContext ctx) {
         rightClick = ctx.ReadValue<float>();
-        if (!pA) {
+        if (pA) {
             pA.CheckToChangeState("Throw", true);
         }
     }
@@ -393,6 +415,66 @@ public class PlayerInteraction : MonoBehaviour {
     public void DoNothing(InputAction.CallbackContext ctx)
     {
 
+    }
+
+    //A quick way of timing out 5 seconds for the potato return mutator - Charles C
+    private IEnumerator Co_WaitToReturnPotato()
+    {
+        yield return new WaitForSeconds(5.0f);
+
+        //If this player is still tagged
+        if (taggedTracker.isTagged)
+        {
+            if (movingObject && movingObject != potatoThrown)
+            {
+                Drop(false);
+            }
+            else if (movingObject && potatoThrown)
+            {
+                //They repicking up the potato so dont do anything
+            }
+            else
+            {
+                //Play grabbing sound if sound manager present
+                if (sM)
+                {
+                    sM.PlaySound(grabSound);
+                }
+
+                //Repicking up the potato that was last thrown
+                grabbing = true;
+
+                movingObject = potatoThrown;
+                potatoThrown.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+
+                //Here we are simply assigning the rbObject the rb component on moving object then setting it's gravity to false and kinematic to true, this is done so this object doesn't drag around.
+                rbObject = movingObject.GetComponent<Rigidbody>();
+                rbObject.useGravity = false;
+                rbObject.isKinematic = true;
+                //Here movingObject position, rotation and parent are assigned to that of moving parent, this is done to keep the moving object positioned where moving parent is and parented to it too.
+                movingObject.transform.position = movingParent.transform.position;
+                movingObject.transform.rotation = movingParent.transform.rotation;
+                movingObject.transform.parent = movingParent.transform;
+                //The collider component on movingObject is assigned the collider type of that of the movingParent and it's collision is then adjusted to the correct type accordingly. 
+                SetComponent(movingObject.GetComponent<Collider>(), movingParent);
+                //Set the smaller trigger component to true
+                movingParent.GetComponent<Collider>().isTrigger = true;
+                AdjustCollision(movingObject);
+                movingObject.GetComponent<Collider>().enabled = false;
+                //Assign the parent rigidbody to the moving parent rigidbody and setting aspects of it true and false
+                rbParent = movingParent.AddComponent<Rigidbody>();
+                rbParent.freezeRotation = true;
+                rbParent.isKinematic = false;
+                rbParent.useGravity = true;
+                //RbParent rigidbody collision is set to ContinuousDynamic as this is the best collision for this fast moving object, also below the carry collision class/component is added to moving parent.
+                rbParent.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                movingParent.AddComponent<CarryCollision>();
+
+                //Resetting the variables for the throw
+                potatoThrown = null;
+                clickLifted = true;
+            }          
+        }     
     }
 }
 
