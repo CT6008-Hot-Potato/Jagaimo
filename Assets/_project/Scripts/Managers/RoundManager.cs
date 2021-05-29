@@ -42,6 +42,8 @@ public class RoundManager : MonoBehaviour
 
     //Necessary for infected and other utility based functionality
     public GameObject potatoPrefab;
+    public GameObject initialPotatoObject;
+
     public WorldBounds worldBoundry;
 
     //Bits and pieces that will be in some of the game scenes
