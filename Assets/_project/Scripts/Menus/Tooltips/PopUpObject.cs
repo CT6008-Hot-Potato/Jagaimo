@@ -207,7 +207,7 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
 
         instance.toolObject.transform.localScale = Scale;
-        instance.toolObject.transform.localPosition = Vector3.zero;
+    //    instance.toolObject.transform.localPosition = Vector3.zero;
 
         if(!instance.toolObject.TryGetComponent(out RectTransform rect))
         {
@@ -255,8 +255,8 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         MyGameObject.SetActive(true);
         MyGameObject.TryGetComponent(out Tooltip i);
-        i.SetPosition(GetPosition());
-
+     //   i.SetPosition(GetPosition());
+            
     }
 
     public void OnPointerExit(PointerEventData eventData) // When the mouse pointer exits the UI Element, make the dissappear
