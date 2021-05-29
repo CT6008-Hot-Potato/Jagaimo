@@ -124,9 +124,9 @@ public class PlayerInteraction : MonoBehaviour {
                         }
                         
                         //Scale down if potato
-                        if (hit.transform.tag == "Potato") {
-                            hit.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-                        }
+                        //if (hit.transform.tag == "Potato") {
+                        //    hit.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                        //}
                         
                         grabbing = true;
                         movingObject = hit.transform.gameObject;
@@ -299,10 +299,10 @@ public class PlayerInteraction : MonoBehaviour {
         }
 
         //Scale down if potato
-        if (movingObject.tag == "Potato")
-        {
-            hit.transform.localScale = Vector3.one;
-        }
+        //if (movingObject.tag == "Potato")
+        //{
+        //    hit.transform.localScale = Vector3.one;
+        //}
 
         movingParent.transform.position = position.position;
         //Null check on moving object
