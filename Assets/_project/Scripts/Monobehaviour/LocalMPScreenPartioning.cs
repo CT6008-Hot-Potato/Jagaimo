@@ -60,7 +60,7 @@ public class LocalMPScreenPartioning : MonoBehaviour {
 
                     settings.LocalPlayerInputs[i] = null; // destroying the object and not clearing the array leads to settings thinking it still contains something! - James B
 
-                    manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme, latestDeviceJoined);
+                    manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme);
                 }
             }
             else if (settings.iPlayercount == 1) {
@@ -75,7 +75,7 @@ public class LocalMPScreenPartioning : MonoBehaviour {
                 settings.LocalPlayerInputs[0] = null; // destroying the object and not clearing the array leads to settings thinking it still contains something! - James B
 
                 //Join the single player
-                manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme, latestDeviceJoined);
+                manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme);
             }
             else {
                 //No players joined, so it was single player from the main menu
@@ -83,6 +83,8 @@ public class LocalMPScreenPartioning : MonoBehaviour {
                 singlePlayer = Instantiate(playerPrefab, new Vector3(0, 25, 0), playerPrefab.transform.rotation);
                 singlePlayer.GetComponent<CharacterManager>().UnLockPlayer();
             }
+
+            settings.iPlayercount = 0;
         }
         //Was played from the scene, anyone can join
         else if (singleLocalPlayer) {
