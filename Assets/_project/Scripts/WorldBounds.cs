@@ -48,21 +48,21 @@ public class WorldBounds : MonoBehaviour
         if (!other.CompareTag("PositionStay"))
         {
             //If it's a player
-            if (other.CompareTag("Player")  && roundManager._currentGamemode.Return_Mode() != GAMEMODE_INDEX.FOOTBALL)
-            {
-                //Get their manager
-                CharacterManager character = other.GetComponent<CharacterManager>();
+            ////if (other.CompareTag("Player")  && roundManager._currentGamemode.Return_Mode() != GAMEMODE_INDEX.FOOTBALL)
+            ////{
+            ////    //Get their manager
+            ////    CharacterManager character = other.GetComponent<CharacterManager>();
 
-                //If they have a manager
-                if (character)
-                {
-                    //Start the timer on them being outside the bounds
-                    charactersInWater.Add(other.GetComponent<CharacterManager>());
-                    StartCoroutine(PlayerKill(character));
-                }
-            }
-            else
-            {
+            ////    //If they have a manager
+            ////    if (character)
+            ////    {
+            ////        //Start the timer on them being outside the bounds
+            ////        charactersInWater.Add(other.GetComponent<CharacterManager>());
+            ////        StartCoroutine(PlayerKill(character));
+            ////    }
+            ////}
+            ////else
+            ////{
                 other.transform.position = position;
                 if (other.TryGetComponent<Rigidbody>(out Rigidbody rb))
                 {
@@ -71,7 +71,7 @@ public class WorldBounds : MonoBehaviour
                         Debug.Log("Something left the map: " + other.name, this);
                     }
                 }
-            }
+           // }
         }
     }
 
