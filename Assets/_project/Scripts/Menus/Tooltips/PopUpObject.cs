@@ -28,6 +28,14 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // Allows the tooltip to be recoloured, intended for elements that should be slightly translucent via assigning a colour with lower alpha. Leave as white if undesired (assigned in inspector)
     [SerializeField] protected Color OverlayColor = Color.white;
 
+
+    public RectTransform GetPosition()
+    {
+        if (TryGetComponent(out RectTransform ThisPosition))
+            return ThisPosition;
+        else
+            return null;
+    }
   
     public class Tooltip 
     {
@@ -48,6 +56,7 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
         
         public GameObject toolObject;
+        
 
         // Refference to the tooltips position and scale, relative to the inspector
         RectTransform MyTransform;
@@ -61,6 +70,13 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             MyTransform = toolObject.GetComponent<RectTransform>();
             ChangeOrientation(myOrientation);
+        }
+        
+        public void SetPosition(RectTransform newposition)
+        {
+
+            MyTransform.parent = newposition;
+            MyTransform.anchoredPosition = Vector2.zero;
         }
 
         public void ChangeOrientation(Orientation Offset)
@@ -127,8 +143,14 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
                 var mouse = Mouse.current;
 
-                MyTransform.anchoredPosition = ScreenToRectPos(mouse.position.ReadValue()) + (Displacement);
+    //            MyTransform.anchorMin = new Vector2(0, 0);
+  //              MyTransform.anchorMax = new Vector2(1, 1);
+//                MyTransform.pivot = new Vector2(0.5f, 0.5f);
 
+
+//                MyTransform.anchoredPosition =  ///  ScreenToRectPos( 1000* (Camera.main.ScreenToViewportPoint(Mouse.current.position.ReadValue()) ));//+ (Vector3)Displacement; // ScreenToRectPos(  /* mouse.position.ReadValue()*/) + (Displacement);
+
+          
             }
 
 
@@ -144,9 +166,13 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             }
             else // The previous calculation only works  if the Render mode is using screenspace. If not, we can atleast ensure that the tooltip won't crash the build
             {
-                Vector2 localpoint;
-                localpoint.x = screen_pos.x - (Screen.width * 0.5f);
-                localpoint.y = screen_pos.y - (Screen.height * 0.5f);
+                Vector2 localpoint = screen_pos;
+
+
+                localpoint.x = screen_pos.x - (Display.main.renderingWidth * 0.5f);
+                localpoint.y = screen_pos.y - (Display.main.renderingHeight * 0.5f);
+
+                Debug.Log(localpoint);
                 return localpoint;
        
             }
@@ -228,7 +254,9 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void OnPointerEnter(PointerEventData eventData, string newString) // When the mouse pointer enters the UI Element, make the tooltip appear 
     {
         MyGameObject.SetActive(true);
-      
+        MyGameObject.TryGetComponent(out Tooltip i);
+        i.SetPosition(GetPosition());
+
     }
 
     public void OnPointerExit(PointerEventData eventData) // When the mouse pointer exits the UI Element, make the dissappear
@@ -238,7 +266,9 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void LateUpdate() // Late update is called after all other important calculations, which is optimal for UI elements 
     {
+
         instance.LateUpdate();
+
 
     }
 
