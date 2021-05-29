@@ -57,6 +57,9 @@ public class LocalMPScreenPartioning : MonoBehaviour {
                     string tempControlScheme = settings.LocalPlayerInputs[i].currentControlScheme;
                     latestDeviceJoined = settings.LocalPlayerInputs[i].devices[0];
                     Destroy(settings.LocalPlayerInputs[i].gameObject);
+
+                    settings.LocalPlayerInputs[i] = null; // destroying the object and not clearing the array leads to settings thinking it still contains something! - James B
+
                     manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme);
                 }
             }
@@ -68,6 +71,9 @@ public class LocalMPScreenPartioning : MonoBehaviour {
                 latestDeviceJoined = settings.LocalPlayerInputs[0].devices[0];
                 //Destroy local player index for this
                 Destroy(settings.LocalPlayerInputs[0].gameObject);
+
+                settings.LocalPlayerInputs[0] = null; // destroying the object and not clearing the array leads to settings thinking it still contains something! - James B
+
                 //Join the single player
                 manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme);
             }
@@ -77,6 +83,8 @@ public class LocalMPScreenPartioning : MonoBehaviour {
                 singlePlayer = Instantiate(playerPrefab, new Vector3(0, 25, 0), playerPrefab.transform.rotation);
                 singlePlayer.GetComponent<CharacterManager>().UnLockPlayer();
             }
+
+            settings.iPlayercount = 0;
         }
         //Was played from the scene, anyone can join
         else if (singleLocalPlayer) {

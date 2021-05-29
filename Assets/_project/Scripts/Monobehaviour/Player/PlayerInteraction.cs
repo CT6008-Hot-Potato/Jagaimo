@@ -386,5 +386,13 @@ public class PlayerInteraction : MonoBehaviour {
     public void ZoomOut(InputAction.CallbackContext ctx) {
         zoomOut = ctx.ReadValue<float>();
     }
+
+
+
+    //Since a null ref in the input system will kick up a stink, we point actions that don't do anything here! - James B
+    public void DoNothing(InputAction.CallbackContext ctx)
+    {
+
+    }
 }
 

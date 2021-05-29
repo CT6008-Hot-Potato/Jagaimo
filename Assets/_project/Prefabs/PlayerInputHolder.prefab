@@ -287,6 +287,6 @@ MonoBehaviour:
     m_ActionName: Gameplay/Any[/Keyboard/anyKey]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Gameplay
+  m_DefaultActionMap: dd37c60d-0a8d-4b25-b281-c7c9460682a4
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
