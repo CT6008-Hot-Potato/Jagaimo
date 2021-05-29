@@ -57,7 +57,10 @@ public class LocalMPScreenPartioning : MonoBehaviour {
                     string tempControlScheme = settings.LocalPlayerInputs[i].currentControlScheme;
                     latestDeviceJoined = settings.LocalPlayerInputs[i].devices[0];
                     Destroy(settings.LocalPlayerInputs[i].gameObject);
-                    manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme);
+
+                    settings.LocalPlayerInputs[i] = null; // destroying the object and not clearing the array leads to settings thinking it still contains something! - James B
+
+                    manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme, latestDeviceJoined);
                 }
             }
             else if (settings.iPlayercount == 1) {
@@ -68,8 +71,11 @@ public class LocalMPScreenPartioning : MonoBehaviour {
                 latestDeviceJoined = settings.LocalPlayerInputs[0].devices[0];
                 //Destroy local player index for this
                 Destroy(settings.LocalPlayerInputs[0].gameObject);
+
+                settings.LocalPlayerInputs[0] = null; // destroying the object and not clearing the array leads to settings thinking it still contains something! - James B
+
                 //Join the single player
-                manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme);
+                manager.JoinPlayer(tempIndex, tempSplitscreenIndex, tempControlScheme, latestDeviceJoined);
             }
             else {
                 //No players joined, so it was single player from the main menu
