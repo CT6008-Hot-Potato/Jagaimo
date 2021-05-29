@@ -24,6 +24,9 @@ public class SpawningSpot
 public class Arena
 {
     public string name;
+    //0 will generally be for the potato
+    //1, 2, 3, 4 is for the players
+    //Any above is for cannon fodder
     public SpawningSpot[] spots;
 }
 
@@ -48,6 +51,11 @@ public class ArenaManager : MonoBehaviour
     #region Public Methods
 
     #region Utility
+
+    public int GetRandomArenaNumber()
+    {
+        return Random.Range(0, arenaSpots.Length);
+    }
 
     //General Methods for utility
     public Transform GettingSpot(int arenaIndex, int SpotIndex)

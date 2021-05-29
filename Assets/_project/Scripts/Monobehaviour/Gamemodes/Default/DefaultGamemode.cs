@@ -62,6 +62,9 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     //How many countdowns have happened so far
     private int iCountdownIndex = 0;
 
+    [SerializeField]
+    GameObject Potato;
+
     #endregion
 
     #region Unity Methods
@@ -72,6 +75,8 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         roundManager = roundManager ?? RoundManager.roundManager;
         arenaManager = arenaManager ?? GetComponent<ArenaManager>();
         winScreenManager = winScreenManager ?? WinScreenManager.instance;
+
+        Potato = roundManager.initialPotatoObject;
     }
 
     #endregion
@@ -81,11 +86,16 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
     {
+        //This gamemode uses a random arena
+        int arena = arenaManager.GetRandomArenaNumber();
+
+        Potato.transform.position = arenaManager.GettingPositionFromArena(arena, 0);
+
         //Going through the give array and adding it to the list
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
-            PutSpecificCharacterInPosition(i);
+            PutSpecificCharacterInPosition(i, arena);
             charArray[i].LockPlayer();
         }
 
@@ -320,9 +330,9 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         }
     }
 
-    private void PutSpecificCharacterInPosition(int index)
+    private void PutSpecificCharacterInPosition(int index, int arenaIndex)
     {
-        Transform spot = arenaManager.GettingSpot(0, index);
+        Transform spot = arenaManager.GettingSpot(arenaIndex, index + 1);
         currentActivePlayers[index].gameObject.transform.position = spot.position;
 
         //This is the "solution" to not being able to turn the player based on the prefab object
