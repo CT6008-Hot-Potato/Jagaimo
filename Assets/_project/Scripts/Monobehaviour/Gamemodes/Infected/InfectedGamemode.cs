@@ -89,11 +89,13 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     //A way for the round manager to set the active players at the start of the game
     private void SettingActivePlayers(CharacterManager[] charArray)
     {
+        int arenaIndex = arenaManager.GetRandomArenaNumber();
+
         //Going through the give array and adding it to the list
         for (int i = 0; i < charArray.Length; ++i)
         {
             currentActivePlayers.Add(charArray[i]);
-            PutSpecificCharacterInPosition(i);
+            PutSpecificCharacterInPosition(i, arenaIndex);
             charArray[i].LockPlayer();
         }
 
@@ -294,9 +296,9 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         enabled = false;
     }
 
-    private void PutSpecificCharacterInPosition(int index)
+    private void PutSpecificCharacterInPosition(int index, int arenaIndex)
     {
-        Transform spot = arenaManager.GettingSpot(0, index);
+        Transform spot = arenaManager.GettingSpot(arenaIndex, index);
         currentActivePlayers[index].gameObject.transform.position = spot.position;
 
         //This is the "solution" to not being able to turn the player based on the prefab object
