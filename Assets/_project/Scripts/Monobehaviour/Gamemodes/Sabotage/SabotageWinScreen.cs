@@ -26,8 +26,7 @@ public class SabotageWinScreen : WinScreen
 
     #region Unity Methods
 
-    // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         rManager = RoundManager.roundManager;
 
@@ -65,9 +64,9 @@ public class SabotageWinScreen : WinScreen
         if (objectsToPosition.Count > 0)
         {
             //These are the survivors
-            for (int i = 0; i < objectsToPosition.Count - 1; ++i)
+            for (int i = 1; i < objectsToPosition.Count - 1; ++i)
             {
-                if (winningSpots[i])
+                if (winningSpots[i] && objectsToPosition[i])
                 {
                     objectsToPosition[i].transform.position = winningSpots[i].transform.position;
                     objectsToPosition[i].transform.rotation = winningSpots[i].transform.rotation;
@@ -78,14 +77,17 @@ public class SabotageWinScreen : WinScreen
                 }
             }
 
-            //If the tagged player is part of the winners
-            if (gamemode.TaggedWin())
+            if (gamemode)
             {
-                //The tagged player is in the last slot
-                if (winningSpots[objectsToPosition.Count - 1])
+                //If the tagged player is part of the winners
+                if (gamemode.TaggedWin())
                 {
-                    objectsToPosition[objectsToPosition.Count - 1].transform.position = winningSpots[objectsToPosition.Count - 1].transform.position;
-                    objectsToPosition[objectsToPosition.Count - 1].transform.rotation = winningSpots[objectsToPosition.Count - 1].transform.rotation;
+                    //The tagged player is in the first slot
+                    if (winningSpots[0])
+                    {
+                        objectsToPosition[0].transform.position = taggedPosition.position;
+                        objectsToPosition[0].transform.rotation = taggedPosition.rotation;
+                    }
                 }
             }
         }

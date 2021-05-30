@@ -87,6 +87,7 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
     {
         int arenaIndex = arenaManager.GetRandomArenaNumber();
 
+        roundManager.initialPotatoObject.transform.position = arenaManager.GettingPositionFromArena(arenaIndex, 0);
 
         //Going through the give array and adding it to the list
         for (int i = 0; i < charArray.Length; ++i)
@@ -153,6 +154,11 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
         //This is the end of the game
         if (currentActivePlayers.Count <= 2)
         {
+            if (!charToEliminate._tracker.isTagged)
+            {
+                TaggedPlayerWon = true;
+            }
+
             roundManager.CallOnRoundEnd();
 
             if (wScreenManager)
@@ -168,8 +174,6 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
             CharacterManager character = getRandomCharacter();
             roundManager.OnPlayerTagged(character);
         }
-
-        RemoveActivePlayer(charToEliminate);
     }
 
     //This runs when the round is about to start/ during the initial timer
@@ -201,6 +205,7 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
         {
             TaggedPlayerWon = true;
             playersWhoWon.Add(currentTagged);
+            playersWhoWon.Reverse();
         }
 
         if (wScreenManager)
@@ -284,12 +289,12 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
 
     private void PutSpecificCharacterInPosition(int index, int arenaIndex)
     {
-        Transform spot = arenaManager.GettingSpot(arenaIndex, index);
+        Transform spot = arenaManager.GettingSpot(arenaIndex, index + 1);
         currentActivePlayers[index].gameObject.transform.position = spot.position;
 
         //This is the "solution" to not being able to turn the player based on the prefab object
         PlayerCamera camera = currentActivePlayers[index].GetComponent<PlayerCamera>();
-        if (camera && spot)
+        if (camera)
         {
             camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
             camera.flipSpin = !camera.flipSpin;
