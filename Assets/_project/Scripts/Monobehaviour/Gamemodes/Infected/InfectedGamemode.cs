@@ -28,6 +28,8 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     void IGamemode.LockActivePlayers() => LockAllPlayers();
     void IGamemode.UnLockActivePlayers() => UnlockAllPlayers();
+    void IGamemode.ForceEliminatePlayer(CharacterManager charEliminated) => EliminatePlayer(charEliminated);
+
 
     //This gamemode is infected: when people are tagged, they join the tagged team, until the timer runs out or everyone is tagged
     void IGamemode.RoundStarted() => RoundStarting();
@@ -153,6 +155,11 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
                 currentActivePlayers[i].UnLockPlayer();
             }
         }
+    }
+
+    public void EliminatePlayer(CharacterManager charEliminated)
+    {
+        
     }
 
     //This runs when the round is about to start/ during the initial timer

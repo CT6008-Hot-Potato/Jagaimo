@@ -7,6 +7,7 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,6 +35,8 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
     void IGamemode.LockActivePlayers() => LockAllPlayers();
     void IGamemode.UnLockActivePlayers() => UnlockAllPlayers();
+    //This is not actually used for this gamemode
+    void IGamemode.ForceEliminatePlayer(CharacterManager charEliminated) => EliminatePlayer(charEliminated);
 
     void IGamemode.RoundStarted() => RoundStarting();
     void IGamemode.RoundEnded() => RoundEnding();
@@ -308,6 +311,10 @@ public class FootballGamemode : MonoBehaviour, IGamemode
                 currentActivePlayers[i].UnLockPlayer();
             }
         }
+    }
+    public void EliminatePlayer(CharacterManager charEliminated)
+    {
+        
     }
 
     //This runs when the round is about to start/ during the initial timer

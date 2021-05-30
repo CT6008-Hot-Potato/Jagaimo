@@ -451,7 +451,7 @@ public class PlayerCamera : MonoBehaviour {
     }
 
     //Function to enable third person mode camera
-    void EnableThirdPerson() {
+    public void EnableThirdPerson() {
         crosshair.color = Color.clear;//        crosshair.SetActive(false);
         thirdPersonCamera.enabled = true;
         firstPersonCamera.enabled = false;

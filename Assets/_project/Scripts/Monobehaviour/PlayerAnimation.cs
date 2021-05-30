@@ -36,7 +36,9 @@ public class PlayerAnimation : MonoBehaviour {
     [SerializeField]
     private Animation animationArms;
     private bool animationLock = false;
-    private Timer timer;
+
+    //public so it can be locked when players die
+    public Timer timer;
 
     //Start animation at idle by default
     private void Start() {

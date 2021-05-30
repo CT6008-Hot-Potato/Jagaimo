@@ -21,6 +21,7 @@ public interface IGamemode
 
     void LockActivePlayers();
     void UnLockActivePlayers();
+    void ForceEliminatePlayer(CharacterManager charEliminated);
 
     //Controlling events in the game
     void RoundStarted();

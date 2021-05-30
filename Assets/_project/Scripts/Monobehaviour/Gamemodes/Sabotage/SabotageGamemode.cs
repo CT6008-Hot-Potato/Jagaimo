@@ -27,6 +27,7 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
 
     void IGamemode.LockActivePlayers() => LockAllPlayers();
     void IGamemode.UnLockActivePlayers() => UnlockAllPlayers();
+    void IGamemode.ForceEliminatePlayer(CharacterManager charEliminated) => EliminatePlayer(charEliminated);
 
     void IGamemode.RoundStarted() => RoundStarting();
     void IGamemode.RoundEnded() => RoundEnding();
@@ -145,6 +146,11 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
                 currentActivePlayers[i].UnLockPlayer();
             }
         }
+    }
+
+    public void EliminatePlayer(CharacterManager charToEliminate)
+    {
+
     }
 
     //This runs when the round is about to start/ during the initial timer

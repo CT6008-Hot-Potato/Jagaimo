@@ -16,9 +16,9 @@ public class JagaimoMenuComponent : MonoBehaviour
     [SerializeField]
     private JagaimoNetworkManagerLobby jagaimoNetworkManger = null;
 
-    [Header("Multiplayer UI")]
-    [SerializeField]
-    private GameObject mpConnectionType = null;
+    //[Header("Multiplayer UI")]
+    //[SerializeField]
+    //private GameObject mpConnectionType = null;
 
     public void HostLobby()
     {

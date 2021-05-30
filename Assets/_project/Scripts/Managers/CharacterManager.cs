@@ -186,12 +186,26 @@ public class CharacterManager : MonoBehaviour
 
     public void ForceElimination()
     {
+        if (Debug.isDebugBuild)
+        {
+            Debug.Log("Player eliminated due to water");
+        }
+
+        //Make sure stuff can move
+        UnLockPlayer();
+
         //Play all the sounds and effects etc
         EliminationEffect();
 
+        if (_playerAnimation)
+        {
+            _playerAnimation.CheckToChangeState("FallingBackDeath", true);
+            _playerAnimation.timer.isLocked = true;
+            _playerAnimation.enabled = false;
+        }
+
         //Telling the gamemode that this isnt an active player anymore
-        rManager._currentGamemode.RemoveActivePlayer(this);
-        enabled = false;
+        rManager._currentGamemode.ForceEliminatePlayer(this);
     }
 
     //Functions to change the player when they're tagged or untagged
@@ -362,16 +376,17 @@ public class CharacterManager : MonoBehaviour
         }
     }
 
-    #endregion
-
-    #region Private Methods
-
     private void EliminationEffect()
     {
         //Send the player into "spectator" mode (No model, no colliders)
         if (_cam)
         {
+            //Forcing it into third person
+            _cam.EnableThirdPerson();
+
+            //Moving it to the correct state
             _cam.cameraState = PlayerCamera.cS.FREECAMUNCONSTRAINED;
+            
         }
 
         //Play Sound
