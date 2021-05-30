@@ -163,10 +163,9 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     {
         //Getting a random spot to put the infected onto
         int iRandArena = arenaManager.GetRandomArenaNumber();
-        int iRandSpot = Random.Range(0, 4);
 
         //Putting them back
-        PutSpecificCharacterInPosition(iRandSpot, iRandArena);
+        PutSpecificCharacterInPosition(charEliminated, iRandArena);
 
         if (activeSurvivors.Contains(charEliminated))
         {
@@ -321,6 +320,23 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
         //This is the "solution" to not being able to turn the player based on the prefab object
         PlayerCamera camera = currentActivePlayers[index].GetComponent<PlayerCamera>();
+        if (camera)
+        {
+            camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
+            camera.flipSpin = !camera.flipSpin;
+        }
+    }
+
+    //Used for the forced elimination
+    private void PutSpecificCharacterInPosition(CharacterManager manager, int arenaIndex)
+    {
+        //Doesnt matter if they hit a potato
+        Transform spot = arenaManager.GettingSpot(arenaIndex, 0);
+        manager.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        manager.gameObject.transform.position = spot.position;
+
+        //This is the "solution" to not being able to turn the player based on the prefab object
+        PlayerCamera camera = manager.GetComponent<PlayerCamera>();
         if (camera)
         {
             camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);

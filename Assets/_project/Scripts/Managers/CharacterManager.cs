@@ -214,9 +214,10 @@ public class CharacterManager : MonoBehaviour
                 _playerAnimation.timer.isLocked = true;
                 _playerAnimation.enabled = false;
             }
+
+            bEliminated = true;
         }
 
-        bEliminated = true;
         //Telling the gamemode that this isnt an active player anymore
         rManager._currentGamemode.ForceEliminatePlayer(this);
     }
