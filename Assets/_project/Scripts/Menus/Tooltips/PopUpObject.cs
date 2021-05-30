@@ -138,20 +138,20 @@ public class PopUpObject: MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             }
 
 
-            if (toolObject.activeSelf) // If the element has a mouse over it, change the position of the overlay 
-            {
+//            if (toolObject.activeSelf) // If the element has a mouse over it, change the position of the overlay 
+//            {
 
-                var mouse = Mouse.current;
+//                var mouse = Mouse.current;
 
-    //            MyTransform.anchorMin = new Vector2(0, 0);
-  //              MyTransform.anchorMax = new Vector2(1, 1);
-//                MyTransform.pivot = new Vector2(0.5f, 0.5f);
+//    //            MyTransform.anchorMin = new Vector2(0, 0);
+//  //              MyTransform.anchorMax = new Vector2(1, 1);
+////                MyTransform.pivot = new Vector2(0.5f, 0.5f);
 
 
-//                MyTransform.anchoredPosition =  ///  ScreenToRectPos( 1000* (Camera.main.ScreenToViewportPoint(Mouse.current.position.ReadValue()) ));//+ (Vector3)Displacement; // ScreenToRectPos(  /* mouse.position.ReadValue()*/) + (Displacement);
+////                MyTransform.anchoredPosition =  ///  ScreenToRectPos( 1000* (Camera.main.ScreenToViewportPoint(Mouse.current.position.ReadValue()) ));//+ (Vector3)Displacement; // ScreenToRectPos(  /* mouse.position.ReadValue()*/) + (Displacement);
 
           
-            }
+//            }
 
 
         }

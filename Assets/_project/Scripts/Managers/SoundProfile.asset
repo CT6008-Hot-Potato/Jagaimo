@@ -162,7 +162,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 7727e2521b1614949a8bcfa2aecd98b0, type: 3}
     audioMixer: {fileID: 7107196500748020539, guid: c7b5073bbf03aaf4bb251b4ebc79e964,
       type: 2}
-    defaultVolume: 0
+    defaultVolume: 0.5
     pitchVariation: 0.8
   - name: 21
     file:
