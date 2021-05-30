@@ -23,8 +23,12 @@ public class MenuManager : MonoBehaviour
 
     [SerializeField] SoundManager Sm;
 
+    bool fading;
+
+
     public void Start() // At start of game, go to start menu  
     {
+        fading = false;
         SwitchOpenMenu(StartScene);
     }
 
@@ -129,6 +133,8 @@ public class MenuManager : MonoBehaviour
 
         if (SlowTransitions)
         {
+            if (fading)
+                return;
             List<GameObject> ToFadeIn = new List<GameObject>();
             List<GameObject> ToFadeOut = new List<GameObject>();
             for (int i = 0; i < MenuObjects.Length; i++)
@@ -185,8 +191,14 @@ public class MenuManager : MonoBehaviour
 
     IEnumerator FadeIntermission(GameObject[] ToFadeIn, GameObject[] ToFadeOut) // Fades the menu gradually. First by fading out the original menu, pause for a little time, and then fading in the new menu 
     {
-        //Print the time of when the function is first called.
+
+        fading = true;
         List<FadeObject> fadeObjects = new List<FadeObject>();
+
+        List<Button> ButtonObjects = new List<Button>();
+
+
+        
 
         float FadeRate = 1 / TransitionSpeed;
 
@@ -196,8 +208,17 @@ public class MenuManager : MonoBehaviour
             FadeObject newFadeObject = ScriptableObject.CreateInstance<FadeObject>();//new FadeObject();
             newFadeObject.initialise(i, i.GetComponentsInChildren<Text>(), i.GetComponentsInChildren<TextMeshProUGUI>(), i.GetComponentsInChildren<Image>(), FadeRate);
 
+            if (i.TryGetComponent(out Button j))
+            {
+                ButtonObjects.Add(j);
+                j.interactable = false;
+            }
+
             fadeObjects.Add(newFadeObject);
         }
+
+
+
 
         foreach (FadeObject i in fadeObjects)
         {
@@ -205,6 +226,10 @@ public class MenuManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(TransitionSpeed);
+
+
+        
+
 
         foreach (GameObject i in ToFadeOut)
         {
@@ -214,6 +239,8 @@ public class MenuManager : MonoBehaviour
         yield return new WaitForSeconds(TransitionPauseAmount);
 
         fadeObjects = new List<FadeObject>();
+        ButtonObjects = new List<Button>();
+
 
         foreach (GameObject i in ToFadeIn)
         {
@@ -222,6 +249,14 @@ public class MenuManager : MonoBehaviour
             FadeObject newFadeObject = ScriptableObject.CreateInstance<FadeObject>();//new FadeObject();
             newFadeObject.initialise(i, i.GetComponentsInChildren<Text>(), i.GetComponentsInChildren<TextMeshProUGUI>(), i.GetComponentsInChildren<Image>(), FadeRate);
             fadeObjects.Add(newFadeObject);
+
+            if (i.TryGetComponent(out Button j)) 
+            {
+                ButtonObjects.Add(j);
+                j.interactable = false;
+            }
+
+
         }
 
         foreach (FadeObject i in fadeObjects)
@@ -231,13 +266,22 @@ public class MenuManager : MonoBehaviour
         }
 
 
+
+
         yield return new WaitForSeconds(TransitionSpeed);
+
+        foreach (Button i in ButtonObjects)
+        {
+            i.interactable = true;
+        }                   
+
 
         Button startSelected = GetComponentInChildren<Button>();
         if (startSelected != null)
         {
             SelectThisButton(startSelected.gameObject);
         }
+        fading = false;
     }
 
     void FadeOut(FadeObject i) // Fades the menu out
@@ -252,11 +296,6 @@ public class MenuManager : MonoBehaviour
     IEnumerator Fader(float BlendFactor, float Displacement, FadeObject j) // Fades a menu in or out using linear interpolation   
     {
         BlendFactor += j.FadeSpeed * Time.deltaTime;
-
-        //if( Mouse.current.leftButton.wasPressedThisFrame)
-        //{
-        //    BlendFactor = 1;
-        //}
 
 
         for (int i = 0; i < j.textProAssets.Count; i++)
