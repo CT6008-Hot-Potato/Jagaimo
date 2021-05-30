@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     private bool touchingWall;
     private PlayerCamera pC;
     private PlayerInteraction pI;
-    private CapsuleCollider collider;
+    private CapsuleCollider m_collider;
     private bool crouching = false;
     private bool slowStand = false;
     public PlayerInput PlayerInput => playerInput;
@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
         playerMovement = pM.INTERACTING;
         //Get the rigidbody and capsule collider components
         rb = GetComponent<Rigidbody>();
-        collider = GetComponent<CapsuleCollider>();
+        m_collider = GetComponent<CapsuleCollider>();
         //Freeze the rigidbody rotation and gravity (this is done because it is essential for this hybrid camera system for the player)
         rb.freezeRotation = true;
         rb.useGravity = false;
@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
             //Set these correctly
             grounded = true;
-            collider.material = null;
+            m_collider.material = null;
         }
         //Else they are touching the wall
         else {
@@ -177,7 +177,7 @@ public class PlayerController : MonoBehaviour
                     if (touchingWall)
                     {
                         rb.AddForce((-rotationPosition.TransformDirection(movementValue) * Time.deltaTime) * 100, ForceMode.Impulse);
-                        collider.material = wall;
+                        m_collider.material = wall;
                     }
                     if (!sliding)
                     {
@@ -338,8 +338,8 @@ public class PlayerController : MonoBehaviour
 
                             crouching = true;
                             speed = walkSpeed;
-                            collider.center = new Vector3(0, 0, 0);
-                            collider.height = 2;
+                            m_collider.center = new Vector3(0, 0, 0);
+                            m_collider.height = 2;
                             playerMovement = pM.WALKING;
                         }
                     }
@@ -354,8 +354,8 @@ public class PlayerController : MonoBehaviour
             case pM.WALKING:
                 if (crouchValue > 0.1f && crouching == false && sliding == false)
                 {
-                    collider.center = new Vector3(0, -0.5f, 0);
-                    collider.height = 1;
+                    m_collider.center = new Vector3(0, -0.5f, 0);
+                    m_collider.height = 1;
                     pI.Crouch();
                     if (grounded)
                     {
@@ -457,8 +457,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             speed = walkSpeed;
-            collider.center = new Vector3(0, 0, 0);
-            collider.height = 2;
+            m_collider.center = new Vector3(0, 0, 0);
+            m_collider.height = 2;
         }
 
         //Set crouching true, sliding false

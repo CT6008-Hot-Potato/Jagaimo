@@ -290,7 +290,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     private bool ThisWinCondition()
     {
         //No one has loaded in/game hasnt started
-        if (currentActivePlayers.Count == 0) return false;
+        if (currentActivePlayers.Count == 0 && !backUpCharacter) return false;
 
         //1 player is left so someone has won this round
         if (currentActivePlayers.Count == 1)
@@ -331,7 +331,14 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
                     Debug.Log("No characters to get from", this);
                 }
 
-                return backUpCharacter;
+                if (backUpCharacter)
+                {
+                    return backUpCharacter;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
     }

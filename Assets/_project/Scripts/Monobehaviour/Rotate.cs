@@ -14,7 +14,7 @@ public class Rotate : MonoBehaviour {
     //Variables
     [SerializeField]
     private float rotateSpeed;
-    private bool playerEntered;
+    //private bool playerEntered;
     private List<GameObject> players = new List<GameObject>();
     private enum directions {
         FORWARDS,
@@ -33,7 +33,7 @@ public class Rotate : MonoBehaviour {
         if (other.tag == "Player") {
             other.transform.parent = transform;
             players.Add(other.gameObject);
-            playerEntered = true;
+            //playerEntered = true;
         }
     }
 
@@ -41,7 +41,7 @@ public class Rotate : MonoBehaviour {
     private void OnTriggerExit(Collider collider) {
         //If parented and player then exit and unparent from this object
         if (collider.transform.parent == transform && collider.tag == "Player") {
-            playerEntered = false;
+            //playerEntered = false;
             transform.GetChild(0).transform.eulerAngles = new Vector3(0, 0, 0);
             collider.transform.parent = null;
             players.Remove(collider.gameObject);

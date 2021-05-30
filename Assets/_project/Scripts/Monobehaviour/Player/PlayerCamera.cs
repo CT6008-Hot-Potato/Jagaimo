@@ -44,7 +44,7 @@ public class PlayerCamera : MonoBehaviour {
     //Rotation position
     [SerializeField]
     private Transform rotationPosition;
-    private CapsuleCollider collider;
+    private CapsuleCollider m_collider;
     //Pitch and yaw speed for camera
     private float pitch;
     private float yaw;
@@ -134,7 +134,7 @@ public class PlayerCamera : MonoBehaviour {
         cM = GetComponent<LocalMPScreenPartioning>();
         Physics.queriesHitBackfaces = true;
         firstPersonCamPosition = firstPersonCamera.transform.localPosition;
-        collider = GetComponent<CapsuleCollider>();
+        m_collider = GetComponent<CapsuleCollider>();
         pC = GetComponent<PlayerController>();
 
         //Set to first person
@@ -211,8 +211,8 @@ public class PlayerCamera : MonoBehaviour {
 
                         if (zoomValue < 0f) {
                             //Make sure that player not crouching      
-                            collider.center = new Vector3(0, 0, 0);
-                            collider.height = 2f;
+                            m_collider.center = new Vector3(0, 0, 0);
+                            m_collider.height = 2f;
                             firstPersonCamera.transform.localPosition = new UnityEngine.Vector3(0, 0.75f, 0);
                             //Raycast when in third person checking if there is an obstacle between camera and player
                             ray = firstPersonCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
