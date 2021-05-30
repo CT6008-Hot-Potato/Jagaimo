@@ -30,7 +30,7 @@ public class PlayerInteraction : MonoBehaviour {
     [SerializeField]
     private Transform position;
     [SerializeField]
-    private float throwStrength = 1;
+    private float throwStrength = 1f;
     [SerializeField]
     private float grabDistance = 5;
     [SerializeField]
@@ -74,7 +74,7 @@ public class PlayerInteraction : MonoBehaviour {
             if (settings.HasGenMutator(4)) {
                 Debug.Log("Throw speed adjusted");
                 //Adding on 50% of the strength * the multiplier from the mutator
-                throwStrength += 0.2f * (int)settings.FindGeneralMutatorValue(4);
+                throwStrength += 0.1f * (int)settings.FindGeneralMutatorValue(4);
             }
 
             //If it has the potato returns mutator
@@ -344,7 +344,7 @@ public class PlayerInteraction : MonoBehaviour {
                 //When object is being thrown first will check got rigidbody and then throw it
                 if (throwObject)
                 {
-                    rB.AddForce(firstPersonCamera.transform.forward * pC.speed * throwStrength, ForceMode.Impulse);
+                    rB.AddForce((firstPersonCamera.transform.forward * pC.speed) * throwStrength, ForceMode.Impulse);
                 }
             }
             //Unassign moving object

@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour
     public UIMenuBehaviour uiMenu;
     [SerializeField]
     private ScriptableSounds.Sounds slideSound, crouchSound, jumpSound;
+    [SerializeField]
     private SoundManager sM;
     private PlayerAnimation pA;
     [SerializeField]
@@ -189,7 +190,10 @@ public class PlayerController : MonoBehaviour
             else if (downForce != 15)
             {
                 particles.CreateParticle(ScriptableParticles.Particle.JumpDust,new Vector3 (transform.position.x, transform.position.y - 1, transform.position.z));
-                sM.PlaySound(ScriptableSounds.Sounds.Landing);
+                if (sM)
+                {
+                    sM.PlaySound(ScriptableSounds.Sounds.Landing);
+                }
                 downForce = 15;
             }
             else if (!sliding)
@@ -327,7 +331,11 @@ public class PlayerController : MonoBehaviour
                         //Uncrouch
                         if (pI.UnCrouch())
                         {
-                            sM.PlaySound(crouchSound);
+                            if (sM)
+                            {
+                                sM.PlaySound(crouchSound);
+                            }
+
                             crouching = true;
                             speed = walkSpeed;
                             collider.center = new Vector3(0, 0, 0);
@@ -356,12 +364,19 @@ public class PlayerController : MonoBehaviour
                             sliding = true;
                             particles.CreateParticle(ScriptableParticles.Particle.Fuse, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z));
 
-                            sM.PlaySound(slideSound);
+                            if (sM)
+                            {
+                                sM.PlaySound(slideSound);
+                            }
                             StartCoroutine(Co_SlideTime());
                         }
                         else
                         {
-                            sM.PlaySound(crouchSound);
+                            if (sM)
+                            {
+                                sM.PlaySound(crouchSound);
+                            }
+
                             crouching = true;
                             speed = crouchSpeed;
                             playerMovement = pM.CROUCHING;
@@ -483,37 +498,39 @@ public class PlayerController : MonoBehaviour
         //    pC.PlayerInput.SwitchCurrentActionMap("Gameplay");
         //}
 
-        if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
+        if (pC)
         {
-            pC.MoveFreeCamY(true, ctx.ReadValue<float>());
-        }
-        else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED)
-        {
-           jumpValue = ctx.ReadValue<float>();
+            if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
+            {
+                pC.MoveFreeCamY(true, ctx.ReadValue<float>());
+            }
+            else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED)
+            {
+                jumpValue = ctx.ReadValue<float>();
+            }
         }
     }
 
     public void Crouch(InputAction.CallbackContext ctx)
     {
-        if (!grounded)
-        {
-            if (crouchValue >= 0.1f)
-            {
-                pA.CheckToChangeState("CrouchingIdle");
-            }
-            else
-            {
-                pA.CheckToChangeState("Idle");
+        if (!grounded) {
+            if (pA) {
+                if (crouchValue >= 0.1f) {
+                    pA.CheckToChangeState("CrouchingIdle");
+                }
+                else {
+                    pA.CheckToChangeState("Idle");
+                }
             }
         }
 
-            if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
-        {
-            pC.MoveFreeCamY(false, ctx.ReadValue<float>());
-        }
-        else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED)
-        { 
-            crouchValue = ctx.ReadValue<float>();
+        if (pC) {
+            if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED) {
+                pC.MoveFreeCamY(false, ctx.ReadValue<float>());
+            }
+            else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED) {
+                crouchValue = ctx.ReadValue<float>();
+            }
         }
     }
 

@@ -334,7 +334,9 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
 
                 winScreenManager.PlayWinScreen(Return_Mode(), characters, characters);
 
-                return null;
+                enabled = false;
+
+                return FindObjectOfType<CharacterManager>();
             }
         }
     }
