@@ -13,7 +13,7 @@ using UnityEngine.UI;
 public class UIMenuBehaviour : MonoBehaviour
 {
 
-   [SerializeField]    private ScriptableSounds.Sounds clickSound; // Sound connected to the pause menu
+   [SerializeField]    private ScriptableSounds.Sounds clickSound; // Sound connected to the pause menu 
     public GameObject uiMenuCanvasObject; // refferences the menumanager object
     private SoundManager sM; // references the sound manager for sound effects
 
