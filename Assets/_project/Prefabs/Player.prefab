@@ -823,6 +823,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tracker: {fileID: 4394244838949972469}
+  _collider: {fileID: 4394244838949972464}
   _movement: {fileID: 4394244838949972471}
   _cam: {fileID: 4394244838949972475}
   _playerAnimation: {fileID: 6282555755904903039}

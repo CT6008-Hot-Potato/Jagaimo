@@ -159,9 +159,47 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
             }
         }
     }
+
     public void EliminatePlayer(CharacterManager charEliminated)
     {
-        
+        //This is the end of the game
+        if (currentActivePlayers.Count <= 2)
+        {
+            roundManager.CallOnRoundEnd();
+
+            if (winScreenManager)
+            {
+                //A player cant be eliminated more than once
+                if (!orderOfEliminations.Contains(charEliminated))
+                {
+                    if (currentActivePlayers.Count == 1)
+                    {
+                        orderOfEliminations.Add(charEliminated);
+                    }
+                    else
+                    {
+                        orderOfEliminations.Add(charEliminated);
+                        orderOfEliminations.Add(currentActivePlayers[0]);
+                        orderOfEliminations.Reverse();
+                    }
+                }
+
+
+                winScreenManager.PlayWinScreen(Return_Mode(), orderOfEliminations, orderOfEliminations);
+                enabled = false;
+            }
+
+            return;
+        }
+
+        if (charEliminated._tracker.isTagged)
+        {
+            CharacterManager character = getRandomCharacter();
+            roundManager.OnPlayerTagged(character);
+        }
+
+        RemoveActivePlayer(charEliminated);
+        orderOfEliminations.Add(charEliminated);
     }
 
     //This runs when the round is about to start/ during the initial timer
@@ -216,7 +254,12 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
             {
                 Debug.Log("Countdown End");
                 RemoveActivePlayer(cManager);
-                orderOfEliminations.Add(cManager);
+
+                if (!orderOfEliminations.Contains(cManager))
+                {
+                    orderOfEliminations.Add(cManager);
+                }
+
                 currentTagged = null;
                 break;
             }
@@ -232,7 +275,6 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
                 //The making the eliminations in the order of first-last but every player including the winner is included
                 orderOfEliminations.Add(currentActivePlayers[0]);
                 orderOfEliminations.Reverse();
-
                 winScreenManager.PlayWinScreen(Return_Mode(), orderOfEliminations, orderOfEliminations);
 
                 enabled = false;

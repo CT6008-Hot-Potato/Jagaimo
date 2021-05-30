@@ -27,6 +27,8 @@ public class CharacterManager : MonoBehaviour
     [Header("Components Needed")]
     //Components already on this object
     [SerializeField]
+    private Collider _collider;
+    [SerializeField]
     private PlayerController _movement;
     [SerializeField]
     private PlayerCamera _cam;
@@ -38,6 +40,8 @@ public class CharacterManager : MonoBehaviour
     private Rigidbody _rb;
     [SerializeField]
     private PlayerInput _input;
+    [SerializeField]
+    private PlayerPowerUpHandler _powerUpHandler;
 
     //Other components needed
     [SerializeField]
@@ -90,6 +94,8 @@ public class CharacterManager : MonoBehaviour
 
     private void Awake()
     {
+        //A big chunck of scripts that manage the player
+        _collider = _collider ?? GetComponent<Collider>();
         _tracker = _tracker ?? GetComponent<TaggedTracker>();
         _movement = _movement ?? GetComponent<PlayerController>();
         _cam = _cam ?? GetComponent<PlayerCamera>();
@@ -97,6 +103,7 @@ public class CharacterManager : MonoBehaviour
         _playerInteraction = _playerInteraction ?? GetComponent<PlayerInteraction>();
         _rb = _rb ?? GetComponent<Rigidbody>();
         _input = _input ?? GetComponent<PlayerInput>();
+        _powerUpHandler = _powerUpHandler ?? GetComponent<PlayerPowerUpHandler>();
 
         soundManager = FindObjectOfType<SoundManager>();
         settings = GameSettingsContainer.instance;
@@ -186,22 +193,31 @@ public class CharacterManager : MonoBehaviour
 
     public void ForceElimination()
     {
+        //Making sure it runs once
+        if (_collider)
+        {
+            _collider.enabled = false;
+        }
+
         if (Debug.isDebugBuild)
         {
             Debug.Log("Player eliminated due to water");
         }
 
-        //Make sure stuff can move
-        UnLockPlayer();
-
-        //Play all the sounds and effects etc
-        EliminationEffect();
-
-        if (_playerAnimation)
+        if (rManager._currentGamemode.GetActivePlayers().Length > 2)
         {
-            _playerAnimation.CheckToChangeState("FallingBackDeath", true);
-            _playerAnimation.timer.isLocked = true;
-            _playerAnimation.enabled = false;
+            //Make sure stuff can move
+            UnLockPlayer();
+
+            //Play all the sounds and effects etc
+            EliminationEffect();
+
+            if (_playerAnimation)
+            {
+                _playerAnimation.CheckToChangeState("FallingBackDeath", true);
+                _playerAnimation.timer.isLocked = true;
+                _playerAnimation.enabled = false;
+            }
         }
 
         //Telling the gamemode that this isnt an active player anymore
