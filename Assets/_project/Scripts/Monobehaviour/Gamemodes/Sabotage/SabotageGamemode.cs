@@ -150,7 +150,26 @@ public class SabotageGamemode : MonoBehaviour, IGamemode
 
     public void EliminatePlayer(CharacterManager charToEliminate)
     {
+        //This is the end of the game
+        if (currentActivePlayers.Count <= 2)
+        {
+            roundManager.CallOnRoundEnd();
 
+            if (wScreenManager)
+            {
+                wScreenManager.PlayWinScreen(GAMEMODE_INDEX.SABOTAGE, currentActivePlayers, playersWhoWon);
+            }
+
+            return;
+        }
+
+        if (charToEliminate._tracker.isTagged)
+        {
+            CharacterManager character = getRandomCharacter();
+            roundManager.OnPlayerTagged(character);
+        }
+
+        RemoveActivePlayer(charToEliminate);
     }
 
     //This runs when the round is about to start/ during the initial timer

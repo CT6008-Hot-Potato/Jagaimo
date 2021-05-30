@@ -823,13 +823,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tracker: {fileID: 4394244838949972469}
-  _collider: {fileID: 4394244838949972464}
   _movement: {fileID: 4394244838949972471}
   _cam: {fileID: 4394244838949972475}
   _playerAnimation: {fileID: 6282555755904903039}
   _playerInteraction: {fileID: 4394244838949972468}
   _rb: {fileID: 4394244838949972467}
   _input: {fileID: 0}
+  _powerUpHandler: {fileID: 0}
   rManager: {fileID: 0}
   soundManager: {fileID: 0}
   settings: {fileID: 0}

@@ -27,8 +27,6 @@ public class CharacterManager : MonoBehaviour
     [Header("Components Needed")]
     //Components already on this object
     [SerializeField]
-    private Collider _collider;
-    [SerializeField]
     private PlayerController _movement;
     [SerializeField]
     private PlayerCamera _cam;
@@ -97,7 +95,6 @@ public class CharacterManager : MonoBehaviour
     private void Awake()
     {
         //A big chunck of scripts that manage the player
-        _collider = _collider ?? GetComponent<Collider>();
         _tracker = _tracker ?? GetComponent<TaggedTracker>();
         _movement = _movement ?? GetComponent<PlayerController>();
         _cam = _cam ?? GetComponent<PlayerCamera>();
@@ -200,12 +197,10 @@ public class CharacterManager : MonoBehaviour
         //Make sure that it doesnt trigger multiple times
         if (bEliminated) return;
 
-        if (Debug.isDebugBuild)
-        {
-            Debug.Log("Player eliminated due to water");
-        }
+        IGamemode gamemode = rManager._currentGamemode;
 
-        if (rManager._currentGamemode.GetActivePlayers().Length > 2)
+        //The infected mode doesnt need to do the effects etc
+        if (gamemode.GetActivePlayers().Length > 2 && gamemode.Return_Mode() != GAMEMODE_INDEX.INFECTED)
         {
             //Make sure stuff can move
             UnLockPlayer();
@@ -221,10 +216,9 @@ public class CharacterManager : MonoBehaviour
             }
         }
 
+        bEliminated = true;
         //Telling the gamemode that this isnt an active player anymore
         rManager._currentGamemode.ForceEliminatePlayer(this);
-
-        bEliminated = true;
     }
 
     //Functions to change the player when they're tagged or untagged

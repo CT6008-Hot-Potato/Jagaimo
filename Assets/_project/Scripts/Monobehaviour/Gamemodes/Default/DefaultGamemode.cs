@@ -172,14 +172,15 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
                 //A player cant be eliminated more than once
                 if (!orderOfEliminations.Contains(charEliminated))
                 {
-                    orderOfEliminations.Add(charEliminated);
                     currentActivePlayers.Remove(charEliminated);
-                    orderOfEliminations.Reverse();
-                }
 
-                if (currentActivePlayers.Count > 0)
-                {
-                    orderOfEliminations.Add(currentActivePlayers[0]);
+                    if (currentActivePlayers.Count > 0)
+                    {
+                        orderOfEliminations.Add(currentActivePlayers[0]);
+                    }
+
+                    orderOfEliminations.Add(charEliminated);
+                    orderOfEliminations.Reverse();
                 }
 
                 winScreenManager.PlayWinScreen(Return_Mode(), orderOfEliminations, orderOfEliminations);
