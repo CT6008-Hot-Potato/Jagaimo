@@ -1135,22 +1135,6 @@ MonoBehaviour:
     m_ActionName: Gameplay/Escape[/Keyboard/escape]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4394244838949972468}
-        m_TargetAssemblyTypeName: PlayerInteraction, Scripts
-        m_MethodName: DoNothing
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 1d0576f5-b285-44c9-a1e1-1a7bcf5e5dc4
-    m_ActionName: Gameplay/Play[/Keyboard/p]
-  - m_PersistentCalls:
-      m_Calls:
       - m_Target: {fileID: 4394244838949972475}
         m_TargetAssemblyTypeName: PlayerCamera, Scripts
         m_MethodName: Camera
@@ -1245,6 +1229,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 7ec4e526-9f73-453a-a01c-e6566f1d66eb
     m_ActionName: Gameplay/Any[/Keyboard/anyKey]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1d0576f5-b285-44c9-a1e1-1a7bcf5e5dc4
+    m_ActionName: Gameplay/Play[/Keyboard/p,/XInputControllerWindows/select]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
