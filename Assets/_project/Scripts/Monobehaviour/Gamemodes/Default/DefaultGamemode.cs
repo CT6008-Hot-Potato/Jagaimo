@@ -63,7 +63,9 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     private int iCountdownIndex = 0;
 
     [SerializeField]
-    GameObject Potato;
+    private GameObject Potato;
+    [SerializeField]
+    private CharacterManager backUpCharacter;
 
     #endregion
 
@@ -89,7 +91,11 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         //This gamemode uses a random arena
         int arena = arenaManager.GetRandomArenaNumber();
 
+        //Putting the potato in the arena
         Potato.transform.position = arenaManager.GettingPositionFromArena(arena, 0);
+
+        //Getting a backup character just in case
+        backUpCharacter = charArray[0];
 
         //Going through the give array and adding it to the list
         for (int i = 0; i < charArray.Length; ++i)
@@ -325,18 +331,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
                     Debug.Log("No characters to get from", this);
                 }
 
-                List<CharacterManager> characters = new List<CharacterManager>();
-
-                foreach (CharacterManager cManager in FindObjectsOfType<CharacterManager>())
-                {
-                    characters.Add(cManager);
-                }
-
-                winScreenManager.PlayWinScreen(Return_Mode(), characters, characters);
-
-                enabled = false;
-
-                return FindObjectOfType<CharacterManager>();
+                return backUpCharacter;
             }
         }
     }
