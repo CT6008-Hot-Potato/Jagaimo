@@ -165,12 +165,12 @@ PrefabInstance:
     - target: {fileID: 49807688284287541, guid: 1027032a72081864c973384f463a7b68,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 49807688284287541, guid: 1027032a72081864c973384f463a7b68,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 49807688284287541, guid: 1027032a72081864c973384f463a7b68,
         type: 3}
@@ -235,7 +235,7 @@ PrefabInstance:
     - target: {fileID: 6186829426009033985, guid: 1027032a72081864c973384f463a7b68,
         type: 3}
       propertyPath: m_fontSize
-      value: 12
+      value: 9.55
       objectReference: {fileID: 0}
     - target: {fileID: 6186829426009033985, guid: 1027032a72081864c973384f463a7b68,
         type: 3}
@@ -243,6 +243,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 0572edda3b5afe94cb85c377f14d8793,
         type: 2}
+    - target: {fileID: 6186829426009033985, guid: 1027032a72081864c973384f463a7b68,
+        type: 3}
+      propertyPath: m_fontSizeMax
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186829426009033985, guid: 1027032a72081864c973384f463a7b68,
+        type: 3}
+      propertyPath: m_fontSizeMin
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6186829426009033985, guid: 1027032a72081864c973384f463a7b68,
         type: 3}
       propertyPath: m_fontSizeBase
@@ -254,6 +264,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 245789126084382421, guid: 0572edda3b5afe94cb85c377f14d8793,
         type: 2}
+    - target: {fileID: 6186829426009033985, guid: 1027032a72081864c973384f463a7b68,
+        type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6186829426009033985, guid: 1027032a72081864c973384f463a7b68,
         type: 3}
       propertyPath: m_HorizontalAlignment
