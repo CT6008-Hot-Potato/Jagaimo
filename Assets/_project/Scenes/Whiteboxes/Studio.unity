@@ -37398,7 +37398,7 @@ PrefabInstance:
     - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}
       propertyPath: testMode
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7172547651974387217, guid: 965db333886fc1b49b56ad328ad99bef,
         type: 3}

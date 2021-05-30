@@ -78,6 +78,8 @@ public class CharacterManager : MonoBehaviour
     private ParticleSystem elimDisplayObject;
     private float taggedAnimduration = 2f;
 
+    private bool bEliminated = false;
+
     //Infected mutator variables
     private bool bApplyInfectedSpeed = false;
     private bool bRemoveSurvivorSpeed = false;
@@ -187,17 +189,16 @@ public class CharacterManager : MonoBehaviour
 
         EliminationEffect();
 
+        bEliminated = true;
+
         //Turn all non-important scripts off (ones that allow the player to interact especially)
         return this;
     }
 
     public void ForceElimination()
     {
-        //Making sure it runs once
-        if (_collider)
-        {
-            _collider.enabled = false;
-        }
+        //Make sure that it doesnt trigger multiple times
+        if (bEliminated) return;
 
         if (Debug.isDebugBuild)
         {
@@ -222,6 +223,8 @@ public class CharacterManager : MonoBehaviour
 
         //Telling the gamemode that this isnt an active player anymore
         rManager._currentGamemode.ForceEliminatePlayer(this);
+
+        bEliminated = true;
     }
 
     //Functions to change the player when they're tagged or untagged
