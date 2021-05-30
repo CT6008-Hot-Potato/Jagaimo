@@ -63,6 +63,7 @@ public class WorldBounds : MonoBehaviour
             }
             else
             {
+                //If it's not the player or the football gamemode, send it to the given position
                 other.transform.position = position;
                 if (other.TryGetComponent<Rigidbody>(out Rigidbody rb))
                 {
@@ -88,8 +89,10 @@ public class WorldBounds : MonoBehaviour
         }
     }
 
+    //The coroutine before the player dies due to the water
     private IEnumerator PlayerKill(CharacterManager character)
     {
+        //Making sure the players stay in the water before killing them
         for (float t = 0; t < killDuration; t += Time.deltaTime)
         {
             if (charactersInWater.Contains(character))
@@ -102,6 +105,7 @@ public class WorldBounds : MonoBehaviour
             }
         }
 
+        //Forcing the elimination to happen
         character.ForceElimination();
     }
 }
