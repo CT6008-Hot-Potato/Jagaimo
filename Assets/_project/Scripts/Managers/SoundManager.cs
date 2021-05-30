@@ -59,7 +59,11 @@ public class SoundManager : MonoBehaviour
                 return;
 
             GameObject MyObject = new GameObject(PlayMe.name);
-            MyObject.transform.parent = Camera.main.transform;
+            if (Camera.main)
+            {
+                MyObject.transform.parent = Camera.main.transform;
+            }
+
             MyObject.transform.position = Vector3.zero;
             AudioSource MyAudio = MyObject.AddComponent<AudioSource>();
 

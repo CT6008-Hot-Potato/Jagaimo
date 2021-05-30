@@ -38,6 +38,8 @@ public class CharacterManager : MonoBehaviour
     private Rigidbody _rb;
     [SerializeField]
     private PlayerInput _input;
+    [SerializeField]
+    private PlayerPowerUpHandler _powerUpHandler;
 
     //Other components needed
     [SerializeField]
@@ -74,6 +76,8 @@ public class CharacterManager : MonoBehaviour
     private ParticleSystem elimDisplayObject;
     private float taggedAnimduration = 2f;
 
+    private bool bEliminated = false;
+
     //Infected mutator variables
     private bool bApplyInfectedSpeed = false;
     private bool bRemoveSurvivorSpeed = false;
@@ -90,6 +94,7 @@ public class CharacterManager : MonoBehaviour
 
     private void Awake()
     {
+        //A big chunck of scripts that manage the player
         _tracker = _tracker ?? GetComponent<TaggedTracker>();
         _movement = _movement ?? GetComponent<PlayerController>();
         _cam = _cam ?? GetComponent<PlayerCamera>();
@@ -97,6 +102,7 @@ public class CharacterManager : MonoBehaviour
         _playerInteraction = _playerInteraction ?? GetComponent<PlayerInteraction>();
         _rb = _rb ?? GetComponent<Rigidbody>();
         _input = _input ?? GetComponent<PlayerInput>();
+        _powerUpHandler = _powerUpHandler ?? GetComponent<PlayerPowerUpHandler>();
 
         soundManager = FindObjectOfType<SoundManager>();
         settings = GameSettingsContainer.instance;
@@ -180,18 +186,40 @@ public class CharacterManager : MonoBehaviour
 
         EliminationEffect();
 
+        bEliminated = true;
+
         //Turn all non-important scripts off (ones that allow the player to interact especially)
         return this;
     }
 
     public void ForceElimination()
     {
-        //Play all the sounds and effects etc
-        EliminationEffect();
+        //Make sure that it doesnt trigger multiple times
+        if (bEliminated) return;
+
+        IGamemode gamemode = rManager._currentGamemode;
+
+        //The infected mode doesnt need to do the effects etc
+        if (gamemode.GetActivePlayers().Length > 2 && gamemode.Return_Mode() != GAMEMODE_INDEX.INFECTED)
+        {
+            //Make sure stuff can move
+            UnLockPlayer();
+
+            //Play all the sounds and effects etc
+            EliminationEffect();
+
+            if (_playerAnimation)
+            {
+                _playerAnimation.CheckToChangeState("FallingBackDeath", true);
+                _playerAnimation.timer.isLocked = true;
+                _playerAnimation.enabled = false;
+            }
+
+            bEliminated = true;
+        }
 
         //Telling the gamemode that this isnt an active player anymore
-        rManager._currentGamemode.RemoveActivePlayer(this);
-        enabled = false;
+        rManager._currentGamemode.ForceEliminatePlayer(this);
     }
 
     //Functions to change the player when they're tagged or untagged
@@ -362,16 +390,17 @@ public class CharacterManager : MonoBehaviour
         }
     }
 
-    #endregion
-
-    #region Private Methods
-
     private void EliminationEffect()
     {
         //Send the player into "spectator" mode (No model, no colliders)
         if (_cam)
         {
+            //Forcing it into third person
+            _cam.EnableThirdPerson();
+
+            //Moving it to the correct state
             _cam.cameraState = PlayerCamera.cS.FREECAMUNCONSTRAINED;
+            
         }
 
         //Play Sound

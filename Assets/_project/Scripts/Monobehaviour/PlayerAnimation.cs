@@ -32,15 +32,17 @@ public class PlayerAnimation : MonoBehaviour {
 
     //Variables
     [SerializeField]
-    private Animation animation;
+    private Animation m_animation;
     [SerializeField]
     private Animation animationArms;
     private bool animationLock = false;
-    private Timer timer;
+
+    //public so it can be locked when players die
+    public Timer timer;
 
     //Start animation at idle by default
     private void Start() {
-        animation.Play("Idle");
+        m_animation.Play("Idle");
         if (animationArms != null) {
             animationArms.CrossFade("Idle");
         }
@@ -49,12 +51,12 @@ public class PlayerAnimation : MonoBehaviour {
     //Function to check to change the animation state for a player
     public bool CheckToChangeState(string animationState) {
         //If animation already playing return false
-        if (animation.name == animationState) {
+        if (m_animation.name == animationState) {
             return false;
         }
         //Else if animation is not locked crossfade play the animation for the arms and body respectively
         else if (!animationLock) {
-            animation.CrossFade(animationState);
+            m_animation.CrossFade(animationState);
             if (animationArms != null) {
                 animationArms.CrossFade(animationState);
             }
@@ -68,17 +70,17 @@ public class PlayerAnimation : MonoBehaviour {
     //Overload of above function which allows for the locking of an animation going to be played
     public bool CheckToChangeState(string animationState, bool lockAnimation) {
         //If animation already playing return false
-        if (animation.name == animationState) {
+        if (m_animation.name == animationState) {
             return false;
         }
         //Else play that animation and lock it if true
         else {
             animationLock = lockAnimation;
-            animation.CrossFade(animationState);
+            m_animation.CrossFade(animationState);
             if (animationArms != null) {
                 animationArms.CrossFade(animationState);
             }
-            StartCoroutine(Co_AnimationTime(animation.GetClip(animationState).length));
+            StartCoroutine(Co_AnimationTime(m_animation.GetClip(animationState).length));
             return true;
         }
     }

@@ -83,7 +83,10 @@ public class PlayerPowerUpHandler : MonoBehaviour
                 //StartCoroutine();
                 break;
             case 1:
-                _movement.speed += 0.3f;
+                if (_movement)
+                {
+                    _movement.speed += 0.3f;
+                }
                 break;
             case 2:
                 //_interaction.BulletPotato(true);
@@ -120,7 +123,10 @@ public class PlayerPowerUpHandler : MonoBehaviour
                 //StartCoroutine();
                 break;
             case 1:
-                _movement.speed -= 0.3f;
+                if (_movement)
+                {
+                    _movement.speed -= 0.3f;
+                }
                 break;
             case 2:
                 //_interaction.BulletPotato(false);

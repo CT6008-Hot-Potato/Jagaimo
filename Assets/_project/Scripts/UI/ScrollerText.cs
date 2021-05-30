@@ -178,8 +178,7 @@ public class ScrollerText : MonoBehaviour
         rectTransforms.Add(gObject.GetComponent<RectTransform>());
 
         //Remove text after prerequisite time
-        StartCoroutine(        RemoveText(gObject, MessageDuration));
-
+        StartCoroutine(RemoveText(gObject, MessageDuration));
         //Seeing if the top text needs to be removed
         CheckTop();
     }
@@ -189,8 +188,7 @@ public class ScrollerText : MonoBehaviour
 
         yield return new WaitForSeconds(Duration);
         rectTransforms.Remove(objectRef.GetComponent<RectTransform>());
-        Destroy(objectRef);
-       
+        Destroy(objectRef);     
     }
 
     #endregion

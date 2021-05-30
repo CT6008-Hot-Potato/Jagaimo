@@ -829,6 +829,7 @@ MonoBehaviour:
   _playerInteraction: {fileID: 4394244838949972468}
   _rb: {fileID: 4394244838949972467}
   _input: {fileID: 0}
+  _powerUpHandler: {fileID: 0}
   rManager: {fileID: 0}
   soundManager: {fileID: 0}
   settings: {fileID: 0}
@@ -871,6 +872,7 @@ MonoBehaviour:
   slideSound: 7
   crouchSound: 8
   jumpSound: 9
+  sM: {fileID: 0}
   particles: {fileID: 11400000, guid: e4907c1dd2137b74ba1f270593241766, type: 2}
   wall: {fileID: 13400000, guid: 1c1ccb7a9f9031e428b1f2e11971ba1b, type: 2}
 --- !u!114 &4394244838949972468
@@ -897,6 +899,7 @@ MonoBehaviour:
   playerInput: {fileID: 4394244838949972472}
   grabSound: 5
   throwSound: 6
+  taggedTracker: {fileID: 4394244838949972469}
 --- !u!114 &4394244838949972469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1259,7 +1262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1fdce86e58f45f49b1e2dd4d29b80d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animation: {fileID: 5646949718390731766}
+  m_animation: {fileID: 5646949718390731766}
   animationArms: {fileID: 6308405620011048494}
 --- !u!111 &5646949718390731766
 Animation:

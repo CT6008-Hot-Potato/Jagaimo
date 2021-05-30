@@ -84,7 +84,7 @@ public class RoundManager : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
 
         //If there is a gamemode already on the object

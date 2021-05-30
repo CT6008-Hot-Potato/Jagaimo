@@ -2213,7 +2213,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jagaimoNetworkManger: {fileID: 2007231262}
-  mpConnectionType: {fileID: 0}
 --- !u!114 &117288101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5424,7 +5423,7 @@ MonoBehaviour:
   - {fileID: 1030981374}
   - {fileID: 163384580}
   GeneralMutators:
-  - name: Number Of AI
+  - name: Cannon Fodder
     TextToChange: {fileID: 1358220537}
     ID: 0
     mType: 2
@@ -30464,7 +30463,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 74439663}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 4
+  m_MaxValue: 16
   m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:

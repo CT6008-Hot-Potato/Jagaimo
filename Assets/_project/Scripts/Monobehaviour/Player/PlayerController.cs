@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     private bool touchingWall;
     private PlayerCamera pC;
     private PlayerInteraction pI;
-    private CapsuleCollider collider;
+    private CapsuleCollider m_collider;
     private bool crouching = false;
     private bool slowStand = false;
     public PlayerInput PlayerInput => playerInput;
@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour
     public UIMenuBehaviour uiMenu;
     [SerializeField]
     private ScriptableSounds.Sounds slideSound, crouchSound, jumpSound;
+    [SerializeField]
     private SoundManager sM;
     private PlayerAnimation pA;
     [SerializeField]
@@ -90,7 +91,7 @@ public class PlayerController : MonoBehaviour
         playerMovement = pM.INTERACTING;
         //Get the rigidbody and capsule collider components
         rb = GetComponent<Rigidbody>();
-        collider = GetComponent<CapsuleCollider>();
+        m_collider = GetComponent<CapsuleCollider>();
         //Freeze the rigidbody rotation and gravity (this is done because it is essential for this hybrid camera system for the player)
         rb.freezeRotation = true;
         rb.useGravity = false;
@@ -117,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
             //Set these correctly
             grounded = true;
-            collider.material = null;
+            m_collider.material = null;
         }
         //Else they are touching the wall
         else {
@@ -176,7 +177,7 @@ public class PlayerController : MonoBehaviour
                     if (touchingWall)
                     {
                         rb.AddForce((-rotationPosition.TransformDirection(movementValue) * Time.deltaTime) * 100, ForceMode.Impulse);
-                        collider.material = wall;
+                        m_collider.material = wall;
                     }
                     if (!sliding)
                     {
@@ -189,7 +190,10 @@ public class PlayerController : MonoBehaviour
             else if (downForce != 15)
             {
                 particles.CreateParticle(ScriptableParticles.Particle.JumpDust,new Vector3 (transform.position.x, transform.position.y - 1, transform.position.z));
-                sM.PlaySound(ScriptableSounds.Sounds.Landing);
+                if (sM)
+                {
+                    sM.PlaySound(ScriptableSounds.Sounds.Landing);
+                }
                 downForce = 15;
             }
             else if (!sliding)
@@ -327,11 +331,15 @@ public class PlayerController : MonoBehaviour
                         //Uncrouch
                         if (pI.UnCrouch())
                         {
-                            sM.PlaySound(crouchSound);
+                            if (sM)
+                            {
+                                sM.PlaySound(crouchSound);
+                            }
+
                             crouching = true;
                             speed = walkSpeed;
-                            collider.center = new Vector3(0, 0, 0);
-                            collider.height = 2;
+                            m_collider.center = new Vector3(0, 0, 0);
+                            m_collider.height = 2;
                             playerMovement = pM.WALKING;
                         }
                     }
@@ -346,8 +354,8 @@ public class PlayerController : MonoBehaviour
             case pM.WALKING:
                 if (crouchValue > 0.1f && crouching == false && sliding == false)
                 {
-                    collider.center = new Vector3(0, -0.5f, 0);
-                    collider.height = 1;
+                    m_collider.center = new Vector3(0, -0.5f, 0);
+                    m_collider.height = 1;
                     pI.Crouch();
                     if (grounded)
                     {
@@ -356,12 +364,19 @@ public class PlayerController : MonoBehaviour
                             sliding = true;
                             particles.CreateParticle(ScriptableParticles.Particle.Fuse, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z));
 
-                            sM.PlaySound(slideSound);
+                            if (sM)
+                            {
+                                sM.PlaySound(slideSound);
+                            }
                             StartCoroutine(Co_SlideTime());
                         }
                         else
                         {
-                            sM.PlaySound(crouchSound);
+                            if (sM)
+                            {
+                                sM.PlaySound(crouchSound);
+                            }
+
                             crouching = true;
                             speed = crouchSpeed;
                             playerMovement = pM.CROUCHING;
@@ -442,8 +457,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             speed = walkSpeed;
-            collider.center = new Vector3(0, 0, 0);
-            collider.height = 2;
+            m_collider.center = new Vector3(0, 0, 0);
+            m_collider.height = 2;
         }
 
         //Set crouching true, sliding false
@@ -483,37 +498,39 @@ public class PlayerController : MonoBehaviour
         //    pC.PlayerInput.SwitchCurrentActionMap("Gameplay");
         //}
 
-        if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
+        if (pC)
         {
-            pC.MoveFreeCamY(true, ctx.ReadValue<float>());
-        }
-        else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED)
-        {
-           jumpValue = ctx.ReadValue<float>();
+            if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
+            {
+                pC.MoveFreeCamY(true, ctx.ReadValue<float>());
+            }
+            else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED)
+            {
+                jumpValue = ctx.ReadValue<float>();
+            }
         }
     }
 
     public void Crouch(InputAction.CallbackContext ctx)
     {
-        if (!grounded)
-        {
-            if (crouchValue >= 0.1f)
-            {
-                pA.CheckToChangeState("CrouchingIdle");
-            }
-            else
-            {
-                pA.CheckToChangeState("Idle");
+        if (!grounded) {
+            if (pA) {
+                if (crouchValue >= 0.1f) {
+                    pA.CheckToChangeState("CrouchingIdle");
+                }
+                else {
+                    pA.CheckToChangeState("Idle");
+                }
             }
         }
 
-            if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED)
-        {
-            pC.MoveFreeCamY(false, ctx.ReadValue<float>());
-        }
-        else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED)
-        { 
-            crouchValue = ctx.ReadValue<float>();
+        if (pC) {
+            if (pC.cameraState == PlayerCamera.cS.FREECAMUNCONSTRAINED) {
+                pC.MoveFreeCamY(false, ctx.ReadValue<float>());
+            }
+            else if (pC.cameraState != PlayerCamera.cS.FREECAMCONSTRAINED) {
+                crouchValue = ctx.ReadValue<float>();
+            }
         }
     }
 

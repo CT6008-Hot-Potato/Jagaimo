@@ -171,16 +171,16 @@ public class CountdownTimer : MonoBehaviour
     //Updates the text UI
     private void UpdateTimerUI(bool infinite)
     {
-        float minutes = Mathf.FloorToInt(roundTimer.current_time / 60);
-        float seconds = Mathf.FloorToInt(roundTimer.current_time % 60);
+        float minutes = Mathf.Floor(roundTimer.current_time / 60);
+        float seconds = Mathf.Floor(roundTimer.current_time % 60);
 
         if (!infinite)
         {
-            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+            timerText.text = minutes.ToString("00") + ":" + seconds.ToString("00");
         }
         else
         {
-            timerText.text = "+" + string.Format("{0:00}:{1:00}", minutes, seconds);
+            timerText.text = "+" + minutes.ToString("00") + ":" + seconds.ToString("00");
         }
     }
 

@@ -28,6 +28,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
 
     void IGamemode.LockActivePlayers() => LockAllPlayers();
     void IGamemode.UnLockActivePlayers() => UnlockAllPlayers();
+    void IGamemode.ForceEliminatePlayer(CharacterManager charEliminated) => EliminatePlayer(charEliminated);
 
     void IGamemode.RoundStarted()      => RoundStarting();
     void IGamemode.RoundEnded()        => RoundEnding();
@@ -63,7 +64,9 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     private int iCountdownIndex = 0;
 
     [SerializeField]
-    GameObject Potato;
+    private GameObject Potato;
+    [SerializeField]
+    private CharacterManager backUpCharacter;
 
     #endregion
 
@@ -89,7 +92,11 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         //This gamemode uses a random arena
         int arena = arenaManager.GetRandomArenaNumber();
 
+        //Putting the potato in the arena
         Potato.transform.position = arenaManager.GettingPositionFromArena(arena, 0);
+
+        //Getting a backup character just in case
+        backUpCharacter = charArray[0];
 
         //Going through the give array and adding it to the list
         for (int i = 0; i < charArray.Length; ++i)
@@ -153,6 +160,46 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
         }
     }
 
+    public void EliminatePlayer(CharacterManager charEliminated)
+    {
+        //This is the end of the game
+        if (currentActivePlayers.Count <= 2)
+        {
+            roundManager.CallOnRoundEnd();
+
+            if (winScreenManager)
+            {
+                //A player cant be eliminated more than once
+                if (!orderOfEliminations.Contains(charEliminated))
+                {
+                    currentActivePlayers.Remove(charEliminated);
+
+                    if (currentActivePlayers.Count > 0)
+                    {
+                        orderOfEliminations.Add(currentActivePlayers[0]);
+                    }
+
+                    orderOfEliminations.Add(charEliminated);
+                    orderOfEliminations.Reverse();
+                }
+
+                winScreenManager.PlayWinScreen(Return_Mode(), orderOfEliminations, orderOfEliminations);
+                enabled = false;
+            }
+
+            return;
+        }
+
+        if (charEliminated._tracker.isTagged)
+        {
+            CharacterManager character = getRandomCharacter();
+            roundManager.OnPlayerTagged(character);
+        }
+
+        RemoveActivePlayer(charEliminated);
+        orderOfEliminations.Add(charEliminated);
+    }
+
     //This runs when the round is about to start/ during the initial timer
     private void RoundStarting()
     {
@@ -205,7 +252,12 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
             {
                 Debug.Log("Countdown End");
                 RemoveActivePlayer(cManager);
-                orderOfEliminations.Add(cManager);
+
+                if (!orderOfEliminations.Contains(cManager))
+                {
+                    orderOfEliminations.Add(cManager);
+                }
+
                 currentTagged = null;
                 break;
             }
@@ -221,7 +273,6 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
                 //The making the eliminations in the order of first-last but every player including the winner is included
                 orderOfEliminations.Add(currentActivePlayers[0]);
                 orderOfEliminations.Reverse();
-
                 winScreenManager.PlayWinScreen(Return_Mode(), orderOfEliminations, orderOfEliminations);
 
                 enabled = false;
@@ -284,7 +335,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
     private bool ThisWinCondition()
     {
         //No one has loaded in/game hasnt started
-        if (currentActivePlayers.Count == 0) return false;
+        if (currentActivePlayers.Count == 0 && !backUpCharacter) return false;
 
         //1 player is left so someone has won this round
         if (currentActivePlayers.Count == 1)
@@ -325,7 +376,14 @@ public class DefaultGamemode : MonoBehaviour, IGamemode
                     Debug.Log("No characters to get from", this);
                 }
 
-                return null;
+                if (backUpCharacter)
+                {
+                    return backUpCharacter;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
     }
