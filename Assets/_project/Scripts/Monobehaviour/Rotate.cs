@@ -51,7 +51,9 @@ public class Rotate : MonoBehaviour {
     void Update() {
         if (players != null ) {
             for (int i = 0; i < players.Count;i++) {
-                players[i].transform.rotation = Quaternion.Euler(0,0, 0);
+                if (players[i]) {
+                    players[i].transform.rotation = Quaternion.Euler(0, 0, 0);
+                }
             }
         }
         //Rotate object around

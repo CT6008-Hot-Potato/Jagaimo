@@ -28,6 +28,7 @@ public class FootballObjectContainer : MonoBehaviour
     public BasicTimerBehaviour goalPauseTimer;
     public ScriptableParticles particleSpawner;
     public Transform[] vfxPoints;
+    public GameObject[] MapObjects; 
 
     #endregion
 
