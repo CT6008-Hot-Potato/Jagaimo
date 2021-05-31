@@ -70,6 +70,9 @@ public class PlayerPowerUpHandler : MonoBehaviour {
         //Power Up 3 - Flood
         //Power Up 4 -   
 
+        //Forcing it to be movement since this may not be fully implemented
+        powerUpID = 1;
+
         switch (powerUpID) {
             case 0:
                 //_cam.ChangeRoll();
