@@ -12,8 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 //Bit different from other basic timers as it needs dev options
-public class CountdownTimer : MonoBehaviour
-{
+public class CountdownTimer : MonoBehaviour {
     #region Variables Needed
 
     [SerializeField]
@@ -33,27 +32,22 @@ public class CountdownTimer : MonoBehaviour
 
     #region Unity Methods
 
-    private void Awake()
-    {
+    private void Awake() {
         settings = GameSettingsContainer.instance;
         timerText = timerText ?? GetComponent<Text>();
     }
 
-    private void Start()
-    {
+    private void Start() {
         roundManager = roundManager ?? RoundManager.roundManager;
 
-        if (settings)
-        {
+        if (settings) {
             //If any come out with weird values, it'll need a fixing on the menu
-            if (settings.HasGenMutator(2))
-            {
+            if (settings.HasGenMutator(2)) {
                 //This is the value of the countdown time mutator
                 float newDur = (float)settings.FindGeneralMutatorValue(2);
 
                 //Making sure it doesnt return a nothing value
-                if (newDur != 0)
-                {
+                if (newDur != 0) {
                     //Making it into minutes + an offset for the timer
                     duration = (newDur * 60) + 1;
                 }
@@ -61,15 +55,13 @@ public class CountdownTimer : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        RoundManager.CountdownStarted   += StartTimer;
+    private void OnEnable() {
+        RoundManager.CountdownStarted += StartTimer;
         RoundManager.CountdownEnded += TimerEndedDebug;
         RoundManager.RoundEnded += RoundEnded;
     }
 
-    private void OnDisable()
-    {
+    private void OnDisable() {
         RoundManager.CountdownStarted -= StartTimer;
         RoundManager.CountdownEnded -= TimerEndedDebug;
         RoundManager.RoundEnded -= RoundEnded;
@@ -80,35 +72,28 @@ public class CountdownTimer : MonoBehaviour
     #region Public Methods
 
     //End the timer forcefully
-    public void TimerEndedDebug()
-    {
-        if (Debug.isDebugBuild)
-        {
+    public void TimerEndedDebug() {
+        if (Debug.isDebugBuild) {
             Debug.Log("Round Timer Over", this);
         }
     }
 
-    public void RoundEnded()
-    {
+    public void RoundEnded() {
         timerText.enabled = false;
         enabled = false;
     }
 
     //Dev Options
     //Toggles Locked/Unlocked
-    public void LockTimer(bool newLocked)
-    {
-        if (roundTimer != null)
-        {
+    public void LockTimer(bool newLocked) {
+        if (roundTimer != null) {
             roundTimer.isLocked = newLocked;
         }
     }
 
     //Changing the time by an amount given
-    public void EditTime(float change)
-    {
-        if (roundTimer.current_time + change < 0)
-        {
+    public void EditTime(float change) {
+        if (roundTimer.current_time + change < 0) {
             return;
         }
 
@@ -116,13 +101,11 @@ public class CountdownTimer : MonoBehaviour
     }
 
     //Reset really just starts a new timer
-    public void ResetTimer()
-    {
+    public void ResetTimer() {
         StartTimer();
     }
 
-    public void CountUpwards()
-    {
+    public void CountUpwards() {
         //Turning the text back on
         timerText.enabled = true;
         //Starting the infinite timer
@@ -130,8 +113,7 @@ public class CountdownTimer : MonoBehaviour
     }
 
     //Start the timer
-    private void StartTimer()
-    {
+    private void StartTimer() {
         timerText.enabled = true;
         StartCoroutine(Co_TimerBehaviour());
     }
@@ -141,12 +123,10 @@ public class CountdownTimer : MonoBehaviour
     #region Private Methods
 
     //The timer behaviour (maybe should be refactored into a multiuse script)
-    private IEnumerator Co_TimerBehaviour()
-    {
+    private IEnumerator Co_TimerBehaviour() {
         roundTimer = new Timer(duration);
 
-        while (roundTimer.isActive)
-        {
+        while (roundTimer.isActive) {
             roundTimer.Tick(Time.deltaTime);
             UpdateTimerUI(false);
             yield return null;
@@ -156,12 +136,10 @@ public class CountdownTimer : MonoBehaviour
     }
 
     //Ticking upwards 
-    private IEnumerator Co_InverseTimerBehaviour()
-    {
+    private IEnumerator Co_InverseTimerBehaviour() {
         roundTimer = new Timer(0.1f);
 
-        while (roundTimer.isActive)
-        {
+        while (roundTimer.isActive) {
             roundTimer.Tick(-Time.deltaTime);
             UpdateTimerUI(true);
             yield return null;
@@ -169,17 +147,13 @@ public class CountdownTimer : MonoBehaviour
     }
 
     //Updates the text UI
-    private void UpdateTimerUI(bool infinite)
-    {
+    private void UpdateTimerUI(bool infinite) {
         float minutes = Mathf.Floor(roundTimer.current_time / 60);
         float seconds = Mathf.Floor(roundTimer.current_time % 60);
 
-        if (!infinite)
-        {
+        if (!infinite) {
             timerText.text = minutes.ToString("00") + ":" + seconds.ToString("00");
-        }
-        else
-        {
+        } else {
             timerText.text = "+" + minutes.ToString("00") + ":" + seconds.ToString("00");
         }
     }
@@ -188,18 +162,15 @@ public class CountdownTimer : MonoBehaviour
 
     #region Protected Methods
 
-    protected float GetCurrentTime()
-    {
+    protected float GetCurrentTime() {
         return roundTimer.current_time;
     }
 
-    protected float GetMaxTime()
-    {
+    protected float GetMaxTime() {
         return roundTimer.max_time;
     }
 
-    protected float GetMinTime()
-    {
+    protected float GetMinTime() {
         return roundTimer.min_time;
     }
 

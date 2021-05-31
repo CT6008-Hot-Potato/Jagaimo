@@ -1,11 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/////////////////////////////////////////////////////////////
+//
+//  Script Name: TestStartTrigger.cs
+//  Creator: Charles Carter
+//  Description: A simple trigger for timer testing
+//  
+/////////////////////////////////////////////////////////////
+
+//This script uses these namespaces
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 //A class so I can start the game whenever I want to in the test scene
-public class TestStartTrigger : MonoBehaviour
-{
+public class TestStartTrigger : MonoBehaviour {
+    #region Variables
+
     public static TestStartTrigger instance;
 
     //Variables
@@ -20,14 +28,14 @@ public class TestStartTrigger : MonoBehaviour
     private bool canStart = false;
     private bool isLocked = false;
 
-    private void Awake()
-    {
-        if (!instance)
-        {
+    #endregion
+
+    #region Unity Methods
+
+    private void Awake() {
+        if (!instance) {
             instance = this;
-        }
-        else
-        {
+        } else {
             Destroy(this);
         }
 
@@ -35,25 +43,26 @@ public class TestStartTrigger : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         //P for play game
-        if (playValue > 0.1f && canStart && !isLocked)
-        {
+        if (playValue > 0.1f && canStart && !isLocked) {
             startCountdown.CallOnTimerStart();
             isLocked = true;
         }
     }
 
-    public void Play(InputAction.CallbackContext ctx)
-    {
+    #endregion
+
+    #region Public Methods
+
+    public void Play(InputAction.CallbackContext ctx) {
         playValue = ctx.ReadValue<float>();
     }
 
-    public void CanStart()
-    {
+    public void CanStart() {
         playerInput = playerInput ?? FindObjectOfType<PlayerInput>();
         canStart = true;
     }
 
+    #endregion
 }

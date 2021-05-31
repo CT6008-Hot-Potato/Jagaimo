@@ -7,8 +7,7 @@
 /////////////////////////////////////////////////////////////
 
 //A class not attached to unity to handle the timer float
-public class Timer
-{
+public class Timer {
     #region Variables Needed
 
     //Could be locked
@@ -26,24 +25,20 @@ public class Timer
     #region Public Methods
 
     //Constructor
-    public Timer(float duration)
-    {
+    public Timer(float duration) {
         max_time = duration;
         current_time = duration;
 
         isActive = true;
     }
 
-    ~Timer()
-    {
+    ~Timer() {
         //Garbage collection should do this (could implement a dispose if needed)
     }
 
     //Ticking the timer down
-    public void Tick(float delta_time)
-    {
-        if (current_time.Equals(min_time) || isLocked)
-        {
+    public void Tick(float delta_time) {
+        if (current_time.Equals(min_time) || isLocked) {
             return;
         }
 
@@ -52,8 +47,7 @@ public class Timer
     }
 
     //If something wants to add/remove time
-    public void OverrideCurrentTime(float amountToChangeBy)
-    {
+    public void OverrideCurrentTime(float amountToChangeBy) {
         current_time += amountToChangeBy;
     }
 
@@ -62,11 +56,9 @@ public class Timer
     #region Private Methods
 
     //Function to check if timer ran out
-    private void EndCheck()
-    {
+    private void EndCheck() {
         //Timer is over
-        if (current_time <= min_time)
-        {
+        if (current_time <= min_time) {
             current_time = min_time;
             isActive = false;
         }

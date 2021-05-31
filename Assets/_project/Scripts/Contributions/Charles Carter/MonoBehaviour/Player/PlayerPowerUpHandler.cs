@@ -5,11 +5,11 @@
 // Brief: The script for the behaviour when the player triggers a power up
 //////////////////////////////////////////////////////////// 
 
+//This script uses these namespaces
 using System.Collections;
 using UnityEngine;
 
-public class PlayerPowerUpHandler : MonoBehaviour
-{
+public class PlayerPowerUpHandler : MonoBehaviour {
     #region Variables Needed
 
     private RoundManager roundManager;
@@ -32,19 +32,16 @@ public class PlayerPowerUpHandler : MonoBehaviour
 
     #region Unity Methods
 
-    private void Awake()
-    {
+    private void Awake() {
         _cam = _cam ?? GetComponent<PlayerCamera>();
         _movement = _movement ?? GetComponent<PlayerController>();
         _interaction = _interaction ?? GetComponent<PlayerInteraction>();
 
         settings = GameSettingsContainer.instance;
 
-        if (settings)
-        {
+        if (settings) {
             //If it doesn't have a value for the powerups bool
-            if (!settings.HasGenMutator(7))
-            {
+            if (!settings.HasGenMutator(7)) {
                 //Then this script isnt needed
                 enabled = false;
             }
@@ -52,13 +49,11 @@ public class PlayerPowerUpHandler : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         roundManager = RoundManager.roundManager;
         waterBounds = roundManager.worldBoundry;
 
-        if (!PowerUp_UI && Debug.isDebugBuild)
-        {
+        if (!PowerUp_UI && Debug.isDebugBuild) {
             Debug.Log("There's no powerUpUI set", this);
         }
     }
@@ -67,8 +62,7 @@ public class PlayerPowerUpHandler : MonoBehaviour
 
     #region Public Methods
 
-    public void PowerUpTriggered(int powerUpID)
-    {
+    public void PowerUpTriggered(int powerUpID) {
         //Handle what happens depending on the powerup ID (it's like this due to not many powerups)
         //Power Up 0 - Flipping the camera upside down temporarily
         //Power Up 1 - Increasing player speed temporarily
@@ -76,15 +70,16 @@ public class PlayerPowerUpHandler : MonoBehaviour
         //Power Up 3 - Flood
         //Power Up 4 -   
 
-        switch (powerUpID)
-        {
+        //Forcing it to be movement since this may not be fully implemented
+        powerUpID = 1;
+
+        switch (powerUpID) {
             case 0:
                 //_cam.ChangeRoll();
                 //StartCoroutine();
                 break;
             case 1:
-                if (_movement)
-                {
+                if (_movement) {
                     _movement.speed += 0.3f;
                 }
                 break;
@@ -98,8 +93,7 @@ public class PlayerPowerUpHandler : MonoBehaviour
 
                 break;
             default:
-                if (Debug.isDebugBuild)
-                {
+                if (Debug.isDebugBuild) {
                     Debug.Log("Power Up Triggered", this);
                 }
                 break;
@@ -112,19 +106,16 @@ public class PlayerPowerUpHandler : MonoBehaviour
 
     #region Private Methods
 
-    private IEnumerator PowerUpTimer(int ID)
-    {
+    private IEnumerator PowerUpTimer(int ID) {
         yield return new WaitForSeconds(5f);
 
-        switch (ID)
-        {
+        switch (ID) {
             case 0:
                 //_cam.ChangeRoll
                 //StartCoroutine();
                 break;
             case 1:
-                if (_movement)
-                {
+                if (_movement) {
                     _movement.speed -= 0.3f;
                 }
                 break;
@@ -138,8 +129,7 @@ public class PlayerPowerUpHandler : MonoBehaviour
 
                 break;
             default:
-                if (Debug.isDebugBuild)
-                {
+                if (Debug.isDebugBuild) {
                     Debug.Log("Power Up Triggered", this);
                 }
                 break;

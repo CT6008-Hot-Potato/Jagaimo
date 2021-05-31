@@ -5,18 +5,17 @@
 // Brief: An example script if we want to do consistent unit testing using the timer class
 //////////////////////////////////////////////////////////// 
 
+//This script uses these namespaces
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 
-namespace Tests
-{
-    public class TimerTests
-    {
+namespace Tests {
+    public class TimerTests {
         // A Test behaves as an ordinary method
         [Test]
-        public void TimerTestsSimplePasses()
-        {
+        public void TimerTestsSimplePasses() 
+            {
             // Use the Assert class to test conditions
         }
 
@@ -31,11 +30,10 @@ namespace Tests
         }
 
         [Test]
-        public void TimerWorks()
-        {
+        public void TimerWorks() {
             //Assign
             var timer = new Timer(1.0f);
-            
+
             //Act
             timer.Tick(1.0f);
 
@@ -45,14 +43,12 @@ namespace Tests
         }
 
         [UnityTest]
-        public IEnumerator TimerBehaviour()
-        {
+        public IEnumerator TimerBehaviour() {
             //Assign
             var timer = new Timer(1.0f);
 
             //Act
-            while (timer.isActive)
-            {          
+            while (timer.isActive) {
                 timer.Tick(UnityEngine.Time.deltaTime);
                 yield return null;
             }

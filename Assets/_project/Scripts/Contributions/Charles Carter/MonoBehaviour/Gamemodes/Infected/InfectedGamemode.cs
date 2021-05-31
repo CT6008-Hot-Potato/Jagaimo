@@ -7,14 +7,12 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(RoundManager))]
 //This will mostly be in the other scripts anyway
-public class InfectedGamemode : MonoBehaviour, IGamemode
-{
+public class InfectedGamemode : MonoBehaviour, IGamemode {
     #region Interfact Contract Expressions
 
     //Fulfilling the interfaces contracted functions
@@ -68,15 +66,14 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     [SerializeField]
     private GameObject potatoPrefab;
-    private bool bGameStarted = false;
+    //private bool bGameStarted = false;
 
     #endregion
-    
+
     #region Unity Methods
 
     //Getting the needed components
-    private void OnEnable()
-    {
+    private void OnEnable() {
         roundManager = roundManager ?? RoundManager.roundManager;
         arenaManager = arenaManager ?? GetComponent<ArenaManager>();
         winScreenManager = winScreenManager ?? WinScreenManager.instance;
@@ -90,8 +87,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     #region Interface Methods
 
     //A way for the round manager to set the active players at the start of the game
-    private void SettingActivePlayers(CharacterManager[] charArray)
-    {
+    private void SettingActivePlayers(CharacterManager[] charArray) {
         //This gamemode uses a random arena
         int arena = arenaManager.GetRandomArenaNumber();
 
@@ -99,45 +95,37 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         roundManager.initialPotatoObject.transform.position = arenaManager.GettingPositionFromArena(arena, 0);
 
         //Going through the give array and adding it to the list
-        for (int i = 0; i < charArray.Length; ++i)
-        {
+        for (int i = 0; i < charArray.Length; ++i) {
             activeSurvivors.Add(charArray[i]);
             currentActivePlayers.Add(charArray[i]);
             PutSpecificCharacterInPosition(i, arena);
             charArray[i].LockPlayer();
         }
 
-        if (Debug.isDebugBuild)
-        {
+        if (Debug.isDebugBuild) {
             Debug.Log("Active players set, Amount of Active players: " + currentActivePlayers.Count, this);
         }
     }
-    private CharacterManager[] GetActivePlayers()
-    {
+    private CharacterManager[] GetActivePlayers() {
         return currentActivePlayers.ToArray();
     }
 
     //Someone joins the game
-    private void AddActivePlayer(CharacterManager newCharacter)
-    {
+    private void AddActivePlayer(CharacterManager newCharacter) {
         currentActivePlayers.Add(newCharacter);
     }
 
-    private void RemoveActivePlayer(CharacterManager characterLeft)
-    {
+    private void RemoveActivePlayer(CharacterManager characterLeft) {
         Debug.Log("Player Left");
         currentActivePlayers.Remove(characterLeft);
     }
 
     //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
-    public void LockAllPlayers()
-    {
+    public void LockAllPlayers() {
         //Go through the players
-        for (int i = 0; i < currentActivePlayers.Count; ++i)
-        {
+        for (int i = 0; i < currentActivePlayers.Count; ++i) {
             //If it's an actual player within the list
-            if (currentActivePlayers[i])
-            {
+            if (currentActivePlayers[i]) {
                 //Use it's unlock function
                 currentActivePlayers[i].LockPlayer();
             }
@@ -145,56 +133,46 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
     }
 
     //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
-    public void UnlockAllPlayers()
-    {
+    public void UnlockAllPlayers() {
         //Go through the players
-        for (int i = 0; i < currentActivePlayers.Count; ++i)
-        {
+        for (int i = 0; i < currentActivePlayers.Count; ++i) {
             //If it's an actual player within the list
-            if (currentActivePlayers[i])
-            {
+            if (currentActivePlayers[i]) {
                 //Use it's unlock function
                 currentActivePlayers[i].UnLockPlayer();
             }
         }
     }
 
-    public void EliminatePlayer(CharacterManager charEliminated)
-    {
+    public void EliminatePlayer(CharacterManager charEliminated) {
         //Getting a random spot to put the infected onto
         int iRandArena = arenaManager.GetRandomArenaNumber();
 
         //Putting them back
         PutSpecificCharacterInPosition(charEliminated, iRandArena);
 
-        if (activeSurvivors.Contains(charEliminated))
-        {
+        if (activeSurvivors.Contains(charEliminated)) {
             roundManager.OnPlayerTagged(charEliminated);
         }
     }
 
     //This runs when the round is about to start/ during the initial timer
-    private void RoundStarting()
-    {
+    private void RoundStarting() {
 
         //Choosing a random person(s) to be infected
         //If there are settings
-        if (settings)
-        {
+        if (settings) {
             //If the settings include a change to the base infected count
-            if (settings.HasGamMutator(2))
-            {
+            if (settings.HasGamMutator(2)) {
                 Debug.Log("Based Infected Count Raised To: " + ((int)settings.FindGamemodeMutatorValue(2)).ToString());
 
                 List<CharacterManager> chars = currentActivePlayers;
                 int iInfectedCount = (int)settings.FindGamemodeMutatorValue(2);
 
                 //If there are enough players to infected without the game just being over
-                if (iInfectedCount < currentActivePlayers.Count)
-                {
+                if (iInfectedCount < currentActivePlayers.Count) {
                     //Going through the active players, tagging them and moving them to the correct lists
-                    for (int i = 0; i < iInfectedCount - 1; ++i)
-                    {
+                    for (int i = 0; i < iInfectedCount - 1; ++i) {
                         int iRandomerPlayer = Random.Range(0, chars.Count - 1);
                         chars.RemoveAt(iRandomerPlayer);
                         roundManager.OnPlayerTagged(chars[iRandomerPlayer]);
@@ -203,46 +181,38 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
                     return;
                 }
             }
-        }        
-        
+        }
+
         //Only tag 1 player randomly
         int iRandomPlayer = Random.Range(0, currentActivePlayers.Count - 1);
         roundManager.OnPlayerTagged(currentActivePlayers[iRandomPlayer]);
     }
 
-    private void RoundEnding()
-    {
+    private void RoundEnding() {
         //The round has ended, it's win screen time... for the survivors
         WinScreen();
     }
 
     //This is what happens when this countdown starts
-    private void CountdownStarting()
-    {
+    private void CountdownStarting() {
         UnlockAllPlayers();
     }
 
     //When the countdown ends
-    private void CountdownEnding()
-    {
+    private void CountdownEnding() {
         //At the end of the countdown, doing a last check if survivors won
-        if (ThisWinCondition())
-        {
+        if (ThisWinCondition()) {
             //Infected Won
             infectedWon = true;
-        }
-        else
-        {
+        } else {
             //Survivors Won
             infectedWon = false;
         }
     }
 
     //Add them to the infected and take them away from the survivors
-    private void PlayerTagged(CharacterManager charTagged)
-    {
-        if (activeSurvivors.Contains(charTagged))
-        {
+    private void PlayerTagged(CharacterManager charTagged) {
+        if (activeSurvivors.Contains(charTagged)) {
             //Removing them from the survivors and adding them to the infected
             activeSurvivors.Remove(charTagged);
             activeInfected.Add(charTagged);
@@ -258,19 +228,16 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
             Instantiate(potatoPrefab, newPotatoPos, Quaternion.identity);
 
             //Since someone is tagged, the infected could have won
-            if (ThisWinCondition())
-            {
+            if (ThisWinCondition()) {
                 roundManager.CallOnRoundEnd();
             }
         }
     }
 
     //When only 1 person is active in the game, return true
-    private bool ThisWinCondition()
-    {
+    private bool ThisWinCondition() {
         //1 player is left so someone has won this round
-        if (activeSurvivors.Count == 0)
-        {
+        if (activeSurvivors.Count == 0) {
             infectedWon = true;
             return true;
         }
@@ -279,8 +246,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
         return false;
     }
 
-    public GAMEMODE_INDEX Return_Mode()
-    {
+    public GAMEMODE_INDEX Return_Mode() {
         return GAMEMODE_INDEX.INFECTED;
     }
 
@@ -288,8 +254,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     #region Public Methods
 
-    public bool ReturnWinners()
-    {
+    public bool ReturnWinners() {
         return infectedWon;
     }
 
@@ -297,39 +262,33 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
     #region Private Methods
 
-    private void WinScreen()
-    {
+    private void WinScreen() {
         //if infected won
-        if (infectedWon)
-        {
+        if (infectedWon) {
             winScreenManager.PlayWinScreen(Return_Mode(), currentActivePlayers, activeInfected);
         }
         //if survivors won
-        else
-        {
+        else {
             winScreenManager.PlayWinScreen(Return_Mode(), currentActivePlayers, activeSurvivors);
         }
 
         enabled = false;
     }
 
-    private void PutSpecificCharacterInPosition(int index, int arenaIndex)
-    {
+    private void PutSpecificCharacterInPosition(int index, int arenaIndex) {
         Transform spot = arenaManager.GettingSpot(arenaIndex, index + 1);
         currentActivePlayers[index].gameObject.transform.position = spot.position;
 
         //This is the "solution" to not being able to turn the player based on the prefab object
         PlayerCamera camera = currentActivePlayers[index].GetComponent<PlayerCamera>();
-        if (camera)
-        {
+        if (camera) {
             camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
             camera.flipSpin = !camera.flipSpin;
         }
     }
 
     //Used for the forced elimination
-    private void PutSpecificCharacterInPosition(CharacterManager manager, int arenaIndex)
-    {
+    private void PutSpecificCharacterInPosition(CharacterManager manager, int arenaIndex) {
         //Doesnt matter if they hit a potato
         Transform spot = arenaManager.GettingSpot(arenaIndex, 0);
         manager.GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -337,8 +296,7 @@ public class InfectedGamemode : MonoBehaviour, IGamemode
 
         //This is the "solution" to not being able to turn the player based on the prefab object
         PlayerCamera camera = manager.GetComponent<PlayerCamera>();
-        if (camera)
-        {
+        if (camera) {
             camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
             camera.flipSpin = !camera.flipSpin;
         }

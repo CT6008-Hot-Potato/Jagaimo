@@ -8,8 +8,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class WinScreen : MonoBehaviour
-{
+public abstract class WinScreen : MonoBehaviour {
     #region Variables Needed
 
     [Header("General Win Screen Variables")]
@@ -35,8 +34,7 @@ public abstract class WinScreen : MonoBehaviour
 
     #region Unity Methods
 
-    private void OnEnable()
-    {
+    private void OnEnable() {
         rManager = RoundManager.roundManager;
     }
 
@@ -45,19 +43,16 @@ public abstract class WinScreen : MonoBehaviour
     #region Public Methods
 
     //The movement of the camera/anything, VFX to get played or anything else needed, also can be overriden if needed
-    public virtual void StartWinSequence(List<CharacterManager> players, List<CharacterManager> winners)
-    {
+    public virtual void StartWinSequence(List<CharacterManager> players, List<CharacterManager> winners) {
         winningPlayers = winners;
 
         //Going through the managers
-        foreach (CharacterManager manager in players)
-        {
+        foreach (CharacterManager manager in players) {
             //Getting the players' cameras
             Camera[] camsToAdd = manager.ReturnCameras();
 
             //Adding them to the list to turn for the screen
-            for (int i = 0; i < camsToAdd.Length; ++i)
-            {
+            for (int i = 0; i < camsToAdd.Length; ++i) {
                 camerasInScene.Add(camsToAdd[i]);
             }
 
@@ -75,31 +70,25 @@ public abstract class WinScreen : MonoBehaviour
     #endregion
 
     #region Private Methods
-    protected virtual void PositionPlayers(List<CharacterManager> objectsToPosition)
-    {
+    protected virtual void PositionPlayers(List<CharacterManager> objectsToPosition) {
         //should be overridden
     }
 
-    protected virtual void PlayCorrectVFX(List<ParticleSystem> particlesToPlay)
-    {
+    protected virtual void PlayCorrectVFX(List<ParticleSystem> particlesToPlay) {
         //If there are particles systems to play
-        if (particlesToPlay.Count > 0)
-        {
+        if (particlesToPlay.Count > 0) {
             //Go through and play them
-            foreach (ParticleSystem particles in particlesToPlay)
-            {
+            foreach (ParticleSystem particles in particlesToPlay) {
                 particles.Play();
             }
         }
     }
 
-    protected virtual void CombineCameras()
-    {
+    protected virtual void CombineCameras() {
         viewCam.enabled = true;
 
         //Going through all the cameras and making the 
-        for (int i = 0; i < camerasInScene.Count; ++i)
-        {
+        for (int i = 0; i < camerasInScene.Count; ++i) {
             camerasInScene[i].enabled = false;
         }
     }

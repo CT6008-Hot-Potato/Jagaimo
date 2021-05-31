@@ -12,11 +12,9 @@ using UnityEngine;
 
 //A more concise version of MutatorUI to be sent over scenes/ networks with less information
 [System.Serializable]
-public class PackagedMutator
-{
+public class PackagedMutator {
     //Constructur to pass across the values
-    public PackagedMutator(string n, int id, object v)
-    {
+    public PackagedMutator(string n, int id, object v) {
         name = n;
         ID = id;
 
@@ -36,8 +34,7 @@ public class PackagedMutator
 
 #endregion
 
-public class MutatorPackager : MonoBehaviour
-{
+public class MutatorPackager : MonoBehaviour {
     #region Variables Needed
 
     public static MutatorPackager instance;
@@ -50,21 +47,18 @@ public class MutatorPackager : MonoBehaviour
     #region Public Methods
 
     //Saving And Loading the current mutators for the game to use
-    public void MakeChangedMutatorArrays(bool bLocalPlay, List<MutatorUI> GenMut, List<MutatorUI> GamMut, List<MutatorUI> MapMut)
-    {
+    public void MakeChangedMutatorArrays(bool bLocalPlay, List<MutatorUI> GenMut, List<MutatorUI> GamMut, List<MutatorUI> MapMut) {
         PackagedMutator[] genMutators = packagedMutatorsForGen(GenMut);
         PackagedMutator[] gmodeMutators = packagedMutatorsForGMode(GamMut);
         PackagedMutator[] mapMutators = packagedMutatorsForMap(MapMut);
 
         //If the game is just for local play
-        if (bLocalPlay)
-        {
+        if (bLocalPlay) {
             GameSettingsContainer.instance.StoreMutators(genMutators, gmodeMutators, mapMutators);
             GameSettingsContainer.instance.StoreGamemode(Gamemode);
         }
         //If the game is over a network
-        else
-        {
+        else {
             Destroy(GameSettingsContainer.instance.gameObject);
         }
     }
@@ -73,14 +67,10 @@ public class MutatorPackager : MonoBehaviour
 
     #region Unity Methods
 
-    private void Awake()
-    {
-        if (!instance)
-        {
+    private void Awake() {
+        if (!instance) {
             instance = this;
-        }
-        else
-        {
+        } else {
             Destroy(gameObject);
         }
     }
@@ -90,18 +80,15 @@ public class MutatorPackager : MonoBehaviour
     #region Private Methods
 
     //Getting an array of packaged mutators from each current mutatorUI list
-    private PackagedMutator[] packagedMutatorsForGen(List<MutatorUI> currentGeneralMutatorList)
-    {
+    private PackagedMutator[] packagedMutatorsForGen(List<MutatorUI> currentGeneralMutatorList) {
         //These 3 functions currently follow the same structure, could be optimized
         //Making a temp variable
         List<PackagedMutator> packagedGenMutators = new List<PackagedMutator>();
 
         //Going through the currently stored mutators
-        foreach (MutatorUI mut in currentGeneralMutatorList)
-        {
+        foreach (MutatorUI mut in currentGeneralMutatorList) {
             //Only needs to convert it if it has been changed
-            if (!mut.isDefaultValue)
-            {
+            if (!mut.isDefaultValue) {
                 //Converting it to a packaged version
                 packagedGenMutators.Add(ConvertingMutatorUIToPackage(mut));
             }
@@ -111,14 +98,11 @@ public class MutatorPackager : MonoBehaviour
         return packagedGenMutators.ToArray();
     }
 
-    private PackagedMutator[] packagedMutatorsForGMode(List<MutatorUI> currentGmodeMutatorList)
-    {
+    private PackagedMutator[] packagedMutatorsForGMode(List<MutatorUI> currentGmodeMutatorList) {
         List<PackagedMutator> packagedGmodeMutators = new List<PackagedMutator>();
 
-        foreach (MutatorUI mut in currentGmodeMutatorList)
-        {
-            if (!mut.isDefaultValue)
-            {
+        foreach (MutatorUI mut in currentGmodeMutatorList) {
+            if (!mut.isDefaultValue) {
                 packagedGmodeMutators.Add(ConvertingMutatorUIToPackage(mut));
             }
         }
@@ -126,14 +110,11 @@ public class MutatorPackager : MonoBehaviour
         return packagedGmodeMutators.ToArray();
     }
 
-    private PackagedMutator[] packagedMutatorsForMap(List<MutatorUI> currentMapMutatorList)
-    {
+    private PackagedMutator[] packagedMutatorsForMap(List<MutatorUI> currentMapMutatorList) {
         List<PackagedMutator> packagedMapMutators = new List<PackagedMutator>();
 
-        foreach (MutatorUI mut in currentMapMutatorList)
-        {
-            if (!mut.isDefaultValue)
-            {
+        foreach (MutatorUI mut in currentMapMutatorList) {
+            if (!mut.isDefaultValue) {
                 packagedMapMutators.Add(ConvertingMutatorUIToPackage(mut));
             }
         }
@@ -142,21 +123,16 @@ public class MutatorPackager : MonoBehaviour
     }
 
     //Making a packaged mutator from a mutator UI
-    private PackagedMutator ConvertingMutatorUIToPackage(MutatorUI mutatorToConvert)
-    {
-        switch (mutatorToConvert.mType)
-        {
+    private PackagedMutator ConvertingMutatorUIToPackage(MutatorUI mutatorToConvert) {
+        switch (mutatorToConvert.mType) {
             case Mutator_Value_Type.INT:
                 return new PackagedMutator(mutatorToConvert.name, mutatorToConvert.ID, (int)mutatorToConvert.value);
             case Mutator_Value_Type.FLOAT:
                 return new PackagedMutator(mutatorToConvert.name, mutatorToConvert.ID, mutatorToConvert.value);
             case Mutator_Value_Type.BOOL:
-                if (mutatorToConvert.value == 0)
-                {
+                if (mutatorToConvert.value == 0) {
                     return new PackagedMutator(mutatorToConvert.name, mutatorToConvert.ID, false);
-                }
-                else
-                {
+                } else {
                     return new PackagedMutator(mutatorToConvert.name, mutatorToConvert.ID, true);
                 }
             case Mutator_Value_Type.PERCENTAGE:

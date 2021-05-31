@@ -7,21 +7,18 @@
 /////////////////////////////////////////////////////////////
 
 //This script uses these namespaces
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Football_Team
-{
+public enum Football_Team {
     Blue_Team = 0,
     Orange_Team = 1
 }
 
 [RequireComponent(typeof(RoundManager))]
 //This will mostly be in the other scripts anyway
-public class FootballGamemode : MonoBehaviour, IGamemode
-{
+public class FootballGamemode : MonoBehaviour, IGamemode {
     #region Interface Contract Expressions
 
     //Fulfilling the interfaces contracted functions
@@ -60,7 +57,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     private FootballObjectContainer footballVariables;
 
     public List<CharacterManager> currentActivePlayers = new List<CharacterManager>();
-    
+
     private List<CharacterManager> blueTeam = new List<CharacterManager>();
     private List<CharacterManager> orangeTeam = new List<CharacterManager>();
 
@@ -114,8 +111,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     #region Unity Methods
 
     //Getting the needed components
-    private void OnEnable()
-    {
+    private void OnEnable() {
         roundManager = roundManager ?? RoundManager.roundManager;
         arenaManager = arenaManager ?? GetComponent<ArenaManager>();
         winScreenManager = winScreenManager ?? WinScreenManager.instance;
@@ -135,91 +131,70 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
     #region Public Methods
 
-    public GAMEMODE_INDEX Return_Mode()
-    {
+    public GAMEMODE_INDEX Return_Mode() {
         return GAMEMODE_INDEX.FOOTBALL;
     }
 
     //Either team scores a goal
-    public void Goal(bool blueTeamScore)
-    {
+    public void Goal(bool blueTeamScore) {
         //Updating the score
-        if (blueTeamScore)
-        {
+        if (blueTeamScore) {
             score.x++;
 
-            if (scoreboard)
-            {
+            if (scoreboard) {
                 scoreboard.UpdateBlueScoreText();
             }
 
             //playing vfx in the orange goal's position
-            if (particlePlayer && goalVFXPositions[(int)Football_Team.Blue_Team])
-            {
+            if (particlePlayer && goalVFXPositions[(int)Football_Team.Blue_Team]) {
                 particlePlayer.CreateParticle(VFX, goalVFXPositions[1].position, Color.red);
             }
-        }
-        else
-        {
+        } else {
             score.y++;
 
-            if (scoreboard)
-            {
+            if (scoreboard) {
                 scoreboard.UpdateRedScoreText();
             }
 
             //Playing vfx in the blue goal's position
-            if (particlePlayer && goalVFXPositions[(int)Football_Team.Orange_Team])
-            {
+            if (particlePlayer && goalVFXPositions[(int)Football_Team.Orange_Team]) {
                 particlePlayer.CreateParticle(VFX, goalVFXPositions[0].position, Color.blue);
             }
         }
 
         //Updating the event texts
-        if (scrollerText)
-        {
+        if (scrollerText) {
             scrollerText.AddGoalText(blueTeamScore);
         }
 
         //Stopping the countdown, putting the players and potato back, starting the countdown up again
-        if (countdownTimer)
-        {
+        if (countdownTimer) {
             countdownTimer.LockTimer(true);
         }
 
-        if (bExtraTime)
-        {
+        if (bExtraTime) {
             //Seeing which team won
             ThisWinCondition();
 
-            if (!winScreenManager)
-            {
-                if (Debug.isDebugBuild)
-                {
+            if (!winScreenManager) {
+                if (Debug.isDebugBuild) {
                     Debug.Log("No win screen manager", this);
                 }
 
                 UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
-            }
-            else
-            {
+            } else {
                 //This goal was scored during extra time
-                if (blueTeamWon)
-                {
+                if (blueTeamWon) {
                     //Playing the win screen and passing through the blue team as the winners
                     winScreenManager.PlayWinScreen(Return_Mode(), currentActivePlayers, blueTeam);
                     enabled = false;
-                }
-                else
-                {
+                } else {
                     //Playing the win screen and passing through the orange team as the winners
                     winScreenManager.PlayWinScreen(Return_Mode(), currentActivePlayers, orangeTeam);
                     enabled = false;
                 }
             }
-        }
-        else
-        {
+        } else {
             //Prepare to start the rest of the game
             //Having a few seconds before everything resets
             StartCoroutine(Co_GoalWait(5f));
@@ -227,8 +202,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     }
 
     //Needed for win screen
-    public bool ReturnWinners()
-    {
+    public bool ReturnWinners() {
         //only needed for after the game so it shouldn't matter
         return blueTeamWon;
     }
@@ -238,60 +212,48 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     #region Interface Methods
 
     //A way for the round manager to set the active players at the start of the game
-    private void SettingActivePlayers(CharacterManager[] charArray)
-    {
+    private void SettingActivePlayers(CharacterManager[] charArray) {
         //Still need to add the active players for testing
-        for (int i = 0; i < charArray.Length; ++i)
-        {
+        for (int i = 0; i < charArray.Length; ++i) {
             currentActivePlayers.Add(charArray[i]);
             charArray[i].LockPlayer();
 
             //Even numbers on blue team, odd on orange team (0 goes to blue)
-            if (i % 2 == 0)
-            {
+            if (i % 2 == 0) {
                 blueTeam.Add(charArray[i]);
-            }
-            else
-            {
+            } else {
                 orangeTeam.Add(charArray[i]);
             }
         }
 
         PutPlayersInSpawnPoints();
 
-        if (Debug.isDebugBuild)
-        {
+        if (Debug.isDebugBuild) {
             Debug.Log("Active players set, Amount of Active players: " + currentActivePlayers.Count, this);
         }
     }
 
-    private CharacterManager[] GetActivePlayers()
-    {
+    private CharacterManager[] GetActivePlayers() {
         return currentActivePlayers.ToArray();
     }
 
     //Someone joins the game
-    private void AddActivePlayer(CharacterManager newCharacter)
-    {
+    private void AddActivePlayer(CharacterManager newCharacter) {
         currentActivePlayers.Add(newCharacter);
     }
 
     //Someone leaves the game
-    private void RemoveActivePlayer(CharacterManager characterLeft)
-    {
+    private void RemoveActivePlayer(CharacterManager characterLeft) {
         currentActivePlayers.Remove(characterLeft);
     }
 
 
     //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
-    public void LockAllPlayers()
-    {
+    public void LockAllPlayers() {
         //Go through the players
-        for (int i = 0; i < currentActivePlayers.Count; ++i)
-        {
+        for (int i = 0; i < currentActivePlayers.Count; ++i) {
             //If it's an actual player within the list
-            if (currentActivePlayers[i])
-            {
+            if (currentActivePlayers[i]) {
                 //Use it's unlock function
                 currentActivePlayers[i].LockPlayer();
             }
@@ -299,59 +261,45 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     }
 
     //Could potentially be something within the round manager which gets the active players from the gamemode (excluding null instances)
-    public void UnlockAllPlayers()
-    {
+    public void UnlockAllPlayers() {
         //Go through the players
-        for (int i = 0; i < currentActivePlayers.Count; ++i)
-        {
+        for (int i = 0; i < currentActivePlayers.Count; ++i) {
             //If it's an actual player within the list
-            if (currentActivePlayers[i])
-            {
+            if (currentActivePlayers[i]) {
                 //Use it's unlock function
                 currentActivePlayers[i].UnLockPlayer();
             }
         }
     }
-    public void EliminatePlayer(CharacterManager charEliminated)
-    {
-        
+    public void EliminatePlayer(CharacterManager charEliminated) {
+
     }
 
     //This runs when the round is about to start/ during the initial timer
-    private void RoundStarting()
-    {
+    private void RoundStarting() {
         //Having the potato fall
-        if (potatoRB)
-        {
+        if (potatoRB) {
             potatoRB.isKinematic = false;
-        }
-        else if (Debug.isDebugBuild)
-        {          
+        } else if (Debug.isDebugBuild) {
             Debug.Log("There's no potato RB", this);
         }
     }
 
-    private void RoundEnding()
-    {
+    private void RoundEnding() {
         //The game ends when the countdown ends
     }
 
     //This is what happens when this countdown starts
-    private void CountdownStarting()
-    {
+    private void CountdownStarting() {
         UnlockAllPlayers();
     }
 
     //When the countdown ends
-    private void CountdownEnding()
-    {
+    private void CountdownEnding() {
         //At the end on the countdown, seeing who has more goals
-        if (ThisWinCondition())
-        {
-            if (!winScreenManager)
-            {
-                if (Debug.isDebugBuild)
-                {
+        if (ThisWinCondition()) {
+            if (!winScreenManager) {
+                if (Debug.isDebugBuild) {
                     Debug.Log("No win screen manager", this);
                 }
 
@@ -359,12 +307,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             }
 
             //A team won
-            if (blueTeamWon)
-            {
-                winScreenManager.PlayWinScreen(Return_Mode(),currentActivePlayers, blueTeam);
-            }
-            else
-            {
+            if (blueTeamWon) {
+                winScreenManager.PlayWinScreen(Return_Mode(), currentActivePlayers, blueTeam);
+            } else {
                 winScreenManager.PlayWinScreen(Return_Mode(), currentActivePlayers, orangeTeam);
             }
 
@@ -377,24 +322,18 @@ public class FootballGamemode : MonoBehaviour, IGamemode
     }
 
     //Doesnt really do anything in this gamemode
-    private void PlayerTagged()
-    {
+    private void PlayerTagged() {
 
     }
 
     //Which teams has more goals - blue = return true and orange = return false
-    private bool ThisWinCondition()
-    {
+    private bool ThisWinCondition() {
         //Blue or Orange team wins
-        if (score.x != score.y)
-        {
+        if (score.x != score.y) {
             //This goal was scored during extra time
-            if (score.x > score.y)
-            {
+            if (score.x > score.y) {
                 blueTeamWon = true;
-            }
-            else
-            {
+            } else {
                 blueTeamWon = false;
             }
 
@@ -409,18 +348,15 @@ public class FootballGamemode : MonoBehaviour, IGamemode
 
     #region Private Methods
 
-    private void PutPlayersInSpawnPoints()
-    {
+    private void PutPlayersInSpawnPoints() {
         //Guard clause, nothing should happen without the manager
         if (!arenaManager) return;
 
         spawnSpots = arenaManager.ReturnFootballSpawnIndexers(currentActivePlayers.Count);
 
-        if (orangeTeam != null)
-        {
+        if (orangeTeam != null) {
             //Doing the loops based on the team amounts not the spot amounts
-            for (int i = 0; i < orangeTeam.Count; ++i)
-            {
+            for (int i = 0; i < orangeTeam.Count; ++i) {
                 Transform spotTransform = arenaManager.GettingSpot((int)Football_Team.Orange_Team, spawnSpots[i]);
 
                 Rigidbody rb = orangeTeam[i].GetComponent<Rigidbody>();
@@ -434,10 +370,8 @@ public class FootballGamemode : MonoBehaviour, IGamemode
             }
         }
 
-        if (blueTeam != null)
-        {
-            for (int i = 0; i < blueTeam.Count; ++i)
-            {
+        if (blueTeam != null) {
+            for (int i = 0; i < blueTeam.Count; ++i) {
                 Transform spotTransform = arenaManager.GettingSpot((int)Football_Team.Blue_Team, spawnSpots[i]);
 
                 Rigidbody rb = orangeTeam[i].GetComponent<Rigidbody>();
@@ -451,8 +385,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         //blueTeam[i].transform.rotation = spotTransform.rotation;
     }
 
-    private IEnumerator Co_GoalWait(float duration)
-    {
+    private IEnumerator Co_GoalWait(float duration) {
 
 
         yield return new WaitForSeconds(duration);
@@ -462,8 +395,7 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         PutPlayersInSpawnPoints();
 
         //Moving the potato back to the start if this has a reference to it (which it should)
-        if (potatoRB)
-        {
+        if (potatoRB) {
             potatoRB.transform.position = Vector3.zero;
         }
 
@@ -471,18 +403,16 @@ public class FootballGamemode : MonoBehaviour, IGamemode
         goalPauseTimer.CallOnTimerStart();
     }
 
-    private void StartExtraTime()
-    {
+    private void StartExtraTime() {
         //The game ended in a draw so have the clock tick upwards until a goal
         //Putting them back in starting points
         PutPlayersInSpawnPoints();
 
         //Moving the potato back to the start if this has a reference to it (which it should)
-        if (potatoRB)
-        {
+        if (potatoRB) {
             potatoRB.transform.position = Vector3.zero;
         }
-        
+
         //Having the time go to zero and go upwards
         countdownTimer.CountUpwards();
 

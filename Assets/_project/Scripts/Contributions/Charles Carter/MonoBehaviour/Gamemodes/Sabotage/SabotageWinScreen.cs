@@ -5,12 +5,11 @@
 // Brief: The script that controls the specific effects on the win screen for the sabotage gamemode
 //////////////////////////////////////////////////////////// 
 
-using System.Collections;
+//This script uses these namespaces
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SabotageWinScreen : WinScreen
-{
+public class SabotageWinScreen : WinScreen {
     #region Variables Needed
 
     [Header("Variables Needed Specifically for the sabotage win screen")]
@@ -26,21 +25,16 @@ public class SabotageWinScreen : WinScreen
 
     #region Unity Methods
 
-    void OnEnable()
-    {
+    void OnEnable() {
         rManager = RoundManager.roundManager;
 
-        if (rManager)
-        {
+        if (rManager) {
             gamemode = rManager.GetComponent<SabotageGamemode>();
-        }
-        else
-        {
+        } else {
             enabled = false;
         }
 
-        if (!gamemode && Debug.isDebugBuild)
-        {
+        if (!gamemode && Debug.isDebugBuild) {
             Debug.Log("This isnt the sabotage gamemode or something is set wrong in the win screen manager", this);
         }
     }
@@ -49,8 +43,7 @@ public class SabotageWinScreen : WinScreen
 
     #region Public Methods
 
-    public override void StartWinSequence(List<CharacterManager> players, List<CharacterManager> winners)
-    {
+    public override void StartWinSequence(List<CharacterManager> players, List<CharacterManager> winners) {
         base.StartWinSequence(players, winners);
     }
 
@@ -58,33 +51,24 @@ public class SabotageWinScreen : WinScreen
 
     #region Protected Methods
 
-    protected override void PositionPlayers(List<CharacterManager> objectsToPosition)
-    {
+    protected override void PositionPlayers(List<CharacterManager> objectsToPosition) {
         //If there are things to place
-        if (objectsToPosition.Count > 0)
-        {
+        if (objectsToPosition.Count > 0) {
             //These are the survivors
-            for (int i = 1; i < objectsToPosition.Count - 1; ++i)
-            {
-                if (winningSpots[i] && objectsToPosition[i])
-                {
+            for (int i = 1; i < objectsToPosition.Count - 1; ++i) {
+                if (winningSpots[i] && objectsToPosition[i]) {
                     objectsToPosition[i].transform.position = winningSpots[i].transform.position;
                     objectsToPosition[i].transform.rotation = winningSpots[i].transform.rotation;
-                }
-                else if (Debug.isDebugBuild)
-                {
+                } else if (Debug.isDebugBuild) {
                     Debug.Log("No spot here, index: " + i, this);
                 }
             }
 
-            if (gamemode)
-            {
+            if (gamemode) {
                 //If the tagged player is part of the winners
-                if (gamemode.TaggedWin())
-                {
+                if (gamemode.TaggedWin()) {
                     //The tagged player is in the first slot
-                    if (winningSpots[0])
-                    {
+                    if (winningSpots[0]) {
                         objectsToPosition[0].transform.position = taggedPosition.position;
                         objectsToPosition[0].transform.rotation = taggedPosition.rotation;
                     }
@@ -93,8 +77,7 @@ public class SabotageWinScreen : WinScreen
         }
     }
 
-    protected override void PlayCorrectVFX(List<ParticleSystem> particlesToPlay)
-    {
+    protected override void PlayCorrectVFX(List<ParticleSystem> particlesToPlay) {
         base.PlayCorrectVFX(particlesToPlay);
     }
 

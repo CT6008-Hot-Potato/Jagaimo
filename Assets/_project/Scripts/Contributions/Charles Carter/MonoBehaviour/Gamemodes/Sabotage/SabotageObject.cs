@@ -5,12 +5,12 @@
 // Brief: The script for the behaviour for the players to fix objects
 //////////////////////////////////////////////////////////// 
 
+//This script uses these namespaces
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SabotageObject : MonoBehaviour, IInteractable
-{
+public class SabotageObject : MonoBehaviour, IInteractable {
     #region Interfact Contract
 
     //This generator was hit by a potato, so it can be damaged for a second
@@ -62,21 +62,17 @@ public class SabotageObject : MonoBehaviour, IInteractable
 
     #region Unity Methods
 
-    private void Awake()
-    {
+    private void Awake() {
         soundManager = soundManager ?? FindObjectOfType<SoundManager>();
     }
 
     // Start is called before the first frame update
-    private void Start()
-    {
-        if (fixingIconVFX)
-        {
+    private void Start() {
+        if (fixingIconVFX) {
             fixingIconVFX.SetActive(false);
         }
 
-        if (finishedIconVFX)
-        {
+        if (finishedIconVFX) {
             finishedIconVFX.SetActive(false);
         }
 
@@ -85,30 +81,24 @@ public class SabotageObject : MonoBehaviour, IInteractable
     }
 
     // Update is called once per frame
-    private void Update()
-    {
-        if (isBeingUsed && !isLocked)
-        {
+    private void Update() {
+        if (isBeingUsed && !isLocked) {
             sabotageTimer.Tick(Time.deltaTime);
 
             //The timer is over
-            if (!sabotageTimer.isActive)
-            {
-                if (Debug.isDebugBuild)
-                {
+            if (!sabotageTimer.isActive) {
+                if (Debug.isDebugBuild) {
                     Debug.Log("Generator finished", this);
                 }
 
                 //So tell the manager the generator is finished
                 sabotageManager.GeneratorFinished(this);
 
-                if (finishedIconVFX)
-                {
+                if (finishedIconVFX) {
                     finishedIconVFX.SetActive(true);
                 }
 
-                if (fixingIconVFX)
-                {
+                if (fixingIconVFX) {
                     fixingIconVFX.SetActive(false);
                 }
 
@@ -118,18 +108,14 @@ public class SabotageObject : MonoBehaviour, IInteractable
     }
 
     //Something has entered the area
-    private void OnTriggerEnter(Collider other)
-    {
+    private void OnTriggerEnter(Collider other) {
         //If it's a player and this generator isnt currently locked
-        if (other.CompareTag("Player") && !isLocked)
-        {
+        if (other.CompareTag("Player") && !isLocked) {
             CharacterManager charManager = other.GetComponent<CharacterManager>();
 
             //It has a manager and the player is untagged
-            if (charManager && !charManager._tracker.isTagged && charManager._tracker.enabled)
-            {
-                if (Debug.isDebugBuild)
-                {
+            if (charManager && !charManager._tracker.isTagged && charManager._tracker.enabled) {
+                if (Debug.isDebugBuild) {
                     Debug.Log("New potential fixer");
                 }
 
@@ -141,26 +127,21 @@ public class SabotageObject : MonoBehaviour, IInteractable
     }
 
     //Something has left the area
-    private void OnTriggerExit(Collider other)
-    {
+    private void OnTriggerExit(Collider other) {
         //if it's a player
-        if (other.CompareTag("Player"))
-        {
+        if (other.CompareTag("Player")) {
             //And they were in the list, remove them
             CharacterManager charManager = other.GetComponent<CharacterManager>();
 
-            if (charManager)
-            {
+            if (charManager) {
                 //And they are untagged
                 //They cant be a potential fixer and they have to stop using the generator
-                if (potentialFixers.Contains(charManager))
-                {
+                if (potentialFixers.Contains(charManager)) {
                     potentialFixers.Remove(charManager);
                 }
 
-                if (charsInteracting.Contains(charManager))
-                {
-                    StopUsage(charManager);               
+                if (charsInteracting.Contains(charManager)) {
+                    StopUsage(charManager);
                 }
             }
         }
@@ -170,13 +151,11 @@ public class SabotageObject : MonoBehaviour, IInteractable
 
     #region Public Methods
 
-    public void SetGamemode(SabotageGamemode sabotage)
-    {
+    public void SetGamemode(SabotageGamemode sabotage) {
         gamemode = sabotage;
     }
 
-    public void StartUsage(CharacterManager charInteracting)
-    {
+    public void StartUsage(CharacterManager charInteracting) {
         //Guard clause incase someone wants to interact with it during break
         if (isLocked) return;
 
@@ -184,41 +163,34 @@ public class SabotageObject : MonoBehaviour, IInteractable
         charsInteracting.Add(charInteracting);
 
         //There is a sound manager, and there's only 1 character interacting with this generator
-        if (soundManager && charsInteracting.Count == 1)
-        {
+        if (soundManager && charsInteracting.Count == 1) {
             //Start fixing sound
             soundManager.PlaySound(ScriptableSounds.Sounds.PowerUp, transform.position);
         }
 
-        if (fixingIconVFX)
-        {
+        if (fixingIconVFX) {
             fixingIconVFX.SetActive(true);
         }
     }
 
-    public void StopUsage(CharacterManager charInteracting)
-    {
+    public void StopUsage(CharacterManager charInteracting) {
         charsInteracting.Remove(charInteracting);
 
-        if (soundManager)
-        {
+        if (soundManager) {
             //Stop fixing sound
             soundManager.PlaySound(ScriptableSounds.Sounds.Grabbing, transform.position);
         }
 
-        if (charsInteracting.Count == 0)
-        {
+        if (charsInteracting.Count == 0) {
             isBeingUsed = false;
 
-            if (fixingIconVFX && !isLocked)
-            {
+            if (fixingIconVFX && !isLocked) {
                 fixingIconVFX.SetActive(false);
             }
         }
     }
 
-    public void SetGamemodeObject(SabotageGamemode sabotageGamemode)
-    {
+    public void SetGamemodeObject(SabotageGamemode sabotageGamemode) {
         gamemode = sabotageGamemode;
     }
 
@@ -227,12 +199,9 @@ public class SabotageObject : MonoBehaviour, IInteractable
     #region Private Methods
 
     //The generator is hit by the potato
-    private void TemporarilyBreak()
-    {
-        if (isBeingUsed)
-        {
-            foreach (CharacterManager character in charsInteracting)
-            {
+    private void TemporarilyBreak() {
+        if (isBeingUsed) {
+            foreach (CharacterManager character in charsInteracting) {
                 //Make them stop interacting with the generator
 
                 //Currently just doing it here for easy management
@@ -241,14 +210,12 @@ public class SabotageObject : MonoBehaviour, IInteractable
 
             potentialFixers.Clear();
 
-            if (soundManager)
-            {
+            if (soundManager) {
                 //Play "Generator Broken" Sound
             }
 
             //Maybe a smoke puff VFX
-            if (SmokeVFX)
-            {
+            if (SmokeVFX) {
                 SmokeVFX.Play();
             }
 
@@ -258,8 +225,7 @@ public class SabotageObject : MonoBehaviour, IInteractable
     }
 
     //The generator broke or needs to be locked for a time
-    private IEnumerator Co_LockGenerator(float duration)
-    {
+    private IEnumerator Co_LockGenerator(float duration) {
         isLocked = true;
 
         yield return new WaitForSeconds(duration);
@@ -267,31 +233,25 @@ public class SabotageObject : MonoBehaviour, IInteractable
         isLocked = false;
 
         //Making sure that the vfx stops
-        if (SmokeVFX)
-        {
+        if (SmokeVFX) {
             SmokeVFX.Stop();
         }
     }
 
-    private IEnumerator Co_PlayerInArea(float duration, CharacterManager cManager)
-    {
-        for (float t = 0; t < duration; t += Time.deltaTime)
-        {
+    private IEnumerator Co_PlayerInArea(float duration, CharacterManager cManager) {
+        for (float t = 0; t < duration; t += Time.deltaTime) {
             //The player is moved or gets moved, restart the timer
-            if (cManager.GetComponent<Rigidbody>().velocity.magnitude > 0.5)
-            {
+            if (cManager.GetComponent<Rigidbody>().velocity.magnitude > 0.5) {
                 t = 0;
             }
 
             //The player was tagged whilst in the area
-            if (cManager._tracker.isTagged)
-            {
+            if (cManager._tracker.isTagged) {
                 potentialFixers.Remove(cManager);
             }
 
             //Moved out of range or tagged
-            if (!potentialFixers.Contains(cManager))
-            {
+            if (!potentialFixers.Contains(cManager)) {
                 StopCoroutine(Co_PlayerInArea(duration, cManager));
             }
 

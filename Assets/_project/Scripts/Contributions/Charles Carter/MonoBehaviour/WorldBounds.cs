@@ -12,8 +12,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //A trigger placed below the test world
-public class WorldBounds : MonoBehaviour
-{
+public class WorldBounds : MonoBehaviour {
     //The specified position moving by Charlie Bullock
     [SerializeField]
     private Vector3 position;
@@ -25,19 +24,15 @@ public class WorldBounds : MonoBehaviour
     [SerializeField]
     private float killDuration = 0.25f;
 
-    private void Start()
-    {
+    private void Start() {
         roundManager = RoundManager.roundManager;
     }
 
     //When something enters the bounds
-    private void OnTriggerEnter(Collider other)
-    {
+    private void OnTriggerEnter(Collider other) {
         //Position isnt set to anything
-        if (position == Vector3.zero)
-        {
-            if (Debug.isDebugBuild)
-            {
+        if (position == Vector3.zero) {
+            if (Debug.isDebugBuild) {
                 Debug.Log("Set position value" + other.name, this);
             }
 
@@ -45,33 +40,26 @@ public class WorldBounds : MonoBehaviour
         }
 
         //If it's not an object which shouldnt be moved 
-        if (!other.CompareTag("PositionStay"))
-        {
+        if (!other.CompareTag("PositionStay")) {
             //If it's a player
-            if (other.CompareTag("Player") && roundManager._currentGamemode.Return_Mode() != GAMEMODE_INDEX.FOOTBALL)
-            {
+            if (other.CompareTag("Player") && roundManager._currentGamemode.Return_Mode() != GAMEMODE_INDEX.FOOTBALL) {
                 //Get their manager
                 CharacterManager character = other.GetComponent<CharacterManager>();
 
                 //If they have a manager
-                if (character)
-                {
+                if (character) {
                     //Start the timer on them being outside the bounds
                     charactersInWater.Add(other.GetComponent<CharacterManager>());
                     StartCoroutine(PlayerKill(character));
                 }
-            }
-            else
-            {
+            } else {
                 //If it's not the player or the football gamemode, send it to the given position
                 other.transform.position = position;
-                if (other.TryGetComponent<Rigidbody>(out Rigidbody rb))
-                {
+                if (other.TryGetComponent<Rigidbody>(out Rigidbody rb)) {
                     rb.velocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
 
-                    if (Debug.isDebugBuild)
-                    {
+                    if (Debug.isDebugBuild) {
                         Debug.Log("Something left the map: " + other.name, this);
                     }
                 }
@@ -79,28 +67,21 @@ public class WorldBounds : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
+    private void OnTriggerExit(Collider other) {
         CharacterManager manager = other.GetComponent<CharacterManager>();
 
-        if (manager && charactersInWater.Contains(manager))
-        {
+        if (manager && charactersInWater.Contains(manager)) {
             charactersInWater.Remove(manager);
         }
     }
 
     //The coroutine before the player dies due to the water
-    private IEnumerator PlayerKill(CharacterManager character)
-    {
+    private IEnumerator PlayerKill(CharacterManager character) {
         //Making sure the players stay in the water before killing them
-        for (float t = 0; t < killDuration; t += Time.deltaTime)
-        {
-            if (charactersInWater.Contains(character))
-            {
+        for (float t = 0; t < killDuration; t += Time.deltaTime) {
+            if (charactersInWater.Contains(character)) {
                 yield return null;
-            }
-            else
-            {
+            } else {
                 StopCoroutine(PlayerKill(character));
             }
         }

@@ -9,8 +9,7 @@
 //This script uses these namespaces
 using UnityEngine;
 
-public class InteractMapObject : MonoBehaviour, IInteractable
-{
+public class InteractMapObject : MonoBehaviour, IInteractable {
     //Does it get destroyed on hit
     [SerializeField]
     private bool bDestroyOnHit;
@@ -24,31 +23,25 @@ public class InteractMapObject : MonoBehaviour, IInteractable
     private Rigidbody _rb;
 
     void IInteractable.Interact() => Interact();
-    private void Interact()
-    {
+    private void Interact() {
         //if (Debug.isDebugBuild)
         //{
         //    Debug.Log("Hit Interactable Map Object", this);
         //}
 
-        if (obj_anim)
-        {
+        if (obj_anim) {
             obj_anim.Play();
         }
 
         //Destroying the object if needed
         //Note: Objects shouldnt really have this and an animation unless it plays an animation for the parent
-        if (bDestroyOnHit)
-        {
+        if (bDestroyOnHit) {
             Destroy(gameObject);
-        }
-        else if (bDropOnHit)
-        {
+        } else if (bDropOnHit) {
             Debug.Log("Here");
             Destroy(obj_anim);
-            
-            if (_rb)
-            {
+
+            if (_rb) {
                 _rb.isKinematic = false;
             }
         }

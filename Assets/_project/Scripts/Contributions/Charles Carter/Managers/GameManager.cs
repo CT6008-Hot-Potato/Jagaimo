@@ -12,8 +12,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //An enum to hold the current state of the overall game loop
-public enum eGameState
-{
+public enum eGameState {
     MainMenu,
     Loading,
     SinglePlayer,
@@ -25,8 +24,7 @@ public enum eGameState
     COUNT
 }
 
-public class GameManager : MonoBehaviour
-{
+public class GameManager : MonoBehaviour {
     [SerializeField]
     private eGameState _currentState;
     public IGamemode _chosenGamemode { get; private set; }
@@ -37,13 +35,11 @@ public class GameManager : MonoBehaviour
     private int iPlayerCount;
 
     // Start is called before the first frame update
-    void Awake()
-    {
+    void Awake() {
         _currentState = eGameState.MainMenu;
     }
 
-    private void SceneChanged(eGameState newState)
-    {
+    private void SceneChanged(eGameState newState) {
         _currentState = newState;
     }
 }

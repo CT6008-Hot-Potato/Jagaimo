@@ -5,12 +5,12 @@
 // Brief: The script for the credits screen in the main menu
 ////////////////////////////////////////////////////////////
 
+//This script uses these namespaces
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CreditsScreen : MonoBehaviour
-{
+public class CreditsScreen : MonoBehaviour {
     #region Variables Needed
 
     [SerializeField]
@@ -20,40 +20,32 @@ public class CreditsScreen : MonoBehaviour
 
     #endregion
 
-    private void Awake()
-    {
-        if (!scrollingText && Debug.isDebugBuild)
-        {
+    private void Awake() {
+        if (!scrollingText && Debug.isDebugBuild) {
             Debug.Log("No scroll rect selected for credits", this);
         }
     }
 
-    private void OnEnable()
-    {
+    private void OnEnable() {
         Debug.Log("Scrolling credits");
 
-        if (!scrollingText)
-        {
+        if (!scrollingText) {
             scrollingText = GetComponentInChildren<ScrollRect>();
         }
 
         StartCoroutine(Co_ScrollingText(fCreditsTime));
     }
 
-    private void OnDisable()
-    {
+    private void OnDisable() {
         StopCoroutine(Co_ScrollingText(fCreditsTime));
 
-        if (scrollingText)
-        {
+        if (scrollingText) {
             scrollingText.verticalNormalizedPosition = 1;
         }
     }
 
-    private IEnumerator Co_ScrollingText(float textTimer)
-    {
-        for (float t = 1; t > 0; t -= Time.deltaTime / textTimer)
-        {
+    private IEnumerator Co_ScrollingText(float textTimer) {
+        for (float t = 1; t > 0; t -= Time.deltaTime / textTimer) {
             scrollingText.verticalNormalizedPosition = t;
             yield return null;
         }
