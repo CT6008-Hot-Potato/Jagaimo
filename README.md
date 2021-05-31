@@ -15,3 +15,6 @@ Font: https://www.dafont.com/cosmic-blaster.font
 The plane: https://www.turbosquid.com/FullPreview/Index.cfm/ID/228898
 
 (The model is a sub mesh of the forklift model under Chris' contributions)
+
+Scenes are bits that generally most of the group have chipped in to do and it would be hard to split it into individuals.
+Also any reference to communications or meetings or work can be seen on the group discord
