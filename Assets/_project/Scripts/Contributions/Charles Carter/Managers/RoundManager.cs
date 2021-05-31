@@ -8,13 +8,11 @@
 
 //This script uses these namespaces
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 //A class to hold the events that happen throughout the round, a round is a full game where the win condition of the gamemode is met
-public class RoundManager : MonoBehaviour
-{
+public class RoundManager : MonoBehaviour {
     #region Delegate Events 
 
     //Defining Delegate
@@ -43,7 +41,6 @@ public class RoundManager : MonoBehaviour
     //Necessary for infected and other utility based functionality
     public GameObject potatoPrefab;
     public GameObject initialPotatoObject;
-
     public WorldBounds worldBoundry;
 
     //Bits and pieces that will be in some of the game scenes
@@ -75,31 +72,24 @@ public class RoundManager : MonoBehaviour
 
     #region Unity Methods
 
-    private void Awake()
-    {
+    private void Awake() {
         //Making sure there's only 1 round manager instance on the scene
-        if (!roundManager)
-        {
+        if (!roundManager) {
             roundManager = this;
-        }
-        else
-        {
+        } else {
             Destroy(gameObject);
         }
 
         //If there is a gamemode already on the object
-        if (TryGetComponent<IGamemode>(out var gamemode))
-        {
+        if (TryGetComponent<IGamemode>(out var gamemode)) {
             _currentGamemode = gamemode;
         }
 
         //Getting the game settings saved over from the main menu
         GameSettingsContainer settingsContainer = GameSettingsContainer.instance;
         //There are settings to use
-        if (settingsContainer)
-        {
-            if (Debug.isDebugBuild)
-            {
+        if (settingsContainer) {
+            if (Debug.isDebugBuild) {
                 Debug.Log("Settings found", this);
             }
 
@@ -107,8 +97,7 @@ public class RoundManager : MonoBehaviour
             iAmountOfExpectedPlayers = settingsContainer.iPlayercount;
 
             //There is a current gamemode already
-            if (_currentGamemode != null)
-            {
+            if (_currentGamemode != null) {
                 Destroy((MonoBehaviour)_currentGamemode);
                 _currentGamemode = null;
             }
@@ -118,19 +107,16 @@ public class RoundManager : MonoBehaviour
         }
 
         //For some reason no gamemode was applied and none was on the object
-        if (_currentGamemode == null)
-        {
+        if (_currentGamemode == null) {
             AddGamemode(testMode);
         }
 
-        if (Debug.isDebugBuild)
-        {
+        if (Debug.isDebugBuild) {
             Debug.Log("Gamemode is: " + _currentGamemode.Return_Mode().ToString(), this);
         }
     }
 
-    void Start()
-    {
+    void Start() {
         playerJoinManager = playerJoinManager ?? PlayerInputManager.instance;
 
         //Waiting for the players
@@ -142,13 +128,10 @@ public class RoundManager : MonoBehaviour
     #region Public Methods
 
     //Calling the RoundStarted Delegate Event
-    public void CallOnRoundStart()
-    {
+    public void CallOnRoundStart() {
         //Null checking the delegate event
-        if (RoundStarted != null)
-        {
-            if (Debug.isDebugBuild)
-            {
+        if (RoundStarted != null) {
+            if (Debug.isDebugBuild) {
                 Debug.Log("Round Started", this);
             }
 
@@ -159,11 +142,9 @@ public class RoundManager : MonoBehaviour
     }
 
     //Calling the RoundEnded Delegate Event
-    public void CallOnRoundEnd()
-    {
+    public void CallOnRoundEnd() {
         //Null checking the delegate event
-        if (RoundEnded != null)
-        {
+        if (RoundEnded != null) {
             RoundEnded.Invoke();
         }
 
@@ -171,11 +152,9 @@ public class RoundManager : MonoBehaviour
     }
 
     //Calling the CountdownStarted Delegate Event
-    public void CallOnCountdownStart()
-    {
+    public void CallOnCountdownStart() {
         //Null checking the delegate event
-        if (CountdownStarted != null)
-        {
+        if (CountdownStarted != null) {
             CountdownStarted.Invoke();
         }
 
@@ -183,11 +162,9 @@ public class RoundManager : MonoBehaviour
     }
 
     //Calling the CountdownEnded Delegate Event
-    public void CallOnCountdownEnd()
-    {
+    public void CallOnCountdownEnd() {
         //Null checking the delegate event
-        if (CountdownEnded != null)
-        {
+        if (CountdownEnded != null) {
             CountdownEnded.Invoke();
         }
 
@@ -195,10 +172,8 @@ public class RoundManager : MonoBehaviour
     }
 
     //A player has been tagged
-    public void OnPlayerTagged(CharacterManager charManager)
-    {
-        if (!(MonoBehaviour)_currentGamemode || !charManager)
-        {
+    public void OnPlayerTagged(CharacterManager charManager) {
+        if (!(MonoBehaviour)_currentGamemode || !charManager) {
             return;
         }
 
@@ -206,8 +181,7 @@ public class RoundManager : MonoBehaviour
         _currentGamemode.PlayerTagged(charManager);
 
         //Adding it to the scroller text
-        if (eventText)
-        {
+        if (eventText) {
             eventText.AddTaggedText();
         }
     }
@@ -217,37 +191,30 @@ public class RoundManager : MonoBehaviour
     #region Private Methods
 
     //The coroutine that waits for players before setting the active players
-    private IEnumerator Co_WaitUntilPlayers()
-    {
-        if (!playerJoinManager && Debug.isDebugBuild)
-        {
+    private IEnumerator Co_WaitUntilPlayers() {
+        if (!playerJoinManager && Debug.isDebugBuild) {
             Debug.Log("Set a player join manager here", this);
             StopCoroutine(Co_WaitUntilPlayers());
         }
 
-        while (playerJoinManager.playerCount < iAmountOfExpectedPlayers)
-        {
+        while (playerJoinManager.playerCount < iAmountOfExpectedPlayers) {
             yield return null;
         }
 
-        if (_currentGamemode != null)
-        {
+        if (_currentGamemode != null) {
             //Tell the gamemode to get everything ready
             _currentGamemode.SetActivePlayers(GameObject.FindObjectsOfType<CharacterManager>());
         }
 
-        if (startWhenReady)
-        {
+        if (startWhenReady) {
             startCountdown.CallOnTimerStart();
             CallOnRoundStart();
         }
     }
 
-    private void AddGamemode(GAMEMODE_INDEX index)
-    {
+    private void AddGamemode(GAMEMODE_INDEX index) {
         //add a different gamemode
-        switch (index)
-        {
+        switch (index) {
             case GAMEMODE_INDEX.INFECTED:
                 _currentGamemode = gameObject.AddComponent<InfectedGamemode>();
                 break;

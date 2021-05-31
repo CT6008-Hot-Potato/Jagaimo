@@ -5,11 +5,11 @@
 // Brief: This is the panel that the users use to edit the mutator values
 //////////////////////////////////////////////////////////// 
 
+//This script uses these namespaces
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MenuMutatorEditPanel : MonoBehaviour
-{
+public class MenuMutatorEditPanel : MonoBehaviour {
     #region Public Variables
 
     public MutatorPackager currentMutators;
@@ -28,13 +28,10 @@ public class MenuMutatorEditPanel : MonoBehaviour
     #region Unity Methods
 
     //When the panel is activated
-    private void OnEnable()
-    {
+    private void OnEnable() {
         //Turn on the right mutator edit gameobjects
-        if (currentMutators && GamemodePanels[(int)currentMutators.Gamemode])
-        {
-            if (currentMutators.Gamemode != GAMEMODE_INDEX.CLASSIC && gamemodeTitle)
-            {
+        if (currentMutators && GamemodePanels[(int)currentMutators.Gamemode]) {
+            if (currentMutators.Gamemode != GAMEMODE_INDEX.CLASSIC && gamemodeTitle) {
                 gamemodeTitle.SetActive(true);
             }
 
@@ -43,13 +40,10 @@ public class MenuMutatorEditPanel : MonoBehaviour
     }
 
     //When the panel is unactived
-    private void OnDisable()
-    {
+    private void OnDisable() {
         //Turn off the right mutator edit gameobjects ready for next time
-        if (currentMutators && GamemodePanels[(int)currentMutators.Gamemode])
-        {
-            if (gamemodeTitle)
-            {
+        if (currentMutators && GamemodePanels[(int)currentMutators.Gamemode]) {
+            if (gamemodeTitle) {
                 gamemodeTitle.SetActive(false);
             }
 

@@ -5,18 +5,17 @@
 // Brief: A script to hold the functionlity in the UI for changing the value of mutators
 //////////////////////////////////////////////////////////// 
 
+//This script uses these namespaces
 using TMPro;
 using UnityEngine;
 
-internal enum MutatorList
-{
+internal enum MutatorList {
     GEN,
     GAM,
     MAP
 }
 
-public class MutatorEditUI : MonoBehaviour
-{
+public class MutatorEditUI : MonoBehaviour {
     #region Public Variables
 
     //These are necessary to be correct
@@ -30,7 +29,7 @@ public class MutatorEditUI : MonoBehaviour
     #endregion
 
     #region Private Variables
-    
+
     [SerializeField]
     private MenuMutatorUI MenuMutatorUI;
     private MutatorUI thisMutator;
@@ -51,13 +50,10 @@ public class MutatorEditUI : MonoBehaviour
 
     #region Unity Methods
 
-    private void Start()
-    {
+    private void Start() {
         //Relies on Awake in this script to run first
-        if (MenuMutatorUI)
-        {
-            switch (ListToGoInto)
-            {
+        if (MenuMutatorUI) {
+            switch (ListToGoInto) {
                 case MutatorList.GEN:
                     thisMutator = MenuMutatorUI.GetMutatorValue(mutatorID);
                     break;
@@ -71,15 +67,11 @@ public class MutatorEditUI : MonoBehaviour
 
             StoredValue = thisMutator.value;
 
-            if (valueText)
-            {
+            if (valueText) {
                 MutatorEditPanelDisplayUpdate();
             }
-        }
-        else
-        {
-            if (Debug.isDebugBuild)
-            {
+        } else {
+            if (Debug.isDebugBuild) {
                 Debug.Log("This mutator edit doesnt have a reference to MenuMutatorUI", this);
             }
         }
@@ -90,17 +82,14 @@ public class MutatorEditUI : MonoBehaviour
     #region Public Methods
 
     //This is a toggle based mutator
-    public void MutatorBoolChange(bool newValue)
-    {
+    public void MutatorBoolChange(bool newValue) {
         float val = 0f;
 
-        if (newValue)
-        {
+        if (newValue) {
             val = 1f;
         }
 
-        switch (ListToGoInto)
-        {
+        switch (ListToGoInto) {
             case MutatorList.GEN:
                 MenuMutatorUI.SetMutatorValue(mutatorID, val);
                 break;
@@ -116,10 +105,8 @@ public class MutatorEditUI : MonoBehaviour
     }
 
     //This is a slider based mutator
-    public void MutatorSliderChange(float newValue)
-    {
-        switch (ListToGoInto)
-        {
+    public void MutatorSliderChange(float newValue) {
+        switch (ListToGoInto) {
             case MutatorList.GEN:
                 MenuMutatorUI.SetMutatorValue(mutatorID, newValue);
                 break;
@@ -135,19 +122,15 @@ public class MutatorEditUI : MonoBehaviour
     }
 
     //The buttons are slightly more difficult, one is to increase and one is to decrease
-    public void MutatorIncreaseButton(float valueToIncreaseBy)
-    {
-        if (StoredValue < fMaximumVal)
-        {
+    public void MutatorIncreaseButton(float valueToIncreaseBy) {
+        if (StoredValue < fMaximumVal) {
             StoredValue += valueToIncreaseBy;
             MutatorEditPanelDisplayUpdate();
         }
     }
 
-    public void MutatorDecreaseButton(float valueToDecreaseBy)
-    {
-        if (StoredValue > fMinimumVal)
-        {
+    public void MutatorDecreaseButton(float valueToDecreaseBy) {
+        if (StoredValue > fMinimumVal) {
             StoredValue -= valueToDecreaseBy;
             MutatorEditPanelDisplayUpdate();
         }
@@ -157,16 +140,13 @@ public class MutatorEditUI : MonoBehaviour
 
     #region Private Methods
 
-    private void MutatorEditPanelDisplayUpdate()
-    {
-        if (valueText)
-        {
+    private void MutatorEditPanelDisplayUpdate() {
+        if (valueText) {
             valueText.text = GetStringBasedOnMutator();
         }
     }
 
-    private string GetStringBasedOnMutator()
-    {
+    private string GetStringBasedOnMutator() {
         return MenuMutatorUI.processMutatorValueToText(thisMutator);
     }
 

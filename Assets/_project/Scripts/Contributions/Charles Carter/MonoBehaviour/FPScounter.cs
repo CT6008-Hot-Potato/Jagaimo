@@ -8,12 +8,10 @@
 
 //This script uses these namespaces
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
-//We may want to make our own FPS Display at some point
-public class FPScounter : MonoBehaviour
-{
+//Our own FPS Display at some point
+public class FPScounter : MonoBehaviour {
     #region Variables Needed
 
     [SerializeField]
@@ -32,25 +30,19 @@ public class FPScounter : MonoBehaviour
 
     #region Unity Methods
 
-    void Start()
-    {
-        if (iFPSLimit == 0)
-        {
+    void Start() {
+        if (iFPSLimit == 0) {
             Application.targetFrameRate = 999;
-        }
-        else
-        {
+        } else {
             Application.targetFrameRate = iFPSLimit;
         }
     }
 
     //Update is called once per frame
-    void Update()
-    {
+    void Update() {
         current_fps = 1 / Time.unscaledDeltaTime;
 
-        if (fpsText && showFPS)
-        {
+        if (fpsText && showFPS) {
             fpsText.text = "" + (int)current_fps;
         }
     }

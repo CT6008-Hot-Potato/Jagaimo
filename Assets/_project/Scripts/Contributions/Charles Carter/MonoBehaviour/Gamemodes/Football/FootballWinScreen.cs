@@ -5,13 +5,11 @@
 // Brief: The script that controls the specific effects on the win screen for the football gamemode
 //////////////////////////////////////////////////////////// 
 
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 //Each team will reference different spots to move to, a different rotation for the camera, and a different goal explosion
-public class FootballWinScreen : WinScreen
-{
+public class FootballWinScreen : WinScreen {
     #region Variables Needed
 
     [Header("Variables Needed Specifically for the football win screen")]
@@ -38,12 +36,10 @@ public class FootballWinScreen : WinScreen
     #region Unity Methods
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         gamemode = rManager.GetComponent<FootballGamemode>();
 
-        if (!gamemode && Debug.isDebugBuild)
-        {
+        if (!gamemode && Debug.isDebugBuild) {
             Debug.Log("This isnt the football gamemode or something is set wrong in the win screen manager", this);
         }
     }
@@ -52,8 +48,7 @@ public class FootballWinScreen : WinScreen
 
     #region Public Methods
 
-    public override void StartWinSequence(List<CharacterManager> players, List<CharacterManager> winners)
-    {
+    public override void StartWinSequence(List<CharacterManager> players, List<CharacterManager> winners) {
         gamemode = rManager.GetComponent<FootballGamemode>();
 
         //Getting which team won here
@@ -65,22 +60,19 @@ public class FootballWinScreen : WinScreen
         CombineCameras();
 
         //Going through the managers
-        foreach (CharacterManager manager in players)
-        {
+        foreach (CharacterManager manager in players) {
             //Getting the players' cameras
             Camera[] camsToAdd = manager.ReturnCameras();
 
             //Adding them to the list to turn for the screen
-            for (int i = 0; i < camsToAdd.Length; ++i)
-            {
+            for (int i = 0; i < camsToAdd.Length; ++i) {
                 camerasInScene.Add(camsToAdd[i]);
             }
 
             //Disabling player so they cant move, interact etc
             manager.DisablePlayer();
 
-            if (!winners.Contains(manager))
-            {
+            if (!winners.Contains(manager)) {
                 Destroy(manager.gameObject);
             }
         }
@@ -96,33 +88,23 @@ public class FootballWinScreen : WinScreen
 
     #region Protected Methods
 
-    protected override void PositionPlayers(List<CharacterManager> objectsToPosition)
-    {
-        if (bBlueWin)
-        {
+    protected override void PositionPlayers(List<CharacterManager> objectsToPosition) {
+        if (bBlueWin) {
             //Position them infont of the blue team goal
-            if (objectsToPosition.Count > 0)
-            {
-                for (int i = 0; i < objectsToPosition.Count; ++i)
-                {
-                    if (winningSpots[i] && objectsToPosition[i])
-                    {
+            if (objectsToPosition.Count > 0) {
+                for (int i = 0; i < objectsToPosition.Count; ++i) {
+                    if (winningSpots[i] && objectsToPosition[i]) {
                         objectsToPosition[i].transform.position = winningSpots[i].position;
                         objectsToPosition[i].transform.rotation = winningSpots[i].rotation;
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             //Position them infront of the orange team goal
 
-            if (objectsToPosition.Count > 0)
-            {
-                for (int i = 0; i < objectsToPosition.Count; ++i)
-                {
-                    if (orangeTeamPos[i] && objectsToPosition[i])
-                    {
+            if (objectsToPosition.Count > 0) {
+                for (int i = 0; i < objectsToPosition.Count; ++i) {
+                    if (orangeTeamPos[i] && objectsToPosition[i]) {
                         objectsToPosition[i].transform.position = orangeTeamPos[i].position;
                         objectsToPosition[i].transform.rotation = orangeTeamPos[i].rotation;
                     }
@@ -131,8 +113,7 @@ public class FootballWinScreen : WinScreen
         }
     }
 
-    protected override void CombineCameras()
-    {
+    protected override void CombineCameras() {
         //Running the parents' version
         base.CombineCameras();
 
@@ -140,29 +121,22 @@ public class FootballWinScreen : WinScreen
         if (cameraPoints.Length < 1 || !viewCam) return;
 
         //Move the camera based on the team who won
-        if (bBlueWin)
-        {
+        if (bBlueWin) {
             //Position it looking at the blue team goal
             viewCam.transform.position = cameraPoints[0].position;
             viewCam.transform.rotation = cameraPoints[0].rotation;
-        }
-        else
-        {
+        } else {
             //Position it looking at the orange team goal
             viewCam.transform.position = cameraPoints[1].position;
             viewCam.transform.rotation = cameraPoints[1].rotation;
         }
     }
 
-    protected override void PlayCorrectVFX(List<ParticleSystem> vfxToPlay)
-    {
-        if (bBlueWin)
-        {
+    protected override void PlayCorrectVFX(List<ParticleSystem> vfxToPlay) {
+        if (bBlueWin) {
             //Play blue goal explosion
             base.PlayCorrectVFX(VFXtoPlay);
-        }
-        else
-        {
+        } else {
             //Play orange goal explosion
             base.PlayCorrectVFX(VFXtoPlayAsOrangeTeam);
         }

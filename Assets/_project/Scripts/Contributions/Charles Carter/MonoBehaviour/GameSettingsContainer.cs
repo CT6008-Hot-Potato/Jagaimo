@@ -5,11 +5,11 @@
 // Brief: The class which holds the mutators, gamemode and other data across local scenes
 //////////////////////////////////////////////////////////// 
 
+//This script uses these namespaces
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GameSettingsContainer : MonoBehaviour
-{
+public class GameSettingsContainer : MonoBehaviour {
     #region Public Variables
 
     //Seperating it from normal instancing
@@ -29,16 +29,13 @@ public class GameSettingsContainer : MonoBehaviour
     #region Public Methods
 
     //Resetting these variables
-    public void ClearPlayers()
-    {
+    public void ClearPlayers() {
         //Resetting the player count
         iPlayercount = 0;
 
         //going through the objects and destroying them
-        foreach (PlayerInput input in LocalPlayerInputs)
-        {
-            if (input)
-            {
+        foreach (PlayerInput input in LocalPlayerInputs) {
+            if (input) {
                 Destroy(input.gameObject);
             }
         }
@@ -47,26 +44,20 @@ public class GameSettingsContainer : MonoBehaviour
         LocalPlayerInputs = new PlayerInput[4];
     }
 
-    public void StoreMutators(PackagedMutator[] genMutators, PackagedMutator[] gmodeMutators, PackagedMutator[] mMutators)
-    {
+    public void StoreMutators(PackagedMutator[] genMutators, PackagedMutator[] gmodeMutators, PackagedMutator[] mMutators) {
         generalMutators = genMutators;
         gamemodeMutators = gmodeMutators;
         mapMutators = mMutators;
     }
 
-    public void StoreGamemode(GAMEMODE_INDEX gamemode)
-    {
+    public void StoreGamemode(GAMEMODE_INDEX gamemode) {
         index = gamemode;
     }
 
-    public object FindGeneralMutatorValue(int ID)
-    {
-        if (generalMutators.Length > 0)
-        {
-            for (int i = 0; i < generalMutators.Length; ++i)
-            {
-                if (ID == generalMutators[i].ID)
-                {
+    public object FindGeneralMutatorValue(int ID) {
+        if (generalMutators.Length > 0) {
+            for (int i = 0; i < generalMutators.Length; ++i) {
+                if (ID == generalMutators[i].ID) {
                     return generalMutators[i].value;
                 }
             }
@@ -75,14 +66,10 @@ public class GameSettingsContainer : MonoBehaviour
         return null;
     }
 
-    public object FindGamemodeMutatorValue(int ID)
-    {
-        if (gamemodeMutators.Length > 0)
-        {
-            for (int i = 0; i < gamemodeMutators.Length; ++i)
-            {
-                if (ID == gamemodeMutators[i].ID)
-                {
+    public object FindGamemodeMutatorValue(int ID) {
+        if (gamemodeMutators.Length > 0) {
+            for (int i = 0; i < gamemodeMutators.Length; ++i) {
+                if (ID == gamemodeMutators[i].ID) {
                     return gamemodeMutators[i].value;
                 }
             }
@@ -91,14 +78,10 @@ public class GameSettingsContainer : MonoBehaviour
         return null;
     }
 
-    public bool HasGenMutator(int ID)
-    {
-        if (generalMutators.Length > 0)
-        {
-            for (int i = 0; i < generalMutators.Length; ++i)
-            {
-                if (ID == generalMutators[i].ID)
-                {
+    public bool HasGenMutator(int ID) {
+        if (generalMutators.Length > 0) {
+            for (int i = 0; i < generalMutators.Length; ++i) {
+                if (ID == generalMutators[i].ID) {
                     return true;
                 }
             }
@@ -107,14 +90,10 @@ public class GameSettingsContainer : MonoBehaviour
         return false;
     }
 
-    public bool HasGamMutator(int ID)
-    {
-        if (gamemodeMutators.Length > 0)
-        {
-            for (int i = 0; i < gamemodeMutators.Length; ++i)
-            {
-                if (ID == gamemodeMutators[i].ID)
-                {
+    public bool HasGamMutator(int ID) {
+        if (gamemodeMutators.Length > 0) {
+            for (int i = 0; i < gamemodeMutators.Length; ++i) {
+                if (ID == gamemodeMutators[i].ID) {
                     return true;
                 }
             }
@@ -127,15 +106,11 @@ public class GameSettingsContainer : MonoBehaviour
 
     #region Unity Methods
 
-    private void Awake()
-    {
-        if (!instance)
-        {
+    private void Awake() {
+        if (!instance) {
             instance = this;
             DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
+        } else {
             Destroy(this);
         }
     }

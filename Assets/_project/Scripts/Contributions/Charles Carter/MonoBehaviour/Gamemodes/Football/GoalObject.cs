@@ -7,8 +7,7 @@
 
 using UnityEngine;
 
-public class GoalObject : MonoBehaviour, IInteractable
-{
+public class GoalObject : MonoBehaviour, IInteractable {
     #region Variables Needed
 
     [SerializeField]
@@ -24,27 +23,21 @@ public class GoalObject : MonoBehaviour, IInteractable
 
     #region Unity Methods
 
-    void Start()
-    {
+    void Start() {
         rManager = rManager ?? RoundManager.roundManager;
 
         //It should always be this gamemode if this script is running
-        if (rManager)
-        {
-            if (rManager._currentGamemode != null)
-            {
+        if (rManager) {
+            if (rManager._currentGamemode != null) {
                 gamemode = rManager.GetComponent<FootballGamemode>();
                 canScore = true;
             }
         }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.TryGetComponent<Potato>(out var potato))
-        {
-            if (!canScore)
-            {
+    private void OnTriggerExit(Collider other) {
+        if (other.TryGetComponent<Potato>(out var potato)) {
+            if (!canScore) {
                 canScore = true;
             }
         }
@@ -55,24 +48,18 @@ public class GoalObject : MonoBehaviour, IInteractable
     #region Interface Methods
 
     //The potato hit the goal collider, meaning it crossed the goal line
-    public void Interact()
-    {
+    public void Interact() {
         //if there is a gamemode script
-        if (gamemode)
-        {
+        if (gamemode) {
             //If the goal isnt "locked"
-            if (canScore)
-            {
+            if (canScore) {
                 //Tell it a goal was scored in this goal (so the other team gets a point)
                 gamemode.Goal(!blueTeamGoal);
 
                 canScore = false;
             }
-        }
-        else
-        {
-            if (Debug.isDebugBuild)
-            {
+        } else {
+            if (Debug.isDebugBuild) {
                 Debug.Log("No football gamemode on the round manager", this);
             }
         }

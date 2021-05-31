@@ -5,13 +5,12 @@
 // Brief: Determing how many players will be in the local game in the menu
 //////////////////////////////////////////////////////////// 
 
-using System.Collections.Generic;
+//This script uses these namespaces
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class LocalMPMenuScreen : MonoBehaviour
-{
+public class LocalMPMenuScreen : MonoBehaviour {
     #region Variables Needed
 
     [SerializeField]
@@ -35,31 +34,26 @@ public class LocalMPMenuScreen : MonoBehaviour
 
     #region Unity Methods
 
-    private void Awake()
-    {
+    private void Awake() {
         soundManager = soundManager ?? FindObjectOfType<SoundManager>();
         inputManager = inputManager ?? GetComponent<PlayerInputManager>();
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         //The static is set in awake
         game = GameSettingsContainer.instance;
 
-        if (startButton)
-        {
+        if (startButton) {
             startButton.interactable = false;
         }
     }
 
-    private void OnEnable()
-    {
+    private void OnEnable() {
         inputManager.EnableJoining();
     }
 
-    private void OnDisable()
-    {
+    private void OnDisable() {
         inputManager.DisableJoining();
     }
 
@@ -67,22 +61,17 @@ public class LocalMPMenuScreen : MonoBehaviour
 
     #region Public Methods
 
-    public void OnPlayerJoined(PlayerInput playerInput)
-    {
-        if (playerInput.devices[0].name.Equals("Keyboard"))
-        {
+    public void OnPlayerJoined(PlayerInput playerInput) {
+        if (playerInput.devices[0].name.Equals("Keyboard")) {
             Destroy(playerInput.gameObject);
             return;
         }
 
         //Updating the UI
-        if (playerInput.devices[0].name != "Mouse")
-        {
+        if (playerInput.devices[0].name != "Mouse") {
             //Gamepad icon shown
             joinedIconGamepad[game.iPlayercount].SetActive(true);
-        }
-        else
-        {
+        } else {
             joinedIconKeyboard[game.iPlayercount].SetActive(true);
         }
 
@@ -99,20 +88,16 @@ public class LocalMPMenuScreen : MonoBehaviour
         game.LocalPlayerInputs[game.iPlayercount] = playerInput;
         game.iPlayercount++;
 
-        if (game.iPlayercount == 1)
-        {
+        if (game.iPlayercount == 1) {
             CheckIfCanStart();
         }
     }
 
     //When the back button is presseed, have to remove the currently stored players
-    public void RemoveCharacters()
-    {
+    public void RemoveCharacters() {
         //Going through and resetting the icons
-        for (int i = 0; i < promptIcon.Length; ++i)
-        {
-            if (joinedIconKeyboard[i] && joinedIconGamepad[i] && promptIcon[i])
-            {
+        for (int i = 0; i < promptIcon.Length; ++i) {
+            if (joinedIconKeyboard[i] && joinedIconGamepad[i] && promptIcon[i]) {
                 joinedIconKeyboard[i].SetActive(false);
                 joinedIconGamepad[i].SetActive(false);
 
@@ -126,10 +111,8 @@ public class LocalMPMenuScreen : MonoBehaviour
     #endregion
 
     //Unlocking the start button
-    private void CheckIfCanStart()
-    {
-        if (startButton)
-        {
+    private void CheckIfCanStart() {
+        if (startButton) {
             startButton.interactable = true;
         }
     }

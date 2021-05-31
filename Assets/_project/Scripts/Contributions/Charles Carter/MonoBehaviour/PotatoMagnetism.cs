@@ -5,12 +5,11 @@
 // Brief: The script for the potato to steer towards the neareast untagged player when in range
 ////////////////////////////////////////////////////////////
 
+//This script uses these namespaces
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PotatoMagnetism : MonoBehaviour
-{
+public class PotatoMagnetism : MonoBehaviour {
     #region Variables Needed
 
     private float MagnestismStrength;
@@ -25,21 +24,16 @@ public class PotatoMagnetism : MonoBehaviour
 
     #region Unity Methods
 
-    private void Awake()
-    {
+    private void Awake() {
         _rb = _rb ?? transform.parent.GetComponent<Rigidbody>();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player") && other.TryGetComponent(out CharacterManager cManager))
-        {
-            if (!cManager._tracker.isTagged && MagnestismStrength > 0 && MagnestismDuration > 0)
-            {
+    private void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("Player") && other.TryGetComponent(out CharacterManager cManager)) {
+            if (!cManager._tracker.isTagged && MagnestismStrength > 0 && MagnestismDuration > 0) {
                 target = cManager;
 
-                if (bCanHone)
-                {
+                if (bCanHone) {
                     StartCoroutine(Co_HomePotato());
                 }
             }
@@ -50,13 +44,11 @@ public class PotatoMagnetism : MonoBehaviour
 
     #region Public Methods
 
-    public void SetMagnetismStr(float newStr)
-    {
+    public void SetMagnetismStr(float newStr) {
         MagnestismStrength = newStr;
     }
 
-    public void SetMagnetismDur(float newDur)
-    {
+    public void SetMagnetismDur(float newDur) {
         MagnestismDuration = newDur;
     }
 
@@ -64,20 +56,16 @@ public class PotatoMagnetism : MonoBehaviour
 
     #region Private Methods
 
-    private IEnumerator Co_HomePotato()
-    {
+    private IEnumerator Co_HomePotato() {
         bCanHone = false;
 
-        if (Debug.isDebugBuild)
-        {
+        if (Debug.isDebugBuild) {
             Debug.Log("Potato homing onto player: " + _rb.velocity, this);
         }
 
-        for (float t = 0; t < MagnestismDuration; t += Time.deltaTime)
-        {
+        for (float t = 0; t < MagnestismDuration; t += Time.deltaTime) {
             //They were tagged by the potato
-            if (target._tracker.isTagged)
-            {
+            if (target._tracker.isTagged) {
                 StopCoroutine(Co_HomePotato());
                 break;
             }

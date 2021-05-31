@@ -13,16 +13,14 @@ using UnityEngine;
 
 [System.Serializable]
 //Each potential spot
-public class SpawningSpot
-{
+public class SpawningSpot {
     public Transform spotTransform;
     public bool isUsed;
 }
 
 [System.Serializable]
 //Each "arena" of spots
-public class Arena
-{
+public class Arena {
     public string name;
     //0 will generally be for the potato
     //1, 2, 3, 4 is for the players
@@ -32,8 +30,7 @@ public class Arena
 
 #endregion
 
-public class ArenaManager : MonoBehaviour
-{
+public class ArenaManager : MonoBehaviour {
     #region Variables Needed
 
     //This will likely be the way to spawn in deathmatch or something similar
@@ -52,29 +49,24 @@ public class ArenaManager : MonoBehaviour
 
     #region Utility
 
-    public int GetRandomArenaNumber()
-    {
+    public int GetRandomArenaNumber() {
         return Random.Range(0, arenaSpots.Length);
     }
 
     //General Methods for utility
-    public Transform GettingSpot(int arenaIndex, int SpotIndex)
-    {
+    public Transform GettingSpot(int arenaIndex, int SpotIndex) {
         return arenaSpots[arenaIndex].spots[SpotIndex].spotTransform;
     }
 
-    public Vector3 GettingPositionFromArena(int arenaIndex, int SpotIndex)
-    {
+    public Vector3 GettingPositionFromArena(int arenaIndex, int SpotIndex) {
         return arenaSpots[arenaIndex].spots[SpotIndex].spotTransform.position;
     }
 
     //An empty spot from a given arena
-    public Vector3 ReturnRandomEmptySpotFromArena(int ArenaIndex)
-    {
+    public Vector3 ReturnRandomEmptySpotFromArena(int ArenaIndex) {
         int randSpot = Random.Range(0, arenaSpots[ArenaIndex].spots.Length);
 
-        while (arenaSpots[ArenaIndex].spots[randSpot].isUsed)
-        {
+        while (arenaSpots[ArenaIndex].spots[randSpot].isUsed) {
             randSpot = Random.Range(0, arenaSpots[ArenaIndex].spots.Length);
         }
 
@@ -82,12 +74,10 @@ public class ArenaManager : MonoBehaviour
     }
 
     //If I need the transform and rotation
-    public SpawningSpot ReturnRandomSpotForArena(int ArenaIndex)
-    {
+    public SpawningSpot ReturnRandomSpotForArena(int ArenaIndex) {
         int randSpot = Random.Range(0, arenaSpots[ArenaIndex].spots.Length);
 
-        while (arenaSpots[ArenaIndex].spots[randSpot].isUsed)
-        {
+        while (arenaSpots[ArenaIndex].spots[randSpot].isUsed) {
             randSpot = Random.Range(0, arenaSpots[ArenaIndex].spots.Length);
         }
 
@@ -95,10 +85,8 @@ public class ArenaManager : MonoBehaviour
     }
 
     //Clearing known usage from a given arena
-    public void ClearUsageFromArena(int ArenaIndex)
-    {
-        for (int i = 0; i < arenaSpots[ArenaIndex].spots.Length; ++i)
-        {
+    public void ClearUsageFromArena(int ArenaIndex) {
+        for (int i = 0; i < arenaSpots[ArenaIndex].spots.Length; ++i) {
             arenaSpots[ArenaIndex].spots[i].isUsed = false;
         }
     }
@@ -108,34 +96,28 @@ public class ArenaManager : MonoBehaviour
     #region Gamemode Specific
 
     //This is for consistent spawn points for the football gamemode, the other team will use the same points from arena 1
-    public List<int> ReturnFootballSpawnIndexers(int iPlayerCount)
-    {
+    public List<int> ReturnFootballSpawnIndexers(int iPlayerCount) {
         List<int> points = new List<int>();
         points.Clear();
 
         //Making sure there's no errors when it comes to moving the players
-        if (arenaSpots[0].spots.Length != arenaSpots[1].spots.Length && Debug.isDebugBuild)
-        {
+        if (arenaSpots[0].spots.Length != arenaSpots[1].spots.Length && Debug.isDebugBuild) {
             Debug.LogWarning("There should be the same amount of spots in the arenas in this gamemode");
         }
 
         //Rand can only be 0, 1 or 2
         //Get 1 spot for upto 2 players
-        if (iPlayerCount < 3)
-        {
+        if (iPlayerCount < 3) {
             points.Add(Random.Range(0, arenaSpots[0].spots.Length));
         }
         //Get 2 spots for upto 4 players
-        else if (iPlayerCount < 5)
-        {
+        else if (iPlayerCount < 5) {
             int spotOne = Random.Range(0, arenaSpots[0].spots.Length);
             int spotTwo = Random.Range(0, arenaSpots[0].spots.Length);
 
             //This should never lead to infinite recursion
-            if (arenaSpots[0].spots.Length > 1)
-            {
-                while (spotOne == spotTwo)
-                {
+            if (arenaSpots[0].spots.Length > 1) {
+                while (spotOne == spotTwo) {
                     spotTwo = Random.Range(0, arenaSpots[0].spots.Length);
                 }
             }
@@ -144,8 +126,7 @@ public class ArenaManager : MonoBehaviour
             points.Add(spotTwo);
         }
         //Add all 3 spots
-        else
-        {
+        else {
             points.Add(0);
             points.Add(1);
             points.Add(2);
@@ -159,12 +140,9 @@ public class ArenaManager : MonoBehaviour
     #region Power Ups Specific (Deprecated now due to outline shader)
 
     //Self explanatory
-    public bool canPowerUpSpawn()
-    {
-        foreach (SpawningSpot sSpot in powerUpSpots.spots)
-        {
-            if (!sSpot.isUsed)
-            {
+    public bool canPowerUpSpawn() {
+        foreach (SpawningSpot sSpot in powerUpSpots.spots) {
+            if (!sSpot.isUsed) {
                 return true;
             }
         }
@@ -173,17 +151,14 @@ public class ArenaManager : MonoBehaviour
     }
 
     //Just a random position for the power up (inefficent with only 1 spot left)
-    public Vector3 ReturnFreePowerUpSpot()
-    {
+    public Vector3 ReturnFreePowerUpSpot() {
         //The temp list for the free spots
-        List<SpawningSpot> freeSpots = new List<SpawningSpot>(); 
+        List<SpawningSpot> freeSpots = new List<SpawningSpot>();
 
         //Going through the spots
-        foreach (SpawningSpot spot in powerUpSpots.spots)
-        {
+        foreach (SpawningSpot spot in powerUpSpots.spots) {
             //If they are free
-            if (!spot.isUsed)
-            {
+            if (!spot.isUsed) {
                 //Add them to the list
                 freeSpots.Add(spot);
             }
@@ -195,8 +170,7 @@ public class ArenaManager : MonoBehaviour
     }
 
     //A power up in a spot was picked up
-    public void PowerUpPickedUp(int SpotID)
-    {
+    public void PowerUpPickedUp(int SpotID) {
         powerUpSpots.spots[SpotID].isUsed = false;
     }
 
@@ -209,23 +183,18 @@ public class ArenaManager : MonoBehaviour
     /// </summary>
 
     //Is there a place to spawn in, in a given arena
-    public bool isPossibleToSpawnIn(int arenaIndex)
-    {
+    public bool isPossibleToSpawnIn(int arenaIndex) {
         //Making sure there's actually an arena that this can look through
-        if (arenaSpots == null || arenaIndex < 0 || arenaSpots.Length < arenaIndex || arenaSpots.Length > 0)
-        {
+        if (arenaSpots == null || arenaIndex < 0 || arenaSpots.Length < arenaIndex || arenaSpots.Length > 0) {
             return false;
         }
         //Making sure there's spots in this arena to look through
-        else if (arenaSpots[arenaIndex] == null || arenaSpots[arenaIndex].spots == null || arenaSpots[arenaIndex].spots.Length == 0)
-        {
+        else if (arenaSpots[arenaIndex] == null || arenaSpots[arenaIndex].spots == null || arenaSpots[arenaIndex].spots.Length == 0) {
             return false;
         }
 
-        foreach (SpawningSpot sSpot in arenaSpots[arenaIndex].spots)
-        {
-            if (!sSpot.isUsed)
-            {
+        foreach (SpawningSpot sSpot in arenaSpots[arenaIndex].spots) {
+            if (!sSpot.isUsed) {
                 return true;
             }
         }
@@ -234,12 +203,10 @@ public class ArenaManager : MonoBehaviour
     }
 
     //Just a random position from any arena
-    public Vector3 ReturnRandomPositionFromAllArenas()
-    {
+    public Vector3 ReturnRandomPositionFromAllArenas() {
         int rand = Random.Range(0, allSpots.spots.Length);
 
-        while (allSpots.spots[rand].isUsed)
-        {
+        while (allSpots.spots[rand].isUsed) {
             rand = Random.Range(0, allSpots.spots.Length);
         }
 

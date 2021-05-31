@@ -7,11 +7,9 @@
 
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class WinScreenManager : MonoBehaviour
-{
+public class WinScreenManager : MonoBehaviour {
     #region Variables Needed
 
     public static WinScreenManager instance;
@@ -48,14 +46,10 @@ public class WinScreenManager : MonoBehaviour
 
     #region Unity Methods
 
-    private void Awake()
-    {
-        if (instance)
-        {
+    private void Awake() {
+        if (instance) {
             Destroy(this);
-        }
-        else
-        {
+        } else {
             instance = this;
         }
 
@@ -69,12 +63,9 @@ public class WinScreenManager : MonoBehaviour
     #region Public Methods
 
     //Playing the win screen (and pass through the gamemode incase of different screens per gamemode)
-    public void PlayWinScreen(GAMEMODE_INDEX gamemode, List<CharacterManager> everyPlayer, List<CharacterManager> winningChars)
-    {
-        if (WinMusic != null)
-        {
-          if(TryGetComponent(out AudioSource changeMe))
-            {
+    public void PlayWinScreen(GAMEMODE_INDEX gamemode, List<CharacterManager> everyPlayer, List<CharacterManager> winningChars) {
+        if (WinMusic != null) {
+            if (TryGetComponent(out AudioSource changeMe)) {
                 changeMe.Stop(); ;
                 changeMe.clip = WinMusic;
                 changeMe.Play();
@@ -82,14 +73,12 @@ public class WinScreenManager : MonoBehaviour
         }
 
         //Destroying the world bounds so it doesnt interfere with the win screen
-        if (worldBounds)
-        {
+        if (worldBounds) {
             Destroy(worldBounds);
         }
 
         //Destroying the settings so it doesnt interfere with the next game
-        if (settings)
-        {
+        if (settings) {
             Destroy(settings.gameObject);
         }
 
@@ -97,10 +86,8 @@ public class WinScreenManager : MonoBehaviour
         charactersWhoWon = winningChars;
 
         //Going through all the manager 
-        foreach (CharacterManager manager in everyPlayer)
-        {
-            if (manager)
-            {
+        foreach (CharacterManager manager in everyPlayer) {
+            if (manager) {
                 //Turning off the revelant components;
                 manager.DisablePlayer();
             }
@@ -114,22 +101,19 @@ public class WinScreenManager : MonoBehaviour
         //Use football arena for football
         //Using a generator scene for sabotage
         //Using a small barn scene for infected
-        if (winScreen)
-        {
+        if (winScreen) {
             winScreen.StartWinSequence(allPlayers, winningChars);
         }
 
         //Setting a timer for going back to the menu
-        if (bReturnToMenu)
-        {
+        if (bReturnToMenu) {
             menuWaitBehaviour.SetDuration(winScreen.screenDuration);
             menuWaitBehaviour.CallOnTimerStart();
         }
     }
 
     //Going back to the main menu
-    public void ReturnToMenu()
-    {
+    public void ReturnToMenu() {
         Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene("MainMenu");
     }

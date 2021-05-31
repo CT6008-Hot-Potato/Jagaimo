@@ -13,8 +13,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 //A timer behaviour script seperate from the countdown
-public class BasicTimerBehaviour : MonoBehaviour
-{
+public class BasicTimerBehaviour : MonoBehaviour {
     #region Variables Needed
 
     [Header("The base timer")]
@@ -34,20 +33,17 @@ public class BasicTimerBehaviour : MonoBehaviour
     #region Public Methods
 
     //Starting the timer
-    public void CallOnTimerStart()
-    {
+    public void CallOnTimerStart() {
         timerText = timerText ?? GetComponent<Text>();
 
-        if (timerText && !timerText.enabled)
-        {
+        if (timerText && !timerText.enabled) {
             timerText.enabled = true;
         }
 
         StartCoroutine(Co_RunTimer());
     }
 
-    public void SetDuration(float newDuration)
-    {
+    public void SetDuration(float newDuration) {
         duration = newDuration;
     }
 
@@ -56,20 +52,17 @@ public class BasicTimerBehaviour : MonoBehaviour
     #region Private Methods
 
     //Running the timer
-    private IEnumerator Co_RunTimer()
-    {
+    private IEnumerator Co_RunTimer() {
         //It's technically a new timer ontop of the class in use
         timer = new Timer(duration);
 
         //Whilst it has time left
-        while (timer.isActive)
-        {
+        while (timer.isActive) {
             //Tick each frame
             timer.Tick(Time.deltaTime);
 
             //And if there's text, update it
-            if (timerText)
-            {
+            if (timerText) {
                 UpdateUI();
             }
 
@@ -77,32 +70,27 @@ public class BasicTimerBehaviour : MonoBehaviour
         }
 
         //The text shouldn't show the timer anymore if there is a timer
-        if (timerText)
-        {
+        if (timerText) {
             timerText.enabled = false;
         }
 
         //Run whatever is hooked up in the inspector
-        if (TimerBehaviour != null)
-        {
+        if (TimerBehaviour != null) {
             TimerBehaviour.Invoke();
         }
     }
 
     //Updating the timer text
-    private void UpdateUI()
-    {
+    private void UpdateUI() {
         //Getting the closest second
         int seconds = Mathf.FloorToInt(timer.current_time % 60);
 
         //If it's above 0 display it as a second
-        if (seconds > 0)
-        {
+        if (seconds > 0) {
             timerText.text = seconds.ToString();
         }
         //Or display "GO" since the only timers with texts are the pause ones/start of rounds
-        else
-        {
+        else {
             timerText.text = "GO!";
         }
     }

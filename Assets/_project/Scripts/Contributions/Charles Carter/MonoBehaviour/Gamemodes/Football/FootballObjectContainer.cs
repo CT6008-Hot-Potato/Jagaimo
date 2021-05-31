@@ -5,12 +5,10 @@
 // Brief: The script that holds relevant references for the football gamemode to then use
 //////////////////////////////////////////////////////////// 
 
-using System.Collections;
-using System.Collections.Generic;
+//This file uses these namespaces
 using UnityEngine;
 
-public class FootballObjectContainer : MonoBehaviour
-{
+public class FootballObjectContainer : MonoBehaviour {
     #region Variables for the gamemode script
 
     //There should only be 1 on scenes
@@ -28,7 +26,7 @@ public class FootballObjectContainer : MonoBehaviour
     public BasicTimerBehaviour goalPauseTimer;
     public ScriptableParticles particleSpawner;
     public Transform[] vfxPoints;
-    public GameObject[] MapObjects; 
+    public GameObject[] MapObjects;
 
     #endregion
 
@@ -42,26 +40,20 @@ public class FootballObjectContainer : MonoBehaviour
 
     #endregion
 
-    private void Awake()
-    {
-        if (!footballObjectContainer)
-        {
+    private void Awake() {
+        if (!footballObjectContainer) {
             footballObjectContainer = this;
-        }
-        else
-        {
+        } else {
             Destroy(this);
         }
     }
 
-    private void Start()
-    {
+    private void Start() {
         roundManager = RoundManager.roundManager;
         gamemode = roundManager.GetComponent<FootballGamemode>();
     }
 
-    public void UnlockPlayersAfterGoal()
-    {
+    public void UnlockPlayersAfterGoal() {
         gamemode.UnlockAllPlayers();
     }
 

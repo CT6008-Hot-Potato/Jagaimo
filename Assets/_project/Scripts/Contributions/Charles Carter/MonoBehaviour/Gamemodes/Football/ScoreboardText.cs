@@ -5,11 +5,11 @@
 // Brief: The text that shows the current score in the football gamemode
 //////////////////////////////////////////////////////////// 
 
+//This script uses these namespaces
 using TMPro;
 using UnityEngine;
 
-public class ScoreboardText : MonoBehaviour
-{
+public class ScoreboardText : MonoBehaviour {
     #region Variables Needed
 
     [Header("Text variables")]
@@ -27,14 +27,12 @@ public class ScoreboardText : MonoBehaviour
 
     #region Public Methods
 
-    public void UpdateBlueScoreText()
-    {
+    public void UpdateBlueScoreText() {
         BlueScore++;
         blueScoreText.text = BlueScore.ToString();
     }
 
-    public void UpdateRedScoreText()
-    {
+    public void UpdateRedScoreText() {
         RedScore++;
         redScoreText.text = RedScore.ToString();
     }

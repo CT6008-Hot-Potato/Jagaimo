@@ -6,36 +6,27 @@
 //////////////////////////////////////////////////////////// 
 
 //The namespaces used
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerUpSpawningManager : MonoBehaviour
-{
+public class PowerUpSpawningManager : MonoBehaviour {
     #region Variables Needed
 
     [Header("Necessary Variables")]
-
     public GameObject[] powerUpPrefabs;
-
     [SerializeField]
     private RoundManager rManager;
-
     [SerializeField]
     private GameSettingsContainer settings;
-
     [SerializeField]
     private BasicTimerBehaviour waitTimer;
-
     [SerializeField]
-    PowerUpTrigger[] powerUpObjects;
-
+    private PowerUpTrigger[] powerUpObjects;
     [SerializeField]
-    List<PowerUpTrigger> availableTriggers = new List<PowerUpTrigger>();
+    private List<PowerUpTrigger> availableTriggers = new List<PowerUpTrigger>();
 
     [Header("Internal tracking variables")]
-
     //Will another power up get put down?
     [SerializeField]
     private bool spawnNextPowerUp = false;
@@ -45,11 +36,9 @@ public class PowerUpSpawningManager : MonoBehaviour
     //The duration before the next power up is spawned
     [SerializeField]
     private float spawningDuration = 5;
-
     //Incase the scroller text wants to say that there's a power up taken/spawned
     [SerializeField]
     private ScrollerText scroller;
-
     //This is to use in the inspector to force the mutator to be on
     [SerializeField]
     private bool bSpawnPowerUps;
@@ -58,29 +47,24 @@ public class PowerUpSpawningManager : MonoBehaviour
 
     #region Unity Methods
 
-    private void Awake()
-    {
+    private void Awake() {
         settings = GameSettingsContainer.instance;
         waitTimer = waitTimer ?? gameObject.AddComponent<BasicTimerBehaviour>();
 
         //Every power up could potentially "spawn"
-        for (int i = 0; i < powerUpObjects.Length; ++i)
-        {
+        for (int i = 0; i < powerUpObjects.Length; ++i) {
             availableTriggers.Add(powerUpObjects[i]);
         }
     }
 
     // Start is called before the first frame update
-    private void Start()
-    {
+    private void Start() {
         rManager = RoundManager.roundManager;
 
         //If there are local settings
-        if (settings)
-        {
+        if (settings) {
             //Get the power ups mutator
-            if (settings.HasGenMutator(7))
-            {
+            if (settings.HasGenMutator(7)) {
                 //Since there's a value, it must be true
                 spawnNextPowerUp = true;
                 waitingForPowerUpSpot = false;
@@ -88,15 +72,12 @@ public class PowerUpSpawningManager : MonoBehaviour
                 waitTimer.SetDuration(spawningDuration);
             }
             //It doesnt have a value
-            else
-            {
+            else {
                 spawnNextPowerUp = false;
                 //So this script is redundant (which stops the timer from starting when the countdown starts)
                 enabled = false;
             }
-        }
-        else if (bSpawnPowerUps)
-        {
+        } else if (bSpawnPowerUps) {
             spawnNextPowerUp = true;
             waitingForPowerUpSpot = false;
 
@@ -104,13 +85,11 @@ public class PowerUpSpawningManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
+    private void OnEnable() {
         RoundManager.CountdownStarted += StartPowerUpTimer;
     }
 
-    private void OnDisable()
-    {
+    private void OnDisable() {
         RoundManager.CountdownStarted -= StartPowerUpTimer;
     }
 
@@ -119,22 +98,17 @@ public class PowerUpSpawningManager : MonoBehaviour
     #region Public Methods
 
     //The basic timer behaviour has run out, so it's time to see if another spawn is possible
-    public void WaitTimerRunOut()
-    {
+    public void WaitTimerRunOut() {
         //If there's a spot
-        if (canSpawnPowerUp())
-        {
+        if (canSpawnPowerUp()) {
             //Finding the a spot and trying to spawn a random power up there
-            if (SpawnPowerUp(RandomFreePowerUp()))
-            {
+            if (SpawnPowerUp(RandomFreePowerUp())) {
                 scroller.AddPowerUpSpawnText();
 
                 //The timer resets within this function
                 waitTimer.CallOnTimerStart();
             }
-        }
-        else
-        {
+        } else {
             //Start waiting for a spot to clear up
             waitingForPowerUpSpot = true;
 
@@ -146,10 +120,8 @@ public class PowerUpSpawningManager : MonoBehaviour
 
     #region Private Methods
 
-    private void StartPowerUpTimer()
-    {
-        if (Debug.isDebugBuild)
-        {
+    private void StartPowerUpTimer() {
+        if (Debug.isDebugBuild) {
             Debug.Log("Waiting for first power up", this);
         }
 
@@ -157,18 +129,15 @@ public class PowerUpSpawningManager : MonoBehaviour
         waitTimer.CallOnTimerStart();
     }
 
-    public void PowerUpPickedUp(PowerUpTrigger triggerActivated)
-    {
+    public void PowerUpPickedUp(PowerUpTrigger triggerActivated) {
         waitingForPowerUpSpot = false;
 
         availableTriggers.Remove(triggerActivated);
     }
 
     //The spawning function, which might need some overrides/overloads at some point
-    private bool SpawnPowerUp(PowerUpTrigger PowerUpToSetActive)
-    {
-        if (spawnNextPowerUp && powerUpPrefabs.Length > 0)
-        {
+    private bool SpawnPowerUp(PowerUpTrigger PowerUpToSetActive) {
+        if (spawnNextPowerUp && powerUpPrefabs.Length > 0) {
             int iRandPowerUp = UnityEngine.Random.Range(0, powerUpPrefabs.Length);
 
             //There is a free spot check before it gets to this part
@@ -177,8 +146,7 @@ public class PowerUpSpawningManager : MonoBehaviour
 
             availableTriggers.Remove(PowerUpToSetActive);
 
-            if (Debug.isDebugBuild)
-            {
+            if (Debug.isDebugBuild) {
                 Debug.Log("Power Up: " + iRandPowerUp + " spawned", this);
             }
 
@@ -188,11 +156,9 @@ public class PowerUpSpawningManager : MonoBehaviour
         return false;
     }
 
-    private IEnumerator Co_waitForPowerUpSpot()
-    {
+    private IEnumerator Co_waitForPowerUpSpot() {
         //Keeping an eye on whether it's done
-        while (waitingForPowerUpSpot)
-        {
+        while (waitingForPowerUpSpot) {
             yield return null;
         }
 
@@ -201,12 +167,10 @@ public class PowerUpSpawningManager : MonoBehaviour
     }
 
     //Make sure there is a free one before running this
-    private PowerUpTrigger RandomFreePowerUp()
-    {
+    private PowerUpTrigger RandomFreePowerUp() {
         int iRandPowerUp = UnityEngine.Random.Range(0, availableTriggers.Count);
 
-       if (availableTriggers.Count == 0)
-        {
+        if (availableTriggers.Count == 0) {
             //Should never reach here
             Debug.LogError("No free spot and forgot to check", this);
             enabled = false;
@@ -216,12 +180,9 @@ public class PowerUpSpawningManager : MonoBehaviour
     }
 
     //Looping through to see if any of the power ups are off
-    private bool canSpawnPowerUp()
-    {
-        for (int i = 0; i < powerUpObjects.Length; ++i)
-        {
-            if (!powerUpObjects[i].gameObject.activeSelf)
-            {
+    private bool canSpawnPowerUp() {
+        for (int i = 0; i < powerUpObjects.Length; ++i) {
+            if (!powerUpObjects[i].gameObject.activeSelf) {
                 return true;
             }
         }
