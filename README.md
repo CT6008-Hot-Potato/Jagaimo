@@ -12,6 +12,6 @@ Specifically the RenderOnTop one by Charlie is from a previous project Colonies 
 The outline material under _project/OtherAssets are from James Gratrix as well as the following assets in the same folder - 
 Animations: https://www.mixamo.com/
 Font: https://www.dafont.com/cosmic-blaster.font
-The Plane:
+The plane: https://www.turbosquid.com/FullPreview/Index.cfm/ID/228898
 
-A more comprehensive and harvard formatted list is on the confluence page associated with this project
+(The model is a sub mesh of the forklift model under Chris' contributions)
