@@ -14,7 +14,7 @@ public class JagaimoMenuComponent : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField]
-    private JagaimoNetworkManagerLobby jagaimoNetworkManger = null;
+    private JagaimoNetworkManager jagaimoNetworkManger = null;
 
     //[Header("Multiplayer UI")]
     //[SerializeField]

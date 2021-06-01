@@ -3,30 +3,29 @@
 //  Creator: Theodor Danciu
 //  Brief: Logic that handles the connection to the host's lobby
 /////////////////////////////////////////////////////////////
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class JagaimoNetworkJoinLobby : MonoBehaviour
 {
-    [SerializeField] private JagaimoNetworkManagerLobby networkManagerLobby = null;
+    [SerializeField] private JagaimoNetworkManager networkManager = null;
 
     [Header("UI")] 
     [SerializeField] private GameObject landingPagePanel = null;
     [SerializeField] private TMP_InputField ipAddressInputField = null;
-    [SerializeField] private Button joinButton = null;
+    [SerializeField] private Button         joinButton          = null;
 
     private void OnEnable()
     {
-        JagaimoNetworkManagerLobby.OnClientConnected += HandleClientConnected;
-        JagaimoNetworkManagerLobby.OnClientDisconnected += HandleClientDisconnected;
+        JagaimoNetworkManager.OnClientConnected += HandleClientConnected;
+        JagaimoNetworkManager.OnClientDisconnected += HandleClientDisconnected;
     }
 
     private void OnDisable()
     {
-        JagaimoNetworkManagerLobby.OnClientConnected -= HandleClientConnected;
-        JagaimoNetworkManagerLobby.OnClientDisconnected -= HandleClientDisconnected;
+        JagaimoNetworkManager.OnClientConnected -= HandleClientConnected;
+        JagaimoNetworkManager.OnClientDisconnected -= HandleClientDisconnected;
     }
 
     /// <summary>
@@ -35,8 +34,8 @@ public class JagaimoNetworkJoinLobby : MonoBehaviour
     public void JoinLobby()
     {
         string ipAddress = ipAddressInputField.text;
-        networkManagerLobby.networkAddress = ipAddress;
-        networkManagerLobby.StartClient();
+        networkManager.networkAddress = ipAddress;
+        networkManager.StartClient();
 
         joinButton.interactable = false;
     }

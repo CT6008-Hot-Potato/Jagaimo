@@ -7,7 +7,7 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/_project/Scenes/MainMenu.unity
-    guid: c5ecd1b27ef69294fab9148e63f9f950
+    guid: 1ae835afba546ff45bcf3c9a9cfdec3c
   - enabled: 1
     path: Assets/_project/Scenes/TestScene.unity
     guid: eb817af1205e2b344bddb6526f7ae897
@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_project/Scenes/Whiteboxes/Football.unity
     guid: 2b3f990b4836acf46833a79e1f31bce6
+  - enabled: 1
+    path: Assets/_project/Scenes/Whiteboxes/Studio_MP_Updated.unity
+    guid: 23cfdc47d6eab4d45ad50fcef4294252
   m_configObjects: {}

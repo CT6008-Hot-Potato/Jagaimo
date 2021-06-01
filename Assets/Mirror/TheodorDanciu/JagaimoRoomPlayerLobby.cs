@@ -4,6 +4,7 @@
 //  Brief: Logic that handles the updating state of the lobby including names and weather the players are ready uped 
 /////////////////////////////////////////////////////////////
 
+using System;
 using Mirror;
 using TMPro;
 using UnityEngine;
@@ -11,18 +12,29 @@ using UnityEngine.UI;
 
 public class JagaimoRoomPlayerLobby : NetworkBehaviour
 {
-    [Header("UI")] 
-    [SerializeField] private GameObject lobbyUI = null;
+    [Header("UI")]
+    [SerializeField] GameObject lobbyUI;
     [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[4];
     [SerializeField] private TMP_Text[] playerReadyTexts = new TMP_Text[4];
     [SerializeField] private Button startGameButton = null;
-
+    [SerializeField] private Button gameplaySettingsButton; //mutator ui
+    
+    [Tooltip("Showing the index of the local networked player")]
+    [SyncVar]
+    public int playerIndex;
+    
     [SyncVar(hook = nameof(HandleDisplayNameChanged))]
     public string DisplayName = "Loading...";
 
     [SyncVar(hook = nameof(HandleReadyStatusChanged))]
     public bool IsReady = false;
-
+    
+    
+    public GameObject LobbyUI
+    {
+        get => lobbyUI;
+        set => lobbyUI = value;
+    }
     private bool isLeader;
 
     /// <summary>
@@ -30,6 +42,7 @@ public class JagaimoRoomPlayerLobby : NetworkBehaviour
     /// </summary>
     public bool IsLeader
     {
+        get => isLeader;
         set
         {
             isLeader = value;
@@ -37,9 +50,9 @@ public class JagaimoRoomPlayerLobby : NetworkBehaviour
         }
     }
 
-    private JagaimoNetworkManagerLobby room;
+    private JagaimoNetworkManager room;
 
-    private JagaimoNetworkManagerLobby Room
+    private JagaimoNetworkManager Room
     {
         get
         {
@@ -48,10 +61,11 @@ public class JagaimoRoomPlayerLobby : NetworkBehaviour
                 return room;
             }
 
-            return room = NetworkManager.singleton as JagaimoNetworkManagerLobby;
+            return room = NetworkManager.singleton as JagaimoNetworkManager;
         }
     }
-    
+
+
     public override void OnStartAuthority()
     {
         CmdSetDisplayName(JagaimoPlayerNameInput.DisplayName);
@@ -65,6 +79,8 @@ public class JagaimoRoomPlayerLobby : NetworkBehaviour
     public override void OnStartClient()
     {
         Room.RoomPlayers.Add(this);
+        Room.RecalculatePlayerIndices();
+        DontDestroyOnLoad(gameObject);
 
         UpdateDisplay();
     }
@@ -168,6 +184,6 @@ public class JagaimoRoomPlayerLobby : NetworkBehaviour
         {
             return;
         }
-        //Room.StartGame();
+        Room.StartGame();
     }
 }
