@@ -208,6 +208,8 @@ public class InfectedGamemode : MonoBehaviour, IGamemode {
             //Survivors Won
             infectedWon = false;
         }
+
+        WinScreen();
     }
 
     //Add them to the infected and take them away from the survivors
