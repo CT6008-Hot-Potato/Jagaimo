@@ -365,7 +365,6 @@ public class FootballGamemode : MonoBehaviour, IGamemode {
 
                 orangeTeam[i].transform.position = spotTransform.position;
 
-                //This is the "solution" to not being able to turn the player based on the prefab object
                 PlayerCamera camera = orangeTeam[i].GetComponent<PlayerCamera>();
                 camera.ChangeYaw(spotTransform.rotation.eulerAngles.y, true);
             }
@@ -379,6 +378,9 @@ public class FootballGamemode : MonoBehaviour, IGamemode {
                 rb.velocity = Vector3.zero;
 
                 blueTeam[i].transform.position = spotTransform.position;
+
+                PlayerCamera camera = blueTeam[i].GetComponent<PlayerCamera>();
+                camera.ChangeYaw(spotTransform.rotation.eulerAngles.y, true);
             }
         }
 
