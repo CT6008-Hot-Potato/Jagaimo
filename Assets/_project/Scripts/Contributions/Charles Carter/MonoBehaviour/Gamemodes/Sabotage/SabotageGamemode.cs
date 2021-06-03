@@ -136,8 +136,10 @@ public class SabotageGamemode : MonoBehaviour, IGamemode {
     }
 
     public void EliminatePlayer(CharacterManager charToEliminate) {
+        currentActivePlayers.Remove(charToEliminate);
+
         //This is the end of the game
-        if (currentActivePlayers.Count <= 2) {
+        if (currentActivePlayers.Count < 2) {
             if (!charToEliminate._tracker.isTagged) {
                 TaggedPlayerWon = true;
             }
@@ -155,6 +157,7 @@ public class SabotageGamemode : MonoBehaviour, IGamemode {
             CharacterManager character = getRandomCharacter();
             roundManager.OnPlayerTagged(character);
         }
+
     }
 
     //This runs when the round is about to start/ during the initial timer
