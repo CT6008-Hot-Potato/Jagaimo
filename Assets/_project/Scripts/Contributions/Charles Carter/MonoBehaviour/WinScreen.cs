@@ -93,5 +93,14 @@ public abstract class WinScreen : MonoBehaviour {
         }
     }
 
+    protected virtual void PositionPerson(CharacterManager manager, Transform spot) {
+        Rigidbody _rb = manager.GetComponent<Rigidbody>();
+        _rb.isKinematic = true;
+        _rb.velocity = Vector3.zero;
+
+        manager.transform.position = spot.transform.position;
+        manager.transform.rotation = spot.transform.rotation;
+    }
+
     #endregion
 }

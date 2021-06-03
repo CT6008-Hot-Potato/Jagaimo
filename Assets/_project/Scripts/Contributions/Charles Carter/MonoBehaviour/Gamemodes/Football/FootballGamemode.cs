@@ -361,12 +361,13 @@ public class FootballGamemode : MonoBehaviour, IGamemode {
 
                 Rigidbody rb = orangeTeam[i].GetComponent<Rigidbody>();
                 rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
 
                 orangeTeam[i].transform.position = spotTransform.position;
 
                 //This is the "solution" to not being able to turn the player based on the prefab object
                 PlayerCamera camera = orangeTeam[i].GetComponent<PlayerCamera>();
-                camera.ChangeYaw(180 / Time.deltaTime);
+                camera.ChangeYaw(180, true);
             }
         }
 

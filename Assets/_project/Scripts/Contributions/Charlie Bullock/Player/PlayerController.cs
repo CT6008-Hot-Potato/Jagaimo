@@ -417,7 +417,7 @@ public class PlayerController : MonoBehaviour
         while (timer.isActive)
         {
             timer.Tick(Time.deltaTime);
-            pC.ChangeYaw(720);
+            pC.ChangeYaw(720, false);
             yield return null;
         }
         rb.velocity = Vector3.zero;

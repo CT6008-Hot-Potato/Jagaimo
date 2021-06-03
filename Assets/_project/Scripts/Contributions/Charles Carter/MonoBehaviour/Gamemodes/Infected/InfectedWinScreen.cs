@@ -61,19 +61,16 @@ public class InfectedWinScreen : WinScreen {
         if (bInfectedWon) {
             //Position all of these objects in the infected spots
             for (int i = 0; i < objectsToPosition.Count; ++i) {
-                objectsToPosition[i].transform.position = winningSpots[i].position;
-                objectsToPosition[i].transform.rotation = winningSpots[i].rotation;
+                PositionPerson(objectsToPosition[i], winningSpots[i]);
             }
         } else {
             //Position the infected in the infected spots and the survivors in the survivor spots
             for (int i = 0; i < gamemode.activeInfected.Count; ++i) {
-                gamemode.activeInfected[i].transform.position = winningSpots[i].position;
-                gamemode.activeInfected[i].transform.rotation = winningSpots[i].rotation;
+                PositionPerson(objectsToPosition[i], winningSpots[i]);
             }
 
             for (int i = 0; i < gamemode.activeSurvivors.Count; ++i) {
-                gamemode.activeSurvivors[i].transform.position = survivorPositions[i].position;
-                gamemode.activeSurvivors[i].transform.rotation = survivorPositions[i].rotation;
+                PositionPerson(objectsToPosition[i], survivorPositions[i]);
             }
         }
     }

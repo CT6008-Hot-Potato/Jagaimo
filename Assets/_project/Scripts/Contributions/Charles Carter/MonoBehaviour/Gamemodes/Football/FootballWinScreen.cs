@@ -94,8 +94,7 @@ public class FootballWinScreen : WinScreen {
             if (objectsToPosition.Count > 0) {
                 for (int i = 0; i < objectsToPosition.Count; ++i) {
                     if (winningSpots[i] && objectsToPosition[i]) {
-                        objectsToPosition[i].transform.position = winningSpots[i].position;
-                        objectsToPosition[i].transform.rotation = winningSpots[i].rotation;
+                        PositionPerson(objectsToPosition[i], winningSpots[i]);
                     }
                 }
             }
@@ -105,8 +104,7 @@ public class FootballWinScreen : WinScreen {
             if (objectsToPosition.Count > 0) {
                 for (int i = 0; i < objectsToPosition.Count; ++i) {
                     if (orangeTeamPos[i] && objectsToPosition[i]) {
-                        objectsToPosition[i].transform.position = orangeTeamPos[i].position;
-                        objectsToPosition[i].transform.rotation = orangeTeamPos[i].rotation;
+                        PositionPerson(objectsToPosition[i], orangeTeamPos[i]);
                     }
                 }
             }

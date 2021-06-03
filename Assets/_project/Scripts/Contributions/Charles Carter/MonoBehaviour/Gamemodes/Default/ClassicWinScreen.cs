@@ -26,9 +26,7 @@ public class ClassicWinScreen : WinScreen {
             for (int i = 0; i < objectsToPosition.Count; ++i) {
                 if (winningSpots[i] != null && objectsToPosition[i] != null) {
                     //Debug.Log(objectsToPosition[i].transform.position + " is going to: " + winningSpots[i].transform.position, this);
-                    objectsToPosition[i].GetComponent<Rigidbody>().velocity = Vector3.zero;
-                    objectsToPosition[i].transform.position = winningSpots[i].position;
-                    objectsToPosition[i].transform.rotation = winningSpots[i].rotation;
+                    PositionPerson(objectsToPosition[i], winningSpots[i]);
                 } else {
                     if (Debug.isDebugBuild) {
                         Debug.Log("This spot or player isnt set", this);

@@ -63,6 +63,10 @@ public class RoundManager : MonoBehaviour {
     //The amount starts from 0, since it's compared to an index (this is for testing in scene)
     [SerializeField]
     private int iAmountOfExpectedPlayers = 1;
+    [SerializeField]
+    private WindZone wind;
+    [SerializeField]
+    private float windForce;
 
     //Change this to quickly test gamemodes in scenes
     [SerializeField]
@@ -78,6 +82,10 @@ public class RoundManager : MonoBehaviour {
             roundManager = this;
         } else {
             Destroy(gameObject);
+        }
+
+        if (wind) {
+            wind.windMain = 0f;
         }
 
         //If there is a gamemode already on the object
@@ -145,6 +153,9 @@ public class RoundManager : MonoBehaviour {
     public void CallOnRoundEnd() {
         //Null checking the delegate event
         if (RoundEnded != null) {
+            if (wind) {
+                wind.windMain = 0f;
+            }
             RoundEnded.Invoke();
         }
 
@@ -155,6 +166,9 @@ public class RoundManager : MonoBehaviour {
     public void CallOnCountdownStart() {
         //Null checking the delegate event
         if (CountdownStarted != null) {
+            if (wind) {
+                wind.windMain = windForce;
+            }
             CountdownStarted.Invoke();
         }
 
@@ -165,6 +179,9 @@ public class RoundManager : MonoBehaviour {
     public void CallOnCountdownEnd() {
         //Null checking the delegate event
         if (CountdownEnded != null) {
+            if (wind) {
+                wind.windMain = 0f;
+            }
             CountdownEnded.Invoke();
         }
 

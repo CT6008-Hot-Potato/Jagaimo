@@ -318,7 +318,7 @@ public class PlayerInteraction : MonoBehaviour {
         if (movingObject != null) {
             //Scale down if potato
             if (movingObject.CompareTag("Potato")) {
-                movingObject.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+                movingObject.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
 
                 //It will return to the player in 5 seconds
                 if (bPotatoReturns) {

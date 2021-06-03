@@ -8,6 +8,7 @@
 
 //This script uses these namespaces
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +27,7 @@ public class CountdownTimer : MonoBehaviour {
     private float duration = 301;
 
     [SerializeField]
-    private Text timerText;
+    private TextMeshProUGUI timerText;
 
     #endregion
 
@@ -34,7 +35,7 @@ public class CountdownTimer : MonoBehaviour {
 
     private void Awake() {
         settings = GameSettingsContainer.instance;
-        timerText = timerText ?? GetComponent<Text>();
+        timerText = timerText ?? GetComponent<TextMeshProUGUI>();
     }
 
     private void Start() {

@@ -200,6 +200,10 @@ public class CharacterManager : MonoBehaviour {
                 _playerAnimation.enabled = false;
             }
 
+            if (_rb) {
+                _rb.isKinematic = true;
+            }
+
             bEliminated = true;
         }
 
