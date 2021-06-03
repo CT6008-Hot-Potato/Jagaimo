@@ -355,6 +355,8 @@ public class CharacterManager : MonoBehaviour {
     }
 
     private void EliminationEffect() {
+        StopCoroutine(Co_TaggedEffect(taggedAnimduration));
+
         //Send the player into "spectator" mode (No model, no colliders)
         if (_cam) {
             //Forcing it into third person
