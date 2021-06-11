@@ -48,7 +48,7 @@ public class Rotate : MonoBehaviour {
         }
     }
     //Rotate around in update
-    void Update() {
+    void FixedUpdate() {
         if (players != null ) {
             for (int i = 0; i < players.Count;i++) {
                 if (players[i]) {

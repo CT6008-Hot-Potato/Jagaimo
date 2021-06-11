@@ -361,12 +361,12 @@ public class FootballGamemode : MonoBehaviour, IGamemode {
 
                 Rigidbody rb = orangeTeam[i].GetComponent<Rigidbody>();
                 rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
 
                 orangeTeam[i].transform.position = spotTransform.position;
 
-                //This is the "solution" to not being able to turn the player based on the prefab object
                 PlayerCamera camera = orangeTeam[i].GetComponent<PlayerCamera>();
-                camera.ChangeYaw(180 / Time.deltaTime);
+                camera.ChangeYaw(spotTransform.rotation.eulerAngles.y, true);
             }
         }
 
@@ -374,10 +374,13 @@ public class FootballGamemode : MonoBehaviour, IGamemode {
             for (int i = 0; i < blueTeam.Count; ++i) {
                 Transform spotTransform = arenaManager.GettingSpot((int)Football_Team.Blue_Team, spawnSpots[i]);
 
-                Rigidbody rb = orangeTeam[i].GetComponent<Rigidbody>();
+                Rigidbody rb = blueTeam[i].GetComponent<Rigidbody>();
                 rb.velocity = Vector3.zero;
 
                 blueTeam[i].transform.position = spotTransform.position;
+
+                PlayerCamera camera = blueTeam[i].GetComponent<PlayerCamera>();
+                camera.ChangeYaw(spotTransform.rotation.eulerAngles.y, true);
             }
         }
 
@@ -386,13 +389,20 @@ public class FootballGamemode : MonoBehaviour, IGamemode {
     }
 
     private IEnumerator Co_GoalWait(float duration) {
-
-
         yield return new WaitForSeconds(duration);
 
         LockAllPlayers();
         //Putting them back in starting points
         PutPlayersInSpawnPoints();
+
+        if (footballVariables) {
+            footballVariables.PutObjectsBack();
+        }
+
+        //This cuts out any forces applied to all the players
+        for (int i = 0; i < currentActivePlayers.Count; ++i) {
+            currentActivePlayers[i].GetComponent<Rigidbody>().isKinematic = true;
+        }
 
         //Moving the potato back to the start if this has a reference to it (which it should)
         if (potatoRB) {

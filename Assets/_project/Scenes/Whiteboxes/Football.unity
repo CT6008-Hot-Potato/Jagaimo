@@ -2612,7 +2612,6 @@ MonoBehaviour:
   - {fileID: 1235505979}
   - {fileID: 1166803099}
   flagpoles: []
-  goalObjects: []
 --- !u!1 &1093875270
 GameObject:
   m_ObjectHideFlags: 0

@@ -136,8 +136,10 @@ public class SabotageGamemode : MonoBehaviour, IGamemode {
     }
 
     public void EliminatePlayer(CharacterManager charToEliminate) {
+        currentActivePlayers.Remove(charToEliminate);
+
         //This is the end of the game
-        if (currentActivePlayers.Count <= 2) {
+        if (currentActivePlayers.Count < 2) {
             if (!charToEliminate._tracker.isTagged) {
                 TaggedPlayerWon = true;
             }
@@ -155,6 +157,7 @@ public class SabotageGamemode : MonoBehaviour, IGamemode {
             CharacterManager character = getRandomCharacter();
             roundManager.OnPlayerTagged(character);
         }
+
     }
 
     //This runs when the round is about to start/ during the initial timer
@@ -260,7 +263,7 @@ public class SabotageGamemode : MonoBehaviour, IGamemode {
         //This is the "solution" to not being able to turn the player based on the prefab object
         PlayerCamera camera = currentActivePlayers[index].GetComponent<PlayerCamera>();
         if (camera) {
-            camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
+            camera.ChangeYaw(spot.rotation.eulerAngles.y, true);
             camera.flipSpin = !camera.flipSpin;
         }
     }
@@ -284,7 +287,7 @@ public class SabotageGamemode : MonoBehaviour, IGamemode {
 
                 //This is the "solution" to not being able to turn the player based on the prefab object
                 PlayerCamera camera = currentActivePlayers[i].GetComponent<PlayerCamera>();
-                camera.ChangeYaw(spot.spotTransform.rotation.eulerAngles.y / Time.deltaTime);
+                camera.ChangeYaw(spot.spotTransform.rotation.eulerAngles.y, true);
                 camera.flipSpin = !camera.flipSpin;
 
                 spot.isUsed = true;

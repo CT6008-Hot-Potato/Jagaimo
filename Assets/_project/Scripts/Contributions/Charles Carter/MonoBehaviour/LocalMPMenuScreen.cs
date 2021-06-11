@@ -37,6 +37,8 @@ public class LocalMPMenuScreen : MonoBehaviour {
     private void Awake() {
         soundManager = soundManager ?? FindObjectOfType<SoundManager>();
         inputManager = inputManager ?? GetComponent<PlayerInputManager>();
+
+        inputManager.DisableJoining();
     }
 
     // Start is called before the first frame update
@@ -54,6 +56,7 @@ public class LocalMPMenuScreen : MonoBehaviour {
     }
 
     private void OnDisable() {
+        //RemoveCharacters();
         inputManager.DisableJoining();
     }
 

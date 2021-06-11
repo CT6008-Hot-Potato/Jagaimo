@@ -57,8 +57,7 @@ public class SabotageWinScreen : WinScreen {
             //These are the survivors
             for (int i = 1; i < objectsToPosition.Count - 1; ++i) {
                 if (winningSpots[i] && objectsToPosition[i]) {
-                    objectsToPosition[i].transform.position = winningSpots[i].transform.position;
-                    objectsToPosition[i].transform.rotation = winningSpots[i].transform.rotation;
+                    PositionPerson(objectsToPosition[i], winningSpots[i]);
                 } else if (Debug.isDebugBuild) {
                     Debug.Log("No spot here, index: " + i, this);
                 }
@@ -69,8 +68,7 @@ public class SabotageWinScreen : WinScreen {
                 if (gamemode.TaggedWin()) {
                     //The tagged player is in the first slot
                     if (winningSpots[0]) {
-                        objectsToPosition[0].transform.position = taggedPosition.position;
-                        objectsToPosition[0].transform.rotation = taggedPosition.rotation;
+                        PositionPerson(objectsToPosition[0], taggedPosition);
                     }
                 }
             }

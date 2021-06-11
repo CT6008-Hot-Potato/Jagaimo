@@ -337,8 +337,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode {
         //This is the "solution" to not being able to turn the player based on the prefab object
         PlayerCamera camera = currentActivePlayers[index].GetComponent<PlayerCamera>();
         if (camera) {
-            camera.ChangeYaw(spot.rotation.eulerAngles.y / Time.deltaTime);
-            camera.flipSpin = !camera.flipSpin;
+            camera.ChangeYaw(spot.rotation.eulerAngles.y, true);
         }
     }
 
@@ -352,8 +351,7 @@ public class DefaultGamemode : MonoBehaviour, IGamemode {
 
                 //This is the "solution" to not being able to turn the player based on the prefab object
                 PlayerCamera camera = currentActivePlayers[i].GetComponent<PlayerCamera>();
-                camera.ChangeYaw(spot.spotTransform.rotation.eulerAngles.y / Time.deltaTime);
-                camera.flipSpin = !camera.flipSpin;
+                camera.ChangeYaw(spot.spotTransform.rotation.eulerAngles.y, true);
 
                 spot.isUsed = true;
             }

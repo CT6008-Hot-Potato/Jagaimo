@@ -178,14 +178,18 @@ public class PlayerCamera : MonoBehaviour {
     }
 
     //Function to set yaw valye
-    public void ChangeYaw(float timeMultiplier) {
-        //If true flip spin in this direction
-        if (flipSpin) {
-            yaw = yaw - Time.deltaTime * timeMultiplier;
-        }
-        //Else flip spin rotate in the alternate direction
-        else {
-            yaw = yaw + Time.deltaTime * timeMultiplier;
+    public void ChangeYaw(float timeMultiplier, bool yawOverride) {
+        if (!yawOverride) {
+            //If true flip spin in this direction
+            if (flipSpin) {
+                yaw = yaw - Time.deltaTime * timeMultiplier;
+            }
+            //Else flip spin rotate in the alternate direction
+            else {
+                yaw = yaw + Time.deltaTime * timeMultiplier;
+            }
+        }  else {
+            yaw = timeMultiplier;
         }
     }
 
